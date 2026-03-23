@@ -12,6 +12,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Android 13+ (API 33+) — طلب إذن إشعارات FCM في التشغيل -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- منع السكون أثناء شاشة العرض (wakelock_plus) -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- موقع الجهاز لتحديث إحداثيات المسجد -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
