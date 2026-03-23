@@ -1,0 +1,236 @@
+{
+  "@@locale": "ar",
+
+  "error_occurred": "حدث خطأ",
+  "retry": "إعادة المحاولة",
+  "cancel": "إلغاء",
+  "save": "حفظ",
+  "delete": "حذف",
+  "edit": "تعديل",
+  "search": "بحث",
+  "no_data": "لا توجد بيانات",
+  "please_select": "الرجاء الاختيار",
+  "select_date": "اختر التاريخ",
+  "upload_image": "رفع صورة",
+  "gallery": "معرض الصور",
+  "camera": "الكاميرا",
+
+  "bismillah": "بسم الله الرحمن الرحيم",
+  "login_title": "تسجيل الدخول",
+  "login_subtitle": "إدارة المسجد — لوحة التحكم",
+  "email_label": "البريد الإلكتروني",
+  "email_hint": "example@domain.com",
+  "password_label": "كلمة المرور",
+  "password_hint": "••••••••",
+  "login_button": "دخول",
+  "tawakkul_quote": "«وَمَن يَتَوَكَّلْ عَلَى اللَّهِ فَهُوَ حَسْبُهُ»",
+  "validation_email_required": "يرجى إدخال البريد الإلكتروني",
+  "validation_email_invalid": "صيغة البريد غير صحيحة",
+  "validation_password_required": "يرجى إدخال كلمة المرور",
+  "validation_password_short": "كلمة المرور يجب أن لا تقل عن 6 أحرف",
+
+  "settings_title": "إعدادات المسجد",
+  "sign_out": "تسجيل الخروج",
+  "refresh": "تحديث",
+  "smart_screen_enabled": "تم تفعيل وضع الشاشة الذكية",
+  "smart_screen_disabled": "تم إيقاف وضع الشاشة الذكية",
+  "restart_action": "إعادة التشغيل",
+  "enable_smart_screen": "تفعيل الشاشة الذكية",
+  "disable_smart_screen": "إيقاف الشاشة الذكية",
+  "saving": "جاري الحفظ…",
+  "saved_successfully": "تم الحفظ بنجاح",
+
+  "use_current_location": "استخدام الموقع الحالي",
+  "location_updated": "تم تحديث الإحداثيات من موقع الجهاز",
+  "location_permission_denied": "يلزم السماح بالموقع لتحديد الإحداثيات",
+  "location_unavailable": "تعذر الحصول على الموقع الحالي",
+
+  "design_background_color": "لون خلفية الشاشة",
+  "design_display_background_image": "خلفية شاشة العرض",
+  "design_bg_primary": "الأساسية",
+  "design_bg_style_1": "نمط 1",
+  "design_bg_style_2": "نمط 2",
+  "design_bg_style_3": "نمط 3",
+  "design_bg_style_4": "نمط 4",
+  "design_bg_style_5": "نمط 5",
+  "design_bg_brand": "الشعار",
+  "design_primary_color": "اللون الأساسي",
+  "design_secondary_color": "اللون الثانوي",
+  "design_pick_color": "اختر اللون",
+
+  "tab_general": "عام",
+  "tab_design": "التصميم",
+  "tab_iqama": "الإقامة",
+  "tab_hadith": "الأحاديث",
+  "tab_verses": "الآيات",
+  "tab_duas": "الأدعية",
+  "tab_adhkar": "الأذكار",
+  "tab_announcements": "الإعلانات",
+
+  "settings_drawer_tagline": "أوقات الصلاة · تحكم بالعرض",
+  "settings_navigate_sections": "الأقسام",
+
+  "hadith_fab_add": "حديث جديد",
+  "hadith_editor_title_new": "حديث جديد",
+  "hadith_editor_title_edit": "تعديل الحديث",
+  "hadith_narrator": "الراوي",
+  "hadith_text": "النص",
+  "hadith_source": "المصدر (اختياري)",
+  "hadith_empty_title": "لا أحاديث بعد",
+  "hadith_empty_subtitle": "أضف نصوصاً تُعرَض بالتناوب على شاشة العرض.",
+  "hadith_delete_title": "حذف الحديث؟",
+  "hadith_delete_body": "سيُزال من القائمة. احفظ على الخادم عند الانتهاء.",
+  "hadith_save_bar_hint": "التعديلات محلية حتى تضغط حفظ على الخادم.",
+
+  "verse_fab_add": "آية جديدة",
+  "verse_editor_title_new": "آية جديدة",
+  "verse_editor_title_edit": "تعديل الآية",
+  "verse_narrator": "السياق أو السورة",
+  "verse_text": "نص الآية",
+  "verse_source": "المصدر (اختياري)",
+  "verse_empty_title": "لا آيات بعد",
+  "verse_empty_subtitle": "أضف آياتاً تُعرَض بالتناوب أسفل أوقات الصلاة.",
+  "verse_delete_title": "حذف الآية؟",
+  "verse_delete_body": "سيُزال من القائمة. احفظ على الخادم عند الانتهاء.",
+  "verse_save_bar_hint": "التعديلات محلية حتى تضغط حفظ على الخادم.",
+
+  "dua_fab_add": "دعاء جديد",
+  "dua_editor_title_new": "دعاء جديد",
+  "dua_editor_title_edit": "تعديل الدعاء",
+  "dua_narrator": "عنوان أو سياق",
+  "dua_text": "النص",
+  "dua_source": "مصدر (اختياري)",
+  "dua_empty_title": "لا أدعية بعد",
+  "dua_empty_subtitle": "أضف أدعية تُعرَض بالتناوب أسفل أوقات الصلاة.",
+  "dua_delete_title": "حذف الدعاء؟",
+  "dua_delete_body": "سيُزال من القائمة. احفظ على الخادم عند الانتهاء.",
+  "dua_save_bar_hint": "التعديلات محلية حتى تضغط حفظ على الخادم.",
+
+  "adhkar_fab_add": "ذكر جديد",
+  "adhkar_editor_title_new": "ذكر جديد",
+  "adhkar_editor_title_edit": "تعديل الذكر",
+  "adhkar_narrator": "الوقت أو السياق",
+  "adhkar_text": "النص",
+  "adhkar_source": "تعليق (اختياري)",
+  "adhkar_empty_title": "لا أذكار بعد",
+  "adhkar_empty_subtitle": "أضف أذكاراً تُعرَض بالتناوب أسفل أوقات الصلاة.",
+  "adhkar_delete_title": "حذف الذكر؟",
+  "adhkar_delete_body": "سيُزال من القائمة. احفظ على الخادم عند الانتهاء.",
+  "adhkar_save_bar_hint": "التعديلات محلية حتى تضغط حفظ على الخادم.",
+
+  "announcement_fab_add": "إعلان جديد",
+  "announcement_editor_new": "إعلان جديد",
+  "announcement_editor_edit": "تعديل الإعلان",
+  "announcement_field_title": "العنوان",
+  "announcement_field_subtitle": "العنوان الفرعي",
+  "announcement_field_qr": "رابط أو نص للرمز",
+  "announcement_period": "فترة العرض",
+  "announcement_status_active": "يُعرض الآن",
+  "announcement_status_upcoming": "مجدول",
+  "announcement_status_ended": "انتهى",
+  "announcement_empty_title": "لا إعلانات",
+  "announcement_empty_subtitle": "أنشئ شرائح مع تواريخ لشاشة العرض.",
+  "announcement_delete_title": "حذف الإعلان؟",
+  "announcement_delete_body": "يُزال من القائمة. احفظ على الخادم للتطبيق.",
+  "announcement_save_bar_hint": "تعديلات محلية — اضغط حفظ للرفع.",
+  "announcement_dates_invalid": "تاريخ النهاية يجب أن يكون بعد أو يساوي تاريخ البداية.",
+
+  "miqat_ar": "مِيقَات صَلَاة",
+  "miqat_en": "MIQAT PRAYER TIMES",
+  "sign_out_tooltip": "تسجيل الخروج",
+  "remaining_label": "المتبقي",
+  "countdown_azan": "أذان",
+  "countdown_iqama": "إقامة",
+  "scan_qr_hint": "امسح للتفاصيل",
+  "mosque_blessing": "بارك الله في هذا المسجد",
+
+  "prayer_fajr": "فجر",
+  "prayer_sunrise": "شروق",
+  "prayer_dhuhr": "ظهر",
+  "prayer_asr": "عصر",
+  "prayer_maghrib": "مغرب",
+  "prayer_isha": "عشاء",
+  "prayer_jummah": "جمعة",
+
+  "prayer_fajr_ar": "فجر",
+  "prayer_fajr_en": "Fajr",
+  "prayer_sunrise_ar": "شروق",
+  "prayer_sunrise_en": "Sunrise",
+  "prayer_dhuhr_ar": "ظهر",
+  "prayer_dhuhr_en": "Dhuhr",
+  "prayer_asr_ar": "عصر",
+  "prayer_asr_en": "Asr",
+  "prayer_maghrib_ar": "مغرب",
+  "prayer_maghrib_en": "Maghrib",
+  "prayer_isha_ar": "عشاء",
+  "prayer_isha_en": "Isha",
+
+  "azan_label": "الأذان",
+  "iqama_label": "الإقامة",
+  "settings_language": "لغة التطبيق وشاشة العرض",
+  "design_prayer_overlay": "لون التغطية على بطاقات الصلاة (فوق SVG)",
+  "required_field": "مطلوب",
+  "minutes_suffix": "دقيقة",
+  "minutes_short": "د",
+
+  "display_error_no_mosque": "لا يوجد مسجد مرتبط بهذا الحساب.",
+  "display_ticker_hadith": "حديث",
+  "display_ticker_verse": "آية",
+  "display_ticker_dua": "دعاء",
+  "display_ticker_adhkar": "ذكر",
+  "display_ticker_platform": "إعلان نظام",
+  "display_ticker_mosque": "إعلان مسجد",
+
+  "display_next_prayer_title": "الصلاة القادمة",
+  "display_next_prayer_badge": "التالية",
+  "display_remaining_to_iqama_line": "متبقٍ لإقامة {prayer}",
+  "@display_remaining_to_iqama_line": {
+    "placeholders": {
+      "prayer": {}
+    }
+  },
+  "display_remaining_to_adhan_line": "متبقٍ لأذان {prayer}",
+  "@display_remaining_to_adhan_line": {
+    "placeholders": {
+      "prayer": {}
+    }
+  },
+  "display_countdown_label": "المتبقي",
+  "display_grace_iqama_subtitle": "اكتمل وقت الإقامة — انتقال للصلاة التالية",
+
+  "iqama_minutes_after_adhan": "الدقائق بعد الأذان",
+  "save_iqama_settings": "حفظ إعدادات الإقامة",
+  "save_design_settings": "حفظ إعدادات التصميم",
+  "save_general_settings": "حفظ الإعدادات العامة",
+  "design_base_font_size": "حجم الخط الأساسي",
+  "validation_font_size_range": "أدخل قيمة بين 8 و 96",
+  "mosque_name_label": "اسم المسجد",
+  "city_label": "المدينة",
+  "prayer_calculation_method": "طريقة احتساب أوقات الصلاة",
+  "latitude_coordinate": "خط العرض: {value}",
+  "@latitude_coordinate": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "longitude_coordinate": "خط الطول: {value}",
+  "@longitude_coordinate": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "splash_app_tagline": "شاشة مسجد ذكية",
+  "display_time_until_iqama_for": "الوقت المتبقي لإقامة {prayer}",
+  "@display_time_until_iqama_for": {
+    "placeholders": {
+      "prayer": {}
+    }
+  },
+  "display_time_until_adhan_for": "الوقت المتبقي لأذان {prayer}",
+  "@display_time_until_adhan_for": {
+    "placeholders": {
+      "prayer": {}
+    }
+  },
+  "prayer_fajr_tomorrow": "فجر (غداً)"
+}

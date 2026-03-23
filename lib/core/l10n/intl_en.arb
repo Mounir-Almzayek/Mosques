@@ -1,0 +1,236 @@
+{
+  "@@locale": "en",
+
+  "error_occurred": "Something went wrong",
+  "retry": "Retry",
+  "cancel": "Cancel",
+  "save": "Save",
+  "delete": "Delete",
+  "edit": "Edit",
+  "search": "Search",
+  "no_data": "No data",
+  "please_select": "Please select",
+  "select_date": "Select date",
+  "upload_image": "Upload image",
+  "gallery": "Gallery",
+  "camera": "Camera",
+
+  "bismillah": "In the name of Allah, the Most Gracious, the Most Merciful",
+  "login_title": "Sign in",
+  "login_subtitle": "Mosque management — control panel",
+  "email_label": "Email",
+  "email_hint": "example@domain.com",
+  "password_label": "Password",
+  "password_hint": "••••••••",
+  "login_button": "Sign in",
+  "tawakkul_quote": "«And whoever relies upon Allah — then He is sufficient for him»",
+  "validation_email_required": "Please enter your email",
+  "validation_email_invalid": "Invalid email format",
+  "validation_password_required": "Please enter your password",
+  "validation_password_short": "Password must be at least 6 characters",
+
+  "settings_title": "Mosque settings",
+  "sign_out": "Sign out",
+  "refresh": "Refresh",
+  "smart_screen_enabled": "Smart screen mode enabled",
+  "smart_screen_disabled": "Smart screen mode disabled",
+  "restart_action": "Restart",
+  "enable_smart_screen": "Enable smart screen",
+  "disable_smart_screen": "Disable smart screen",
+  "saving": "Saving…",
+  "saved_successfully": "Saved successfully",
+
+  "use_current_location": "Use current location",
+  "location_updated": "Coordinates updated from device location",
+  "location_permission_denied": "Location permission is required to set coordinates",
+  "location_unavailable": "Could not get current location",
+
+  "design_background_color": "Screen background color",
+  "design_display_background_image": "Display background image",
+  "design_bg_primary": "Primary",
+  "design_bg_style_1": "Style 1",
+  "design_bg_style_2": "Style 2",
+  "design_bg_style_3": "Style 3",
+  "design_bg_style_4": "Style 4",
+  "design_bg_style_5": "Style 5",
+  "design_bg_brand": "Logo",
+  "design_primary_color": "Primary color",
+  "design_secondary_color": "Secondary color",
+  "design_pick_color": "Pick color",
+
+  "tab_general": "General",
+  "tab_design": "Design",
+  "tab_iqama": "Iqama",
+  "tab_hadith": "Hadith",
+  "tab_verses": "Verses",
+  "tab_duas": "Supplications",
+  "tab_adhkar": "Dhikr",
+  "tab_announcements": "Announcements",
+
+  "settings_drawer_tagline": "Prayer times · display control",
+  "settings_navigate_sections": "Sections",
+
+  "hadith_fab_add": "New hadith",
+  "hadith_editor_title_new": "New hadith",
+  "hadith_editor_title_edit": "Edit hadith",
+  "hadith_narrator": "Narrator",
+  "hadith_text": "Text",
+  "hadith_source": "Source (optional)",
+  "hadith_empty_title": "No hadiths yet",
+  "hadith_empty_subtitle": "Add texts to rotate on the display screen.",
+  "hadith_delete_title": "Remove hadith?",
+  "hadith_delete_body": "This will remove it from the list. Save to server when you are ready.",
+  "hadith_save_bar_hint": "Changes are local until you sync with the server.",
+
+  "verse_fab_add": "New verse",
+  "verse_editor_title_new": "New verse",
+  "verse_editor_title_edit": "Edit verse",
+  "verse_narrator": "Context or surah",
+  "verse_text": "Verse text",
+  "verse_source": "Source (optional)",
+  "verse_empty_title": "No verses yet",
+  "verse_empty_subtitle": "Add verses to rotate below the prayer times on the display.",
+  "verse_delete_title": "Remove verse?",
+  "verse_delete_body": "This will remove it from the list. Save to server when you are ready.",
+  "verse_save_bar_hint": "Changes are local until you sync with the server.",
+
+  "dua_fab_add": "New supplication",
+  "dua_editor_title_new": "New supplication",
+  "dua_editor_title_edit": "Edit supplication",
+  "dua_narrator": "Title or context",
+  "dua_text": "Text",
+  "dua_source": "Source (optional)",
+  "dua_empty_title": "No supplications yet",
+  "dua_empty_subtitle": "Add supplications to rotate below the prayer times on the display.",
+  "dua_delete_title": "Remove supplication?",
+  "dua_delete_body": "This will remove it from the list. Save to server when you are ready.",
+  "dua_save_bar_hint": "Changes are local until you sync with the server.",
+
+  "adhkar_fab_add": "New dhikr",
+  "adhkar_editor_title_new": "New dhikr",
+  "adhkar_editor_title_edit": "Edit dhikr",
+  "adhkar_narrator": "Time or context",
+  "adhkar_text": "Text",
+  "adhkar_source": "Note (optional)",
+  "adhkar_empty_title": "No dhikr yet",
+  "adhkar_empty_subtitle": "Add adhkar to rotate below the prayer times on the display.",
+  "adhkar_delete_title": "Remove dhikr?",
+  "adhkar_delete_body": "This will remove it from the list. Save to server when you are ready.",
+  "adhkar_save_bar_hint": "Changes are local until you sync with the server.",
+
+  "announcement_fab_add": "New announcement",
+  "announcement_editor_new": "New announcement",
+  "announcement_editor_edit": "Edit announcement",
+  "announcement_field_title": "Title",
+  "announcement_field_subtitle": "Subtitle",
+  "announcement_field_qr": "Link or text for QR",
+  "announcement_period": "Display period",
+  "announcement_status_active": "Showing now",
+  "announcement_status_upcoming": "Scheduled",
+  "announcement_status_ended": "Ended",
+  "announcement_empty_title": "No announcements",
+  "announcement_empty_subtitle": "Create slides with dates for the display screen.",
+  "announcement_delete_title": "Remove announcement?",
+  "announcement_delete_body": "It will be removed from the list. Sync with the server to apply.",
+  "announcement_save_bar_hint": "Local changes — tap save to upload.",
+  "announcement_dates_invalid": "End date must be on or after the start date.",
+
+  "miqat_ar": "Prayer times",
+  "miqat_en": "MIQAT PRAYER TIMES",
+  "sign_out_tooltip": "Sign out",
+  "remaining_label": "Remaining",
+  "countdown_azan": "Azan",
+  "countdown_iqama": "Iqama",
+  "scan_qr_hint": "Scan for details",
+  "mosque_blessing": "May Allah bless this Mosque",
+
+  "prayer_fajr": "Fajr",
+  "prayer_sunrise": "Sunrise",
+  "prayer_dhuhr": "Dhuhr",
+  "prayer_asr": "Asr",
+  "prayer_maghrib": "Maghrib",
+  "prayer_isha": "Isha",
+  "prayer_jummah": "Jumuah",
+
+  "prayer_fajr_ar": "فجر",
+  "prayer_fajr_en": "Fajr",
+  "prayer_sunrise_ar": "شروق",
+  "prayer_sunrise_en": "Sunrise",
+  "prayer_dhuhr_ar": "ظهر",
+  "prayer_dhuhr_en": "Dhuhr",
+  "prayer_asr_ar": "عصر",
+  "prayer_asr_en": "Asr",
+  "prayer_maghrib_ar": "مغرب",
+  "prayer_maghrib_en": "Maghrib",
+  "prayer_isha_ar": "عشاء",
+  "prayer_isha_en": "Isha",
+
+  "azan_label": "Azan",
+  "iqama_label": "Iqama",
+  "settings_language": "App language",
+  "design_prayer_overlay": "Prayer cards overlay (on SVG backgrounds)",
+  "required_field": "Required",
+  "minutes_suffix": "mins",
+  "minutes_short": "m",
+
+  "display_error_no_mosque": "No active mosque linked to this account.",
+  "display_ticker_hadith": "Hadith",
+  "display_ticker_verse": "Verse",
+  "display_ticker_dua": "Dua",
+  "display_ticker_adhkar": "Dhikr",
+  "display_ticker_platform": "System ad",
+  "display_ticker_mosque": "Mosque ad",
+
+  "display_next_prayer_title": "Next prayer",
+  "display_next_prayer_badge": "Up next",
+  "display_remaining_to_iqama_line": "Remaining to iqama — {prayer}",
+  "@display_remaining_to_iqama_line": {
+    "placeholders": {
+      "prayer": {}
+    }
+  },
+  "display_remaining_to_adhan_line": "Remaining to adhan — {prayer}",
+  "@display_remaining_to_adhan_line": {
+    "placeholders": {
+      "prayer": {}
+    }
+  },
+  "display_countdown_label": "Remaining",
+  "display_grace_iqama_subtitle": "Iqama time ended — moving to next prayer",
+
+  "iqama_minutes_after_adhan": "Minutes after adhan",
+  "save_iqama_settings": "Save iqama settings",
+  "save_design_settings": "Save design settings",
+  "save_general_settings": "Save general settings",
+  "design_base_font_size": "Base font size",
+  "validation_font_size_range": "Enter a value between 8 and 96",
+  "mosque_name_label": "Mosque name",
+  "city_label": "City",
+  "prayer_calculation_method": "Prayer calculation method",
+  "latitude_coordinate": "Latitude: {value}",
+  "@latitude_coordinate": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "longitude_coordinate": "Longitude: {value}",
+  "@longitude_coordinate": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "splash_app_tagline": "Mosque Smart Display",
+  "display_time_until_iqama_for": "Time until iqama for {prayer}",
+  "@display_time_until_iqama_for": {
+    "placeholders": {
+      "prayer": {}
+    }
+  },
+  "display_time_until_adhan_for": "Time until adhan for {prayer}",
+  "@display_time_until_adhan_for": {
+    "placeholders": {
+      "prayer": {}
+    }
+  },
+  "prayer_fajr_tomorrow": "Fajr (tomorrow)"
+}

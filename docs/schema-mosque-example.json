@@ -1,0 +1,51 @@
+{
+  "name": "مسجد النور",
+  "logo_url": "https://example.com/logo.png",
+  "city": "Damascus",
+  "latitude": 36.2021,
+  "longitude": 37.1343,
+  "calculation_method": "umm_al_qura",
+
+  "iqama_offsets": {
+    "fajr": 20,
+    "dhuhr": 15,
+    "asr": 15,
+    "maghrib": 10,
+    "isha": 15
+  },
+
+  "design_settings": {
+    "background_type": "image",
+    "background_value": "https://example.com/bg.jpg",
+    "primary_color": "#1E3A8A",
+    "secondary_color": "#FACC15",
+    "font_family": "Amiri",
+    "font_size": 18,
+    "updated_at": "2026-03-13T08:23:00Z"
+  },
+
+  "hadiths": [
+    {
+      "narrator": "أبو هريرة",
+      "text": "خيركم من تعلم القرآن وعلمه",
+      "source": "صحيح البخاري",
+      "display_order": 1,
+      "duration_seconds": 20,
+      "updated_at": "2026-03-13T08:10:00Z"
+    }
+  ],
+
+  "mosque_ads": [
+    {
+      "title": "درس تحفيظ القرآن",
+      "start_date": "2026-03-14",
+      "end_date": "2026-03-20",
+      "qr_content": "https://example.com/lesson?id=001",
+      "image_url": null,
+      "updated_at": "2026-03-13T08:00:00Z"
+    }
+  ],
+
+  "updated_at": "2026-03-13T08:23:00Z",
+  "last_seen": "2026-03-13T08:30:00Z"
+}

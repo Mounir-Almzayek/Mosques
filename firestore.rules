@@ -1,0 +1,64 @@
+rules_version = '2';
+
+// Firestore security rules — mosques app
+// Deploy:  firebase deploy --only firestore:rules,firestore:indexes
+// Requires: npm i -g firebase-tools && firebase login
+//
+// Data model:
+// - users/{uid}           → field active_mosque_id (links to mosques collection)
+// - mosques/{mosqueId}    → mosque document (app read/write when active_mosque_id matches)
+// - platform_announcements/{id} → read-only from mobile; managed via Console or Admin SDK
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function userPath(uid) {
+      return /databases/$(database)/documents/users/$(uid);
+    }
+
+    // `get()` returns a Resource — use exists(path), not resource.exists (invalid here).
+    // Compare as strings so Console number typos still match mosque doc IDs.
+    function userActiveMosqueIdString() {
+      let p = userPath(request.auth.uid);
+      return exists(p) && get(p).data.active_mosque_id != null
+        ? string(get(p).data.active_mosque_id)
+        : '';
+    }
+
+    function canAccessMosque(mosqueId) {
+      return isSignedIn()
+        && exists(userPath(request.auth.uid))
+        && userActiveMosqueIdString() == string(mosqueId);
+    }
+
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId);
+      allow delete: if isOwner(userId);
+    }
+
+    match /mosques/{mosqueId} {
+      allow read: if canAccessMosque(mosqueId);
+      allow create, update: if canAccessMosque(mosqueId);
+      allow delete: if canAccessMosque(mosqueId);
+    }
+
+    // Platform-wide announcements — not writable from mobile clients
+    match /platform_announcements/{docId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

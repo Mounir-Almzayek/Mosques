@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- بانر قناة التلفاز (يُفضّل استبداله بصورة 320×180 بكسل للمتجر). -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#1B5E20" />
+        </shape>
+    </item>
+</layer-list>
