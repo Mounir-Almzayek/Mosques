@@ -57,20 +57,22 @@ flutter {
     source = "../.."
 }
 
-// play:core and play:core-common both ship overlapping classes; excluding only from app
-// classpaths used to merge dependencies avoids duplicate classes without breaking
-// :app:l8DexDesugarLibRelease (global configurations.configureEach { exclude } did).
-configurations.configureEach {
-    val n = name.lowercase()
-    if (n.contains("desugar") || n.contains("l8") || n.contains("corelibrarydesugaring")) {
-        return@configureEach
-    }
+// Deduplicate play:core vs play:core-common. Use exact configuration names only — broader
+// patterns (e.g. *ReleaseRuntimeClasspath) can match internal Gradle configs and break L8 under
+// Shorebird's Flutter toolchain ("No source specified" / :app:l8DexDesugarLibRelease).
+configurations.matching {
+    it.name == "releaseRuntimeClasspath" || it.name == "debugRuntimeClasspath"
+}.configureEach {
     exclude(group = "com.google.android.play", module = "core-common")
 }
 
 dependencies {
     // Required by flutter_local_notifications (Java 8+ APIs on older minSdk).
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
-    // Needed by Flutter Play Store split/deferred-components classes referenced at release shrink time.
-    implementation("com.google.android.play:core:1.10.3")
+    // Referenced by Flutter embedding (deferred components / Play split). R8 needs these classes.
+    // Exclude only the transitive core-common here — do not use configurations.configureEach {
+    // exclude(...) } (breaks :app:l8DexDesugarLibRelease under Shorebird).
+    implementation("com.google.android.play:core:1.10.3") {
+        exclude(group = "com.google.android.play", module = "core-common")
+    }
 }
