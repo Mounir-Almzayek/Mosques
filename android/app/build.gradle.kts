@@ -57,12 +57,19 @@ flutter {
     source = "../.."
 }
 
+// play:core and play:core-common both ship overlapping classes; excluding only from app
+// classpaths used to merge dependencies avoids duplicate classes without breaking
+// :app:l8DexDesugarLibRelease (global configurations.configureEach { exclude } did).
 configurations.configureEach {
+    val n = name.lowercase()
+    if (n.contains("desugar") || n.contains("l8") || n.contains("corelibrarydesugaring")) {
+        return@configureEach
+    }
     exclude(group = "com.google.android.play", module = "core-common")
 }
 
 dependencies {
-    // Required by flutter_local_notifications (Java 8+ APIs on older minSdk)
+    // Required by flutter_local_notifications (Java 8+ APIs on older minSdk).
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
     // Needed by Flutter Play Store split/deferred-components classes referenced at release shrink time.
     implementation("com.google.android.play:core:1.10.3")
