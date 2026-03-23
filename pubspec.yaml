@@ -111,8 +111,8 @@ flutter:
 
   assets:
     - assets/
-    # Subfolders must be listed explicitly (assets/ alone does not bundle nested dirs).
     - assets/display_backgrounds/
+    - shorebird.yaml
 
   # أسماء الملفات من حزمة Google Fonts Beiruti (انظر assets/Beiruti/README.txt)
   fonts:
