@@ -205,7 +205,10 @@ class _DisplayBeigeAreaState extends State<DisplayBeigeArea> {
                               final timeDisplaySize =
                                   timeSize * (1.0 + 0.14 * compactFactor);
 
-                              final cardColumn = Column(
+                              // Main block only — must not sit in the same [FittedBox] as
+                              // [PrayerCardNextStrip], or the strip's height makes the
+                              // whole card scale down and shrinks icon/text (next-prayer card).
+                              final mainColumn = Column(
                                 mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -254,40 +257,50 @@ class _DisplayBeigeAreaState extends State<DisplayBeigeArea> {
                                           .primaryColorValue,
                                     ),
                                   ),
-                                  if (isFocusCard) ...[
-                                    SizedBox(
-                                      height: math.min(
-                                        8 * compactFactor,
-                                        maxH * 0.05,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: math.min(
-                                        math.max(24.0, maxH * 0.38),
-                                        maxH * 0.5,
-                                      ),
-                                      child: PrayerCardNextStrip(
-                                        phase: phase,
-                                        remaining: remaining,
-                                        designSettings: widget.designSettings,
-                                        baseFontSize:
-                                            widget.baseFontSize * compactFactor,
-                                        graceOpacityAnimation: graceAnim,
-                                      ),
-                                    ),
-                                  ],
                                 ],
                               );
 
+                              final padded = EdgeInsets.symmetric(
+                                vertical: verticalPad,
+                                horizontal: 5,
+                              );
+
+                              if (isFocusCard) {
+                                return Padding(
+                                  padding: padded,
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                        flex: 62,
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          alignment: Alignment.center,
+                                          child: mainColumn,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 38,
+                                        child: PrayerCardNextStrip(
+                                          phase: phase,
+                                          remaining: remaining,
+                                          designSettings:
+                                              widget.designSettings,
+                                          baseFontSize: widget.baseFontSize *
+                                              compactFactor,
+                                          graceOpacityAnimation: graceAnim,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+
                               return Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: verticalPad,
-                                  horizontal: 5,
-                                ),
+                                padding: padded,
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
                                   alignment: Alignment.center,
-                                  child: cardColumn,
+                                  child: mainColumn,
                                 ),
                               );
                             },

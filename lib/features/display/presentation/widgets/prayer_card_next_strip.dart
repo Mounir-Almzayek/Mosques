@@ -47,6 +47,14 @@ class PrayerCardNextStrip extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
+        // [FittedBox] with [BoxFit.scaleDown] lays out its child with unbounded
+        // constraints; [Column] + [CrossAxisAlignment.stretch] then hits
+        // "BoxConstraints forces an infinite width". Use a finite width when
+        // only the height is bounded (e.g. [SizedBox] height under FittedBox).
+        final maxW = constraints.maxWidth.isFinite
+            ? constraints.maxWidth
+            : (constraints.maxHeight * 4.0).clamp(120.0, 800.0);
+
         final compact = (constraints.maxHeight / 96.0).clamp(0.66, 1.0);
         final dividerHeight = 14.0 * compact;
         final topGap = 3.0 * compact;
@@ -56,10 +64,12 @@ class PrayerCardNextStrip extends StatelessWidget {
         final enFont = (baseFontSize * 0.78 * compact).clamp(8.0, 16.0);
         final showEnglish = constraints.maxHeight >= 74;
 
-        return Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
+        return SizedBox(
+          width: maxW,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
             Divider(
               height: dividerHeight,
               thickness: 1,
@@ -112,6 +122,7 @@ class PrayerCardNextStrip extends StatelessWidget {
                 ),
               ),
           ],
+          ),
         );
       },
     );

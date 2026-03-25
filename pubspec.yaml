@@ -71,7 +71,7 @@ dependencies:
   image_cropper: ^11.0.0
   geolocator: ^13.0.4
   flutter_colorpicker: ^1.1.0
-  wakelock_plus: ^1.2.8
+  wakelock_plus: ^1.5.1
 
 dev_dependencies:
   flutter_test:
