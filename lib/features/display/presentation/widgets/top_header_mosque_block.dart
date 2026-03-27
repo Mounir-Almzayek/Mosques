@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../../../core/enums/app_numeral_format.dart';
+import '../../../../core/utils/app_number_format.dart';
+import '../../../../core/utils/app_font_loader.dart';
 
 class TopHeaderMosqueBlock extends StatelessWidget {
   final String mosqueName;
@@ -6,6 +9,8 @@ class TopHeaderMosqueBlock extends StatelessWidget {
   final Color textColor;
   final bool isRtl;
   final double base;
+  final AppNumeralFormat numeralFormat;
+  final String fontFamily;
 
   const TopHeaderMosqueBlock({
     super.key,
@@ -14,6 +19,8 @@ class TopHeaderMosqueBlock extends StatelessWidget {
     required this.textColor,
     required this.isRtl,
     required this.base,
+    required this.numeralFormat,
+    required this.fontFamily,
   });
 
   @override
@@ -27,12 +34,15 @@ class TopHeaderMosqueBlock extends StatelessWidget {
     );
     final cityText = Flexible(
       child: Text(
-        cityName,
+        cityName.formatNumerals(numeralFormat),
         textAlign: textAlign,
-        style: TextStyle(
-          fontSize: base * 0.95,
-          color: textColor.withValues(alpha: 0.82),
-          height: 1.3,
+        style: AppFontLoader.getStyle(
+          fontFamily,
+          baseStyle: TextStyle(
+            fontSize: base * 0.95,
+            color: textColor.withValues(alpha: 0.82),
+            height: 1.3,
+          ),
         ),
       ),
     );
@@ -42,13 +52,16 @@ class TopHeaderMosqueBlock extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          mosqueName,
+          mosqueName.formatNumerals(numeralFormat),
           textAlign: textAlign,
-          style: TextStyle(
-            fontSize: base * 1.35,
-            fontWeight: FontWeight.bold,
-            color: textColor,
-            height: 1.15,
+          style: AppFontLoader.getStyle(
+            fontFamily,
+            baseStyle: TextStyle(
+              fontSize: base * 1.35,
+              fontWeight: FontWeight.bold,
+              color: textColor,
+              height: 1.15,
+            ),
           ),
         ),
         const SizedBox(height: 6),

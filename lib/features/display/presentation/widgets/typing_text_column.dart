@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/app_number_format.dart';
+import '../../../../core/utils/app_font_loader.dart';
 import '../../../../data/models/design_settings_model.dart';
 import '../../../../data/models/mosque_text_entry_model.dart';
 
@@ -200,25 +201,36 @@ class _TypingTextColumnState extends State<TypingTextColumn> {
   @override
   Widget build(BuildContext context) {
     final p = widget.primaryColor;
-    final ctxStyle = TextStyle(
-      color: p.withValues(alpha: 0.78),
-      fontWeight: FontWeight.w600,
-      fontSize: widget.contextFs,
-      height: 1.35,
+    final fontFamily = widget.design.fontFamily;
+
+    final ctxStyle = AppFontLoader.getStyle(
+      fontFamily,
+      baseStyle: TextStyle(
+        color: p.withValues(alpha: 0.78),
+        fontWeight: FontWeight.w600,
+        fontSize: widget.contextFs,
+        height: 1.35,
+      ),
     );
-    final bodyStyle = TextStyle(
-      color: p.withValues(alpha: 0.96),
-      fontWeight: FontWeight.w700,
-      fontSize: widget.bodyFs,
-      height: 1.5, // Balanced height
-      letterSpacing: 0.12,
+    final bodyStyle = AppFontLoader.getStyle(
+      fontFamily,
+      baseStyle: TextStyle(
+        color: p.withValues(alpha: 0.96),
+        fontWeight: FontWeight.w700,
+        fontSize: widget.bodyFs,
+        height: 1.5, // Balanced height
+        letterSpacing: 0.12,
+      ),
     );
-    final srcStyle = TextStyle(
-      color: p.withValues(alpha: 0.58),
-      fontWeight: FontWeight.w500,
-      fontSize: widget.sourceFs,
-      fontStyle: FontStyle.italic,
-      height: 1.35,
+    final srcStyle = AppFontLoader.getStyle(
+      fontFamily,
+      baseStyle: TextStyle(
+        color: p.withValues(alpha: 0.58),
+        fontWeight: FontWeight.w500,
+        fontSize: widget.sourceFs,
+        fontStyle: FontStyle.italic,
+        height: 1.35,
+      ),
     );
 
     final showN = _nMax > 0;
@@ -244,7 +256,7 @@ class _TypingTextColumnState extends State<TypingTextColumn> {
             visible: _tLen,
             style: bodyStyle,
             caretHere: _stage == 1,
-            maxLines: 3, // Slightly reduced from 12
+            maxLines: 2,
           ),
         if (showS) ...[
           const SizedBox(height: 10),

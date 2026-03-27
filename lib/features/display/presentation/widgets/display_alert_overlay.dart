@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../../../core/enums/app_numeral_format.dart';
+import '../../../../core/utils/app_number_format.dart';
+import '../../../../core/utils/app_font_loader.dart';
 import '../../../../data/models/announcement_model.dart';
 
 /// Full-screen priority alert overlay.
@@ -8,12 +11,16 @@ class DisplayAlertOverlay extends StatefulWidget {
   final List<AnnouncementModel> alerts;
   final Color primaryColor;
   final Color backgroundColor;
+  final AppNumeralFormat numeralFormat;
+  final String fontFamily;
 
   const DisplayAlertOverlay({
     super.key,
     required this.alerts,
     required this.primaryColor,
     required this.backgroundColor,
+    required this.numeralFormat,
+    required this.fontFamily,
   });
 
   @override
@@ -71,6 +78,9 @@ class _DisplayAlertOverlayState extends State<DisplayAlertOverlay> {
     final alert = _currentAlert;
     if (alert == null) return const SizedBox.shrink();
 
+    final title = alert.title.formatNumerals(widget.numeralFormat);
+    final subtitle = alert.subtitle?.formatNumerals(widget.numeralFormat);
+
     return Container(
       color: widget.backgroundColor,
       width: double.infinity,
@@ -87,22 +97,28 @@ class _DisplayAlertOverlayState extends State<DisplayAlertOverlay> {
             ),
             const SizedBox(height: 32),
             Text(
-              alert.title,
+              title,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 64,
-                fontWeight: FontWeight.bold,
-                color: widget.primaryColor,
+              style: AppFontLoader.getStyle(
+                widget.fontFamily,
+                baseStyle: TextStyle(
+                  fontSize: 64,
+                  fontWeight: FontWeight.bold,
+                  color: widget.primaryColor,
+                ),
               ),
             ),
-            if (alert.subtitle != null && alert.subtitle!.isNotEmpty) ...[
+            if (subtitle != null && subtitle.isNotEmpty) ...[
               const SizedBox(height: 24),
               Text(
-                alert.subtitle!,
+                subtitle,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 32,
-                  color: widget.primaryColor.withOpacity(0.8),
+                style: AppFontLoader.getStyle(
+                  widget.fontFamily,
+                  baseStyle: TextStyle(
+                    fontSize: 32,
+                    color: widget.primaryColor.withOpacity(0.8),
+                  ),
                 ),
               ),
             ],

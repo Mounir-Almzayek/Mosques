@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import '../../../../core/utils/app_font_loader.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/utils/app_number_format.dart';
@@ -106,18 +107,25 @@ class _MosqueClockWidgetState extends State<MosqueClockWidget> {
   @override
   Widget build(BuildContext context) {
     final numeralFormat = widget.mosque.designSettings.numeralFormat;
+    final fontFamily = widget.mosque.designSettings.fontFamily;
     final clock = AppTimeFormat.clockParts12h(context, _now);
-    
+
     // Apply numerical formatting to time strings.
     final hourMinute = clock.hourMinute.formatNumerals(numeralFormat);
-    final secondsAndPeriod = clock.secondsAndPeriod.formatNumerals(numeralFormat);
-    final countdownStr = PrayerTimesHelper.formatDuration(_countdown).formatNumerals(numeralFormat);
-    
+    final seconds = clock.seconds.formatNumerals(numeralFormat);
+    final period = ' ${clock.period}'.formatNumerals(numeralFormat);
+    final secondsAndPeriodStr = '$seconds$period';
+    final countdownStr = PrayerTimesHelper.formatDuration(
+      _countdown,
+    ).formatNumerals(numeralFormat);
+
     final prayerName = _localizedPrayerName(context, _nextEvent.prayerName);
     final s = S.of(context);
-    final countdownTitle = _nextEvent.isIqama
-        ? s.display_time_until_iqama_for(prayerName)
-        : s.display_time_until_adhan_for(prayerName);
+    final countdownTitle =
+        (_nextEvent.isIqama
+                ? s.display_time_until_iqama_for(prayerName)
+                : s.display_time_until_adhan_for(prayerName))
+            .formatNumerals(numeralFormat);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -129,19 +137,25 @@ class _MosqueClockWidgetState extends State<MosqueClockWidget> {
           children: [
             Text(
               hourMinute,
-              style: TextStyle(
-                fontSize: 140,
-                fontWeight: FontWeight.bold,
-                color: widget.primaryColor,
-                height: 1.0,
+              style: AppFontLoader.getStyle(
+                fontFamily,
+                baseStyle: TextStyle(
+                  fontSize: 140,
+                  fontWeight: FontWeight.bold,
+                  color: widget.primaryColor,
+                  height: 1.0,
+                ),
               ),
             ),
             Text(
-              secondsAndPeriod,
-              style: TextStyle(
-                fontSize: 48,
-                fontWeight: FontWeight.w300,
-                color: widget.primaryColor.withOpacityCompat(0.7),
+              secondsAndPeriodStr,
+              style: AppFontLoader.getStyle(
+                fontFamily,
+                baseStyle: TextStyle(
+                  fontSize: 48,
+                  fontWeight: FontWeight.w300,
+                  color: widget.primaryColor.withOpacityCompat(0.7),
+                ),
               ),
             ),
           ],
@@ -165,20 +179,26 @@ class _MosqueClockWidgetState extends State<MosqueClockWidget> {
             children: [
               Text(
                 countdownTitle,
-                style: TextStyle(
-                  fontSize: 24,
-                  letterSpacing: 2.0,
-                  color: widget.primaryColor,
-                  fontWeight: FontWeight.w500,
+                style: AppFontLoader.getStyle(
+                  fontFamily,
+                  baseStyle: TextStyle(
+                    fontSize: 24,
+                    letterSpacing: 2.0,
+                    color: widget.primaryColor,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
               Text(
                 countdownStr,
-                style: TextStyle(
-                  fontSize: 84,
-                  fontWeight: FontWeight.bold,
-                  color: widget.primaryColor,
+                style: AppFontLoader.getStyle(
+                  fontFamily,
+                  baseStyle: TextStyle(
+                    fontSize: 84,
+                    fontWeight: FontWeight.bold,
+                    color: widget.primaryColor,
+                  ),
                 ),
               ),
             ],

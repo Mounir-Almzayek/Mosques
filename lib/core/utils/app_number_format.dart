@@ -9,11 +9,17 @@ abstract final class AppNumberFormat {
 
   /// Formats a string (usually a number or time) using the specified numeral format.
   static String format(String input, AppNumeralFormat format) {
-    if (format == AppNumeralFormat.english) return input;
-
     var output = input;
-    for (var i = 0; i < 10; i++) {
-      output = output.replaceAll(_en[i], _ar[i]);
+    if (format == AppNumeralFormat.arabic) {
+      // Force Arabic Numerals
+      for (var i = 0; i < 10; i++) {
+        output = output.replaceAll(_en[i], _ar[i]);
+      }
+    } else {
+      // Force English Numerals
+      for (var i = 0; i < 10; i++) {
+        output = output.replaceAll(_ar[i], _en[i]);
+      }
     }
     return output;
   }

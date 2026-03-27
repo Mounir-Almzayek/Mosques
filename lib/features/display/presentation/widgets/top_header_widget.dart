@@ -70,7 +70,7 @@ class _TopHeaderWidgetState extends State<TopHeaderWidget> {
         '${h.hDay} ${h.getLongMonthName()} ${h.hYear} $hijriSuffix'
             .formatNumerals(numeralFormat);
 
-    final secondary = widget.designSettings.secondaryColorValue;
+    final headerColor = widget.designSettings.primaryColorValue;
     // Scale up header typography relative to design base (full upper section reads larger).
     final baseRaw = widget.designSettings.baseFontSize * 1.28;
 
@@ -89,9 +89,11 @@ class _TopHeaderWidgetState extends State<TopHeaderWidget> {
                 child: TopHeaderMosqueBlock(
                   mosqueName: widget.mosque.name,
                   cityName: widget.mosque.city,
-                  textColor: secondary,
+                  textColor: headerColor,
                   isRtl: isRtl,
                   base: base,
+                  numeralFormat: numeralFormat,
+                  fontFamily: widget.designSettings.fontFamily,
                 ),
               ),
             ),
@@ -101,9 +103,10 @@ class _TopHeaderWidgetState extends State<TopHeaderWidget> {
               ),
               child: TopHeaderClockBlock(
                 now: _now,
-                textColor: secondary,
+                textColor: headerColor,
                 base: base,
                 numeralFormat: numeralFormat,
+                fontFamily: widget.designSettings.fontFamily,
               ),
             ),
             Expanded(
@@ -113,9 +116,10 @@ class _TopHeaderWidgetState extends State<TopHeaderWidget> {
                   weekday: weekday,
                   gregorianLong: gregorianLong,
                   hijriLine: hijriLine,
-                  textColor: secondary,
+                  textColor: headerColor,
                   isRtl: isRtl,
                   base: base,
+                  fontFamily: widget.designSettings.fontFamily,
                 ),
               ),
             ),

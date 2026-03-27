@@ -34,6 +34,8 @@ String _displayBackgroundLabel(DisplayBackgroundPreset p, S s) {
       return s.design_bg_style_9;
     case DisplayBackgroundPreset.mosqueDisplay10:
       return s.design_bg_style_10;
+    case DisplayBackgroundPreset.mosqueDisplay11:
+      return s.design_bg_style_11;
   }
 }
 
@@ -228,10 +230,33 @@ class _DesignSectionState extends State<DesignSection> {
           const SizedBox(height: 16),
           _colorRow(
             s: s,
+            label: s.design_active_card_color,
+            hex: d.activeCardColor,
+            onApply: (h) => bloc.add(SettingsDesignActiveCardColorChanged(h)),
+          ),
+          const SizedBox(height: 8),
+          _colorRow(
+            s: s,
+            label: s.design_active_card_text_color,
+            hex: d.activeCardTextColor,
+            onApply: (h) =>
+                bloc.add(SettingsDesignActiveCardTextColorChanged(h)),
+          ),
+          const SizedBox(height: 16),
+          _colorRow(
+            s: s,
             label: s.design_prayer_overlay,
             hex: d.prayerOverlayColor,
             onApply: (h) => bloc.add(SettingsDesignPrayerOverlayChanged(h)),
             includeAlpha: true,
+          ),
+          const SizedBox(height: 8),
+          _colorRow(
+            s: s,
+            label: s.design_inactive_card_text_color,
+            hex: d.inactiveCardTextColor,
+            onApply: (h) =>
+                bloc.add(SettingsDesignInactiveCardTextColorChanged(h)),
           ),
           const Divider(height: 32),
           Text(
@@ -287,12 +312,16 @@ class _DesignSectionState extends State<DesignSection> {
             value: d.numeralFormat,
             decoration: InputDecoration(labelText: s.design_numeral_format),
             items: AppNumeralFormat.values
-                .map((f) => DropdownMenuItem(
-                      value: f,
-                      child: Text(f == AppNumeralFormat.arabic
+                .map(
+                  (f) => DropdownMenuItem(
+                    value: f,
+                    child: Text(
+                      f == AppNumeralFormat.arabic
                           ? s.design_numeral_arabic
-                          : s.design_numeral_english),
-                    ))
+                          : s.design_numeral_english,
+                    ),
+                  ),
+                )
                 .toList(),
             onChanged: (val) {
               if (val != null) {

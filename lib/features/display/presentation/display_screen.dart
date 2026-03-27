@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/styles/app_theme.dart';
+import '../../../core/widgets/optimized_image.dart';
 import '../../../core/enums/display_background_preset.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/routes/app_routes.dart';
-import '../../../core/utils/app_font_loader.dart';
-import '../../../data/models/mosque_model.dart';
 import '../bloc/display_bloc.dart';
 import 'widgets/display_alert_overlay.dart';
 import 'widgets/display_background_image.dart';
 import 'widgets/display_beige_area.dart';
 import 'widgets/display_ticker_bar.dart';
 import 'widgets/top_header_widget.dart';
-import '../../../core/widgets/optimized_image.dart';
 
 class DisplayScreen extends StatefulWidget {
   const DisplayScreen({super.key});
@@ -35,8 +34,6 @@ class _DisplayScreenState extends State<DisplayScreen> {
   }
 
   void _precacheBackgrounds() {
-    // We only precache the CURRENT background with optimized resolution.
-    // Precaching all 11 full-res backgrounds caused massive memory spikes (~700MB+).
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final state = context.read<DisplayBloc>().state;
@@ -44,9 +41,10 @@ class _DisplayScreenState extends State<DisplayScreen> {
         final path = DisplayBackgroundPreset.fromStorageId(
           state.mosque.designSettings.backgroundValue,
         ).assetPath;
-        
+
         final media = MediaQuery.of(context);
-        final physicalWidth = (media.size.width * media.devicePixelRatio).round();
+        final physicalWidth = (media.size.width * media.devicePixelRatio)
+            .round();
         final cappedWidth = physicalWidth > 1920 ? 1920 : physicalWidth;
 
         precacheOptimizedAsset(context, path, cacheWidth: cappedWidth);
@@ -79,10 +77,13 @@ class _DisplayScreenState extends State<DisplayScreen> {
           if (state is DisplayLoaded) {
             final mosque = state.mosque;
             final platformAds = state.platformAnnouncements;
-            final DesignSettingsModel design = mosque.designSettings;
-            
-            // Dynamic theme based on font family setting.
-            final theme = AppFontLoader.getTheme(design.fontFamily);
+            final design = mosque.designSettings;
+
+            // Centralized theme lookup with dynamic font support.
+            final theme = AppTheme.light(
+              context,
+              fontFamily: design.fontFamily,
+            );
             final baseFontSize = design.baseFontSize;
 
             final media = MediaQuery.sizeOf(context);
@@ -91,87 +92,93 @@ class _DisplayScreenState extends State<DisplayScreen> {
 
             return Theme(
               data: theme,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  // 1. Background Image
-                  Positioned.fill(
-                    child: DisplayBackgroundImage(
-                      fallbackColor: design.primaryColorValue,
-                      backgroundPresetId: design.backgroundValue,
+              child: Builder(
+                builder: (context) => Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    // 1. Background Image
+                    Positioned.fill(
+                      child: DisplayBackgroundImage(
+                        fallbackColor: design.primaryColorValue,
+                        backgroundPresetId: design.backgroundValue,
+                      ),
                     ),
-                  ),
 
-                  // 2. Main Content
-                  Positioned.fill(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Expanded(
-                          child: SafeArea(
-                            bottom: false,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: padH,
-                                    vertical: padV,
+                    // 2. Main Content
+                    Positioned.fill(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(
+                            child: SafeArea(
+                              bottom: false,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: padH,
+                                      vertical: padV,
+                                    ),
+                                    child: TopHeaderWidget(
+                                      mosque: mosque,
+                                      designSettings: design,
+                                    ),
                                   ),
-                                  child: TopHeaderWidget(
-                                    mosque: mosque,
-                                    designSettings: design,
+                                  Expanded(
+                                    child: DisplayBeigeArea(
+                                      mosque: mosque,
+                                      platformAnnouncements: platformAds,
+                                      designSettings: design,
+                                      baseFontSize: baseFontSize,
+                                    ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: DisplayBeigeArea(
-                                    mosque: mosque,
-                                    platformAnnouncements: platformAds,
-                                    designSettings: design,
-                                    baseFontSize: baseFontSize,
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        SafeArea(
-                          top: false,
-                          minimum: EdgeInsets.zero,
-                          child: DisplayTickerBar(
-                            mosque: mosque,
-                            platformAnnouncements: platformAds,
-                            primaryColor: design.primaryColorValue,
-                            baseFontSize: baseFontSize,
+                          SafeArea(
+                            top: false,
+                            minimum: EdgeInsets.zero,
+                            child: DisplayTickerBar(
+                              mosque: mosque,
+                              platformAnnouncements: platformAds,
+                              primaryColor: design.secondaryColorValue,
+                              baseFontSize: baseFontSize,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // 3. High-Priority Alert Overlay
-                  Positioned.fill(
-                    child: DisplayAlertOverlay(
-                      alerts: mosque.activeAlerts,
-                      primaryColor: design.primaryColorValue,
-                      backgroundColor: design.secondaryColorValue.withOpacity(0.98),
-                    ),
-                  ),
-
-                  // 4. Hidden Settings Shortcut
-                  Positioned(
-                    top: 10,
-                    right: 10,
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.settings,
-                        color: Colors.transparent,
+                        ],
                       ),
-                      onPressed: () => _backToSettings(context),
-                      tooltip: S.of(context).sign_out_tooltip,
                     ),
-                  ),
-                ],
+
+                    // 3. High-Priority Alert Overlay
+                    Positioned.fill(
+                      child: DisplayAlertOverlay(
+                        alerts: mosque.activeAlerts,
+                        primaryColor: design.activeCardTextColorValue,
+                        backgroundColor: design.activeCardColorValue.withValues(
+                          alpha: 0.98,
+                        ),
+                        numeralFormat: design.numeralFormat,
+                        fontFamily: design.fontFamily,
+                      ),
+                    ),
+
+                    // 4. Hidden Settings Shortcut
+                    Positioned(
+                      top: 10,
+                      right: 10,
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.settings,
+                          color: Colors.transparent,
+                        ),
+                        onPressed: () => _backToSettings(context),
+                        tooltip: S.of(context).sign_out_tooltip,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           }

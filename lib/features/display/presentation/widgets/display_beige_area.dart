@@ -70,26 +70,26 @@ class _DisplayBeigeAreaState extends State<DisplayBeigeArea> {
     return parsed == slot;
   }
 
-  static DateTime _azanFor(PrayerTimes prayers, PrayerDisplaySlot slot) {
+  static DateTime _azanFor(AdjustedPrayerTimes prayers, PrayerDisplaySlot slot) {
     switch (slot) {
       case PrayerDisplaySlot.fajr:
-        return prayers.fajr;
+        return prayers.getByPrayer(Prayer.fajr)!.adhanTime;
       case PrayerDisplaySlot.sunrise:
-        return prayers.sunrise;
+        return prayers.getByPrayer(Prayer.sunrise)!.adhanTime;
       case PrayerDisplaySlot.dhuhr:
-        return prayers.dhuhr;
+        return prayers.getByPrayer(Prayer.dhuhr)!.adhanTime;
       case PrayerDisplaySlot.asr:
-        return prayers.asr;
+        return prayers.getByPrayer(Prayer.asr)!.adhanTime;
       case PrayerDisplaySlot.maghrib:
-        return prayers.maghrib;
+        return prayers.getByPrayer(Prayer.maghrib)!.adhanTime;
       case PrayerDisplaySlot.isha:
-        return prayers.isha;
+        return prayers.getByPrayer(Prayer.isha)!.adhanTime;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final prayers = _helper.getTodayPrayerTimes();
+    final prayers = _helper.getTodayAdjustedTimes();
     final phase = _helper.getPrayerDisplayPhase(_now);
     final remaining = phase.focusTime.difference(_now);
     final slots = PrayerDisplaySlot.values;
@@ -153,7 +153,7 @@ class _DisplayBeigeAreaState extends State<DisplayBeigeArea> {
           width: 1200,
           child: DisplaySpiritualStrip(
             mosque: widget.mosque,
-            primaryColor: widget.designSettings.primaryColorValue,
+            primaryColor: widget.designSettings.inactiveCardTextColorValue,
             cardColor: widget.designSettings.prayerCardColorValue,
             baseFontSize: widget.baseFontSize,
           ),

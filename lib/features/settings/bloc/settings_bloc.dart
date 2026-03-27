@@ -46,6 +46,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
     on<SettingsDesignPrimaryColorChanged>(onDesignPrimaryColorChanged);
     on<SettingsDesignSecondaryColorChanged>(onDesignSecondaryColorChanged);
     on<SettingsDesignPrayerOverlayChanged>(onDesignPrayerOverlayChanged);
+    on<SettingsDesignActiveCardColorChanged>(onDesignActiveCardColorChanged);
+    on<SettingsDesignActiveCardTextColorChanged>(onDesignActiveCardTextColorChanged);
+    on<SettingsDesignInactiveCardTextColorChanged>(onDesignInactiveCardTextColorChanged);
     on<SettingsDesignBaseFontSizeChanged>(onDesignBaseFontSizeChanged);
     on<SettingsDesignTickerSpeedChanged>(onDesignTickerSpeedChanged);
     on<SettingsDesignNumeralFormatChanged>(onDesignNumeralFormatChanged);

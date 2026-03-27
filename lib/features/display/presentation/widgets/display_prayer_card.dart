@@ -5,6 +5,7 @@ import '../../../../core/utils/app_time_format.dart';
 import '../../../../data/models/design_settings_model.dart';
 import '../../../../data/models/prayer_display_slot.dart';
 import '../../../../core/utils/prayer_times_helper.dart';
+import '../../../../core/utils/app_font_loader.dart';
 import 'prayer_card_background.dart';
 import 'prayer_card_next_strip.dart';
 
@@ -58,6 +59,9 @@ class DisplayPrayerCard extends StatelessWidget {
         final enSize = (baseFontSize * 1.22 * compactFactor).clamp(8.0, 26.0);
         final timeDisplaySize = (baseFontSize * 2.1 * compactFactor).clamp(10.0, 48.0);
 
+        final cardColor = isFocusCard ? designSettings.activeCardColorValue : designSettings.prayerCardColorValue;
+        final textColor = isFocusCard ? designSettings.activeCardTextColorValue : designSettings.inactiveCardTextColorValue;
+
         final numeralFormat = designSettings.numeralFormat;
         final formattedTime = AppTimeFormat.time12h(context, azanTime).formatNumerals(numeralFormat);
 
@@ -68,36 +72,45 @@ class DisplayPrayerCard extends StatelessWidget {
             Icon(
               slot.icon,
               size: iconSize,
-              color: designSettings.primaryColorValue.withValues(alpha: 0.85),
+              color: textColor.withValues(alpha: 0.85),
             ),
             SizedBox(height: gap),
             Text(
               slot.labelAr(s),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: arSize,
-                fontWeight: FontWeight.bold,
-                color: designSettings.primaryColorValue,
+              style: AppFontLoader.getStyle(
+                designSettings.fontFamily,
+                baseStyle: TextStyle(
+                  fontSize: arSize,
+                  fontWeight: FontWeight.bold,
+                  color: textColor,
+                ),
               ),
             ),
             Text(
               slot.labelEn(s),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: enSize,
-                color: designSettings.primaryColorValue.withValues(alpha: 0.72),
+              style: AppFontLoader.getStyle(
+                designSettings.fontFamily,
+                baseStyle: TextStyle(
+                  fontSize: enSize,
+                  color: textColor.withValues(alpha: 0.72),
+                ),
               ),
             ),
             SizedBox(height: gap),
             Text(
               formattedTime,
               maxLines: 1,
-              style: TextStyle(
-                fontSize: timeDisplaySize,
-                fontWeight: FontWeight.bold,
-                color: designSettings.primaryColorValue,
+              style: AppFontLoader.getStyle(
+                designSettings.fontFamily,
+                baseStyle: TextStyle(
+                  fontSize: timeDisplaySize,
+                  fontWeight: FontWeight.bold,
+                  color: textColor,
+                ),
               ),
             ),
           ],
@@ -106,7 +119,7 @@ class DisplayPrayerCard extends StatelessWidget {
         final padded = EdgeInsets.symmetric(vertical: verticalPad, horizontal: 4);
 
         return PrayerCardBackground(
-          prayerCardColor: designSettings.prayerCardColorValue,
+          prayerCardColor: cardColor,
           child: Padding(
             padding: padded,
             child: isFocusCard

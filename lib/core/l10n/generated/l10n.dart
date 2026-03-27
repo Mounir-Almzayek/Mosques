@@ -580,6 +580,16 @@ class S {
     );
   }
 
+  /// `Style 11`
+  String get design_bg_style_11 {
+    return Intl.message(
+      'Style 11',
+      name: 'design_bg_style_11',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Logo`
   String get design_bg_brand {
     return Intl.message(
@@ -590,21 +600,51 @@ class S {
     );
   }
 
-  /// `Primary color`
+  /// `Clock and Time color`
   String get design_primary_color {
     return Intl.message(
-      'Primary color',
+      'Clock and Time color',
       name: 'design_primary_color',
       desc: '',
       args: [],
     );
   }
 
-  /// `Secondary color`
+  /// `Ticker bar color`
   String get design_secondary_color {
     return Intl.message(
-      'Secondary color',
+      'Ticker bar color',
       name: 'design_secondary_color',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active card background`
+  String get design_active_card_color {
+    return Intl.message(
+      'Active card background',
+      name: 'design_active_card_color',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active card text color`
+  String get design_active_card_text_color {
+    return Intl.message(
+      'Active card text color',
+      name: 'design_active_card_text_color',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Inactive card & Hadith text color`
+  String get design_inactive_card_text_color {
+    return Intl.message(
+      'Inactive card & Hadith text color',
+      name: 'design_inactive_card_text_color',
       desc: '',
       args: [],
     );
@@ -1720,10 +1760,10 @@ class S {
     );
   }
 
-  /// `Prayer cards overlay (on SVG backgrounds)`
+  /// `Inactive card background`
   String get design_prayer_overlay {
     return Intl.message(
-      'Prayer cards overlay (on SVG backgrounds)',
+      'Inactive card background',
       name: 'design_prayer_overlay',
       desc: '',
       args: [],

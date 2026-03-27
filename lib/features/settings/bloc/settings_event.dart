@@ -144,6 +144,27 @@ class SettingsDesignPrayerOverlayChanged extends SettingsEvent {
   List<Object?> get props => [prayerOverlayColor];
 }
 
+class SettingsDesignActiveCardColorChanged extends SettingsEvent {
+  final String color;
+  const SettingsDesignActiveCardColorChanged(this.color);
+  @override
+  List<Object?> get props => [color];
+}
+
+class SettingsDesignActiveCardTextColorChanged extends SettingsEvent {
+  final String color;
+  const SettingsDesignActiveCardTextColorChanged(this.color);
+  @override
+  List<Object?> get props => [color];
+}
+
+class SettingsDesignInactiveCardTextColorChanged extends SettingsEvent {
+  final String color;
+  const SettingsDesignInactiveCardTextColorChanged(this.color);
+  @override
+  List<Object?> get props => [color];
+}
+
 class SettingsDesignBaseFontSizeChanged extends SettingsEvent {
   final double baseFontSize;
 

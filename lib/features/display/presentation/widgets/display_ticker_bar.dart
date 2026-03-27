@@ -5,6 +5,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/utils/app_number_format.dart';
+import '../../../../core/utils/app_font_loader.dart';
 import '../../../../data/models/announcement_model.dart';
 import '../../../../data/models/mosque_model.dart';
 import '../../../../data/models/ticker_segment.dart';
@@ -124,18 +125,22 @@ class _DisplayTickerBarState extends State<DisplayTickerBar> {
     required double qrSize,
   }) {
     final numeralFormat = widget.mosque.designSettings.numeralFormat;
+    final fontFamily = widget.mosque.designSettings.fontFamily;
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           ' ${item.text.formatNumerals(numeralFormat)}',
-          style: TextStyle(
+        style: AppFontLoader.getStyle(
+          fontFamily,
+          baseStyle: TextStyle(
             color: _cream,
             fontWeight: FontWeight.w700,
             fontSize: fontSize,
             height: 1.34,
           ),
+        ),
         ),
         if (_hasQr(item)) ...[
           const SizedBox(width: 12),
@@ -158,12 +163,15 @@ class _DisplayTickerBarState extends State<DisplayTickerBar> {
         ],
         Text(
           '      ۞      ',
-          style: TextStyle(
+        style: AppFontLoader.getStyle(
+          fontFamily,
+          baseStyle: TextStyle(
             color: _cream,
             fontWeight: FontWeight.w700,
             fontSize: fontSize,
             height: 1.34,
           ),
+        ),
         ),
         const SizedBox(width: _itemGap),
       ],
@@ -179,6 +187,7 @@ class _DisplayTickerBarState extends State<DisplayTickerBar> {
     final s = S.of(context);
     if (_segments.isEmpty) return const SizedBox.shrink();
 
+    final fontFamily = widget.mosque.designSettings.fontFamily;
     final locale = Localizations.localeOf(context);
     final isArabic = locale.languageCode.toLowerCase().startsWith('ar');
     final dir = isArabic ? TextDirection.rtl : Directionality.of(context);
@@ -213,11 +222,14 @@ class _DisplayTickerBarState extends State<DisplayTickerBar> {
                       _sideLabel(context),
                       textAlign: TextAlign.center,
                       maxLines: 1,
-                      style: TextStyle(
-                        color: _cream,
-                        fontWeight: FontWeight.w900,
-                        fontSize: sideFontSize,
-                        height: 1.1,
+                      style: AppFontLoader.getStyle(
+                        fontFamily,
+                        baseStyle: TextStyle(
+                          color: _cream,
+                          fontWeight: FontWeight.w900,
+                          fontSize: sideFontSize,
+                          height: 1.1,
+                        ),
                       ),
                     ),
                   ),

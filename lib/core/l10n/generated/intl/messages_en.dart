@@ -113,6 +113,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "countdown_azan": MessageLookupByLibrary.simpleMessage("Azan"),
         "countdown_iqama": MessageLookupByLibrary.simpleMessage("Iqama"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
+        "design_active_card_color":
+            MessageLookupByLibrary.simpleMessage("Active card background"),
+        "design_active_card_text_color":
+            MessageLookupByLibrary.simpleMessage("Active card text color"),
         "design_background_color":
             MessageLookupByLibrary.simpleMessage("Screen background color"),
         "design_base_font_size":
@@ -121,6 +125,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "design_bg_primary": MessageLookupByLibrary.simpleMessage("Primary"),
         "design_bg_style_1": MessageLookupByLibrary.simpleMessage("Style 1"),
         "design_bg_style_10": MessageLookupByLibrary.simpleMessage("Style 10"),
+        "design_bg_style_11": MessageLookupByLibrary.simpleMessage("Style 11"),
         "design_bg_style_2": MessageLookupByLibrary.simpleMessage("Style 2"),
         "design_bg_style_3": MessageLookupByLibrary.simpleMessage("Style 3"),
         "design_bg_style_4": MessageLookupByLibrary.simpleMessage("Style 4"),
@@ -139,6 +144,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("App Font Family"),
         "design_font_preview_text": MessageLookupByLibrary.simpleMessage(
             "بسم الله الرحمن الرحيم - Mosque App Preview"),
+        "design_inactive_card_text_color": MessageLookupByLibrary.simpleMessage(
+            "Inactive card & Hadith text color"),
         "design_numeral_arabic":
             MessageLookupByLibrary.simpleMessage("Arabic (١٢٣)"),
         "design_numeral_english":
@@ -146,12 +153,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "design_numeral_format":
             MessageLookupByLibrary.simpleMessage("Numeral Format"),
         "design_pick_color": MessageLookupByLibrary.simpleMessage("Pick color"),
-        "design_prayer_overlay": MessageLookupByLibrary.simpleMessage(
-            "Prayer cards overlay (on SVG backgrounds)"),
+        "design_prayer_overlay":
+            MessageLookupByLibrary.simpleMessage("Inactive card background"),
         "design_primary_color":
-            MessageLookupByLibrary.simpleMessage("Primary color"),
+            MessageLookupByLibrary.simpleMessage("Clock and Time color"),
         "design_secondary_color":
-            MessageLookupByLibrary.simpleMessage("Secondary color"),
+            MessageLookupByLibrary.simpleMessage("Ticker bar color"),
         "design_section_ticker":
             MessageLookupByLibrary.simpleMessage("Ticker & Symbols"),
         "design_section_typography":

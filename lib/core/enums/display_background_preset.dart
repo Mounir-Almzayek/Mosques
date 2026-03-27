@@ -44,6 +44,10 @@ enum DisplayBackgroundPreset {
   mosqueDisplay10(
     'mosque_display_10',
     'assets/display_backgrounds/mosque_display_10.jpg',
+  ),
+  mosqueDisplay11(
+    'mosque_display_11',
+    'assets/display_backgrounds/mosque_display_11.jpg',
   );
 
   const DisplayBackgroundPreset(this.storageId, this.assetPath);

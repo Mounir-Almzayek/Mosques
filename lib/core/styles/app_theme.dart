@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'app_colors.dart';
 import '../utils/responsive_layout.dart';
@@ -11,7 +12,7 @@ abstract final class AppTheme {
   AppTheme._();
 
   /// ثيم فاتح واحد (Material 3) متناسق مع هوية المسجد.
-  static ThemeData light(BuildContext context) {
+  static ThemeData light(BuildContext context, {String fontFamily = 'Beiruti'}) {
     const double globalRadius = 14.0;
 
     double size(double base) =>
@@ -20,7 +21,7 @@ abstract final class AppTheme {
     double iSize(double base) =>
         ResponsiveLayout.adaptiveIconSize(context, base.sp);
 
-    final textTheme = TextTheme(
+    final baseTextTheme = TextTheme(
       displayLarge: TextStyle(color: AppColors.primaryText, fontSize: size(57)),
       displayMedium: TextStyle(
         color: AppColors.primaryText,
@@ -68,6 +69,9 @@ abstract final class AppTheme {
       labelSmall: TextStyle(color: AppColors.secondaryText, fontSize: size(11)),
     );
 
+    // Dynamic Google Font integration
+    final textTheme = GoogleFonts.getTextTheme(fontFamily, baseTextTheme);
+
     const scheme = ColorScheme(
       brightness: Brightness.light,
       primary: AppColors.primary,
@@ -85,7 +89,7 @@ abstract final class AppTheme {
 
     return ThemeData(
       useMaterial3: true,
-      fontFamily: 'Beiruti',
+      fontFamily: fontFamily,
       primaryColor: AppColors.primary,
       scaffoldBackgroundColor: AppColors.background,
       colorScheme: scheme,
@@ -100,7 +104,6 @@ abstract final class AppTheme {
         foregroundColor: AppColors.primaryText,
         surfaceTintColor: Colors.transparent,
         titleTextStyle: TextStyle(
-          fontFamily: 'Beiruti',
           color: AppColors.primaryText,
           fontSize: size(18),
           fontWeight: FontWeight.bold,
@@ -122,13 +125,11 @@ abstract final class AppTheme {
           borderRadius: BorderRadius.circular(globalRadius),
         ),
         titleTextStyle: TextStyle(
-          fontFamily: 'Beiruti',
           fontSize: size(20),
           fontWeight: FontWeight.w700,
           color: AppColors.primaryText,
         ),
         contentTextStyle: TextStyle(
-          fontFamily: 'Beiruti',
           fontSize: size(14),
           color: AppColors.primaryText,
           height: 1.4,
@@ -138,7 +139,6 @@ abstract final class AppTheme {
       snackBarTheme: SnackBarThemeData(
         backgroundColor: AppColors.primaryText,
         contentTextStyle: TextStyle(
-          fontFamily: 'Beiruti',
           fontSize: size(14),
           color: AppColors.brightWhite,
         ),
@@ -152,7 +152,6 @@ abstract final class AppTheme {
         color: AppColors.surface,
         surfaceTintColor: Colors.transparent,
         textStyle: TextStyle(
-          fontFamily: 'Beiruti',
           fontSize: size(14),
           color: AppColors.primaryText,
         ),
@@ -194,7 +193,6 @@ abstract final class AppTheme {
           textStyle: TextStyle(
             fontSize: size(16),
             fontWeight: FontWeight.bold,
-            fontFamily: 'Beiruti',
           ),
         ),
       ),
@@ -229,13 +227,11 @@ abstract final class AppTheme {
         hintStyle: TextStyle(
           color: AppColors.secondaryText.withValues(alpha: 0.65),
           fontSize: size(14),
-          fontFamily: 'Beiruti',
         ),
         labelStyle: TextStyle(
           color: AppColors.secondaryText,
           fontSize: size(14),
           fontWeight: FontWeight.w600,
-          fontFamily: 'Beiruti',
         ),
       ),
     );
@@ -245,3 +241,4 @@ abstract final class AppTheme {
 /// توافق مع الكود القديم — يفضّل استخدام [AppTheme.light].
 @Deprecated('Use AppTheme.light(context) instead')
 ThemeData appThemeData(BuildContext context) => AppTheme.light(context);
+

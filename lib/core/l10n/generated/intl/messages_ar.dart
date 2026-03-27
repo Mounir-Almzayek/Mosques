@@ -112,6 +112,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "countdown_azan": MessageLookupByLibrary.simpleMessage("أذان"),
         "countdown_iqama": MessageLookupByLibrary.simpleMessage("إقامة"),
         "delete": MessageLookupByLibrary.simpleMessage("حذف"),
+        "design_active_card_color": MessageLookupByLibrary.simpleMessage(
+            "لون خلفية الكارد المحددة (العد التنازلي)"),
+        "design_active_card_text_color":
+            MessageLookupByLibrary.simpleMessage("لون خط الكارد المحددة"),
         "design_background_color":
             MessageLookupByLibrary.simpleMessage("لون خلفية الشاشة"),
         "design_base_font_size":
@@ -120,6 +124,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "design_bg_primary": MessageLookupByLibrary.simpleMessage("الأساسية"),
         "design_bg_style_1": MessageLookupByLibrary.simpleMessage("نمط 1"),
         "design_bg_style_10": MessageLookupByLibrary.simpleMessage("نمط 10"),
+        "design_bg_style_11": MessageLookupByLibrary.simpleMessage("نمط 11"),
         "design_bg_style_2": MessageLookupByLibrary.simpleMessage("نمط 2"),
         "design_bg_style_3": MessageLookupByLibrary.simpleMessage("نمط 3"),
         "design_bg_style_4": MessageLookupByLibrary.simpleMessage("نمط 4"),
@@ -138,6 +143,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("خط التطبيق"),
         "design_font_preview_text": MessageLookupByLibrary.simpleMessage(
             "بسم الله الرحمن الرحيم - تجربة خط المسجد"),
+        "design_inactive_card_text_color": MessageLookupByLibrary.simpleMessage(
+            "لون الخط للكروت غير المحددة وقسم الأحاديث"),
         "design_numeral_arabic":
             MessageLookupByLibrary.simpleMessage("عربي (١٢٣)"),
         "design_numeral_english":
@@ -145,12 +152,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "design_numeral_format":
             MessageLookupByLibrary.simpleMessage("تنسيق الأرقام"),
         "design_pick_color": MessageLookupByLibrary.simpleMessage("اختر اللون"),
-        "design_prayer_overlay": MessageLookupByLibrary.simpleMessage(
-            "لون التغطية على بطاقات الصلاة (فوق SVG)"),
+        "design_prayer_overlay":
+            MessageLookupByLibrary.simpleMessage("خلفية الكارد غير المحددة"),
         "design_primary_color":
-            MessageLookupByLibrary.simpleMessage("اللون الأساسي"),
+            MessageLookupByLibrary.simpleMessage("لون الساعة والوقت"),
         "design_secondary_color":
-            MessageLookupByLibrary.simpleMessage("اللون الثانوي"),
+            MessageLookupByLibrary.simpleMessage("لون شريط الإعلانات"),
         "design_section_ticker":
             MessageLookupByLibrary.simpleMessage("شريط المعلومات والرموز"),
         "design_section_typography":

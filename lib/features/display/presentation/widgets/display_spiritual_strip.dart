@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/utils/app_font_loader.dart';
 import '../../../../data/models/mosque_model.dart';
 import '../../../../data/models/mosque_text_entry_model.dart';
 import '../../../../data/models/mosque_text_list_kind.dart';
@@ -191,8 +192,8 @@ class _DisplaySpiritualStripState extends State<DisplaySpiritualStrip> {
     final p = widget.primaryColor;
     final c = widget.cardColor;
 
-    final fillA = Color.lerp(c, Colors.white, 0.06)!.withValues(alpha: 0.44);
-    final fillB = c.withValues(alpha: 0.36);
+    final fillA = Color.lerp(c, Colors.white, 0.06)!.withValues(alpha: 0.6);
+    final fillB = c.withValues(alpha: 0.6);
 
     return LayoutBuilder(
       builder: (context, stripConstraints) {
@@ -326,6 +327,7 @@ class _DisplaySpiritualStripState extends State<DisplaySpiritualStrip> {
     double maxW,
     bool narrow,
   ) {
+    final fontFamily = widget.mosque.designSettings.fontFamily;
     return Container(
       constraints: BoxConstraints(minWidth: minW, maxWidth: maxW),
       padding: EdgeInsets.symmetric(
@@ -354,12 +356,15 @@ class _DisplaySpiritualStripState extends State<DisplaySpiritualStrip> {
             label,
             textAlign: TextAlign.center,
             maxLines: 2,
-            style: TextStyle(
-              color: _cream,
-              fontWeight: FontWeight.w800,
-              fontSize: fontSize,
-              height: 1.1,
-              letterSpacing: 0.15,
+            style: AppFontLoader.getStyle(
+              fontFamily,
+              baseStyle: TextStyle(
+                color: _cream,
+                fontWeight: FontWeight.w800,
+                fontSize: fontSize,
+                height: 1.1,
+                letterSpacing: 0.15,
+              ),
             ),
           ),
         ),

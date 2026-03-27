@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/utils/app_font_loader.dart';
 
 class TopHeaderDateBlock extends StatelessWidget {
   final String weekday;
@@ -7,6 +8,7 @@ class TopHeaderDateBlock extends StatelessWidget {
   final Color textColor;
   final bool isRtl;
   final double base;
+  final String fontFamily;
 
   const TopHeaderDateBlock({
     super.key,
@@ -16,6 +18,7 @@ class TopHeaderDateBlock extends StatelessWidget {
     required this.textColor,
     required this.isRtl,
     required this.base,
+    required this.fontFamily,
   });
 
   @override
@@ -29,30 +32,40 @@ class TopHeaderDateBlock extends StatelessWidget {
         Text(
           weekday,
           textAlign: textAlign,
-          style: TextStyle(
-            fontSize: base * 1.35,
-            fontWeight: FontWeight.w600,
-            color: textColor.withValues(alpha: 0.92),
-            height: 1.15,
+          style: AppFontLoader.getStyle(
+            fontFamily,
+            baseStyle: TextStyle(
+              fontSize: base * 1.35,
+              fontWeight: FontWeight.w700,
+              color: textColor.withValues(alpha: 0.92),
+              height: 1.15,
+            ),
           ),
         ),
         const SizedBox(height: 4),
         Text(
           gregorianLong,
           textAlign: textAlign,
-          style: TextStyle(
-            fontSize: base * 1.15,
-            color: textColor.withValues(alpha: 0.78),
+          style: AppFontLoader.getStyle(
+            fontFamily,
+            baseStyle: TextStyle(
+              fontSize: base * 1.15,
+              color: textColor.withValues(alpha: 0.78),
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
         const SizedBox(height: 2),
         Text(
           hijriLine,
           textAlign: textAlign,
-          style: TextStyle(
-            fontSize: base * 1.15,
-            fontWeight: FontWeight.w500,
-            color: textColor.withValues(alpha: 0.85),
+          style: AppFontLoader.getStyle(
+            fontFamily,
+            baseStyle: TextStyle(
+              fontSize: base * 1.15,
+              fontWeight: FontWeight.w600,
+              color: textColor.withValues(alpha: 0.85),
+            ),
           ),
         ),
       ],

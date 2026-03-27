@@ -28,7 +28,7 @@ class PrayerCardBackground extends StatelessWidget {
             fit: BoxFit.cover,
             alignment: Alignment.center,
             colorFilter: ColorFilter.mode(
-              prayerCardColor.withValues(alpha: 0.5),
+              prayerCardColor.withValues(alpha: 0.7),
               BlendMode.srcIn,
             ),
           ),

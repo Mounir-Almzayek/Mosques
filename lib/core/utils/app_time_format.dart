@@ -13,14 +13,15 @@ abstract final class AppTimeFormat {
     return DateFormat('h:mm a', _locale(context)).format(d);
   }
 
-  /// ساعة كبيرة + ثوانٍ وص/م أصغر (للرأس والساعة الكبيرة).
-  static ({String hourMinute, String secondsAndPeriod}) clockParts12h(
+  /// ساعة كبيرة + ثوانٍ + ص/م (للرأس والساعة الكبيرة).
+  static ({String hourMinute, String seconds, String period}) clockParts12h(
     BuildContext context,
     DateTime d,
   ) {
     final loc = _locale(context);
     final hourMinute = DateFormat('h:mm', loc).format(d);
-    final secondsAndPeriod = DateFormat("':'ss a", loc).format(d);
-    return (hourMinute: hourMinute, secondsAndPeriod: secondsAndPeriod);
+    final seconds = DateFormat("':'ss", loc).format(d);
+    final period = DateFormat("a", loc).format(d);
+    return (hourMinute: hourMinute, seconds: seconds, period: period);
   }
 }

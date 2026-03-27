@@ -65,6 +65,45 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
     );
   }
 
+  void onDesignActiveCardColorChanged(
+    SettingsDesignActiveCardColorChanged event,
+    Emitter<SettingsState> emit,
+  ) {
+    final m = currentMosque;
+    if (m == null) return;
+    final d = m.designSettings.copyWith(activeCardColor: event.color);
+    emitDraftUpdated(
+      emit,
+      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
+    );
+  }
+
+  void onDesignActiveCardTextColorChanged(
+    SettingsDesignActiveCardTextColorChanged event,
+    Emitter<SettingsState> emit,
+  ) {
+    final m = currentMosque;
+    if (m == null) return;
+    final d = m.designSettings.copyWith(activeCardTextColor: event.color);
+    emitDraftUpdated(
+      emit,
+      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
+    );
+  }
+
+  void onDesignInactiveCardTextColorChanged(
+    SettingsDesignInactiveCardTextColorChanged event,
+    Emitter<SettingsState> emit,
+  ) {
+    final m = currentMosque;
+    if (m == null) return;
+    final d = m.designSettings.copyWith(inactiveCardTextColor: event.color);
+    emitDraftUpdated(
+      emit,
+      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
+    );
+  }
+
   void onDesignBaseFontSizeChanged(
     SettingsDesignBaseFontSizeChanged event,
     Emitter<SettingsState> emit,

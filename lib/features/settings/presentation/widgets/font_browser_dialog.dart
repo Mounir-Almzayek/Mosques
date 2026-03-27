@@ -4,7 +4,7 @@ import '../../../../core/config/font_preset.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 
 /// Visual font browser to select from Google Fonts with live previews.
-class FontBrowserDialog extends StatelessWidget {
+class FontBrowserDialog extends StatefulWidget {
   final String selectedFont;
   final void Function(String) onFontSelected;
 
@@ -13,6 +13,19 @@ class FontBrowserDialog extends StatelessWidget {
     required this.selectedFont,
     required this.onFontSelected,
   });
+
+  @override
+  State<FontBrowserDialog> createState() => _FontBrowserDialogState();
+}
+
+class _FontBrowserDialogState extends State<FontBrowserDialog> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,17 +38,19 @@ class FontBrowserDialog extends StatelessWidget {
         width: 400,
         height: 500,
         child: Scrollbar(
+          controller: _scrollController,
           thumbVisibility: true,
           child: ListView.separated(
+            controller: _scrollController,
             itemCount: FontPreset.values.length,
             separatorBuilder: (_, __) => const Divider(height: 1),
             itemBuilder: (context, i) {
               final font = FontPreset.values[i];
-              final isSelected = font.name == selectedFont;
+              final isSelected = font.name == widget.selectedFont;
               
               return InkWell(
                 onTap: () {
-                  onFontSelected(font.name);
+                  widget.onFontSelected(font.name);
                   Navigator.pop(context);
                 },
                 child: Container(
