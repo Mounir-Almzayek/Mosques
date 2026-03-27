@@ -4,76 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/utils/app_number_format.dart';
+import '../../../../data/models/announcement_model.dart';
 import '../../../../data/models/mosque_model.dart';
+import '../../../../data/models/ticker_segment.dart';
 
-enum _TickerKind { platformAd, mosqueAd }
-
-class _TickerSegment {
-  final _TickerKind kind;
-  final String text;
-  final String? qrData;
-
-  const _TickerSegment({required this.kind, required this.text, this.qrData});
-}
-
-bool _adVisible(AnnouncementModel a, DateTime now) {
-  return a.isActive && !a.startDate.isAfter(now) && a.endDate.isAfter(now);
-}
-
-String _announcementMarqueeText(AnnouncementModel a) {
-  if (a.subtitle != null && a.subtitle!.trim().isNotEmpty) {
-    return '${a.title} — ${a.subtitle!.trim()}';
-  }
-  return a.title;
-}
-
-String _sideLabel(BuildContext context) {
-  final locale = Localizations.localeOf(context);
-  if (locale.languageCode.toLowerCase().startsWith('ar')) {
-    return 'إعلانات';
-  }
-  return 'Ads';
-}
-
-List<_TickerSegment> _buildTickerSegments({
-  required MosqueModel mosque,
-  required List<AnnouncementModel> platform,
-}) {
-  final now = DateTime.now();
-  final platformVisible = platform
-      .where((a) => _adVisible(a, now))
-      .map(
-        (a) => _TickerSegment(
-          kind: _TickerKind.platformAd,
-          text: _announcementMarqueeText(a).trim(),
-          qrData: a.qrCodeUrl?.trim(),
-        ),
-      )
-      .where((seg) => seg.text.isNotEmpty)
-      .toList();
-  final mosqueVisible = mosque.announcements
-      .where((a) => _adVisible(a, now))
-      .map(
-        (a) => _TickerSegment(
-          kind: _TickerKind.mosqueAd,
-          text: _announcementMarqueeText(a).trim(),
-          qrData: a.qrCodeUrl?.trim(),
-        ),
-      )
-      .where((seg) => seg.text.isNotEmpty)
-      .toList();
-
-  final out = <_TickerSegment>[];
-  final maxLen = platformVisible.length > mosqueVisible.length
-      ? platformVisible.length
-      : mosqueVisible.length;
-  for (var i = 0; i < maxLen; i++) {
-    if (mosqueVisible.length > i) out.add(mosqueVisible[i]);
-    if (platformVisible.length > i) out.add(platformVisible[i]);
-  }
-  return out;
-}
-
+/// Horizontal auto-scrolling ticker bar for announcements at the bottom
+/// of the display screen.
 class DisplayTickerBar extends StatefulWidget {
   final MosqueModel mosque;
   final List<AnnouncementModel> platformAnnouncements;
@@ -95,11 +32,17 @@ class DisplayTickerBar extends StatefulWidget {
 class _DisplayTickerBarState extends State<DisplayTickerBar> {
   static const _cream = Color(0xFFFFF8F0);
   static const _itemGap = 26.0;
-  static const _scrollTick = Duration(milliseconds: 16);
+  
+  // High-frequency tick for sub-pixel smoothness.
+  static const _scrollTick = Duration(milliseconds: 12);
 
-  List<_TickerSegment> _segments = [];
+  List<TickerSegment> _segments = [];
   final ScrollController _scrollController = ScrollController();
   Timer? _scrollTimer;
+
+  // ---------------------------------------------------------------------------
+  // Lifecycle
+  // ---------------------------------------------------------------------------
 
   @override
   void initState() {
@@ -108,6 +51,27 @@ class _DisplayTickerBarState extends State<DisplayTickerBar> {
     _startAutoScroll();
   }
 
+  @override
+  void didUpdateWidget(covariant DisplayTickerBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.mosque != widget.mosque ||
+        oldWidget.platformAnnouncements != widget.platformAnnouncements) {
+      setState(_refreshContent);
+      _startAutoScroll(); // Restart with new potentially faster speed
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollTimer?.cancel();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Auto-scroll
+  // ---------------------------------------------------------------------------
+
   void _startAutoScroll() {
     _scrollTimer?.cancel();
     _scrollTimer = Timer.periodic(_scrollTick, (_) {
@@ -115,7 +79,9 @@ class _DisplayTickerBarState extends State<DisplayTickerBar> {
       final maxExtent = _scrollController.position.maxScrollExtent;
       if (maxExtent <= 0) return;
 
-      final pxPerTick = 34 * (_scrollTick.inMilliseconds / 1000);
+      // Base speed * configurable multiplier * time delta.
+      final speedMultiplier = widget.mosque.designSettings.tickerSpeed;
+      final pxPerTick = (30 * speedMultiplier) * (_scrollTick.inMilliseconds / 1000);
       final next = _scrollController.offset + pxPerTick;
 
       if (next >= maxExtent) {
@@ -127,53 +93,47 @@ class _DisplayTickerBarState extends State<DisplayTickerBar> {
   }
 
   void _refreshContent() {
-    _segments = _buildTickerSegments(
+    _segments = TickerSegmentBuilder.build(
       mosque: widget.mosque,
       platform: widget.platformAnnouncements,
     );
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      if (_scrollController.hasClients) {
-        _scrollController.jumpTo(0);
-      }
+      if (!mounted || !_scrollController.hasClients) return;
+      _scrollController.jumpTo(0);
     });
   }
 
-  @override
-  void didUpdateWidget(covariant DisplayTickerBar oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.mosque != widget.mosque ||
-        oldWidget.platformAnnouncements != widget.platformAnnouncements) {
-      setState(_refreshContent);
+  // ---------------------------------------------------------------------------
+  // Build helpers
+  // ---------------------------------------------------------------------------
+
+  String _sideLabel(BuildContext context) {
+    final locale = Localizations.localeOf(context);
+    if (locale.languageCode.toLowerCase().startsWith('ar')) {
+      return 'إعلانات';
     }
+    return 'Ads';
   }
 
-  @override
-  void dispose() {
-    _scrollTimer?.cancel();
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  bool _hasQr(_TickerSegment item) => (item.qrData ?? '').trim().isNotEmpty;
+  bool _hasQr(TickerSegment item) => (item.qrData ?? '').trim().isNotEmpty;
 
   Widget _buildTickerItem(
     S s,
-    _TickerSegment item,
+    TickerSegment item,
     double fontSize, {
     required double qrSize,
   }) {
+    final numeralFormat = widget.mosque.designSettings.numeralFormat;
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          ' ${item.text}',
+          ' ${item.text.formatNumerals(numeralFormat)}',
           style: TextStyle(
             color: _cream,
             fontWeight: FontWeight.w700,
             fontSize: fontSize,
-            fontFamily: 'Beiruti',
             height: 1.34,
           ),
         ),
@@ -202,7 +162,6 @@ class _DisplayTickerBarState extends State<DisplayTickerBar> {
             color: _cream,
             fontWeight: FontWeight.w700,
             fontSize: fontSize,
-            fontFamily: 'Beiruti',
             height: 1.34,
           ),
         ),
@@ -211,12 +170,14 @@ class _DisplayTickerBarState extends State<DisplayTickerBar> {
     );
   }
 
+  // ---------------------------------------------------------------------------
+  // Build
+  // ---------------------------------------------------------------------------
+
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    if (_segments.isEmpty) {
-      return const SizedBox.shrink();
-    }
+    if (_segments.isEmpty) return const SizedBox.shrink();
 
     final locale = Localizations.localeOf(context);
     final isArabic = locale.languageCode.toLowerCase().startsWith('ar');
@@ -256,7 +217,6 @@ class _DisplayTickerBarState extends State<DisplayTickerBar> {
                         color: _cream,
                         fontWeight: FontWeight.w900,
                         fontSize: sideFontSize,
-                        fontFamily: 'Beiruti',
                         height: 1.1,
                       ),
                     ),

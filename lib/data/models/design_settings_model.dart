@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart' show Color;
 
+import '../../core/enums/app_numeral_format.dart';
 import '../../core/enums/display_background_preset.dart';
+import '../../core/utils/color_parser.dart';
 
-/// Visual settings for the display screen.
-/// [backgroundValue] — [DisplayBackgroundPreset.storageId] for the full-screen image.
-/// [prayerOverlayColor] ARGB hex (e.g. `#80143B4E`) — للبطاقات والـ SVG.
+/// Visual and behavioral settings for the display screen.
 class DesignSettingsModel extends Equatable {
   final String backgroundValue;
   final String primaryColor;
@@ -13,40 +13,39 @@ class DesignSettingsModel extends Equatable {
   final String prayerOverlayColor;
   final double baseFontSize;
 
+  /// Speed of the bottom ticker (1.0 = normal, higher = faster).
+  final double tickerSpeed;
+
+  /// Forced numeral format for the entire app.
+  final AppNumeralFormat numeralFormat;
+
+  /// Google Font name or custom font family.
+  final String fontFamily;
+
   const DesignSettingsModel({
     required this.backgroundValue,
     required this.primaryColor,
     required this.secondaryColor,
     required this.prayerOverlayColor,
     required this.baseFontSize,
+    this.tickerSpeed = 1.0,
+    this.numeralFormat = AppNumeralFormat.english,
+    this.fontFamily = 'Beiruti',
   });
 
   static const Color _defaultPrimary = Color(0xFF143B4E);
   static const Color _defaultSecondary = Color(0xFFF3EEDC);
 
-  static Color _parseColorHex(String? hexString, Color fallback) {
-    if (hexString == null || hexString.isEmpty) return fallback;
-    var hex = hexString.replaceFirst('#', '').trim();
-    if (hex.length == 6) {
-      hex = 'FF$hex';
-    } else if (hex.length != 8) {
-      return fallback;
-    }
-    try {
-      return Color(int.parse(hex, radix: 16));
-    } catch (_) {
-      return fallback;
-    }
-  }
+  /// UI-ready primary color parsed from the hex string.
+  Color get primaryColorValue => parseColorHex(primaryColor, _defaultPrimary);
 
-  /// لون أساسي جاهز للواجهة (من [primaryColor] كسلسلة hex).
-  Color get primaryColorValue => _parseColorHex(primaryColor, _defaultPrimary);
+  /// UI-ready secondary color parsed from the hex string.
+  Color get secondaryColorValue =>
+      parseColorHex(secondaryColor, _defaultSecondary);
 
-  /// لون ثانوي جاهز للواجهة (من [secondaryColor]).
-  Color get secondaryColorValue => _parseColorHex(secondaryColor, _defaultSecondary);
-
-  /// لون بطاقات الصلاة / الـ SVG (من [prayerOverlayColor]).
-  Color get prayerCardColorValue => _parseColorHex(prayerOverlayColor, _defaultSecondary);
+  /// UI-ready color for prayer cards / SVG overlays.
+  Color get prayerCardColorValue =>
+      parseColorHex(prayerOverlayColor, _defaultSecondary);
 
   factory DesignSettingsModel.fromMap(Map<String, dynamic> map) {
     return DesignSettingsModel(
@@ -55,8 +54,12 @@ class DesignSettingsModel extends Equatable {
       ),
       primaryColor: map['primary_color']?.toString() ?? '#FFFFFF',
       secondaryColor: map['secondary_color']?.toString() ?? '#CCCCCC',
-      prayerOverlayColor: map['prayer_overlay_color']?.toString() ?? '#66143B4E',
+      prayerOverlayColor:
+          map['prayer_overlay_color']?.toString() ?? '#66143B4E',
       baseFontSize: (map['base_font_size'] ?? 16.0).toDouble(),
+      tickerSpeed: (map['ticker_speed'] ?? 1.0).toDouble(),
+      numeralFormat: AppNumeralFormat.fromCode(map['numeral_format'] ?? 'en'),
+      fontFamily: map['font_family'] ?? 'Beiruti',
     );
   }
 
@@ -68,6 +71,9 @@ class DesignSettingsModel extends Equatable {
       'secondary_color': secondaryColor,
       'prayer_overlay_color': prayerOverlayColor,
       'base_font_size': baseFontSize,
+      'ticker_speed': tickerSpeed,
+      'numeral_format': numeralFormat.code,
+      'font_family': fontFamily,
     };
   }
 
@@ -77,6 +83,9 @@ class DesignSettingsModel extends Equatable {
     String? secondaryColor,
     String? prayerOverlayColor,
     double? baseFontSize,
+    double? tickerSpeed,
+    AppNumeralFormat? numeralFormat,
+    String? fontFamily,
   }) {
     return DesignSettingsModel(
       backgroundValue: backgroundValue ?? this.backgroundValue,
@@ -84,6 +93,9 @@ class DesignSettingsModel extends Equatable {
       secondaryColor: secondaryColor ?? this.secondaryColor,
       prayerOverlayColor: prayerOverlayColor ?? this.prayerOverlayColor,
       baseFontSize: baseFontSize ?? this.baseFontSize,
+      tickerSpeed: tickerSpeed ?? this.tickerSpeed,
+      numeralFormat: numeralFormat ?? this.numeralFormat,
+      fontFamily: fontFamily ?? this.fontFamily,
     );
   }
 
@@ -94,5 +106,8 @@ class DesignSettingsModel extends Equatable {
         secondaryColor,
         prayerOverlayColor,
         baseFontSize,
+        tickerSpeed,
+        numeralFormat,
+        fontFamily,
       ];
 }

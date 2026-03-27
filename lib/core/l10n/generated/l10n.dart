@@ -530,6 +530,56 @@ class S {
     );
   }
 
+  /// `Style 6`
+  String get design_bg_style_6 {
+    return Intl.message(
+      'Style 6',
+      name: 'design_bg_style_6',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Style 7`
+  String get design_bg_style_7 {
+    return Intl.message(
+      'Style 7',
+      name: 'design_bg_style_7',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Style 8`
+  String get design_bg_style_8 {
+    return Intl.message(
+      'Style 8',
+      name: 'design_bg_style_8',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Style 9`
+  String get design_bg_style_9 {
+    return Intl.message(
+      'Style 9',
+      name: 'design_bg_style_9',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Style 10`
+  String get design_bg_style_10 {
+    return Intl.message(
+      'Style 10',
+      name: 'design_bg_style_10',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Logo`
   String get design_bg_brand {
     return Intl.message(
@@ -645,6 +695,16 @@ class S {
     return Intl.message(
       'Announcements',
       name: 'tab_announcements',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Instant Alerts`
+  String get tab_alerts {
+    return Intl.message(
+      'Instant Alerts',
+      name: 'tab_alerts',
       desc: '',
       args: [],
     );
@@ -1270,6 +1330,96 @@ class S {
     );
   }
 
+  /// `No active priority alerts.`
+  String get alerts_empty_title {
+    return Intl.message(
+      'No active priority alerts.',
+      name: 'alerts_empty_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `These alerts appear full-screen on the display.`
+  String get alerts_empty_subtitle {
+    return Intl.message(
+      'These alerts appear full-screen on the display.',
+      name: 'alerts_empty_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New High-Priority Alert`
+  String get alerts_fab_add {
+    return Intl.message(
+      'New High-Priority Alert',
+      name: 'alerts_fab_add',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear All Active Alerts`
+  String get alerts_clear_all {
+    return Intl.message(
+      'Clear All Active Alerts',
+      name: 'alerts_clear_all',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send Instant Alert`
+  String get alert_editor_title {
+    return Intl.message(
+      'Send Instant Alert',
+      name: 'alert_editor_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Alert Headline`
+  String get alert_field_headline {
+    return Intl.message(
+      'Alert Headline',
+      name: 'alert_field_headline',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Urgent Message`
+  String get alert_field_message {
+    return Intl.message(
+      'Urgent Message',
+      name: 'alert_field_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Duration:`
+  String get alert_field_duration {
+    return Intl.message(
+      'Duration:',
+      name: 'alert_field_duration',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send to Screen`
+  String get alert_send_action {
+    return Intl.message(
+      'Send to Screen',
+      name: 'alert_send_action',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Prayer times`
   String get miqat_ar {
     return Intl.message(
@@ -1610,6 +1760,16 @@ class S {
     );
   }
 
+  /// `s`
+  String get unit_seconds {
+    return Intl.message(
+      's',
+      name: 'unit_seconds',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `No active mosque linked to this account.`
   String get display_error_no_mosque {
     return Intl.message(
@@ -1780,6 +1940,106 @@ class S {
     );
   }
 
+  /// `Typography & Layout`
+  String get design_section_typography {
+    return Intl.message(
+      'Typography & Layout',
+      name: 'design_section_typography',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ticker & Symbols`
+  String get design_section_ticker {
+    return Intl.message(
+      'Ticker & Symbols',
+      name: 'design_section_ticker',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ticker Speed`
+  String get design_ticker_speed {
+    return Intl.message(
+      'Ticker Speed',
+      name: 'design_ticker_speed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Numeral Format`
+  String get design_numeral_format {
+    return Intl.message(
+      'Numeral Format',
+      name: 'design_numeral_format',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Arabic (١٢٣)`
+  String get design_numeral_arabic {
+    return Intl.message(
+      'Arabic (١٢٣)',
+      name: 'design_numeral_arabic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `English (123)`
+  String get design_numeral_english {
+    return Intl.message(
+      'English (123)',
+      name: 'design_numeral_english',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `App Font Family`
+  String get design_font_family {
+    return Intl.message(
+      'App Font Family',
+      name: 'design_font_family',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Browse Fonts`
+  String get design_font_browse {
+    return Intl.message(
+      'Browse Fonts',
+      name: 'design_font_browse',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Visual Font Browser`
+  String get design_font_browser_title {
+    return Intl.message(
+      'Visual Font Browser',
+      name: 'design_font_browser_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `بسم الله الرحمن الرحيم - Mosque App Preview`
+  String get design_font_preview_text {
+    return Intl.message(
+      'بسم الله الرحمن الرحيم - Mosque App Preview',
+      name: 'design_font_preview_text',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Base font size`
   String get design_base_font_size {
     return Intl.message(
@@ -1825,6 +2085,16 @@ class S {
     return Intl.message(
       'Prayer calculation method',
       name: 'prayer_calculation_method',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Advanced Prayer Time Adjustment (Minutes)`
+  String get general_section_adjustments {
+    return Intl.message(
+      'Advanced Prayer Time Adjustment (Minutes)',
+      name: 'general_section_adjustments',
       desc: '',
       args: [],
     );

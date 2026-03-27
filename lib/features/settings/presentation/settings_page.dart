@@ -13,6 +13,7 @@ import 'sections/iqama_section.dart';
 import 'sections/mosque_text_list_section.dart';
 import '../../../data/models/mosque_text_list_kind.dart';
 import 'sections/announcement_section.dart';
+import 'sections/alerts_section.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -20,7 +21,7 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SettingsBloc()..add(LoadSettings()),
+      create: (context) => SettingsBloc()..add(const LoadSettings()),
       child: const SettingsScreen(),
     );
   }
@@ -61,6 +62,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         return s.tab_adhkar;
       case 7:
         return s.tab_announcements;
+      case 8:
+        return s.tab_alerts;
       default:
         return s.settings_title;
     }
@@ -88,15 +91,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             iconSize: 28,
             tooltip: s.refresh,
             onPressed: () {
-              context.read<SettingsBloc>().add(LoadSettings());
+              context.read<SettingsBloc>().add(const LoadSettings());
             },
           ),
           PopupMenuButton<String>(
             iconSize: 28,
             onSelected: (value) async {
               if (value == 'smart_screen') {
-                // Navigate to Display (Smart screen) immediately.
-                // We force display-mode override so it works even on smaller screens.
                 await AuthRepository.setIsDisplayModeOverride(true);
                 if (!context.mounted) return;
                 context.go(Routes.displayPath);
@@ -106,7 +107,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               return [
                 PopupMenuItem<String>(
                   value: 'smart_screen',
-                  // This menu behaves like a "go to smart screen" action.
                   child: Text(s.enable_smart_screen),
                 ),
               ];
@@ -116,35 +116,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       body: BlocConsumer<SettingsBloc, SettingsState>(
         listenWhen: (prev, curr) {
-          if (curr is SettingsSaving) return true;
-          if (curr is SettingsError) return true;
-          if (curr is SettingsLoaded && prev is SettingsSaving) return true;
+          if (curr.isSaving && !prev.isSaving) return true;
+          if (curr.error != null && prev.error == null) return true;
+          if (!curr.isSaving && prev.isSaving && curr.error == null) return true;
           return false;
         },
         listener: (context, state) {
-          if (state is SettingsSaving) {
+          if (state.isSaving) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(S.of(context).saving)),
             );
-          } else if (state is SettingsLoaded) {
+          } else if (state.error != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.error!), backgroundColor: Colors.red),
+            );
+          } else {
+            // Saved successfully
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(S.of(context).saved_successfully)),
             );
-          } else if (state is SettingsError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: Colors.red),
-            );
           }
         },
         builder: (context, state) {
-          if (state is SettingsInitial || state is SettingsLoading) {
+          if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
           final mosque = state.request.mosque;
-          if (state is SettingsError && mosque == null) {
-            return Center(child: Text(state.message));
+          if (state.error != null && mosque == null) {
+            return Center(child: Text(state.error!));
           }
 
           if (mosque == null) {
@@ -163,6 +164,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               MosqueTextListSection(mosque: mosque, kind: MosqueTextListKind.dua),
               MosqueTextListSection(mosque: mosque, kind: MosqueTextListKind.adhkar),
               AnnouncementSection(mosque: mosque),
+              AlertsSection(mosque: mosque),
             ],
           );
         },

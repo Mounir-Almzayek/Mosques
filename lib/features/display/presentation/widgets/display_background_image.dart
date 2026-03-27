@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/enums/display_background_preset.dart';
+import '../../../../core/widgets/optimized_image.dart';
 
 const String kDisplayBackgroundFallbackAsset = 'assets/logo.jpg';
 
@@ -26,17 +27,15 @@ class DisplayBackgroundImage extends StatelessWidget {
           decoration: BoxDecoration(color: fallbackColor),
           child: const SizedBox.expand(),
         ),
-        Image.asset(
+        OptimizedImage.background(
           primaryPath,
+          context: context,
           fit: BoxFit.cover,
-          width: double.infinity,
-          height: double.infinity,
           errorBuilder: (context, error, stackTrace) {
-            return Image.asset(
+            return OptimizedImage.background(
               kDisplayBackgroundFallbackAsset,
+              context: context,
               fit: BoxFit.cover,
-              width: double.infinity,
-              height: double.infinity,
               errorBuilder: (context, error, stackTrace) {
                 return DecoratedBox(
                   decoration: BoxDecoration(color: fallbackColor),

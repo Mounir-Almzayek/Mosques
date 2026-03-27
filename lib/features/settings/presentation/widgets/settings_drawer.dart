@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
+import '../../../../core/widgets/optimized_image.dart';
 
 /// Side navigation for settings: brand header + section shortcuts + sign out.
 class SettingsDrawer extends StatelessWidget {
@@ -124,9 +125,10 @@ class SettingsDrawer extends StatelessWidget {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: Image.asset(
+                      child: OptimizedImage.asset(
                         'assets/logo.jpg',
                         height: 92,
+                        cacheHeight: 200, // Roughly 2x for retina density
                         fit: BoxFit.contain,
                         errorBuilder: (context, error, stackTrace) => const Icon(
                           Icons.mosque_rounded,
@@ -182,6 +184,7 @@ class SettingsDrawer extends StatelessWidget {
                   navTile(index: 5, icon: Icons.favorite_border_rounded, label: s.tab_duas),
                   navTile(index: 6, icon: Icons.psychology_outlined, label: s.tab_adhkar),
                   navTile(index: 7, icon: Icons.campaign_outlined, label: s.tab_announcements),
+                  navTile(index: 8, icon: Icons.emergency_share_outlined, label: s.tab_alerts),
                 ],
               ),
             ),

@@ -1,66 +1,44 @@
 import 'package:equatable/equatable.dart';
-
 import '../models/settings_edit_request.dart';
 
-abstract class SettingsState extends Equatable {
+/// Single concrete state for settings to simplify handler logic and copyWith usage.
+class SettingsState extends Equatable {
   final SettingsEditRequest request;
+  final bool isLoading;
+  final bool isSaving;
+  final bool hasUnsavedChanges;
+  final String? error;
 
-  const SettingsState({required this.request});
-
-  @override
-  List<Object?> get props => [request];
-}
-
-class SettingsInitial extends SettingsState {
-  const SettingsInitial({required super.request});
-
-  SettingsInitial copyWith({SettingsEditRequest? request}) {
-    return SettingsInitial(request: request ?? this.request);
-  }
-}
-
-class SettingsLoading extends SettingsState {
-  const SettingsLoading({required super.request});
-
-  SettingsLoading copyWith({SettingsEditRequest? request}) {
-    return SettingsLoading(request: request ?? this.request);
-  }
-}
-
-class SettingsLoaded extends SettingsState {
-  const SettingsLoaded({required super.request});
-
-  SettingsLoaded copyWith({SettingsEditRequest? request}) {
-    return SettingsLoaded(request: request ?? this.request);
-  }
-}
-
-class SettingsSaving extends SettingsState {
-  const SettingsSaving({required super.request});
-
-  SettingsSaving copyWith({SettingsEditRequest? request}) {
-    return SettingsSaving(request: request ?? this.request);
-  }
-}
-
-class SettingsError extends SettingsState {
-  final String message;
-
-  const SettingsError({
-    required super.request,
-    required this.message,
+  const SettingsState({
+    this.request = const SettingsEditRequest(mosque: null),
+    this.isLoading = false,
+    this.isSaving = false,
+    this.hasUnsavedChanges = false,
+    this.error,
   });
 
-  @override
-  List<Object?> get props => [request, message];
-
-  SettingsError copyWith({
+  SettingsState copyWith({
     SettingsEditRequest? request,
-    String? message,
+    bool? isLoading,
+    bool? isSaving,
+    bool? hasUnsavedChanges,
+    String? error,
   }) {
-    return SettingsError(
+    return SettingsState(
       request: request ?? this.request,
-      message: message ?? this.message,
+      isLoading: isLoading ?? this.isLoading,
+      isSaving: isSaving ?? this.isSaving,
+      hasUnsavedChanges: hasUnsavedChanges ?? this.hasUnsavedChanges,
+      error: error,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        request,
+        isLoading,
+        isSaving,
+        hasUnsavedChanges,
+        error,
+      ];
 }

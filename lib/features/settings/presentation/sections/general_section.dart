@@ -219,12 +219,46 @@ class _GeneralSectionState extends State<GeneralSection> {
               ),
             ],
           ),
+          const Divider(height: 32),
+          Text(
+            s.general_section_adjustments,
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+          const SizedBox(height: 12),
+          _buildOffsetField(s.prayer_fajr, widget.mosque.prayerOffsets.fajr, (v) => bloc.add(SettingsPrayerOffsetFajrChanged(v))),
+          _buildOffsetField(s.prayer_dhuhr, widget.mosque.prayerOffsets.dhuhr, (v) => bloc.add(SettingsPrayerOffsetDhuhrChanged(v))),
+          _buildOffsetField(s.prayer_asr, widget.mosque.prayerOffsets.asr, (v) => bloc.add(SettingsPrayerOffsetAsrChanged(v))),
+          _buildOffsetField(s.prayer_maghrib, widget.mosque.prayerOffsets.maghrib, (v) => bloc.add(SettingsPrayerOffsetMaghribChanged(v))),
+          _buildOffsetField(s.prayer_isha, widget.mosque.prayerOffsets.isha, (v) => bloc.add(SettingsPrayerOffsetIshaChanged(v))),
           const SizedBox(height: 32),
           ElevatedButton(
             onPressed: () => _save(),
             child: Text(s.save_general_settings),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildOffsetField(String label, int val, ValueChanged<int> onChanged) {
+    final s = S.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: TextFormField(
+        key: ValueKey('${label}_$val'),
+        initialValue: val.toString(),
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          labelText: label,
+          suffixText: s.minutes_short,
+          isDense: true,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          border: const OutlineInputBorder(),
+        ),
+        onChanged: (v) {
+          final n = int.tryParse(v);
+          if (n != null) onChanged(n);
+        },
       ),
     );
   }

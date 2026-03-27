@@ -11,6 +11,7 @@ import '../../../core/widgets/custom_elevated_button.dart';
 import '../../../core/widgets/custom_text_field.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/widgets/unified_snackbar.dart';
+import '../../../core/widgets/optimized_image.dart';
 import '../bloc/login/login_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -292,8 +293,9 @@ class _BrandMark extends StatelessWidget {
         ),
         child: Padding(
           padding: EdgeInsets.all(size * 0.14),
-          child: Image.asset(
+          child: OptimizedImage.asset(
             'assets/logo.jpg',
+            cacheWidth: 200,
             fit: BoxFit.contain,
           ),
         ),

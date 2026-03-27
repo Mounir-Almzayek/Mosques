@@ -1,84 +1,23 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../data/models/mosque_model.dart';
-import '../../../../data/repositories/mosque_local_repository.dart';
-import '../../../../data/repositories/mosque_repository.dart';
-import '../../../../data/repositories/platform_announcements_repository.dart';
+import '../../../data/models/announcement_model.dart';
+import '../../../data/models/mosque_model.dart';
+import '../../../data/repositories/mosque_local_repository.dart';
+import '../../../data/repositories/mosque_repository.dart';
+import '../../../data/repositories/platform_announcements_repository.dart';
+import 'display_event.dart';
+import 'display_state.dart';
 
-abstract class DisplayEvent extends Equatable {
-  const DisplayEvent();
+export 'display_event.dart';
+export 'display_state.dart';
 
-  @override
-  List<Object?> get props => [];
-}
-
-class StartDisplaySubscription extends DisplayEvent {}
-
-class MosqueUpdated extends DisplayEvent {
-  final MosqueModel? mosque;
-
-  const MosqueUpdated(this.mosque);
-
-  @override
-  List<Object?> get props => [mosque];
-}
-
-/// بث من [platform_announcements] — تُحدَّث من خارج تطبيق الجوال فقط.
-class PlatformAnnouncementsUpdated extends DisplayEvent {
-  final List<AnnouncementModel> announcements;
-
-  const PlatformAnnouncementsUpdated(this.announcements);
-
-  @override
-  List<Object?> get props => [announcements];
-}
-
-class DisplayErrorEvent extends DisplayEvent {
-  final String message;
-
-  const DisplayErrorEvent(this.message);
-
-  @override
-  List<Object?> get props => [message];
-}
-
-abstract class DisplayState extends Equatable {
-  const DisplayState();
-
-  @override
-  List<Object?> get props => [];
-}
-
-class DisplayInitial extends DisplayState {}
-
-class DisplayLoading extends DisplayState {}
-
-class DisplayLoaded extends DisplayState {
-  final MosqueModel mosque;
-  final List<AnnouncementModel> platformAnnouncements;
-
-  const DisplayLoaded(
-    this.mosque, {
-    this.platformAnnouncements = const [],
-  });
-
-  @override
-  List<Object?> get props => [mosque, platformAnnouncements];
-}
-
-class DisplayError extends DisplayState {
-  final String message;
-
-  const DisplayError(this.message);
-
-  @override
-  List<Object?> get props => [message];
-}
-
+/// Manages real-time mosque data and platform announcements for the display screen.
+///
+/// Subscribes to Firestore snapshots and performs hourly server fetches
+/// to keep the display in sync even if the snapshot listener reconnects.
 class DisplayBloc extends Bloc<DisplayEvent, DisplayState> {
   StreamSubscription<MosqueModel?>? _mosqueSubscription;
   StreamSubscription<List<AnnouncementModel>>? _platformSubscription;
@@ -109,6 +48,7 @@ class DisplayBloc extends Bloc<DisplayEvent, DisplayState> {
     _platformSubscription?.cancel();
     _platformAnnouncements = [];
 
+    // Show cached data immediately while waiting for network.
     final cached = await MosqueLocalRepository.getCachedForActiveMosque();
     if (cached != null) {
       add(MosqueUpdated(cached));
@@ -117,7 +57,6 @@ class DisplayBloc extends Bloc<DisplayEvent, DisplayState> {
     _platformSubscription =
         PlatformAnnouncementsRepository.watchActiveForDisplay().listen(
       (list) => add(PlatformAnnouncementsUpdated(list)),
-      // لا نوقف شاشة العرض — الإعلانات العامة اختيارية
       onError: (error, stackTrace) {},
     );
 
@@ -141,7 +80,7 @@ class DisplayBloc extends Bloc<DisplayEvent, DisplayState> {
     );
   }
 
-  /// مزامنة من السيرفر كل ساعة عند توفر الشبكة؛ بدون شبكة يُتخطى ويُعاد المحاولة في الساعة التالية.
+  /// Syncs from the server every hour when the network is available.
   Future<void> _runHourlyServerFetch() async {
     if (isClosed) return;
     try {
@@ -152,12 +91,13 @@ class DisplayBloc extends Bloc<DisplayEvent, DisplayState> {
       if (mosque != null && !isClosed) {
         add(MosqueUpdated(mosque));
       }
-      final platform = await PlatformAnnouncementsRepository.fetchActiveForDisplayFromServer();
+      final platform =
+          await PlatformAnnouncementsRepository.fetchActiveForDisplayFromServer();
       if (!isClosed) {
         add(PlatformAnnouncementsUpdated(platform));
       }
     } catch (_) {
-      // أخطاء الشبكة أو Firestore: ننتظر المحاولة في الساعة القادمة
+      // Network errors: retry next hour.
     }
   }
 
@@ -175,11 +115,8 @@ class DisplayBloc extends Bloc<DisplayEvent, DisplayState> {
     final current = state;
     if (current is DisplayLoaded) {
       _emitLoaded(emit, current.mosque);
-    } else if (current is DisplayLoading) {
-      // انتظر وصول بيانات المسجد
-    } else {
-      // إن وُجد مسجد لاحقاً عبر المجرى الآخر سيُصدر DisplayLoaded
     }
+    // If still loading, the mosque stream will trigger DisplayLoaded later.
   }
 
   void _onDisplayError(DisplayErrorEvent event, Emitter<DisplayState> emit) {

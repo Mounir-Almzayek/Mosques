@@ -58,6 +58,7 @@ dependencies:
   uuid: ^4.5.3
   adhan: ^2.0.0+1
   qr_flutter: ^4.1.0
+  google_fonts: ^6.2.1
   hijri: ^3.0.0
   marquee: ^2.3.0
   flutter_svg: ^2.2.3

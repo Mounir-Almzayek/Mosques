@@ -25,29 +25,42 @@ enum DisplayBackgroundPreset {
     'mosque_display_05',
     'assets/display_backgrounds/mosque_display_05.jpg',
   ),
-  mosqueDisplayBrand('mosque_display_brand', 'assets/logo.jpg');
+  mosqueDisplay06(
+    'mosque_display_06',
+    'assets/display_backgrounds/mosque_display_06.jpg',
+  ),
+  mosqueDisplay07(
+    'mosque_display_07',
+    'assets/display_backgrounds/mosque_display_07.jpg',
+  ),
+  mosqueDisplay08(
+    'mosque_display_08',
+    'assets/display_backgrounds/mosque_display_08.jpg',
+  ),
+  mosqueDisplay09(
+    'mosque_display_09',
+    'assets/display_backgrounds/mosque_display_09.jpg',
+  ),
+  mosqueDisplay10(
+    'mosque_display_10',
+    'assets/display_backgrounds/mosque_display_10.jpg',
+  );
 
   const DisplayBackgroundPreset(this.storageId, this.assetPath);
 
   final String storageId;
   final String assetPath;
 
+  /// Explicitly set fallback = first image (mosque_display_primary)
   static const String defaultStorageId = 'mosque_display_primary';
 
   static DisplayBackgroundPreset fromStorageId(String? raw) {
     final v = raw?.trim() ?? '';
-    if (v.startsWith('http')) {
-      return DisplayBackgroundPreset.mosqueDisplayPrimary;
-    }
-    if (v.isEmpty) {
-      return DisplayBackgroundPreset.mosqueDisplayPrimary;
-    }
+    // Prevent logo or invalid ids from breaking the background display
     for (final p in DisplayBackgroundPreset.values) {
       if (p.storageId == v) return p;
     }
-    if (v.contains('background.jpg') || v == 'assets/background.jpg') {
-      return DisplayBackgroundPreset.mosqueDisplayPrimary;
-    }
+    // Final fallback to primary
     return DisplayBackgroundPreset.mosqueDisplayPrimary;
   }
 

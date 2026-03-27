@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
+import '../../../../core/enums/app_numeral_format.dart';
 import '../../../../core/enums/display_background_preset.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../data/models/mosque_model.dart';
 import '../../bloc/settings_bloc.dart';
+import '../widgets/font_browser_dialog.dart';
+import '../../../../core/widgets/optimized_image.dart';
 
 String _displayBackgroundLabel(DisplayBackgroundPreset p, S s) {
   switch (p) {
@@ -21,8 +24,16 @@ String _displayBackgroundLabel(DisplayBackgroundPreset p, S s) {
       return s.design_bg_style_4;
     case DisplayBackgroundPreset.mosqueDisplay05:
       return s.design_bg_style_5;
-    case DisplayBackgroundPreset.mosqueDisplayBrand:
-      return s.design_bg_brand;
+    case DisplayBackgroundPreset.mosqueDisplay06:
+      return s.design_bg_style_6;
+    case DisplayBackgroundPreset.mosqueDisplay07:
+      return s.design_bg_style_7;
+    case DisplayBackgroundPreset.mosqueDisplay08:
+      return s.design_bg_style_8;
+    case DisplayBackgroundPreset.mosqueDisplay09:
+      return s.design_bg_style_9;
+    case DisplayBackgroundPreset.mosqueDisplay10:
+      return s.design_bg_style_10;
   }
 }
 
@@ -35,19 +46,19 @@ Color _colorFromHex(String hex) {
 
 String _hexFromColor(Color c, {bool includeAlpha = false}) {
   if (includeAlpha) {
-    final a = (c.a * 255.0).round().clamp(0, 255);
-    final r = (c.r * 255.0).round().clamp(0, 255);
-    final g = (c.g * 255.0).round().clamp(0, 255);
-    final b = (c.b * 255.0).round().clamp(0, 255);
+    final a = (c.a * 255.0).round().toInt().clamp(0, 255);
+    final r = (c.r * 255.0).round().toInt().clamp(0, 255);
+    final g = (c.g * 255.0).round().toInt().clamp(0, 255);
+    final b = (c.b * 255.0).round().toInt().clamp(0, 255);
     return '#${a.toRadixString(16).padLeft(2, '0')}'
             '${r.toRadixString(16).padLeft(2, '0')}'
             '${g.toRadixString(16).padLeft(2, '0')}'
             '${b.toRadixString(16).padLeft(2, '0')}'
         .toUpperCase();
   }
-  final r = (c.r * 255.0).round().clamp(0, 255);
-  final g = (c.g * 255.0).round().clamp(0, 255);
-  final b = (c.b * 255.0).round().clamp(0, 255);
+  final r = (c.r * 255.0).round().toInt().clamp(0, 255);
+  final g = (c.g * 255.0).round().toInt().clamp(0, 255);
+  final b = (c.b * 255.0).round().toInt().clamp(0, 255);
   return '#${r.toRadixString(16).padLeft(2, '0')}'
           '${g.toRadixString(16).padLeft(2, '0')}'
           '${b.toRadixString(16).padLeft(2, '0')}'
@@ -222,7 +233,12 @@ class _DesignSectionState extends State<DesignSection> {
             onApply: (h) => bloc.add(SettingsDesignPrayerOverlayChanged(h)),
             includeAlpha: true,
           ),
-          const SizedBox(height: 16),
+          const Divider(height: 32),
+          Text(
+            s.design_section_typography,
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+          const SizedBox(height: 12),
           TextFormField(
             controller: _fontSizeCtrl,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -238,6 +254,50 @@ class _DesignSectionState extends State<DesignSection> {
             onChanged: (v) {
               final n = double.tryParse(v);
               if (n != null) bloc.add(SettingsDesignBaseFontSizeChanged(n));
+            },
+          ),
+          const SizedBox(height: 16),
+          FontSelectorButton(
+            currentFont: d.fontFamily,
+            onFontSelected: (font) {
+              bloc.add(SettingsDesignFontFamilyChanged(font));
+            },
+          ),
+          const Divider(height: 32),
+          Text(
+            s.design_section_ticker,
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+          const SizedBox(height: 12),
+          ListTile(
+            title: Text(s.design_ticker_speed),
+            subtitle: Slider(
+              value: d.tickerSpeed,
+              min: 0.5,
+              max: 5.0,
+              divisions: 45, // Smoother slider
+              onChanged: (val) {
+                bloc.add(SettingsDesignTickerSpeedChanged(val));
+              },
+            ),
+            trailing: Text('${d.tickerSpeed.toStringAsFixed(1)}x'),
+          ),
+          const SizedBox(height: 12),
+          DropdownButtonFormField<AppNumeralFormat>(
+            value: d.numeralFormat,
+            decoration: InputDecoration(labelText: s.design_numeral_format),
+            items: AppNumeralFormat.values
+                .map((f) => DropdownMenuItem(
+                      value: f,
+                      child: Text(f == AppNumeralFormat.arabic
+                          ? s.design_numeral_arabic
+                          : s.design_numeral_english),
+                    ))
+                .toList(),
+            onChanged: (val) {
+              if (val != null) {
+                bloc.add(SettingsDesignNumeralFormatChanged(val));
+              }
             },
           ),
           const SizedBox(height: 32),
@@ -315,8 +375,9 @@ class _DisplayBackgroundPicker extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Expanded(
-                              child: Image.asset(
+                              child: OptimizedImage.thumbnail(
                                 p.assetPath,
+                                size: 400,
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) =>
                                     ColoredBox(color: Colors.grey.shade300),

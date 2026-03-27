@@ -4,7 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart' hide TextDirection;
-
+import '../../../../core/utils/app_number_format.dart';
 import '../../../../data/models/mosque_model.dart';
 import 'top_header_clock_block.dart';
 import 'top_header_date_block.dart';
@@ -33,6 +33,7 @@ class _TopHeaderWidgetState extends State<TopHeaderWidget> {
     super.initState();
     _now = DateTime.now();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) return;
       setState(() {
         _now = DateTime.now();
       });
@@ -59,10 +60,15 @@ class _TopHeaderWidgetState extends State<TopHeaderWidget> {
     final isRtl = Directionality.of(context) == TextDirection.rtl;
     final h = HijriCalendar.fromDate(_now);
     final weekday = DateFormat('EEEE', locale).format(_now);
-    final gregorianLong = DateFormat('d MMMM yyyy', locale).format(_now);
+
+    final numeralFormat = widget.designSettings.numeralFormat;
+    final gregorianLong = DateFormat('d MMMM yyyy', locale)
+        .format(_now)
+        .formatNumerals(numeralFormat);
     final hijriSuffix = lang == 'ar' ? 'هـ' : 'AH';
     final hijriLine =
-        '${h.hDay} ${h.getLongMonthName()} ${h.hYear} $hijriSuffix';
+        '${h.hDay} ${h.getLongMonthName()} ${h.hYear} $hijriSuffix'
+            .formatNumerals(numeralFormat);
 
     final secondary = widget.designSettings.secondaryColorValue;
     // Scale up header typography relative to design base (full upper section reads larger).
@@ -97,6 +103,7 @@ class _TopHeaderWidgetState extends State<TopHeaderWidget> {
                 now: _now,
                 textColor: secondary,
                 base: base,
+                numeralFormat: numeralFormat,
               ),
             ),
             Expanded(

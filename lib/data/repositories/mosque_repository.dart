@@ -147,6 +147,18 @@ class MosqueRepository {
     });
   }
 
+  /// Update just the active alerts list
+  static Future<void> updateActiveAlerts(MosqueModel mosque) async {
+    final ref = _mosqueRef;
+    if (ref == null) throw Exception('No active mosque');
+
+    await ref.update({
+      'active_alerts': mosque.activeAlerts.map((a) => a.toMap()).toList(),
+      'updated_at': FieldValue.serverTimestamp(),
+      'last_seen': FieldValue.serverTimestamp(),
+    });
+  }
+
   /// Update last seen timestamp (useful for display screens)
   static Future<void> updateLastSeen() async {
     final ref = _mosqueRef;

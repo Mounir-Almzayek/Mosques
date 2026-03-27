@@ -54,6 +54,23 @@ class MessageLookup extends MessageLookupByLibrary {
         "adhkar_source":
             MessageLookupByLibrary.simpleMessage("تعليق (اختياري)"),
         "adhkar_text": MessageLookupByLibrary.simpleMessage("النص"),
+        "alert_editor_title":
+            MessageLookupByLibrary.simpleMessage("إرسال تنبيه عاجل"),
+        "alert_field_duration": MessageLookupByLibrary.simpleMessage("المدة:"),
+        "alert_field_headline":
+            MessageLookupByLibrary.simpleMessage("عنوان التنبيه"),
+        "alert_field_message":
+            MessageLookupByLibrary.simpleMessage("الرسالة العاجلة"),
+        "alert_send_action":
+            MessageLookupByLibrary.simpleMessage("إرسال للشاشة"),
+        "alerts_clear_all":
+            MessageLookupByLibrary.simpleMessage("مسح جميع التنبيهات النشطة"),
+        "alerts_empty_subtitle": MessageLookupByLibrary.simpleMessage(
+            "تنبيهات عاجلة تظهر بملء الشاشة على العرض."),
+        "alerts_empty_title":
+            MessageLookupByLibrary.simpleMessage("لا توجد تنبيهات عاجلة نشطة."),
+        "alerts_fab_add":
+            MessageLookupByLibrary.simpleMessage("تنبيه عاجل جديد"),
         "announcement_dates_invalid": MessageLookupByLibrary.simpleMessage(
             "تاريخ النهاية يجب أن يكون بعد أو يساوي تاريخ البداية."),
         "announcement_delete_body": MessageLookupByLibrary.simpleMessage(
@@ -102,12 +119,31 @@ class MessageLookup extends MessageLookupByLibrary {
         "design_bg_brand": MessageLookupByLibrary.simpleMessage("الشعار"),
         "design_bg_primary": MessageLookupByLibrary.simpleMessage("الأساسية"),
         "design_bg_style_1": MessageLookupByLibrary.simpleMessage("نمط 1"),
+        "design_bg_style_10": MessageLookupByLibrary.simpleMessage("نمط 10"),
         "design_bg_style_2": MessageLookupByLibrary.simpleMessage("نمط 2"),
         "design_bg_style_3": MessageLookupByLibrary.simpleMessage("نمط 3"),
         "design_bg_style_4": MessageLookupByLibrary.simpleMessage("نمط 4"),
         "design_bg_style_5": MessageLookupByLibrary.simpleMessage("نمط 5"),
+        "design_bg_style_6": MessageLookupByLibrary.simpleMessage("نمط 6"),
+        "design_bg_style_7": MessageLookupByLibrary.simpleMessage("نمط 7"),
+        "design_bg_style_8": MessageLookupByLibrary.simpleMessage("نمط 8"),
+        "design_bg_style_9": MessageLookupByLibrary.simpleMessage("نمط 9"),
         "design_display_background_image":
             MessageLookupByLibrary.simpleMessage("خلفية شاشة العرض"),
+        "design_font_browse":
+            MessageLookupByLibrary.simpleMessage("تصفح الخطوط"),
+        "design_font_browser_title":
+            MessageLookupByLibrary.simpleMessage("متصفح الخطوط المرئي"),
+        "design_font_family":
+            MessageLookupByLibrary.simpleMessage("خط التطبيق"),
+        "design_font_preview_text": MessageLookupByLibrary.simpleMessage(
+            "بسم الله الرحمن الرحيم - تجربة خط المسجد"),
+        "design_numeral_arabic":
+            MessageLookupByLibrary.simpleMessage("عربي (١٢٣)"),
+        "design_numeral_english":
+            MessageLookupByLibrary.simpleMessage("إنجليزي (123)"),
+        "design_numeral_format":
+            MessageLookupByLibrary.simpleMessage("تنسيق الأرقام"),
         "design_pick_color": MessageLookupByLibrary.simpleMessage("اختر اللون"),
         "design_prayer_overlay": MessageLookupByLibrary.simpleMessage(
             "لون التغطية على بطاقات الصلاة (فوق SVG)"),
@@ -115,6 +151,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("اللون الأساسي"),
         "design_secondary_color":
             MessageLookupByLibrary.simpleMessage("اللون الثانوي"),
+        "design_section_ticker":
+            MessageLookupByLibrary.simpleMessage("شريط المعلومات والرموز"),
+        "design_section_typography":
+            MessageLookupByLibrary.simpleMessage("الخطوط والتنسيق"),
+        "design_ticker_speed":
+            MessageLookupByLibrary.simpleMessage("سرعة الشريط"),
         "disable_smart_screen":
             MessageLookupByLibrary.simpleMessage("إيقاف الشاشة الذكية"),
         "display_countdown_label":
@@ -164,6 +206,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("تفعيل الشاشة الذكية"),
         "error_occurred": MessageLookupByLibrary.simpleMessage("حدث خطأ"),
         "gallery": MessageLookupByLibrary.simpleMessage("معرض الصور"),
+        "general_section_adjustments": MessageLookupByLibrary.simpleMessage(
+            "ضبط أوقات الصلاة المتقدم (بالدقائق)"),
         "hadith_delete_body": MessageLookupByLibrary.simpleMessage(
             "سيُزال من القائمة. احفظ على الخادم عند الانتهاء."),
         "hadith_delete_title":
@@ -269,6 +313,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "splash_app_tagline":
             MessageLookupByLibrary.simpleMessage("شاشة مسجد ذكية"),
         "tab_adhkar": MessageLookupByLibrary.simpleMessage("الأذكار"),
+        "tab_alerts": MessageLookupByLibrary.simpleMessage("تنبيهات عاجلة"),
         "tab_announcements": MessageLookupByLibrary.simpleMessage("الإعلانات"),
         "tab_design": MessageLookupByLibrary.simpleMessage("التصميم"),
         "tab_duas": MessageLookupByLibrary.simpleMessage("الأدعية"),
@@ -278,6 +323,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "tab_verses": MessageLookupByLibrary.simpleMessage("الآيات"),
         "tawakkul_quote": MessageLookupByLibrary.simpleMessage(
             "«وَمَن يَتَوَكَّلْ عَلَى اللَّهِ فَهُوَ حَسْبُهُ»"),
+        "unit_seconds": MessageLookupByLibrary.simpleMessage("ث"),
         "upload_image": MessageLookupByLibrary.simpleMessage("رفع صورة"),
         "use_current_location":
             MessageLookupByLibrary.simpleMessage("استخدام الموقع الحالي"),

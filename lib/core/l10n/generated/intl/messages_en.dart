@@ -54,6 +54,24 @@ class MessageLookup extends MessageLookupByLibrary {
         "adhkar_source":
             MessageLookupByLibrary.simpleMessage("Note (optional)"),
         "adhkar_text": MessageLookupByLibrary.simpleMessage("Text"),
+        "alert_editor_title":
+            MessageLookupByLibrary.simpleMessage("Send Instant Alert"),
+        "alert_field_duration":
+            MessageLookupByLibrary.simpleMessage("Duration:"),
+        "alert_field_headline":
+            MessageLookupByLibrary.simpleMessage("Alert Headline"),
+        "alert_field_message":
+            MessageLookupByLibrary.simpleMessage("Urgent Message"),
+        "alert_send_action":
+            MessageLookupByLibrary.simpleMessage("Send to Screen"),
+        "alerts_clear_all":
+            MessageLookupByLibrary.simpleMessage("Clear All Active Alerts"),
+        "alerts_empty_subtitle": MessageLookupByLibrary.simpleMessage(
+            "These alerts appear full-screen on the display."),
+        "alerts_empty_title":
+            MessageLookupByLibrary.simpleMessage("No active priority alerts."),
+        "alerts_fab_add":
+            MessageLookupByLibrary.simpleMessage("New High-Priority Alert"),
         "announcement_dates_invalid": MessageLookupByLibrary.simpleMessage(
             "End date must be on or after the start date."),
         "announcement_delete_body": MessageLookupByLibrary.simpleMessage(
@@ -102,12 +120,31 @@ class MessageLookup extends MessageLookupByLibrary {
         "design_bg_brand": MessageLookupByLibrary.simpleMessage("Logo"),
         "design_bg_primary": MessageLookupByLibrary.simpleMessage("Primary"),
         "design_bg_style_1": MessageLookupByLibrary.simpleMessage("Style 1"),
+        "design_bg_style_10": MessageLookupByLibrary.simpleMessage("Style 10"),
         "design_bg_style_2": MessageLookupByLibrary.simpleMessage("Style 2"),
         "design_bg_style_3": MessageLookupByLibrary.simpleMessage("Style 3"),
         "design_bg_style_4": MessageLookupByLibrary.simpleMessage("Style 4"),
         "design_bg_style_5": MessageLookupByLibrary.simpleMessage("Style 5"),
+        "design_bg_style_6": MessageLookupByLibrary.simpleMessage("Style 6"),
+        "design_bg_style_7": MessageLookupByLibrary.simpleMessage("Style 7"),
+        "design_bg_style_8": MessageLookupByLibrary.simpleMessage("Style 8"),
+        "design_bg_style_9": MessageLookupByLibrary.simpleMessage("Style 9"),
         "design_display_background_image":
             MessageLookupByLibrary.simpleMessage("Display background image"),
+        "design_font_browse":
+            MessageLookupByLibrary.simpleMessage("Browse Fonts"),
+        "design_font_browser_title":
+            MessageLookupByLibrary.simpleMessage("Visual Font Browser"),
+        "design_font_family":
+            MessageLookupByLibrary.simpleMessage("App Font Family"),
+        "design_font_preview_text": MessageLookupByLibrary.simpleMessage(
+            "بسم الله الرحمن الرحيم - Mosque App Preview"),
+        "design_numeral_arabic":
+            MessageLookupByLibrary.simpleMessage("Arabic (١٢٣)"),
+        "design_numeral_english":
+            MessageLookupByLibrary.simpleMessage("English (123)"),
+        "design_numeral_format":
+            MessageLookupByLibrary.simpleMessage("Numeral Format"),
         "design_pick_color": MessageLookupByLibrary.simpleMessage("Pick color"),
         "design_prayer_overlay": MessageLookupByLibrary.simpleMessage(
             "Prayer cards overlay (on SVG backgrounds)"),
@@ -115,6 +152,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Primary color"),
         "design_secondary_color":
             MessageLookupByLibrary.simpleMessage("Secondary color"),
+        "design_section_ticker":
+            MessageLookupByLibrary.simpleMessage("Ticker & Symbols"),
+        "design_section_typography":
+            MessageLookupByLibrary.simpleMessage("Typography & Layout"),
+        "design_ticker_speed":
+            MessageLookupByLibrary.simpleMessage("Ticker Speed"),
         "disable_smart_screen":
             MessageLookupByLibrary.simpleMessage("Disable smart screen"),
         "display_countdown_label":
@@ -167,6 +210,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "error_occurred":
             MessageLookupByLibrary.simpleMessage("Something went wrong"),
         "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
+        "general_section_adjustments": MessageLookupByLibrary.simpleMessage(
+            "Advanced Prayer Time Adjustment (Minutes)"),
         "hadith_delete_body": MessageLookupByLibrary.simpleMessage(
             "This will remove it from the list. Save to server when you are ready."),
         "hadith_delete_title":
@@ -272,6 +317,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "splash_app_tagline":
             MessageLookupByLibrary.simpleMessage("Mosque Smart Display"),
         "tab_adhkar": MessageLookupByLibrary.simpleMessage("Dhikr"),
+        "tab_alerts": MessageLookupByLibrary.simpleMessage("Instant Alerts"),
         "tab_announcements":
             MessageLookupByLibrary.simpleMessage("Announcements"),
         "tab_design": MessageLookupByLibrary.simpleMessage("Design"),
@@ -282,6 +328,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "tab_verses": MessageLookupByLibrary.simpleMessage("Verses"),
         "tawakkul_quote": MessageLookupByLibrary.simpleMessage(
             "«And whoever relies upon Allah — then He is sufficient for him»"),
+        "unit_seconds": MessageLookupByLibrary.simpleMessage("s"),
         "upload_image": MessageLookupByLibrary.simpleMessage("Upload image"),
         "use_current_location":
             MessageLookupByLibrary.simpleMessage("Use current location"),

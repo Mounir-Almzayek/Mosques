@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import '../../../data/models/mosque_model.dart';
 
 import '../../../core/enums/app_language.dart';
+import '../../../core/enums/app_numeral_format.dart';
 
 abstract class SettingsEvent extends Equatable {
   const SettingsEvent();
@@ -66,6 +67,41 @@ class SettingsMosqueCoordinatesChanged extends SettingsEvent {
   List<Object?> get props => [latitude, longitude];
 }
 
+class SettingsPrayerOffsetFajrChanged extends SettingsEvent {
+  final int offset;
+  const SettingsPrayerOffsetFajrChanged(this.offset);
+  @override
+  List<Object?> get props => [offset];
+}
+
+class SettingsPrayerOffsetDhuhrChanged extends SettingsEvent {
+  final int offset;
+  const SettingsPrayerOffsetDhuhrChanged(this.offset);
+  @override
+  List<Object?> get props => [offset];
+}
+
+class SettingsPrayerOffsetAsrChanged extends SettingsEvent {
+  final int offset;
+  const SettingsPrayerOffsetAsrChanged(this.offset);
+  @override
+  List<Object?> get props => [offset];
+}
+
+class SettingsPrayerOffsetMaghribChanged extends SettingsEvent {
+  final int offset;
+  const SettingsPrayerOffsetMaghribChanged(this.offset);
+  @override
+  List<Object?> get props => [offset];
+}
+
+class SettingsPrayerOffsetIshaChanged extends SettingsEvent {
+  final int offset;
+  const SettingsPrayerOffsetIshaChanged(this.offset);
+  @override
+  List<Object?> get props => [offset];
+}
+
 class SaveGeneralSettingsRequested extends SettingsEvent {
   const SaveGeneralSettingsRequested();
 }
@@ -115,6 +151,33 @@ class SettingsDesignBaseFontSizeChanged extends SettingsEvent {
 
   @override
   List<Object?> get props => [baseFontSize];
+}
+
+class SettingsDesignTickerSpeedChanged extends SettingsEvent {
+  final double speed;
+
+  const SettingsDesignTickerSpeedChanged(this.speed);
+
+  @override
+  List<Object?> get props => [speed];
+}
+
+class SettingsDesignNumeralFormatChanged extends SettingsEvent {
+  final AppNumeralFormat format;
+
+  const SettingsDesignNumeralFormatChanged(this.format);
+
+  @override
+  List<Object?> get props => [format];
+}
+
+class SettingsDesignFontFamilyChanged extends SettingsEvent {
+  final String fontFamily;
+
+  const SettingsDesignFontFamilyChanged(this.fontFamily);
+
+  @override
+  List<Object?> get props => [fontFamily];
 }
 
 class SaveDesignSettingsRequested extends SettingsEvent {
@@ -250,4 +313,28 @@ class SettingsAnnouncementRemoved extends SettingsEvent {
 
 class SaveAnnouncementsRequested extends SettingsEvent {
   const SaveAnnouncementsRequested();
+}
+
+// ——— Instant Announcements (Alerts) ———
+
+class SettingsAlertAdded extends SettingsEvent {
+  final AnnouncementModel alert;
+  const SettingsAlertAdded(this.alert);
+  @override
+  List<Object?> get props => [alert];
+}
+
+class SettingsAlertRemoved extends SettingsEvent {
+  final String alertId;
+  const SettingsAlertRemoved(this.alertId);
+  @override
+  List<Object?> get props => [alertId];
+}
+
+class SettingsAlertsCleared extends SettingsEvent {
+  const SettingsAlertsCleared();
+}
+
+class SaveAlertsRequested extends SettingsEvent {
+  const SaveAlertsRequested();
 }

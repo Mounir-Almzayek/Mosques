@@ -1,16 +1,24 @@
 import 'package:adhan/adhan.dart';
-import '../../../data/models/mosque_model.dart';
 
+import '../../data/models/mosque_model.dart';
+import 'next_prayer_event.dart';
+import 'prayer_display_phase.dart';
+
+export 'next_prayer_event.dart';
+export 'prayer_display_phase.dart';
+
+/// Optimized helper for prayer time calculations and display phase management.
 class PrayerTimesHelper {
-  /// Sentinel for [getNextEvent] when the next adhan is tomorrow's Fajr.
-  static const String tomorrowFajrPrayerName = 'FAJR_TOMORROW';
-
   final MosqueModel mosque;
+
+  static const String tomorrowFajrPrayerName = 'FAJR (TOMORROW)';
 
   PrayerTimesHelper(this.mosque);
 
   CalculationParameters _getParams() {
     switch (mosque.prayerCalculationMethod) {
+      case 'MuslimWorldLeague':
+        return CalculationMethod.muslim_world_league.getParameters();
       case 'Egyptian':
         return CalculationMethod.egyptian.getParameters();
       case 'Karachi':
@@ -31,9 +39,8 @@ class PrayerTimesHelper {
         return CalculationMethod.turkey.getParameters();
       case 'Tehran':
         return CalculationMethod.tehran.getParameters();
-      case 'NorthAmerica':
+      case 'Isna':
         return CalculationMethod.north_america.getParameters();
-      case 'MuslimWorldLeague':
       default:
         return CalculationMethod.muslim_world_league.getParameters();
     }
@@ -45,7 +52,34 @@ class PrayerTimesHelper {
     return PrayerTimes.today(coordinates, params);
   }
 
-  /// Get Iqama offset for a specific prayer in minutes
+  DateTime? _getAdjustedTime(DateTime? t, Prayer prayer) {
+    if (t == null) return null;
+    final offsets = mosque.prayerOffsets;
+    int offset = 0;
+    switch (prayer) {
+      case Prayer.fajr:
+        offset = offsets.fajr;
+        break;
+      case Prayer.dhuhr:
+        offset = offsets.dhuhr;
+        break;
+      case Prayer.asr:
+        offset = offsets.asr;
+        break;
+      case Prayer.maghrib:
+        offset = offsets.maghrib;
+        break;
+      case Prayer.isha:
+        offset = offsets.isha;
+        break;
+      default:
+        offset = 0;
+    }
+    if (offset == 0) return t;
+    return t.add(Duration(minutes: offset));
+  }
+
+  /// Get Iqama offset for a specific prayer in minutes.
   int getIqamaOffset(Prayer prayer) {
     switch (prayer) {
       case Prayer.fajr:
@@ -58,13 +92,12 @@ class PrayerTimesHelper {
         return mosque.iqamaSettings.maghribOffset;
       case Prayer.isha:
         return mosque.iqamaSettings.ishaOffset;
-      case Prayer.none:
-      case Prayer.sunrise:
+      default:
         return 0;
     }
   }
 
-  static const _iqamaPrayers = [
+  static const List<Prayer> _iqamaPrayers = [
     Prayer.fajr,
     Prayer.dhuhr,
     Prayer.asr,
@@ -72,16 +105,15 @@ class PrayerTimesHelper {
     Prayer.isha,
   ];
 
-  /// مراحل العرض: إقامة حالية، دقيقة انتقال بعد الإقامة، ثم العدّ لأذان القادم.
-  PrayerDisplayPhase getPrayerDisplayPhase([DateTime? now]) {
-    now ??= DateTime.now();
+  /// Determines the current UI display phase (Next Adhan, Iqama countdown, etc.).
+  PrayerDisplayPhase getPrayerDisplayPhase(DateTime now) {
     final prayers = getTodayPrayerTimes();
 
+    // Check if we are between adhan and iqama for any prayer.
     for (final p in _iqamaPrayers) {
-      final azan = prayers.timeForPrayer(p);
+      final azan = _getAdjustedTime(prayers.timeForPrayer(p), p);
       if (azan == null) continue;
-      final offsetMin = getIqamaOffset(p);
-      final iqamaTime = azan.add(Duration(minutes: offsetMin));
+      final iqamaTime = azan.add(Duration(minutes: getIqamaOffset(p)));
       if (now.isAfter(azan) && now.isBefore(iqamaTime)) {
         return PrayerDisplayPhase(
           kind: PrayerDisplayPhaseKind.iqama,
@@ -91,13 +123,13 @@ class PrayerTimesHelper {
       }
     }
 
+    // Check if we are in the 1-minute grace period after iqama.
     for (final p in _iqamaPrayers) {
-      final azan = prayers.timeForPrayer(p);
+      final azan = _getAdjustedTime(prayers.timeForPrayer(p), p);
       if (azan == null) continue;
-      final offsetMin = getIqamaOffset(p);
-      final iqamaTime = azan.add(Duration(minutes: offsetMin));
+      final iqamaTime = azan.add(Duration(minutes: getIqamaOffset(p)));
       final graceEnd = iqamaTime.add(const Duration(minutes: 1));
-      if (!now.isBefore(iqamaTime) && now.isBefore(graceEnd)) {
+      if (now.isAfter(iqamaTime) && now.isBefore(graceEnd)) {
         return PrayerDisplayPhase(
           kind: PrayerDisplayPhaseKind.graceAfterIqama,
           prayerNameKey: p.name.toUpperCase(),
@@ -106,80 +138,67 @@ class PrayerTimesHelper {
       }
     }
 
+    // Default: counting down to the next adhan.
     final ev = getNextEvent();
-    final rawName = ev['prayerName'] as String;
-    final key = rawName.split(' ').first;
+    final key = ev.prayerName.split('(').first.trim();
     return PrayerDisplayPhase(
       kind: PrayerDisplayPhaseKind.nextAdhan,
       prayerNameKey: key,
-      focusTime: ev['targetTime'] as DateTime,
+      focusTime: ev.targetTime,
     );
   }
 
-  /// Calculates upcoming event (Next Azan OR Iqama Countdown)
-  Map<String, dynamic> getNextEvent() {
-    final prayers = getTodayPrayerTimes();
+  /// Returns the single most relevant upcoming "Event" (Next Adhan or next Iqama).
+  NextPrayerEvent getNextEvent() {
     final now = DateTime.now();
+    final prayers = getTodayPrayerTimes();
 
-    // First, check if we are currently BETWEEN an Azan and its Iqama
+    // Check if we are between an adhan and its iqama.
     final currentPrayer = prayers.currentPrayer();
     if (currentPrayer != Prayer.none && currentPrayer != Prayer.sunrise) {
-      final azanTime = prayers.timeForPrayer(currentPrayer)!;
+      final azanTime =
+          _getAdjustedTime(prayers.timeForPrayer(currentPrayer), currentPrayer)!;
       final iqamaOffset = getIqamaOffset(currentPrayer);
       final iqamaTime = azanTime.add(Duration(minutes: iqamaOffset));
 
-      // If now is after Azan, but before Iqama, we are in Iqama countdown
       if (now.isAfter(azanTime) && now.isBefore(iqamaTime)) {
-        return {
-          'isIqama': true,
-          'targetTime': iqamaTime,
-          'prayerName': currentPrayer.name.toUpperCase(),
-        };
+        return NextPrayerEvent(
+          isIqama: true,
+          targetTime: iqamaTime,
+          prayerName: currentPrayer.name.toUpperCase(),
+        );
       }
     }
 
-    // Otherwise, find the next Azan
+    // Find the next adhan.
     final nextPrayer = prayers.nextPrayer();
     if (nextPrayer != Prayer.none && nextPrayer != Prayer.sunrise) {
-      return {
-        'isIqama': false,
-        'targetTime': prayers.timeForPrayer(nextPrayer),
-        'prayerName': nextPrayer.name.toUpperCase(),
-      };
-    } else {
-      // It's after Isha, so next is tomorrow's Fajr
-      final tomorrowPrayers = PrayerTimes(
-        Coordinates(mosque.latitude, mosque.longitude),
-        DateComponents.from(now.add(const Duration(days: 1))),
-        _getParams(),
+      return NextPrayerEvent(
+        isIqama: false,
+        targetTime:
+            _getAdjustedTime(prayers.timeForPrayer(nextPrayer), nextPrayer)!,
+        prayerName: nextPrayer.name.toUpperCase(),
       );
-      return {
-        'isIqama': false,
-        'targetTime': tomorrowPrayers.fajr,
-        'prayerName': tomorrowFajrPrayerName,
-      };
     }
+
+    // After Isha → tomorrow's Fajr.
+    final tomorrowPrayers = PrayerTimes(
+      Coordinates(mosque.latitude, mosque.longitude),
+      DateComponents.from(now.add(const Duration(days: 1))),
+      _getParams(),
+    );
+    return NextPrayerEvent(
+      isIqama: false,
+      targetTime: _getAdjustedTime(tomorrowPrayers.fajr, Prayer.fajr)!,
+      prayerName: tomorrowFajrPrayerName,
+    );
   }
 
   static String formatDuration(Duration d) {
-    if (d.isNegative) return "00:00:00";
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
-    String twoDigitMinutes = twoDigits(d.inMinutes.remainder(60));
-    String twoDigitSeconds = twoDigits(d.inSeconds.remainder(60));
-    return "${twoDigits(d.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+    if (d.isNegative) return '00:00:00';
+    final h = d.inHours.toString().padLeft(2, '0');
+    final m = (d.inMinutes % 60).toString().padLeft(2, '0');
+    final s = (d.inSeconds % 60).toString().padLeft(2, '0');
+    return '$h:$m:$s';
   }
-}
-
-enum PrayerDisplayPhaseKind { iqama, graceAfterIqama, nextAdhan }
-
-class PrayerDisplayPhase {
-  final PrayerDisplayPhaseKind kind;
-  final String prayerNameKey;
-  final DateTime focusTime;
-
-  const PrayerDisplayPhase({
-    required this.kind,
-    required this.prayerNameKey,
-    required this.focusTime,
-  });
 }
