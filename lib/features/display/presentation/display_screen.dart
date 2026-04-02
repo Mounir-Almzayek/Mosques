@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/styles/app_theme.dart';
 import '../../../core/widgets/optimized_image.dart';
 import '../../../core/enums/display_background_preset.dart';
+import '../../../core/enums/display_background_type.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/routes/app_routes.dart';
 import '../bloc/display_bloc.dart';
@@ -38,16 +39,14 @@ class _DisplayScreenState extends State<DisplayScreen> {
       if (!mounted) return;
       final state = context.read<DisplayBloc>().state;
       if (state is DisplayLoaded) {
-        final path = DisplayBackgroundPreset.fromStorageId(
-          state.mosque.designSettings.backgroundValue,
-        ).assetPath;
-
-        final media = MediaQuery.of(context);
-        final physicalWidth = (media.size.width * media.devicePixelRatio)
-            .round();
-        final cappedWidth = physicalWidth > 1920 ? 1920 : physicalWidth;
-
-        precacheOptimizedAsset(context, path, cacheWidth: cappedWidth);
+        final d = state.mosque.designSettings;
+        if (d.background.type == DisplayBackgroundType.image) {
+          final path = DisplayBackgroundPreset.fromStorageId(d.background.value).assetPath;
+          final media = MediaQuery.of(context);
+          final physicalWidth = (media.size.width * media.devicePixelRatio).round();
+          final cappedWidth = physicalWidth > 1920 ? 1920 : physicalWidth;
+          precacheOptimizedAsset(context, path, cacheWidth: cappedWidth);
+        }
       }
     });
   }
@@ -78,13 +77,13 @@ class _DisplayScreenState extends State<DisplayScreen> {
             final mosque = state.mosque;
             final platformAds = state.platformAnnouncements;
             final design = mosque.designSettings;
+            final colors = design.colors;
 
             // Centralized theme lookup with dynamic font support.
             final theme = AppTheme.light(
               context,
               fontFamily: design.fontFamily,
             );
-            final baseFontSize = design.baseFontSize;
 
             final media = MediaQuery.sizeOf(context);
             final padH = (media.width * 0.028).clamp(14.0, 64.0);
@@ -96,11 +95,11 @@ class _DisplayScreenState extends State<DisplayScreen> {
                 builder: (context) => Stack(
                   fit: StackFit.expand,
                   children: [
-                    // 1. Background Image
+                    // 1. Background
                     Positioned.fill(
                       child: DisplayBackgroundImage(
-                        fallbackColor: design.primaryColorValue,
-                        backgroundPresetId: design.backgroundValue,
+                        fallbackColor: colors.primaryValue,
+                        settings: design.background,
                       ),
                     ),
 
@@ -130,7 +129,8 @@ class _DisplayScreenState extends State<DisplayScreen> {
                                       mosque: mosque,
                                       platformAnnouncements: platformAds,
                                       designSettings: design,
-                                      baseFontSize: baseFontSize,
+                                      prayersFontSize: design.fontSizes.prayers,
+                                      contentFontSize: design.fontSizes.content,
                                     ),
                                   ),
                                 ],
@@ -143,8 +143,8 @@ class _DisplayScreenState extends State<DisplayScreen> {
                             child: DisplayTickerBar(
                               mosque: mosque,
                               platformAnnouncements: platformAds,
-                              primaryColor: design.secondaryColorValue,
-                              baseFontSize: baseFontSize,
+                              primaryColor: colors.secondaryValue,
+                              fontSize: design.fontSizes.announcements,
                             ),
                           ),
                         ],
@@ -155,8 +155,8 @@ class _DisplayScreenState extends State<DisplayScreen> {
                     Positioned.fill(
                       child: DisplayAlertOverlay(
                         alerts: mosque.activeAlerts,
-                        primaryColor: design.activeCardTextColorValue,
-                        backgroundColor: design.activeCardColorValue.withValues(
+                        primaryColor: colors.activeCardTextValue,
+                        backgroundColor: colors.activeCardValue.withValues(
                           alpha: 0.98,
                         ),
                         numeralFormat: design.numeralFormat,

@@ -4,6 +4,7 @@ import '../../../data/models/mosque_model.dart';
 
 import '../../../core/enums/app_language.dart';
 import '../../../core/enums/app_numeral_format.dart';
+import '../../../core/enums/display_background_type.dart';
 
 abstract class SettingsEvent extends Equatable {
   const SettingsEvent();
@@ -117,6 +118,15 @@ class SettingsDesignBackgroundValueChanged extends SettingsEvent {
   List<Object?> get props => [backgroundValue];
 }
 
+class SettingsDesignBackgroundTypeChanged extends SettingsEvent {
+  final DisplayBackgroundType type;
+
+  const SettingsDesignBackgroundTypeChanged(this.type);
+
+  @override
+  List<Object?> get props => [type];
+}
+
 class SettingsDesignPrimaryColorChanged extends SettingsEvent {
   final String primaryColor;
 
@@ -165,13 +175,39 @@ class SettingsDesignInactiveCardTextColorChanged extends SettingsEvent {
   List<Object?> get props => [color];
 }
 
-class SettingsDesignBaseFontSizeChanged extends SettingsEvent {
-  final double baseFontSize;
-
-  const SettingsDesignBaseFontSizeChanged(this.baseFontSize);
-
+class SettingsDesignClockFontSizeChanged extends SettingsEvent {
+  final double fontSize;
+  const SettingsDesignClockFontSizeChanged(this.fontSize);
   @override
-  List<Object?> get props => [baseFontSize];
+  List<Object?> get props => [fontSize];
+}
+
+class SettingsDesignMosqueInfoFontSizeChanged extends SettingsEvent {
+  final double fontSize;
+  const SettingsDesignMosqueInfoFontSizeChanged(this.fontSize);
+  @override
+  List<Object?> get props => [fontSize];
+}
+
+class SettingsDesignPrayersFontSizeChanged extends SettingsEvent {
+  final double fontSize;
+  const SettingsDesignPrayersFontSizeChanged(this.fontSize);
+  @override
+  List<Object?> get props => [fontSize];
+}
+
+class SettingsDesignAnnouncementsFontSizeChanged extends SettingsEvent {
+  final double fontSize;
+  const SettingsDesignAnnouncementsFontSizeChanged(this.fontSize);
+  @override
+  List<Object?> get props => [fontSize];
+}
+
+class SettingsDesignContentFontSizeChanged extends SettingsEvent {
+  final double fontSize;
+  const SettingsDesignContentFontSizeChanged(this.fontSize);
+  @override
+  List<Object?> get props => [fontSize];
 }
 
 class SettingsDesignTickerSpeedChanged extends SettingsEvent {

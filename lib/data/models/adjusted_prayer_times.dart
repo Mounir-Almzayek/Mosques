@@ -16,6 +16,9 @@ class PrayerTimeItem {
     required this.offset,
   });
 
+  bool get isSunrise => prayer == Prayer.sunrise;
+  bool get isIqamaApplicable => prayer != Prayer.sunrise;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

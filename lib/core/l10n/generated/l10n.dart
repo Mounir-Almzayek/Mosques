@@ -880,6 +880,16 @@ class S {
     );
   }
 
+  /// `Are you sure you want to delete this hadith?`
+  String get hadith_confirm_delete {
+    return Intl.message(
+      'Are you sure you want to delete this hadith?',
+      name: 'hadith_confirm_delete',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `New verse`
   String get verse_fab_add {
     return Intl.message(
@@ -1920,6 +1930,16 @@ class S {
     );
   }
 
+  /// `Remaining to Sunrise`
+  String get display_remaining_to_sunrise_line {
+    return Intl.message(
+      'Remaining to Sunrise',
+      name: 'display_remaining_to_sunrise_line',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Remaining`
   String get display_countdown_label {
     return Intl.message(
@@ -2080,11 +2100,51 @@ class S {
     );
   }
 
-  /// `Base font size`
-  String get design_base_font_size {
+  /// `Clock font size`
+  String get design_font_size_clock {
     return Intl.message(
-      'Base font size',
-      name: 'design_base_font_size',
+      'Clock font size',
+      name: 'design_font_size_clock',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mosque info font size`
+  String get design_font_size_mosque_info {
+    return Intl.message(
+      'Mosque info font size',
+      name: 'design_font_size_mosque_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Prayers font size`
+  String get design_font_size_prayers {
+    return Intl.message(
+      'Prayers font size',
+      name: 'design_font_size_prayers',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Announcements font size`
+  String get design_font_size_announcements {
+    return Intl.message(
+      'Announcements font size',
+      name: 'design_font_size_announcements',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hadiths & content font size`
+  String get design_font_size_content {
+    return Intl.message(
+      'Hadiths & content font size',
+      name: 'design_font_size_content',
       desc: '',
       args: [],
     );
@@ -2195,6 +2255,216 @@ class S {
     return Intl.message(
       'Fajr (tomorrow)',
       name: 'prayer_fajr_tomorrow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Background Type`
+  String get design_background_type {
+    return Intl.message(
+      'Background Type',
+      name: 'design_background_type',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Library Image`
+  String get design_bg_type_image {
+    return Intl.message(
+      'Library Image',
+      name: 'design_bg_type_image',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Solid Color`
+  String get design_bg_type_color {
+    return Intl.message(
+      'Solid Color',
+      name: 'design_bg_type_color',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Colors & Theme`
+  String get design_colors_title {
+    return Intl.message(
+      'Colors & Theme',
+      name: 'design_colors_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Font Sizes`
+  String get design_font_sizes_title {
+    return Intl.message(
+      'Font Sizes',
+      name: 'design_font_sizes_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Typography`
+  String get design_typography_title {
+    return Intl.message(
+      'Typography',
+      name: 'design_typography_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Display Behavior`
+  String get design_behavior_title {
+    return Intl.message(
+      'Display Behavior',
+      name: 'design_behavior_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Screen Background`
+  String get design_background_title {
+    return Intl.message(
+      'Screen Background',
+      name: 'design_background_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Main Clock & Time Color`
+  String get design_color_primary {
+    return Intl.message(
+      'Main Clock & Time Color',
+      name: 'design_color_primary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ticker Bar Background Color`
+  String get design_color_secondary {
+    return Intl.message(
+      'Ticker Bar Background Color',
+      name: 'design_color_secondary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active Prayer Card Background`
+  String get design_color_active_card {
+    return Intl.message(
+      'Active Prayer Card Background',
+      name: 'design_color_active_card',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active Card Text Color`
+  String get design_color_active_card_text {
+    return Intl.message(
+      'Active Card Text Color',
+      name: 'design_color_active_card_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Inactive Card & Hadith Text`
+  String get design_color_inactive_card_text {
+    return Intl.message(
+      'Inactive Card & Hadith Text',
+      name: 'design_color_inactive_card_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Inactive Cards Background Color`
+  String get design_color_prayer_overlay {
+    return Intl.message(
+      'Inactive Cards Background Color',
+      name: 'design_color_prayer_overlay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clock Font Size`
+  String get design_clock_font_size {
+    return Intl.message(
+      'Clock Font Size',
+      name: 'design_clock_font_size',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mosque Info Font Size`
+  String get design_mosque_info_font_size {
+    return Intl.message(
+      'Mosque Info Font Size',
+      name: 'design_mosque_info_font_size',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Prayers Font Size`
+  String get design_prayers_font_size {
+    return Intl.message(
+      'Prayers Font Size',
+      name: 'design_prayers_font_size',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Announcements Font Size`
+  String get design_announcements_font_size {
+    return Intl.message(
+      'Announcements Font Size',
+      name: 'design_announcements_font_size',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hadiths & Content Font Size`
+  String get design_content_font_size {
+    return Intl.message(
+      'Hadiths & Content Font Size',
+      name: 'design_content_font_size',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Arabic (١٢٣)`
+  String get numeral_format_arabic {
+    return Intl.message(
+      'Arabic (١٢٣)',
+      name: 'numeral_format_arabic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `English (123)`
+  String get numeral_format_english {
+    return Intl.message(
+      'English (123)',
+      name: 'numeral_format_english',
       desc: '',
       args: [],
     );

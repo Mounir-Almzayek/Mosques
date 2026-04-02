@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:adhan/adhan.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/prayer_times_helper.dart';
@@ -14,14 +13,16 @@ class DisplayBeigeArea extends StatefulWidget {
   final MosqueModel mosque;
   final List<AnnouncementModel> platformAnnouncements;
   final DesignSettingsModel designSettings;
-  final double baseFontSize;
+  final double prayersFontSize;
+  final double contentFontSize;
 
   const DisplayBeigeArea({
     super.key,
     required this.mosque,
     this.platformAnnouncements = const [],
     required this.designSettings,
-    required this.baseFontSize,
+    required this.prayersFontSize,
+    required this.contentFontSize,
   });
 
   @override
@@ -43,6 +44,7 @@ class _DisplayBeigeAreaState extends State<DisplayBeigeArea> {
       if (!mounted) return;
       setState(() {
         _now = DateTime.now();
+        // The helper instance is cheap; re-syncing to ensure it handles mosque updates
         _helper = PrayerTimesHelper(widget.mosque);
       });
     });
@@ -70,29 +72,39 @@ class _DisplayBeigeAreaState extends State<DisplayBeigeArea> {
     return parsed == slot;
   }
 
-  static DateTime _azanFor(AdjustedPrayerTimes prayers, PrayerDisplaySlot slot) {
-    switch (slot) {
-      case PrayerDisplaySlot.fajr:
-        return prayers.getByPrayer(Prayer.fajr)!.adhanTime;
-      case PrayerDisplaySlot.sunrise:
-        return prayers.getByPrayer(Prayer.sunrise)!.adhanTime;
-      case PrayerDisplaySlot.dhuhr:
-        return prayers.getByPrayer(Prayer.dhuhr)!.adhanTime;
-      case PrayerDisplaySlot.asr:
-        return prayers.getByPrayer(Prayer.asr)!.adhanTime;
-      case PrayerDisplaySlot.maghrib:
-        return prayers.getByPrayer(Prayer.maghrib)!.adhanTime;
-      case PrayerDisplaySlot.isha:
-        return prayers.getByPrayer(Prayer.isha)!.adhanTime;
+  /// Finds the correct adhan time for a card slot.
+  /// If today's time for this slot is already past (and it's not the focused card in iqama mode),
+  /// we show tomorrow's time to keep the UI relevant.
+  DateTime _azanTimeForSlot(
+    DateTime now,
+    AdjustedPrayerTimes today,
+    PrayerDisplaySlot slot,
+  ) {
+    final todayItem = today.getByPrayerName(slot.name.toUpperCase());
+    if (todayItem == null) return now;
+
+    // Determine if we should show tomorrow's time.
+    // Logic: If Today's Adhan + Grace (e.g. 1 min) is in the past, and it's NOT the current focus,
+    // then this card is "Done" for today and should show tomorrow's time.
+    final cutoff = todayItem.iqamaTime.add(const Duration(minutes: 1));
+    if (now.isAfter(cutoff)) {
+      final tomorrow = _helper.buildAdjustedPrayerTimes(
+        now.add(const Duration(days: 1)),
+      );
+      final tomItem = tomorrow.getByPrayerName(slot.name.toUpperCase());
+      return tomItem?.adhanTime ?? todayItem.adhanTime;
     }
+
+    return todayItem.adhanTime;
   }
 
   @override
   Widget build(BuildContext context) {
-    final prayers = _helper.getTodayAdjustedTimes();
+    final today = _helper.buildAdjustedPrayerTimes(_now);
     final phase = _helper.getPrayerDisplayPhase(_now);
     final remaining = phase.focusTime.difference(_now);
     final slots = PrayerDisplaySlot.values;
+    final colors = widget.designSettings.colors;
 
     return LayoutBuilder(
       builder: (context, outer) {
@@ -115,8 +127,17 @@ class _DisplayBeigeAreaState extends State<DisplayBeigeArea> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: slots.map((slot) {
-              final azanTime = _azanFor(prayers, slot);
+              final azanTime = _azanTimeForSlot(_now, today, slot);
               final isFocusCard = _cardMatchesPhase(slot, phase);
+
+              // Blinking logic: Matches hour/minute AND matches day for Adhan, 
+              // OR is currently in the active grace period after iqama.
+              final isBlinking = (_now.hour == azanTime.hour && 
+                                 _now.minute == azanTime.minute &&
+                                 _now.day == azanTime.day) ||
+                                 (isFocusCard && 
+                                  phase.kind == PrayerDisplayPhaseKind.graceAfterIqama);
+
               final graceAnim =
                   isFocusCard &&
                       phase.kind == PrayerDisplayPhaseKind.graceAfterIqama
@@ -139,8 +160,9 @@ class _DisplayBeigeAreaState extends State<DisplayBeigeArea> {
                       phase: phase,
                       remaining: remaining,
                       designSettings: widget.designSettings,
-                      baseFontSize: widget.baseFontSize,
+                      prayersFontSize: widget.prayersFontSize,
                       graceAnim: graceAnim,
+                      isBlinking: isBlinking,
                     ),
                   ),
                 ),
@@ -153,9 +175,9 @@ class _DisplayBeigeAreaState extends State<DisplayBeigeArea> {
           width: 1200,
           child: DisplaySpiritualStrip(
             mosque: widget.mosque,
-            primaryColor: widget.designSettings.inactiveCardTextColorValue,
-            cardColor: widget.designSettings.prayerCardColorValue,
-            baseFontSize: widget.baseFontSize,
+            primaryColor: colors.inactiveCardTextValue,
+            cardColor: colors.prayerOverlayValue,
+            contentFontSize: widget.contentFontSize,
           ),
         );
 

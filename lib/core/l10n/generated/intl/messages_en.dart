@@ -117,10 +117,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Active card background"),
         "design_active_card_text_color":
             MessageLookupByLibrary.simpleMessage("Active card text color"),
+        "design_announcements_font_size":
+            MessageLookupByLibrary.simpleMessage("Announcements Font Size"),
         "design_background_color":
             MessageLookupByLibrary.simpleMessage("Screen background color"),
-        "design_base_font_size":
-            MessageLookupByLibrary.simpleMessage("Base font size"),
+        "design_background_title":
+            MessageLookupByLibrary.simpleMessage("Screen Background"),
+        "design_background_type":
+            MessageLookupByLibrary.simpleMessage("Background Type"),
+        "design_behavior_title":
+            MessageLookupByLibrary.simpleMessage("Display Behavior"),
         "design_bg_brand": MessageLookupByLibrary.simpleMessage("Logo"),
         "design_bg_primary": MessageLookupByLibrary.simpleMessage("Primary"),
         "design_bg_style_1": MessageLookupByLibrary.simpleMessage("Style 1"),
@@ -134,6 +140,28 @@ class MessageLookup extends MessageLookupByLibrary {
         "design_bg_style_7": MessageLookupByLibrary.simpleMessage("Style 7"),
         "design_bg_style_8": MessageLookupByLibrary.simpleMessage("Style 8"),
         "design_bg_style_9": MessageLookupByLibrary.simpleMessage("Style 9"),
+        "design_bg_type_color":
+            MessageLookupByLibrary.simpleMessage("Solid Color"),
+        "design_bg_type_image":
+            MessageLookupByLibrary.simpleMessage("Library Image"),
+        "design_clock_font_size":
+            MessageLookupByLibrary.simpleMessage("Clock Font Size"),
+        "design_color_active_card": MessageLookupByLibrary.simpleMessage(
+            "Active Prayer Card Background"),
+        "design_color_active_card_text":
+            MessageLookupByLibrary.simpleMessage("Active Card Text Color"),
+        "design_color_inactive_card_text":
+            MessageLookupByLibrary.simpleMessage("Inactive Card & Hadith Text"),
+        "design_color_prayer_overlay": MessageLookupByLibrary.simpleMessage(
+            "Inactive Cards Background Color"),
+        "design_color_primary":
+            MessageLookupByLibrary.simpleMessage("Main Clock & Time Color"),
+        "design_color_secondary":
+            MessageLookupByLibrary.simpleMessage("Ticker Bar Background Color"),
+        "design_colors_title":
+            MessageLookupByLibrary.simpleMessage("Colors & Theme"),
+        "design_content_font_size":
+            MessageLookupByLibrary.simpleMessage("Hadiths & Content Font Size"),
         "design_display_background_image":
             MessageLookupByLibrary.simpleMessage("Display background image"),
         "design_font_browse":
@@ -144,8 +172,22 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("App Font Family"),
         "design_font_preview_text": MessageLookupByLibrary.simpleMessage(
             "بسم الله الرحمن الرحيم - Mosque App Preview"),
+        "design_font_size_announcements":
+            MessageLookupByLibrary.simpleMessage("Announcements font size"),
+        "design_font_size_clock":
+            MessageLookupByLibrary.simpleMessage("Clock font size"),
+        "design_font_size_content":
+            MessageLookupByLibrary.simpleMessage("Hadiths & content font size"),
+        "design_font_size_mosque_info":
+            MessageLookupByLibrary.simpleMessage("Mosque info font size"),
+        "design_font_size_prayers":
+            MessageLookupByLibrary.simpleMessage("Prayers font size"),
+        "design_font_sizes_title":
+            MessageLookupByLibrary.simpleMessage("Font Sizes"),
         "design_inactive_card_text_color": MessageLookupByLibrary.simpleMessage(
             "Inactive card & Hadith text color"),
+        "design_mosque_info_font_size":
+            MessageLookupByLibrary.simpleMessage("Mosque Info Font Size"),
         "design_numeral_arabic":
             MessageLookupByLibrary.simpleMessage("Arabic (١٢٣)"),
         "design_numeral_english":
@@ -155,6 +197,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "design_pick_color": MessageLookupByLibrary.simpleMessage("Pick color"),
         "design_prayer_overlay":
             MessageLookupByLibrary.simpleMessage("Inactive card background"),
+        "design_prayers_font_size":
+            MessageLookupByLibrary.simpleMessage("Prayers Font Size"),
         "design_primary_color":
             MessageLookupByLibrary.simpleMessage("Clock and Time color"),
         "design_secondary_color":
@@ -165,6 +209,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Typography & Layout"),
         "design_ticker_speed":
             MessageLookupByLibrary.simpleMessage("Ticker Speed"),
+        "design_typography_title":
+            MessageLookupByLibrary.simpleMessage("Typography"),
         "disable_smart_screen":
             MessageLookupByLibrary.simpleMessage("Disable smart screen"),
         "display_countdown_label":
@@ -179,6 +225,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Next prayer"),
         "display_remaining_to_adhan_line": m0,
         "display_remaining_to_iqama_line": m1,
+        "display_remaining_to_sunrise_line":
+            MessageLookupByLibrary.simpleMessage("Remaining to Sunrise"),
         "display_ticker_adhkar": MessageLookupByLibrary.simpleMessage("Dhikr"),
         "display_ticker_dua": MessageLookupByLibrary.simpleMessage("Dua"),
         "display_ticker_hadith": MessageLookupByLibrary.simpleMessage("Hadith"),
@@ -219,6 +267,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
         "general_section_adjustments": MessageLookupByLibrary.simpleMessage(
             "Advanced Prayer Time Adjustment (Minutes)"),
+        "hadith_confirm_delete": MessageLookupByLibrary.simpleMessage(
+            "Are you sure you want to delete this hadith?"),
         "hadith_delete_body": MessageLookupByLibrary.simpleMessage(
             "This will remove it from the list. Save to server when you are ready."),
         "hadith_delete_title":
@@ -262,6 +312,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "mosque_name_label":
             MessageLookupByLibrary.simpleMessage("Mosque name"),
         "no_data": MessageLookupByLibrary.simpleMessage("No data"),
+        "numeral_format_arabic":
+            MessageLookupByLibrary.simpleMessage("Arabic (١٢٣)"),
+        "numeral_format_english":
+            MessageLookupByLibrary.simpleMessage("English (123)"),
         "password_hint": MessageLookupByLibrary.simpleMessage("••••••••"),
         "password_label": MessageLookupByLibrary.simpleMessage("Password"),
         "please_select": MessageLookupByLibrary.simpleMessage("Please select"),

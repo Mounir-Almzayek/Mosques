@@ -1,85 +1,40 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart' show Color, Colors;
 
 import '../../core/enums/app_numeral_format.dart';
-import '../../core/enums/display_background_preset.dart';
-import '../../core/utils/color_parser.dart';
+import 'design_background_settings.dart';
+import 'font_size_settings.dart';
+import 'design_color_settings.dart';
 
-/// Visual and behavioral settings for the display screen.
+/// Top-level visual settings for the display screen.
+/// Groups related properties into sub-models for better architecture.
 class DesignSettingsModel extends Equatable {
-  final String backgroundValue;
-  final String primaryColor;
-  final String secondaryColor;
-  final String prayerOverlayColor;
-  final String activeCardColor;
-  final String activeCardTextColor;
-  final String inactiveCardTextColor;
-  final double baseFontSize;
+  /// Background configuration (Image vs Color).
+  final DesignBackgroundSettings background;
 
-  /// Speed of the bottom ticker (1.0 = normal, higher = faster).
+  /// Font sizes for all components.
+  final FontSizeSettings fontSizes;
+
+  /// Colors for all components.
+  final DesignColorSettings colors;
+
   final double tickerSpeed;
-
-  /// Forced numeral format for the entire app.
   final AppNumeralFormat numeralFormat;
-
-  /// Google Font name or custom font family.
   final String fontFamily;
 
   const DesignSettingsModel({
-    required this.backgroundValue,
-    required this.primaryColor,
-    required this.secondaryColor,
-    required this.prayerOverlayColor,
-    required this.activeCardColor,
-    required this.activeCardTextColor,
-    required this.inactiveCardTextColor,
-    required this.baseFontSize,
+    this.background = const DesignBackgroundSettings(),
+    this.fontSizes = const FontSizeSettings(),
+    this.colors = const DesignColorSettings(),
     this.tickerSpeed = 1.0,
     this.numeralFormat = AppNumeralFormat.english,
     this.fontFamily = 'Beiruti',
   });
 
-  static const Color _defaultPrimary = Color(0xFF143B4E);
-  static const Color _defaultSecondary = Color(0xFFF3EEDC);
-
-  /// UI-ready primary color parsed from the hex string.
-  /// (Renamed in UI to Clock and Time color)
-  Color get primaryColorValue => parseColorHex(primaryColor, _defaultPrimary);
-
-  /// UI-ready secondary color parsed from the hex string.
-  /// (Renamed in UI to Ticker Bar Color)
-  Color get secondaryColorValue =>
-      parseColorHex(secondaryColor, _defaultSecondary);
-
-  /// UI-ready color for inactive prayer cards.
-  Color get prayerCardColorValue =>
-      parseColorHex(prayerOverlayColor, _defaultSecondary);
-
-  /// UI-ready color for the active prayer card (the one with the countdown).
-  Color get activeCardColorValue => 
-      parseColorHex(activeCardColor, _defaultPrimary);
-
-  /// UI-ready text color for the active prayer card.
-  Color get activeCardTextColorValue => 
-      parseColorHex(activeCardTextColor, Colors.white);
-
-  /// UI-ready text color for inactive cards and the hadith/spiritual section.
-  Color get inactiveCardTextColorValue =>
-      parseColorHex(inactiveCardTextColor, _defaultPrimary);
-
   factory DesignSettingsModel.fromMap(Map<String, dynamic> map) {
     return DesignSettingsModel(
-      backgroundValue: DisplayBackgroundPreset.normalizeStoredId(
-        map['background_value']?.toString(),
-      ),
-      primaryColor: map['primary_color']?.toString() ?? '#FFFFFF',
-      secondaryColor: map['secondary_color']?.toString() ?? '#CCCCCC',
-      prayerOverlayColor:
-          map['prayer_overlay_color']?.toString() ?? '#66143B4E',
-      activeCardColor: map['active_card_color']?.toString() ?? '#143B4E',
-      activeCardTextColor: map['active_card_text_color']?.toString() ?? '#FFFFFF',
-      inactiveCardTextColor: map['inactive_card_text_color']?.toString() ?? '#143B4E',
-      baseFontSize: (map['base_font_size'] ?? 16.0).toDouble(),
+      background: DesignBackgroundSettings.fromMap(map),
+      fontSizes: FontSizeSettings.fromMap(map),
+      colors: DesignColorSettings.fromMap(map),
       tickerSpeed: (map['ticker_speed'] ?? 1.0).toDouble(),
       numeralFormat: AppNumeralFormat.fromCode(map['numeral_format'] ?? 'en'),
       fontFamily: map['font_family'] ?? 'Beiruti',
@@ -88,15 +43,9 @@ class DesignSettingsModel extends Equatable {
 
   Map<String, dynamic> toMap() {
     return {
-      'background_type': 'color',
-      'background_value': backgroundValue,
-      'primary_color': primaryColor,
-      'secondary_color': secondaryColor,
-      'prayer_overlay_color': prayerOverlayColor,
-      'active_card_color': activeCardColor,
-      'active_card_text_color': activeCardTextColor,
-      'inactive_card_text_color': inactiveCardTextColor,
-      'base_font_size': baseFontSize,
+      ...background.toMap(),
+      ...fontSizes.toMap(),
+      ...colors.toMap(),
       'ticker_speed': tickerSpeed,
       'numeral_format': numeralFormat.code,
       'font_family': fontFamily,
@@ -104,27 +53,17 @@ class DesignSettingsModel extends Equatable {
   }
 
   DesignSettingsModel copyWith({
-    String? backgroundValue,
-    String? primaryColor,
-    String? secondaryColor,
-    String? prayerOverlayColor,
-    String? activeCardColor,
-    String? activeCardTextColor,
-    String? inactiveCardTextColor,
-    double? baseFontSize,
+    DesignBackgroundSettings? background,
+    FontSizeSettings? fontSizes,
+    DesignColorSettings? colors,
     double? tickerSpeed,
     AppNumeralFormat? numeralFormat,
     String? fontFamily,
   }) {
     return DesignSettingsModel(
-      backgroundValue: backgroundValue ?? this.backgroundValue,
-      primaryColor: primaryColor ?? this.primaryColor,
-      secondaryColor: secondaryColor ?? this.secondaryColor,
-      prayerOverlayColor: prayerOverlayColor ?? this.prayerOverlayColor,
-      activeCardColor: activeCardColor ?? this.activeCardColor,
-      activeCardTextColor: activeCardTextColor ?? this.activeCardTextColor,
-      inactiveCardTextColor: inactiveCardTextColor ?? this.inactiveCardTextColor,
-      baseFontSize: baseFontSize ?? this.baseFontSize,
+      background: background ?? this.background,
+      fontSizes: fontSizes ?? this.fontSizes,
+      colors: colors ?? this.colors,
       tickerSpeed: tickerSpeed ?? this.tickerSpeed,
       numeralFormat: numeralFormat ?? this.numeralFormat,
       fontFamily: fontFamily ?? this.fontFamily,
@@ -133,16 +72,11 @@ class DesignSettingsModel extends Equatable {
 
   @override
   List<Object?> get props => [
-    backgroundValue,
-    primaryColor,
-    secondaryColor,
-    prayerOverlayColor,
-    activeCardColor,
-    activeCardTextColor,
-    inactiveCardTextColor,
-    baseFontSize,
-    tickerSpeed,
-    numeralFormat,
-    fontFamily,
-  ];
+        background,
+        fontSizes,
+        colors,
+        tickerSpeed,
+        numeralFormat,
+        fontFamily,
+      ];
 }

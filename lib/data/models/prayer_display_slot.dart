@@ -21,6 +21,9 @@ enum PrayerDisplaySlot {
     }
     return null;
   }
+
+  bool get isSunrise => this == PrayerDisplaySlot.sunrise;
+  bool get isPrayer => this != PrayerDisplaySlot.sunrise;
 }
 
 extension PrayerDisplaySlotX on PrayerDisplaySlot {

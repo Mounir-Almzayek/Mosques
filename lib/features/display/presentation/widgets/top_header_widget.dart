@@ -70,15 +70,15 @@ class _TopHeaderWidgetState extends State<TopHeaderWidget> {
         '${h.hDay} ${h.getLongMonthName()} ${h.hYear} $hijriSuffix'
             .formatNumerals(numeralFormat);
 
-    final headerColor = widget.designSettings.primaryColorValue;
-    // Scale up header typography relative to design base (full upper section reads larger).
-    final baseRaw = widget.designSettings.baseFontSize * 1.28;
-
+    final headerColor = widget.designSettings.colors.primaryValue;
+    
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Shrink header on narrow widths / split-screen so the row never clips.
         final widthScale = (constraints.maxWidth / 1100).clamp(0.48, 1.0);
-        final base = baseRaw * widthScale;
+        
+        final fontSizes = widget.designSettings.fontSizes;
+        final mosqueBase = fontSizes.mosqueInfo * 1.28 * widthScale;
+        final clockBase = fontSizes.clock * 1.28 * widthScale;
 
         return Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -91,7 +91,7 @@ class _TopHeaderWidgetState extends State<TopHeaderWidget> {
                   cityName: widget.mosque.city,
                   textColor: headerColor,
                   isRtl: isRtl,
-                  base: base,
+                  base: mosqueBase,
                   numeralFormat: numeralFormat,
                   fontFamily: widget.designSettings.fontFamily,
                 ),
@@ -99,12 +99,12 @@ class _TopHeaderWidgetState extends State<TopHeaderWidget> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: math.max(4.0, base * 1.1),
+                horizontal: math.max(4.0, clockBase * 1.1),
               ),
               child: TopHeaderClockBlock(
                 now: _now,
                 textColor: headerColor,
-                base: base,
+                base: clockBase,
                 numeralFormat: numeralFormat,
                 fontFamily: widget.designSettings.fontFamily,
               ),
@@ -118,7 +118,7 @@ class _TopHeaderWidgetState extends State<TopHeaderWidget> {
                   hijriLine: hijriLine,
                   textColor: headerColor,
                   isRtl: isRtl,
-                  base: base,
+                  base: mosqueBase,
                   fontFamily: widget.designSettings.fontFamily,
                 ),
               ),

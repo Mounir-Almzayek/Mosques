@@ -38,7 +38,7 @@ class _MosqueClockWidgetState extends State<MosqueClockWidget> {
     super.initState();
     _helper = PrayerTimesHelper(widget.mosque);
     _now = DateTime.now();
-    _nextEvent = _helper.getNextEvent();
+    _nextEvent = _helper.getNextEvent(_now);
     _countdown = _nextEvent.targetTime.difference(_now);
 
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
@@ -48,7 +48,7 @@ class _MosqueClockWidgetState extends State<MosqueClockWidget> {
         // The helper logic is internally cached/calculated based on widget.mosque.
         _helper = PrayerTimesHelper(widget.mosque);
 
-        final newEvent = _helper.getNextEvent();
+        final newEvent = _helper.getNextEvent(_now);
         if (newEvent.prayerName != _nextEvent.prayerName ||
             newEvent.isIqama != _nextEvent.isIqama) {
           _nextEvent = newEvent;
@@ -57,7 +57,7 @@ class _MosqueClockWidgetState extends State<MosqueClockWidget> {
         _countdown = _nextEvent.targetTime.difference(_now);
         if (_countdown.isNegative) {
           _countdown = Duration.zero;
-          _nextEvent = _helper.getNextEvent();
+          _nextEvent = _helper.getNextEvent(_now);
         }
       });
     });
@@ -67,7 +67,7 @@ class _MosqueClockWidgetState extends State<MosqueClockWidget> {
   void didUpdateWidget(covariant MosqueClockWidget oldWidget) {
     if (oldWidget.mosque != widget.mosque) {
       _helper = PrayerTimesHelper(widget.mosque);
-      _nextEvent = _helper.getNextEvent();
+      _nextEvent = _helper.getNextEvent(_now);
     }
     super.didUpdateWidget(oldWidget);
   }

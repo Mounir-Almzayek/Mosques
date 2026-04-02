@@ -1,14 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
-import '../../../../core/l10n/generated/l10n.dart';
-import '../../../../core/utils/app_number_format.dart';
-import '../../../../core/utils/app_font_loader.dart';
 import '../../../../data/models/announcement_model.dart';
 import '../../../../data/models/mosque_model.dart';
 import '../../../../data/models/ticker_segment.dart';
+import 'ticker_item_widget.dart';
+import 'ticker_side_label_widget.dart';
 
 /// Horizontal auto-scrolling ticker bar for announcements at the bottom
 /// of the display screen.
@@ -16,14 +14,14 @@ class DisplayTickerBar extends StatefulWidget {
   final MosqueModel mosque;
   final List<AnnouncementModel> platformAnnouncements;
   final Color primaryColor;
-  final double baseFontSize;
+  final double fontSize;
 
   const DisplayTickerBar({
     super.key,
     required this.mosque,
     required this.platformAnnouncements,
     required this.primaryColor,
-    required this.baseFontSize,
+    required this.fontSize,
   });
 
   @override
@@ -32,7 +30,6 @@ class DisplayTickerBar extends StatefulWidget {
 
 class _DisplayTickerBarState extends State<DisplayTickerBar> {
   static const _cream = Color(0xFFFFF8F0);
-  static const _itemGap = 26.0;
   
   // High-frequency tick for sub-pixel smoothness.
   static const _scrollTick = Duration(milliseconds: 12);
@@ -105,98 +102,25 @@ class _DisplayTickerBarState extends State<DisplayTickerBar> {
   }
 
   // ---------------------------------------------------------------------------
-  // Build helpers
-  // ---------------------------------------------------------------------------
-
-  String _sideLabel(BuildContext context) {
-    final locale = Localizations.localeOf(context);
-    if (locale.languageCode.toLowerCase().startsWith('ar')) {
-      return 'إعلانات';
-    }
-    return 'Ads';
-  }
-
-  bool _hasQr(TickerSegment item) => (item.qrData ?? '').trim().isNotEmpty;
-
-  Widget _buildTickerItem(
-    S s,
-    TickerSegment item,
-    double fontSize, {
-    required double qrSize,
-  }) {
-    final numeralFormat = widget.mosque.designSettings.numeralFormat;
-    final fontFamily = widget.mosque.designSettings.fontFamily;
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          ' ${item.text.formatNumerals(numeralFormat)}',
-        style: AppFontLoader.getStyle(
-          fontFamily,
-          baseStyle: TextStyle(
-            color: _cream,
-            fontWeight: FontWeight.w700,
-            fontSize: fontSize,
-            height: 1.34,
-          ),
-        ),
-        ),
-        if (_hasQr(item)) ...[
-          const SizedBox(width: 12),
-          Container(
-            width: qrSize,
-            height: qrSize,
-            padding: const EdgeInsets.all(3),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: QrImageView(
-              data: item.qrData!.trim(),
-              version: QrVersions.auto,
-              padding: EdgeInsets.zero,
-              backgroundColor: Colors.white,
-            ),
-          ),
-          const SizedBox(width: 12),
-        ],
-        Text(
-          '      ۞      ',
-        style: AppFontLoader.getStyle(
-          fontFamily,
-          baseStyle: TextStyle(
-            color: _cream,
-            fontWeight: FontWeight.w700,
-            fontSize: fontSize,
-            height: 1.34,
-          ),
-        ),
-        ),
-        const SizedBox(width: _itemGap),
-      ],
-    );
-  }
-
-  // ---------------------------------------------------------------------------
   // Build
   // ---------------------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
-    final s = S.of(context);
     if (_segments.isEmpty) return const SizedBox.shrink();
 
     final fontFamily = widget.mosque.designSettings.fontFamily;
+    final numeralFormat = widget.mosque.designSettings.numeralFormat;
     final locale = Localizations.localeOf(context);
     final isArabic = locale.languageCode.toLowerCase().startsWith('ar');
     final dir = isArabic ? TextDirection.rtl : Directionality.of(context);
+    
     final media = MediaQuery.sizeOf(context);
     final shortest = media.shortestSide;
     final barHeight = (shortest * 0.105).clamp(56.0, 92.0);
     final sidePanelW = (shortest * 0.09).clamp(80.0, 132.0);
     final qrSize = (barHeight * 0.52).clamp(36.0, 52.0);
-    final fontSize = (widget.baseFontSize * 1.28).clamp(14.0, 28.0);
+    final fontSize = (widget.fontSize * 1.28).clamp(14.0, 28.0);
     final sideFontSize = (fontSize * 1.04).clamp(14.0, 26.0);
     final duplicated = [..._segments, ..._segments];
 
@@ -213,27 +137,10 @@ class _DisplayTickerBarState extends State<DisplayTickerBar> {
           children: [
             SizedBox(
               width: sidePanelW,
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      _sideLabel(context),
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      style: AppFontLoader.getStyle(
-                        fontFamily,
-                        baseStyle: TextStyle(
-                          color: _cream,
-                          fontWeight: FontWeight.w900,
-                          fontSize: sideFontSize,
-                          height: 1.1,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+              child: TickerSideLabelWidget(
+                fontFamily: fontFamily,
+                fontSize: sideFontSize,
+                textColor: _cream,
               ),
             ),
             Container(
@@ -250,7 +157,14 @@ class _DisplayTickerBarState extends State<DisplayTickerBar> {
                   itemCount: duplicated.length,
                   itemBuilder: (context, index) {
                     final item = duplicated[index];
-                    return _buildTickerItem(s, item, fontSize, qrSize: qrSize);
+                    return TickerItemWidget(
+                    item: item,
+                    fontSize: fontSize,
+                    qrSize: qrSize,
+                    fontFamily: fontFamily,
+                    numeralFormat: numeralFormat,
+                    textColor: _cream,
+                    );
                   },
                 ),
               ),

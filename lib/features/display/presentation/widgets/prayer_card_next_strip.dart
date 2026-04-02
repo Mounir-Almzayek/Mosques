@@ -14,7 +14,7 @@ class PrayerCardNextStrip extends StatelessWidget {
   final PrayerDisplayPhase phase;
   final Duration remaining;
   final DesignSettingsModel designSettings;
-  final double baseFontSize;
+  final double prayersFontSize;
   final Animation<double>? graceOpacityAnimation;
 
   const PrayerCardNextStrip({
@@ -22,7 +22,7 @@ class PrayerCardNextStrip extends StatelessWidget {
     required this.phase,
     required this.remaining,
     required this.designSettings,
-    required this.baseFontSize,
+    required this.prayersFontSize,
     this.graceOpacityAnimation,
   });
 
@@ -34,26 +34,31 @@ class PrayerCardNextStrip extends StatelessWidget {
     final slot = PrayerDisplaySlot.tryParsePhaseKey(phase.prayerNameKey);
     final pAr = slot?.labelAr(s) ?? phase.prayerNameKey;
     final pEn = slot?.labelEn(s) ?? phase.prayerNameKey;
+    final activeTextColor = designSettings.colors.activeCardTextValue;
 
     late final String subLine;
-    switch (phase.kind) {
-      case PrayerDisplayPhaseKind.iqama:
-        subLine = s.display_remaining_to_iqama_line(pAr);
-        break;
-      case PrayerDisplayPhaseKind.graceAfterIqama:
-        subLine = '';
-        break;
-      case PrayerDisplayPhaseKind.nextAdhan:
-        subLine = s.display_remaining_to_adhan_line(pAr);
-        break;
+    if (phase.isSunrise) {
+      subLine = s.display_remaining_to_sunrise_line;
+    } else {
+      switch (phase.kind) {
+        case PrayerDisplayPhaseKind.iqama:
+          subLine = s.display_remaining_to_iqama_line(pAr);
+          break;
+        case PrayerDisplayPhaseKind.graceAfterIqama:
+          subLine = '';
+          break;
+        case PrayerDisplayPhaseKind.nextAdhan:
+          subLine = s.display_remaining_to_adhan_line(pAr);
+          break;
+      }
+    }
+
+    if (phase.kind == PrayerDisplayPhaseKind.graceAfterIqama) {
+      return const SizedBox.shrink();
     }
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        // [FittedBox] with [BoxFit.scaleDown] lays out its child with unbounded
-        // constraints; [Column] + [CrossAxisAlignment.stretch] then hits
-        // "BoxConstraints forces an infinite width". Use a finite width when
-        // only the height is bounded (e.g. [SizedBox] height under FittedBox).
         final maxW = constraints.maxWidth.isFinite
             ? constraints.maxWidth
             : (constraints.maxHeight * 4.0).clamp(120.0, 800.0);
@@ -62,9 +67,9 @@ class PrayerCardNextStrip extends StatelessWidget {
         final dividerHeight = 14.0 * compact;
         final topGap = 3.0 * compact;
         final middleGap = 5.0 * compact;
-        final subFont = (baseFontSize * 1.50 * compact).clamp(9.0, 24.0);
-        final timeFont = (baseFontSize * 1.55 * compact).clamp(9.0, 22.0);
-        final enFont = (baseFontSize * 0.78 * compact).clamp(8.0, 16.0);
+        final subFont = (prayersFontSize * 1.50 * compact).clamp(9.0, 24.0);
+        final timeFont = (prayersFontSize * 1.55 * compact).clamp(9.0, 22.0);
+        final enFont = (prayersFontSize * 0.78 * compact).clamp(8.0, 16.0);
         final showEnglish = constraints.maxHeight >= 74;
 
         final fontFamily = designSettings.fontFamily;
@@ -79,7 +84,7 @@ class PrayerCardNextStrip extends StatelessWidget {
               Divider(
                 height: dividerHeight,
                 thickness: 1,
-                color: designSettings.activeCardTextColorValue.withValues(
+                color: activeTextColor.withValues(
                   alpha: 0.22,
                 ),
               ),
@@ -93,7 +98,7 @@ class PrayerCardNextStrip extends StatelessWidget {
                   fontFamily,
                   baseStyle: TextStyle(
                     fontSize: subFont,
-                    color: designSettings.activeCardTextColorValue.withValues(
+                    color: activeTextColor.withValues(
                       alpha: 0.78,
                     ),
                     height: 1.1,
@@ -112,7 +117,7 @@ class PrayerCardNextStrip extends StatelessWidget {
                     fontSize: timeFont,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.4 * compact,
-                    color: designSettings.activeCardTextColorValue,
+                    color: activeTextColor,
                     fontFeatures: const [FontFeature.tabularFigures()],
                     height: 1.0,
                   ),
@@ -131,8 +136,7 @@ class PrayerCardNextStrip extends StatelessWidget {
                         fontFamily,
                         baseStyle: TextStyle(
                           fontSize: enFont,
-                          color: designSettings.activeCardTextColorValue
-                              .withValues(alpha: 0.5),
+                          color: activeTextColor.withValues(alpha: 0.5),
                           height: 1.0,
                         ),
                       ),

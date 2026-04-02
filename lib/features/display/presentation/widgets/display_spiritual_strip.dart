@@ -31,14 +31,14 @@ class DisplaySpiritualStrip extends StatefulWidget {
   final MosqueModel mosque;
   final Color primaryColor;
   final Color cardColor;
-  final double baseFontSize;
+  final double contentFontSize;
 
   const DisplaySpiritualStrip({
     super.key,
     required this.mosque,
     required this.primaryColor,
     required this.cardColor,
-    required this.baseFontSize,
+    required this.contentFontSize,
   });
 
   @override
@@ -182,7 +182,7 @@ class _DisplaySpiritualStripState extends State<DisplaySpiritualStrip> {
     final slide = _pool[_index];
     final dir = Directionality.of(context);
     final label = _labelForKind(slide.kind, s);
-    final base = widget.baseFontSize;
+    final base = widget.contentFontSize;
 
     final labelFs = (base * 1.1).clamp(15.0, 24.0);
     final contextFs = (base * 1.05).clamp(14.0, 22.0);

@@ -116,10 +116,16 @@ class MessageLookup extends MessageLookupByLibrary {
             "لون خلفية الكارد المحددة (العد التنازلي)"),
         "design_active_card_text_color":
             MessageLookupByLibrary.simpleMessage("لون خط الكارد المحددة"),
+        "design_announcements_font_size":
+            MessageLookupByLibrary.simpleMessage("حجم خط الإعلانات"),
         "design_background_color":
             MessageLookupByLibrary.simpleMessage("لون خلفية الشاشة"),
-        "design_base_font_size":
-            MessageLookupByLibrary.simpleMessage("حجم الخط الأساسي"),
+        "design_background_title":
+            MessageLookupByLibrary.simpleMessage("خلفية الشاشة"),
+        "design_background_type":
+            MessageLookupByLibrary.simpleMessage("نوع الخلفية"),
+        "design_behavior_title":
+            MessageLookupByLibrary.simpleMessage("سلوك العرض"),
         "design_bg_brand": MessageLookupByLibrary.simpleMessage("الشعار"),
         "design_bg_primary": MessageLookupByLibrary.simpleMessage("الأساسية"),
         "design_bg_style_1": MessageLookupByLibrary.simpleMessage("نمط 1"),
@@ -133,6 +139,28 @@ class MessageLookup extends MessageLookupByLibrary {
         "design_bg_style_7": MessageLookupByLibrary.simpleMessage("نمط 7"),
         "design_bg_style_8": MessageLookupByLibrary.simpleMessage("نمط 8"),
         "design_bg_style_9": MessageLookupByLibrary.simpleMessage("نمط 9"),
+        "design_bg_type_color":
+            MessageLookupByLibrary.simpleMessage("لون سادة"),
+        "design_bg_type_image":
+            MessageLookupByLibrary.simpleMessage("صورة من المكتبة"),
+        "design_clock_font_size":
+            MessageLookupByLibrary.simpleMessage("حجم خط الساعة"),
+        "design_color_active_card":
+            MessageLookupByLibrary.simpleMessage("لون خلفية صلاة القادمة"),
+        "design_color_active_card_text":
+            MessageLookupByLibrary.simpleMessage("لون خط صلاة القادمة"),
+        "design_color_inactive_card_text":
+            MessageLookupByLibrary.simpleMessage("لون خط الكروت غير المحددة"),
+        "design_color_prayer_overlay": MessageLookupByLibrary.simpleMessage(
+            "لون خلفية الكروت غير المحددة"),
+        "design_color_primary":
+            MessageLookupByLibrary.simpleMessage("لون الساعة والوقت الأساسي"),
+        "design_color_secondary":
+            MessageLookupByLibrary.simpleMessage("لون خلفية شريط الإعلانات"),
+        "design_colors_title":
+            MessageLookupByLibrary.simpleMessage("الألوان والمظهر"),
+        "design_content_font_size": MessageLookupByLibrary.simpleMessage(
+            "حجم خط المحتوى (أحاديث، آيات...)"),
         "design_display_background_image":
             MessageLookupByLibrary.simpleMessage("خلفية شاشة العرض"),
         "design_font_browse":
@@ -143,8 +171,22 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("خط التطبيق"),
         "design_font_preview_text": MessageLookupByLibrary.simpleMessage(
             "بسم الله الرحمن الرحيم - تجربة خط المسجد"),
+        "design_font_size_announcements":
+            MessageLookupByLibrary.simpleMessage("حجم خط الإعلانات"),
+        "design_font_size_clock":
+            MessageLookupByLibrary.simpleMessage("حجم خط الساعة"),
+        "design_font_size_content": MessageLookupByLibrary.simpleMessage(
+            "حجم خط المحتوى (أحاديث، آيات...)"),
+        "design_font_size_mosque_info":
+            MessageLookupByLibrary.simpleMessage("حجم خط معلومات المسجد"),
+        "design_font_size_prayers":
+            MessageLookupByLibrary.simpleMessage("حجم خط الصلوات"),
+        "design_font_sizes_title":
+            MessageLookupByLibrary.simpleMessage("أحجام الخطوط"),
         "design_inactive_card_text_color": MessageLookupByLibrary.simpleMessage(
             "لون الخط للكروت غير المحددة وقسم الأحاديث"),
+        "design_mosque_info_font_size":
+            MessageLookupByLibrary.simpleMessage("حجم خط معلومات المسجد"),
         "design_numeral_arabic":
             MessageLookupByLibrary.simpleMessage("عربي (١٢٣)"),
         "design_numeral_english":
@@ -154,6 +196,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "design_pick_color": MessageLookupByLibrary.simpleMessage("اختر اللون"),
         "design_prayer_overlay":
             MessageLookupByLibrary.simpleMessage("خلفية الكارد غير المحددة"),
+        "design_prayers_font_size":
+            MessageLookupByLibrary.simpleMessage("حجم خط الصلوات"),
         "design_primary_color":
             MessageLookupByLibrary.simpleMessage("لون الساعة والوقت"),
         "design_secondary_color":
@@ -164,6 +208,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("الخطوط والتنسيق"),
         "design_ticker_speed":
             MessageLookupByLibrary.simpleMessage("سرعة الشريط"),
+        "design_typography_title":
+            MessageLookupByLibrary.simpleMessage("الخطوط والتنسيق"),
         "disable_smart_screen":
             MessageLookupByLibrary.simpleMessage("إيقاف الشاشة الذكية"),
         "display_countdown_label":
@@ -178,6 +224,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("الصلاة القادمة"),
         "display_remaining_to_adhan_line": m0,
         "display_remaining_to_iqama_line": m1,
+        "display_remaining_to_sunrise_line":
+            MessageLookupByLibrary.simpleMessage("متبقٍ للشروق"),
         "display_ticker_adhkar": MessageLookupByLibrary.simpleMessage("ذكر"),
         "display_ticker_dua": MessageLookupByLibrary.simpleMessage("دعاء"),
         "display_ticker_hadith": MessageLookupByLibrary.simpleMessage("حديث"),
@@ -215,6 +263,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "gallery": MessageLookupByLibrary.simpleMessage("معرض الصور"),
         "general_section_adjustments": MessageLookupByLibrary.simpleMessage(
             "ضبط أوقات الصلاة المتقدم (بالدقائق)"),
+        "hadith_confirm_delete": MessageLookupByLibrary.simpleMessage(
+            "هل أنت متأكد من حذف هذا الحديث؟"),
         "hadith_delete_body": MessageLookupByLibrary.simpleMessage(
             "سيُزال من القائمة. احفظ على الخادم عند الانتهاء."),
         "hadith_delete_title":
@@ -257,6 +307,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("بارك الله في هذا المسجد"),
         "mosque_name_label": MessageLookupByLibrary.simpleMessage("اسم المسجد"),
         "no_data": MessageLookupByLibrary.simpleMessage("لا توجد بيانات"),
+        "numeral_format_arabic":
+            MessageLookupByLibrary.simpleMessage("عربي (١٢٣)"),
+        "numeral_format_english":
+            MessageLookupByLibrary.simpleMessage("إنجليزي (123)"),
         "password_hint": MessageLookupByLibrary.simpleMessage("••••••••"),
         "password_label": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
         "please_select":

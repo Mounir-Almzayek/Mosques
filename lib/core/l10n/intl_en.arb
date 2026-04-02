@@ -83,6 +83,7 @@
   "hadith_delete_title": "Remove hadith?",
   "hadith_delete_body": "This will remove it from the list. Save to server when you are ready.",
   "hadith_save_bar_hint": "Changes are local until you sync with the server.",
+  "hadith_confirm_delete": "Are you sure you want to delete this hadith?",
   "verse_fab_add": "New verse",
   "verse_editor_title_new": "New verse",
   "verse_editor_title_edit": "Edit verse",
@@ -192,6 +193,7 @@
     }
   },
   "display_remaining_to_adhan_line": "Remaining to adhan — {prayer}",
+  "display_remaining_to_sunrise_line": "Remaining to Sunrise",
   "@display_remaining_to_adhan_line": {
     "placeholders": {
       "prayer": {}
@@ -213,7 +215,11 @@
   "design_font_browse": "Browse Fonts",
   "design_font_browser_title": "Visual Font Browser",
   "design_font_preview_text": "بسم الله الرحمن الرحيم - Mosque App Preview",
-  "design_base_font_size": "Base font size",
+  "design_font_size_clock": "Clock font size",
+  "design_font_size_mosque_info": "Mosque info font size",
+  "design_font_size_prayers": "Prayers font size",
+  "design_font_size_announcements": "Announcements font size",
+  "design_font_size_content": "Hadiths & content font size",
   "validation_font_size_range": "Enter a value between 8 and 96",
   "mosque_name_label": "Mosque name",
   "city_label": "City",
@@ -244,5 +250,26 @@
       "prayer": {}
     }
   },
-  "prayer_fajr_tomorrow": "Fajr (tomorrow)"
+  "prayer_fajr_tomorrow": "Fajr (tomorrow)",
+  "design_background_type": "Background Type",
+  "design_bg_type_image": "Library Image",
+  "design_bg_type_color": "Solid Color",
+  "design_colors_title": "Colors & Theme",
+  "design_font_sizes_title": "Font Sizes",
+  "design_typography_title": "Typography",
+  "design_behavior_title": "Display Behavior",
+  "design_background_title": "Screen Background",
+  "design_color_primary": "Main Clock & Time Color",
+  "design_color_secondary": "Ticker Bar Background Color",
+  "design_color_active_card": "Active Prayer Card Background",
+  "design_color_active_card_text": "Active Card Text Color",
+  "design_color_inactive_card_text": "Inactive Card & Hadith Text",
+  "design_color_prayer_overlay": "Inactive Cards Background Color",
+  "design_clock_font_size": "Clock Font Size",
+  "design_mosque_info_font_size": "Mosque Info Font Size",
+  "design_prayers_font_size": "Prayers Font Size",
+  "design_announcements_font_size": "Announcements Font Size",
+  "design_content_font_size": "Hadiths & Content Font Size",
+  "numeral_format_arabic": "Arabic (١٢٣)",
+  "numeral_format_english": "English (123)"
 }

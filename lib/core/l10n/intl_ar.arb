@@ -83,6 +83,7 @@
   "hadith_delete_title": "حذف الحديث؟",
   "hadith_delete_body": "سيُزال من القائمة. احفظ على الخادم عند الانتهاء.",
   "hadith_save_bar_hint": "التعديلات محلية حتى تضغط حفظ على الخادم.",
+  "hadith_confirm_delete": "هل أنت متأكد من حذف هذا الحديث؟",
   "verse_fab_add": "آية جديدة",
   "verse_editor_title_new": "آية جديدة",
   "verse_editor_title_edit": "تعديل الآية",
@@ -192,6 +193,7 @@
     }
   },
   "display_remaining_to_adhan_line": "متبقٍ لأذان {prayer}",
+  "display_remaining_to_sunrise_line": "متبقٍ للشروق",
   "@display_remaining_to_adhan_line": {
     "placeholders": {
       "prayer": {}
@@ -213,7 +215,11 @@
   "design_font_browse": "تصفح الخطوط",
   "design_font_browser_title": "متصفح الخطوط المرئي",
   "design_font_preview_text": "بسم الله الرحمن الرحيم - تجربة خط المسجد",
-  "design_base_font_size": "حجم الخط الأساسي",
+  "design_font_size_clock": "حجم خط الساعة",
+  "design_font_size_mosque_info": "حجم خط معلومات المسجد",
+  "design_font_size_prayers": "حجم خط الصلوات",
+  "design_font_size_announcements": "حجم خط الإعلانات",
+  "design_font_size_content": "حجم خط المحتوى (أحاديث، آيات...)",
   "validation_font_size_range": "أدخل قيمة بين 8 و 96",
   "mosque_name_label": "اسم المسجد",
   "city_label": "المدينة",
@@ -244,5 +250,26 @@
       "prayer": {}
     }
   },
-  "prayer_fajr_tomorrow": "فجر (غداً)"
+  "prayer_fajr_tomorrow": "فجر (غداً)",
+  "design_background_type": "نوع الخلفية",
+  "design_bg_type_image": "صورة من المكتبة",
+  "design_bg_type_color": "لون سادة",
+  "design_colors_title": "الألوان والمظهر",
+  "design_font_sizes_title": "أحجام الخطوط",
+  "design_typography_title": "الخطوط والتنسيق",
+  "design_behavior_title": "سلوك العرض",
+  "design_background_title": "خلفية الشاشة",
+  "design_color_primary": "لون الساعة والوقت الأساسي",
+  "design_color_secondary": "لون خلفية شريط الإعلانات",
+  "design_color_active_card": "لون خلفية صلاة القادمة",
+  "design_color_active_card_text": "لون خط صلاة القادمة",
+  "design_color_inactive_card_text": "لون خط الكروت غير المحددة",
+  "design_color_prayer_overlay": "لون خلفية الكروت غير المحددة",
+  "design_clock_font_size": "حجم خط الساعة",
+  "design_mosque_info_font_size": "حجم خط معلومات المسجد",
+  "design_prayers_font_size": "حجم خط الصلوات",
+  "design_announcements_font_size": "حجم خط الإعلانات",
+  "design_content_font_size": "حجم خط المحتوى (أحاديث، آيات...)",
+  "numeral_format_arabic": "عربي (١٢٣)",
+  "numeral_format_english": "إنجليزي (123)"
 }

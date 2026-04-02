@@ -157,7 +157,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             sizing: StackFit.expand,
             children: [
               GeneralSection(mosque: mosque),
-              DesignSection(mosque: mosque),
+              DesignSection(),
               IqamaSection(mosque: mosque),
               MosqueTextListSection(mosque: mosque, kind: MosqueTextListKind.hadith),
               MosqueTextListSection(mosque: mosque, kind: MosqueTextListKind.verse),

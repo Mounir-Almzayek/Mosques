@@ -26,4 +26,6 @@ class PrayerDisplayPhase {
     required this.prayerNameKey,
     required this.focusTime,
   });
+
+  bool get isSunrise => prayerNameKey.toUpperCase().contains('SUNRISE');
 }
