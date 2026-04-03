@@ -1,0 +1,2 @@
+enum MultipleCallsBehavior { abortNew, abortOld }
+

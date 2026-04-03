@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../../../data/models/announcement_model.dart';
+import '../../../data/models/app_settings_model.dart';
 import '../../../data/models/mosque_model.dart';
 
 /// Base class for all display-screen events.
@@ -32,6 +33,26 @@ class PlatformAnnouncementsUpdated extends DisplayEvent {
 
   @override
   List<Object?> get props => [announcements];
+}
+
+/// Fired when global app settings change.
+class AppSettingsUpdated extends DisplayEvent {
+  final AppSettingsModel? settings;
+
+  const AppSettingsUpdated(this.settings);
+
+  @override
+  List<Object?> get props => [settings];
+}
+
+/// Fired when the current app version is retrieved.
+class CurrentVersionUpdated extends DisplayEvent {
+  final String version;
+
+  const CurrentVersionUpdated(this.version);
+
+  @override
+  List<Object?> get props => [version];
 }
 
 /// Fired on subscription errors.

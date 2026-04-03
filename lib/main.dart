@@ -18,9 +18,9 @@ void main() async {
   // منع إطفاء الشاشة / السكون أثناء تشغيل التطبيق (يُكمّل android:keepScreenOn و iOS idle timer).
   await _enableKeepScreenOn();
 
-  // Optional env overrides (file must exist under assets/ for web — see assets/.env)
+  // Optional env overrides (file is stored at assets/.env)
   try {
-    await dotenv.load(fileName: '.env');
+    await dotenv.load(fileName: 'assets/.env');
   } catch (e) {
     debugPrint("DotEnv load failed: $e");
   }

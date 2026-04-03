@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../../../data/models/announcement_model.dart';
+import '../../../data/models/app_settings_model.dart';
 import '../../../data/models/mosque_model.dart';
 
 /// Base class for all display-screen states.
@@ -19,14 +20,19 @@ class DisplayLoading extends DisplayState {}
 class DisplayLoaded extends DisplayState {
   final MosqueModel mosque;
   final List<AnnouncementModel> platformAnnouncements;
+  final AppSettingsModel? appSettings;
+  final String? currentVersion;
 
   const DisplayLoaded(
     this.mosque, {
     this.platformAnnouncements = const [],
+    this.appSettings,
+    this.currentVersion,
   });
 
   @override
-  List<Object?> get props => [mosque, platformAnnouncements];
+  List<Object?> get props =>
+      [mosque, platformAnnouncements, appSettings, currentVersion];
 }
 
 class DisplayError extends DisplayState {

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../data/models/mosque_model.dart';
-import '../../bloc/settings_bloc.dart';
+import '../../bloc/settings/settings_bloc.dart';
+
+import '../widgets/common/common_widgets.dart';
 
 class IqamaSection extends StatefulWidget {
   final MosqueModel mosque;
@@ -15,49 +17,6 @@ class IqamaSection extends StatefulWidget {
 
 class _IqamaSectionState extends State<IqamaSection> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _fajrCtrl;
-  late TextEditingController _dhuhrCtrl;
-  late TextEditingController _asrCtrl;
-  late TextEditingController _maghribCtrl;
-  late TextEditingController _ishaCtrl;
-  late TextEditingController _jummahCtrl;
-
-  @override
-  void initState() {
-    super.initState();
-    final d = widget.mosque.iqamaSettings;
-    _fajrCtrl = TextEditingController(text: d.fajrOffset.toString());
-    _dhuhrCtrl = TextEditingController(text: d.dhuhrOffset.toString());
-    _asrCtrl = TextEditingController(text: d.asrOffset.toString());
-    _maghribCtrl = TextEditingController(text: d.maghribOffset.toString());
-    _ishaCtrl = TextEditingController(text: d.ishaOffset.toString());
-    _jummahCtrl = TextEditingController(text: d.jummahOffset.toString());
-  }
-
-  @override
-  void didUpdateWidget(covariant IqamaSection oldWidget) {
-    if (oldWidget.mosque.iqamaSettings != widget.mosque.iqamaSettings) {
-      final d = widget.mosque.iqamaSettings;
-      _fajrCtrl.text = d.fajrOffset.toString();
-      _dhuhrCtrl.text = d.dhuhrOffset.toString();
-      _asrCtrl.text = d.asrOffset.toString();
-      _maghribCtrl.text = d.maghribOffset.toString();
-      _ishaCtrl.text = d.ishaOffset.toString();
-      _jummahCtrl.text = d.jummahOffset.toString();
-    }
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void dispose() {
-    _fajrCtrl.dispose();
-    _dhuhrCtrl.dispose();
-    _asrCtrl.dispose();
-    _maghribCtrl.dispose();
-    _ishaCtrl.dispose();
-    _jummahCtrl.dispose();
-    super.dispose();
-  }
 
   void _save() {
     if (_formKey.currentState!.validate()) {
@@ -65,34 +24,12 @@ class _IqamaSectionState extends State<IqamaSection> {
     }
   }
 
-  Widget _buildField(
-    S s,
-    String label,
-    TextEditingController controller, {
-    required void Function(int) onOffset,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: TextFormField(
-        controller: controller,
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          labelText: label,
-          suffixText: s.minutes_suffix,
-        ),
-        validator: (v) => v!.isEmpty ? s.required_field : null,
-        onChanged: (v) {
-          final n = int.tryParse(v);
-          if (n != null) onOffset(n);
-        },
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<SettingsBloc>();
     final s = S.of(context);
+    final i = widget.mosque.iqamaSettings;
+
     return Form(
       key: _formKey,
       child: ListView(
@@ -103,41 +40,41 @@ class _IqamaSectionState extends State<IqamaSection> {
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           const SizedBox(height: 16),
-          _buildField(
-            s,
-            s.prayer_fajr,
-            _fajrCtrl,
-            onOffset: (n) => bloc.add(SettingsIqamaFajrOffsetChanged(n)),
+          OffsetStepperField(
+            label: s.prayer_fajr,
+            value: i.fajrOffset,
+            suffix: s.minutes_short,
+            onChanged: (n) => bloc.add(SettingsIqamaFajrOffsetChanged(n)),
           ),
-          _buildField(
-            s,
-            s.prayer_dhuhr,
-            _dhuhrCtrl,
-            onOffset: (n) => bloc.add(SettingsIqamaDhuhrOffsetChanged(n)),
+          OffsetStepperField(
+            label: s.prayer_dhuhr,
+            value: i.dhuhrOffset,
+            suffix: s.minutes_short,
+            onChanged: (n) => bloc.add(SettingsIqamaDhuhrOffsetChanged(n)),
           ),
-          _buildField(
-            s,
-            s.prayer_asr,
-            _asrCtrl,
-            onOffset: (n) => bloc.add(SettingsIqamaAsrOffsetChanged(n)),
+          OffsetStepperField(
+            label: s.prayer_asr,
+            value: i.asrOffset,
+            suffix: s.minutes_short,
+            onChanged: (n) => bloc.add(SettingsIqamaAsrOffsetChanged(n)),
           ),
-          _buildField(
-            s,
-            s.prayer_maghrib,
-            _maghribCtrl,
-            onOffset: (n) => bloc.add(SettingsIqamaMaghribOffsetChanged(n)),
+          OffsetStepperField(
+            label: s.prayer_maghrib,
+            value: i.maghribOffset,
+            suffix: s.minutes_short,
+            onChanged: (n) => bloc.add(SettingsIqamaMaghribOffsetChanged(n)),
           ),
-          _buildField(
-            s,
-            s.prayer_isha,
-            _ishaCtrl,
-            onOffset: (n) => bloc.add(SettingsIqamaIshaOffsetChanged(n)),
+          OffsetStepperField(
+            label: s.prayer_isha,
+            value: i.ishaOffset,
+            suffix: s.minutes_short,
+            onChanged: (n) => bloc.add(SettingsIqamaIshaOffsetChanged(n)),
           ),
-          _buildField(
-            s,
-            s.prayer_jummah,
-            _jummahCtrl,
-            onOffset: (n) => bloc.add(SettingsIqamaJummahOffsetChanged(n)),
+          OffsetStepperField(
+            label: s.prayer_jummah,
+            value: i.jummahOffset,
+            suffix: s.minutes_short,
+            onChanged: (n) => bloc.add(SettingsIqamaJummahOffsetChanged(n)),
           ),
           const SizedBox(height: 16),
           ElevatedButton(

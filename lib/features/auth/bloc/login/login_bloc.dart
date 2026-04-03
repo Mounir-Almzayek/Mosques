@@ -63,6 +63,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         emit(LoginLoading(request: state.request));
       },
       onSuccess: (credential) async {
+        await FirebaseService.syncTokenToCurrentUser();
         emit(
           LoginSuccess(
             request: state.request,

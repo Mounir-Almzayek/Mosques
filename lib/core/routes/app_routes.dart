@@ -5,4 +5,5 @@ class Routes {
   static const String loginPath = '/login';
   static const String settingsPath = '/settings';
   static const String displayPath = '/display';
+  static const String registrationPath = '/register';
 }

@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../core/enums/settings/announcement_schedule.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../data/models/mosque_model.dart';
-import '../../bloc/settings_bloc.dart';
+import '../../bloc/settings/settings_bloc.dart';
 
-enum _AdSchedule { active, upcoming, ended }
-
-_AdSchedule _scheduleFor(AnnouncementModel a) {
+AnnouncementSchedule _scheduleFor(AnnouncementModel a) {
   final now = DateTime.now();
-  if (now.isBefore(a.startDate)) return _AdSchedule.upcoming;
-  if (!now.isBefore(a.endDate)) return _AdSchedule.ended;
-  return _AdSchedule.active;
+  if (now.isBefore(a.startDate)) return AnnouncementSchedule.upcoming;
+  if (!now.isBefore(a.endDate)) return AnnouncementSchedule.ended;
+  return AnnouncementSchedule.active;
 }
 
 class AnnouncementSection extends StatefulWidget {
@@ -38,8 +37,14 @@ class _AnnouncementSectionState extends State<AnnouncementSection> {
         title: Text(s.announcement_delete_title),
         content: Text(s.announcement_delete_body),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(s.cancel)),
-          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(s.delete)),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(s.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(s.delete),
+          ),
         ],
       ),
     );
@@ -58,30 +63,28 @@ class _AnnouncementSectionState extends State<AnnouncementSection> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (ctx) => _AnnouncementEditorSheet(
-        existing: existing,
-        bloc: bloc,
-      ),
+      builder: (ctx) =>
+          _AnnouncementEditorSheet(existing: existing, bloc: bloc),
     );
   }
 
-  Widget _statusChip(BuildContext context, _AdSchedule st, S s) {
+  Widget _statusChip(BuildContext context, AnnouncementSchedule st, S s) {
     final scheme = Theme.of(context).colorScheme;
     late Color bg;
     late Color fg;
     late String label;
     switch (st) {
-      case _AdSchedule.active:
+      case AnnouncementSchedule.active:
         bg = Colors.green.withValues(alpha: 0.15);
         fg = Colors.green.shade800;
         label = s.announcement_status_active;
         break;
-      case _AdSchedule.upcoming:
+      case AnnouncementSchedule.upcoming:
         bg = scheme.primaryContainer.withValues(alpha: 0.7);
         fg = scheme.onPrimaryContainer;
         label = s.announcement_status_upcoming;
         break;
-      case _AdSchedule.ended:
+      case AnnouncementSchedule.ended:
         bg = scheme.surfaceContainerHighest;
         fg = scheme.onSurfaceVariant;
         label = s.announcement_status_ended;
@@ -96,9 +99,9 @@ class _AnnouncementSectionState extends State<AnnouncementSection> {
       child: Text(
         label,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: fg,
-              fontWeight: FontWeight.w600,
-            ),
+          color: fg,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
@@ -123,22 +126,24 @@ class _AnnouncementSectionState extends State<AnnouncementSection> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.campaign_outlined, size: 72, color: scheme.outlineVariant),
+                        Icon(
+                          Icons.campaign_outlined,
+                          size: 72,
+                          color: scheme.outlineVariant,
+                        ),
                         const SizedBox(height: 16),
                         Text(
                           s.announcement_empty_title,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           s.announcement_empty_subtitle,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: scheme.onSurfaceVariant,
-                              ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(color: scheme.onSurfaceVariant),
                         ),
                       ],
                     ),
@@ -150,13 +155,17 @@ class _AnnouncementSectionState extends State<AnnouncementSection> {
                 child: ListView.separated(
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
                   itemCount: ads.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: 10),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 10),
                   itemBuilder: (context, index) {
                     final a = ads[index];
                     final st = _scheduleFor(a);
                     return Material(
+                      key: ValueKey('announcement_${a.id}'),
                       elevation: 0,
-                      color: scheme.surfaceContainerHighest.withValues(alpha: 0.6),
+                      color: scheme.surfaceContainerHighest.withValues(
+                        alpha: 0.6,
+                      ),
                       borderRadius: BorderRadius.circular(16),
                       child: InkWell(
                         borderRadius: BorderRadius.circular(16),
@@ -167,43 +176,78 @@ class _AnnouncementSectionState extends State<AnnouncementSection> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Expanded(
                                     child: Text(
                                       a.title,
-                                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall
+                                          ?.copyWith(
                                             fontWeight: FontWeight.w700,
-                                            color: AppColors.primary,
+                                            color: a.isActive
+                                                ? AppColors.primary
+                                                : scheme.outline,
                                           ),
                                     ),
                                   ),
+                                  Transform.scale(
+                                    scale: 0.8,
+                                    child: Switch(
+                                      value: a.isActive,
+                                      onChanged: (val) {
+                                        context.read<SettingsBloc>().add(
+                                          SettingsAnnouncementUpdated(
+                                            a.copyWith(isActive: val),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
                                   _statusChip(context, st, s),
                                 ],
                               ),
-                              if (a.subtitle != null && a.subtitle!.isNotEmpty) ...[
+                              if (a.subtitle != null &&
+                                  a.subtitle!.isNotEmpty) ...[
                                 const SizedBox(height: 6),
-                                Text(
-                                  a.subtitle!,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.bodyMedium,
+                                Opacity(
+                                  opacity: a.isActive ? 1.0 : 0.6,
+                                  child: Text(
+                                    a.subtitle!,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyMedium,
+                                  ),
                                 ),
                               ],
                               const SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  Icon(Icons.date_range_outlined, size: 16, color: scheme.onSurfaceVariant),
-                                  const SizedBox(width: 6),
-                                  Expanded(
-                                    child: Text(
-                                      '${a.startDate.toLocal().toString().split(' ').first} → ${a.endDate.toLocal().toString().split(' ').first}',
-                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                            color: scheme.onSurfaceVariant,
-                                          ),
+                              Opacity(
+                                opacity: a.isActive ? 1.0 : 0.6,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.date_range_outlined,
+                                      size: 16,
+                                      color: scheme.onSurfaceVariant,
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(width: 6),
+                                    Expanded(
+                                      child: Text(
+                                        '${a.startDate.toLocal().toString().split(' ').first} → ${a.endDate.toLocal().toString().split(' ').first}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(
+                                              color: scheme.onSurfaceVariant,
+                                            ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                               const SizedBox(height: 10),
                               Row(
@@ -211,13 +255,29 @@ class _AnnouncementSectionState extends State<AnnouncementSection> {
                                 children: [
                                   TextButton.icon(
                                     onPressed: () => _openEditor(a),
-                                    icon: const Icon(Icons.edit_outlined, size: 20),
+                                    icon: const Icon(
+                                      Icons.edit_outlined,
+                                      size: 18,
+                                    ),
                                     label: Text(s.edit),
+                                    style: TextButton.styleFrom(
+                                      visualDensity: VisualDensity.compact,
+                                    ),
                                   ),
                                   TextButton.icon(
                                     onPressed: () => _confirmDelete(a),
-                                    icon: Icon(Icons.delete_outline_rounded, size: 20, color: scheme.error),
-                                    label: Text(s.delete, style: TextStyle(color: scheme.error)),
+                                    icon: Icon(
+                                      Icons.delete_outline_rounded,
+                                      size: 18,
+                                      color: scheme.error,
+                                    ),
+                                    label: Text(
+                                      s.delete,
+                                      style: TextStyle(color: scheme.error),
+                                    ),
+                                    style: TextButton.styleFrom(
+                                      visualDensity: VisualDensity.compact,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -251,8 +311,8 @@ class _AnnouncementSectionState extends State<AnnouncementSection> {
                       s.announcement_save_bar_hint,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: scheme.onSurfaceVariant,
-                          ),
+                        color: scheme.onSurfaceVariant,
+                      ),
                     ),
                     const SizedBox(height: 10),
                     SizedBox(
@@ -291,16 +351,14 @@ class _AnnouncementSectionState extends State<AnnouncementSection> {
 }
 
 class _AnnouncementEditorSheet extends StatefulWidget {
-  const _AnnouncementEditorSheet({
-    required this.existing,
-    required this.bloc,
-  });
+  const _AnnouncementEditorSheet({required this.existing, required this.bloc});
 
   final AnnouncementModel? existing;
   final SettingsBloc bloc;
 
   @override
-  State<_AnnouncementEditorSheet> createState() => _AnnouncementEditorSheetState();
+  State<_AnnouncementEditorSheet> createState() =>
+      _AnnouncementEditorSheetState();
 }
 
 class _AnnouncementEditorSheetState extends State<_AnnouncementEditorSheet> {
@@ -336,9 +394,7 @@ class _AnnouncementEditorSheetState extends State<_AnnouncementEditorSheet> {
     final bloc = widget.bloc;
 
     return Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.viewInsetsOf(context).bottom,
-      ),
+      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
       child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
         child: Column(
@@ -346,10 +402,12 @@ class _AnnouncementEditorSheetState extends State<_AnnouncementEditorSheet> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              existing == null ? s.announcement_editor_new : s.announcement_editor_edit,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              existing == null
+                  ? s.announcement_editor_new
+                  : s.announcement_editor_edit,
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             TextField(
@@ -358,7 +416,9 @@ class _AnnouncementEditorSheetState extends State<_AnnouncementEditorSheet> {
               decoration: InputDecoration(
                 labelText: s.announcement_field_title,
                 filled: true,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
             ),
             const SizedBox(height: 14),
@@ -368,7 +428,9 @@ class _AnnouncementEditorSheetState extends State<_AnnouncementEditorSheet> {
               decoration: InputDecoration(
                 labelText: s.announcement_field_subtitle,
                 filled: true,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
             ),
             const SizedBox(height: 14),
@@ -378,15 +440,17 @@ class _AnnouncementEditorSheetState extends State<_AnnouncementEditorSheet> {
               decoration: InputDecoration(
                 labelText: s.announcement_field_qr,
                 filled: true,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
             ),
             const SizedBox(height: 18),
             Text(
               s.announcement_period,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 10),
             Row(
@@ -443,10 +507,19 @@ class _AnnouncementEditorSheetState extends State<_AnnouncementEditorSheet> {
                 final newAd = AnnouncementModel(
                   id: existing?.id ?? const Uuid().v4(),
                   title: _titleCtrl.text.trim(),
-                  subtitle: _subtitleCtrl.text.trim().isEmpty ? null : _subtitleCtrl.text.trim(),
-                  qrCodeUrl: _qrCtrl.text.trim().isEmpty ? null : _qrCtrl.text.trim(),
+                  subtitle: _subtitleCtrl.text.trim().isEmpty
+                      ? null
+                      : _subtitleCtrl.text.trim(),
+                  qrCodeUrl: _qrCtrl.text.trim().isEmpty
+                      ? null
+                      : _qrCtrl.text.trim(),
                   startDate: _startDate,
                   endDate: _endDate,
+                  isActive: existing?.isActive ?? true,
+                  order: existing?.order ?? 0,
+                  isPriority: existing?.isPriority ?? false,
+                  displayDurationSeconds:
+                      existing?.displayDurationSeconds ?? 30,
                 );
                 if (existing == null) {
                   bloc.add(SettingsAnnouncementAdded(newAd));
@@ -459,7 +532,9 @@ class _AnnouncementEditorSheetState extends State<_AnnouncementEditorSheet> {
               label: Text(s.save),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
             ),
           ],

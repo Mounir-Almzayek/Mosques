@@ -1,23 +1,9 @@
 import 'package:dio/dio.dart';
+import '../../core/enums/network/api_request_enums.dart';
 import '../../features/auth/repository/auth_local_repository.dart';
 import '../../features/splash/repositories/settings_local_repository.dart';
 import 'api_config.dart';
 import 'dio_provider.dart';
-
-/// Enum to specify the HTTP method used in a request.
-enum HTTPMethod { get, post, delete, put, patch }
-
-/// Enum to specify the type of body sent:
-enum BodyType { data, formData }
-
-/// Enum to specify the type of request:
-enum RequestType { request, download }
-
-/// Enum to specify the shape of the sent data:
-enum DataShape { map, list, none }
-
-/// Enum to specify whether the request requires authorization:
-enum AuthorizationOption { authorized, unauthorized }
 
 /// Extension that converts HTTPMethod enum values to their corresponding string representations.
 extension HTTPMethodString on HTTPMethod {

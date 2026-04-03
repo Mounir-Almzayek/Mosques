@@ -4,12 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:async';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/enums/splash/splash_destination.dart';
 import '../../../core/utils/color_extensions.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/utils/responsive_layout.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/styles/app_colors.dart';
-import '../../../core/widgets/logo_rectangle.dart';
+import '../../../core/widgets/media/media_widgets.dart';
 import '../bloc/splash_routing/splash_routing_bloc.dart';
 
 class SplashScreen extends StatefulWidget {

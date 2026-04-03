@@ -6,7 +6,9 @@ import '../../../../core/enums/app_language.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../data/models/mosque_model.dart';
 import '../../../language/bloc/language/language_bloc.dart';
-import '../../bloc/settings_bloc.dart';
+import '../../bloc/settings/settings_bloc.dart';
+
+import '../widgets/common/common_widgets.dart';
 
 class GeneralSection extends StatefulWidget {
   final MosqueModel mosque;
@@ -88,9 +90,9 @@ class _GeneralSectionState extends State<GeneralSection> {
       if (perm == LocationPermission.denied ||
           perm == LocationPermission.deniedForever) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(s.location_permission_denied)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(s.location_permission_denied)));
         return;
       }
 
@@ -106,14 +108,14 @@ class _GeneralSectionState extends State<GeneralSection> {
           longitude: pos.longitude,
         ),
       );
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(s.location_updated)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(s.location_updated)));
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(s.location_unavailable)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(s.location_unavailable)));
     } finally {
       if (mounted) setState(() => _locating = false);
     }
@@ -138,17 +140,14 @@ class _GeneralSectionState extends State<GeneralSection> {
                   value: langState.language,
                   items: AppLanguage.values
                       .map(
-                        (e) => DropdownMenuItem(
-                          value: e,
-                          child: Text(e.name),
-                        ),
+                        (e) => DropdownMenuItem(value: e, child: Text(e.name)),
                       )
                       .toList(),
                   onChanged: (v) {
                     if (v != null) {
-                      context
-                          .read<SettingsBloc>()
-                          .add(SettingsMosqueLanguageChanged(v));
+                      context.read<SettingsBloc>().add(
+                        SettingsMosqueLanguageChanged(v),
+                      );
                       context.read<LanguageBloc>().add(ChangeLanguage(v));
                     }
                   },
@@ -177,7 +176,9 @@ class _GeneralSectionState extends State<GeneralSection> {
             ),
             initialValue: _calculationMethod,
             decoration: InputDecoration(labelText: s.prayer_calculation_method),
-            items: _methods.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+            items: _methods
+                .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                .toList(),
             onChanged: (v) {
               if (v != null) {
                 setState(() => _calculationMethod = v);
@@ -194,12 +195,16 @@ class _GeneralSectionState extends State<GeneralSection> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      s.latitude_coordinate(widget.mosque.latitude.toStringAsFixed(6)),
+                      s.latitude_coordinate(
+                        widget.mosque.latitude.toStringAsFixed(6),
+                      ),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      s.longitude_coordinate(widget.mosque.longitude.toStringAsFixed(6)),
+                      s.longitude_coordinate(
+                        widget.mosque.longitude.toStringAsFixed(6),
+                      ),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
@@ -225,40 +230,48 @@ class _GeneralSectionState extends State<GeneralSection> {
             style: Theme.of(context).textTheme.titleSmall,
           ),
           const SizedBox(height: 12),
-          _buildOffsetField(s.prayer_fajr, widget.mosque.prayerOffsets.fajr, (v) => bloc.add(SettingsPrayerOffsetFajrChanged(v))),
-          _buildOffsetField(s.prayer_dhuhr, widget.mosque.prayerOffsets.dhuhr, (v) => bloc.add(SettingsPrayerOffsetDhuhrChanged(v))),
-          _buildOffsetField(s.prayer_asr, widget.mosque.prayerOffsets.asr, (v) => bloc.add(SettingsPrayerOffsetAsrChanged(v))),
-          _buildOffsetField(s.prayer_maghrib, widget.mosque.prayerOffsets.maghrib, (v) => bloc.add(SettingsPrayerOffsetMaghribChanged(v))),
-          _buildOffsetField(s.prayer_isha, widget.mosque.prayerOffsets.isha, (v) => bloc.add(SettingsPrayerOffsetIshaChanged(v))),
+          OffsetStepperField(
+            label: s.prayer_fajr,
+            value: widget.mosque.prayerOffsets.fajr,
+            suffix: s.minutes_short,
+            onChanged: (v) => bloc.add(SettingsPrayerOffsetFajrChanged(v)),
+          ),
+          OffsetStepperField(
+            label: s.prayer_sunrise,
+            value: widget.mosque.prayerOffsets.sunrise,
+            suffix: s.minutes_short,
+            onChanged: (v) => bloc.add(SettingsPrayerOffsetSunriseChanged(v)),
+          ),
+          OffsetStepperField(
+            label: s.prayer_dhuhr,
+            value: widget.mosque.prayerOffsets.dhuhr,
+            suffix: s.minutes_short,
+            onChanged: (v) => bloc.add(SettingsPrayerOffsetDhuhrChanged(v)),
+          ),
+          OffsetStepperField(
+            label: s.prayer_asr,
+            value: widget.mosque.prayerOffsets.asr,
+            suffix: s.minutes_short,
+            onChanged: (v) => bloc.add(SettingsPrayerOffsetAsrChanged(v)),
+          ),
+          OffsetStepperField(
+            label: s.prayer_maghrib,
+            value: widget.mosque.prayerOffsets.maghrib,
+            suffix: s.minutes_short,
+            onChanged: (v) => bloc.add(SettingsPrayerOffsetMaghribChanged(v)),
+          ),
+          OffsetStepperField(
+            label: s.prayer_isha,
+            value: widget.mosque.prayerOffsets.isha,
+            suffix: s.minutes_short,
+            onChanged: (v) => bloc.add(SettingsPrayerOffsetIshaChanged(v)),
+          ),
           const SizedBox(height: 32),
           ElevatedButton(
             onPressed: () => _save(),
             child: Text(s.save_general_settings),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildOffsetField(String label, int val, ValueChanged<int> onChanged) {
-    final s = S.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: TextFormField(
-        key: ValueKey('${label}_$val'),
-        initialValue: val.toString(),
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          labelText: label,
-          suffixText: s.minutes_short,
-          isDense: true,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          border: const OutlineInputBorder(),
-        ),
-        onChanged: (v) {
-          final n = int.tryParse(v);
-          if (n != null) onChanged(n);
-        },
       ),
     );
   }

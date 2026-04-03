@@ -12,7 +12,10 @@ abstract final class AppTheme {
   AppTheme._();
 
   /// ثيم فاتح واحد (Material 3) متناسق مع هوية المسجد.
-  static ThemeData light(BuildContext context, {String fontFamily = 'Beiruti'}) {
+  static ThemeData light(
+    BuildContext context, {
+    String fontFamily = 'Beiruti',
+  }) {
     const double globalRadius = 14.0;
 
     double size(double base) =>
@@ -89,7 +92,7 @@ abstract final class AppTheme {
 
     return ThemeData(
       useMaterial3: true,
-      fontFamily: fontFamily,
+      fontFamily: 'Beiruti',
       primaryColor: AppColors.primary,
       scaffoldBackgroundColor: AppColors.background,
       colorScheme: scheme,
@@ -143,21 +146,14 @@ abstract final class AppTheme {
           color: AppColors.brightWhite,
         ),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
 
       popupMenuTheme: PopupMenuThemeData(
         color: AppColors.surface,
         surfaceTintColor: Colors.transparent,
-        textStyle: TextStyle(
-          fontSize: size(14),
-          color: AppColors.primaryText,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        textStyle: TextStyle(fontSize: size(14), color: AppColors.primaryText),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
 
       dividerTheme: const DividerThemeData(
@@ -190,10 +186,7 @@ abstract final class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(globalRadius),
           ),
-          textStyle: TextStyle(
-            fontSize: size(16),
-            fontWeight: FontWeight.bold,
-          ),
+          textStyle: TextStyle(fontSize: size(16), fontWeight: FontWeight.bold),
         ),
       ),
 
@@ -241,4 +234,3 @@ abstract final class AppTheme {
 /// توافق مع الكود القديم — يفضّل استخدام [AppTheme.light].
 @Deprecated('Use AppTheme.light(context) instead')
 ThemeData appThemeData(BuildContext context) => AppTheme.light(context);
-

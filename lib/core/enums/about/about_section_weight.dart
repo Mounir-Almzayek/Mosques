@@ -1,0 +1,5 @@
+enum AboutSectionWeight {
+  thin,
+  bold,
+}
+

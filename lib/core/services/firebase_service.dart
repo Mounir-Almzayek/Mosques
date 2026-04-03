@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
+import '../../features/auth/repository/auth_repository.dart';
 import '../../firebase_options.dart';
 import 'local_notification_service.dart';
 import '../routes/app_pages.dart';
@@ -62,9 +64,16 @@ class FirebaseService {
     if (kDebugMode && _fcmToken != null) {
       debugPrint('FCM Token: $_fcmToken');
     }
+    await _syncTokenToCurrentUser();
   }
 
   static void _setupNotificationHandlers() {
+    FirebaseAuth.instance.authStateChanges().listen((user) async {
+      if (user != null) {
+        await _syncTokenToCurrentUser();
+      }
+    });
+
     FirebaseMessaging.onMessage.listen((message) {
       _handleForegroundMessage(message);
     });
@@ -77,6 +86,11 @@ class FirebaseService {
       if (message != null) {
         _onNotificationTapped(message.data);
       }
+    });
+
+    _messaging?.onTokenRefresh.listen((token) async {
+      _fcmToken = token;
+      await _syncTokenToCurrentUser();
     });
   }
 
@@ -116,6 +130,23 @@ class FirebaseService {
     final messaging = _messaging;
     if (messaging == null) return null;
     _fcmToken = await messaging.getToken();
+    await _syncTokenToCurrentUser();
     return _fcmToken;
+  }
+
+  static Future<void> syncTokenToCurrentUser() async {
+    await _syncTokenToCurrentUser();
+  }
+
+  static Future<void> _syncTokenToCurrentUser() async {
+    final token = _fcmToken;
+    if (token == null || token.isEmpty) return;
+    try {
+      await AuthRepository.saveFcmToken(token);
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('FCM token sync failed: $e');
+      }
+    }
   }
 }

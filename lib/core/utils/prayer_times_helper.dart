@@ -113,6 +113,8 @@ class PrayerTimesHelper {
     switch (prayer) {
       case Prayer.fajr:
         return offsets.fajr;
+      case Prayer.sunrise:
+        return offsets.sunrise;
       case Prayer.dhuhr:
         return offsets.dhuhr;
       case Prayer.asr:

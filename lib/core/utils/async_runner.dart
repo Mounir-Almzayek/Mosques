@@ -3,7 +3,9 @@ import 'package:async/async.dart';
 import 'package:dio/dio.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-enum MultipleCallsBehavior { abortNew, abortOld }
+import '../enums/async/multiple_calls_behavior.dart';
+
+export '../enums/async/multiple_calls_behavior.dart';
 
 class AsyncRunner<T> {
   CancelableOperation<T>? _currentOperation;

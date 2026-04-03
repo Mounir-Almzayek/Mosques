@@ -1,14 +1,6 @@
-/// Represents the three display phases during a prayer cycle.
-enum PrayerDisplayPhaseKind {
-  /// Between adhan and iqama — counting down to iqama.
-  iqama,
+import '../enums/display/prayer_display_phase_kind.dart';
 
-  /// 1-minute grace period after iqama (silent/dimmed UI).
-  graceAfterIqama,
-
-  /// Counting down to the next adhan.
-  nextAdhan,
-}
+export '../enums/display/prayer_display_phase_kind.dart';
 
 /// Current display phase: which prayer is in focus, the kind of countdown,
 /// and the target time for the countdown.

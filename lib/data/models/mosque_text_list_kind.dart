@@ -1,7 +1,1 @@
-/// نوع قائمة النصوص في الإعدادات والمزامنة مع Firestore.
-enum MosqueTextListKind {
-  hadith,
-  verse,
-  dua,
-  adhkar,
-}
+export '../../core/enums/settings/mosque_text_list_kind.dart';

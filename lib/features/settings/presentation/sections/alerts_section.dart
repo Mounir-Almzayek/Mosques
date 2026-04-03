@@ -5,7 +5,7 @@ import 'package:uuid/uuid.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../data/models/mosque_model.dart';
 import '../../../../data/models/announcement_model.dart';
-import '../../bloc/settings_bloc.dart';
+import '../../bloc/settings/settings_bloc.dart';
 
 /// Manage high-priority instant alerts to be shown on the mosque display screen.
 class AlertsSection extends StatelessWidget {
@@ -47,7 +47,10 @@ class AlertsSection extends StatelessWidget {
           ? Padding(
               padding: const EdgeInsets.all(16),
               child: FilledButton.tonalIcon(
-                onPressed: () => bloc.add(const SettingsAlertsCleared()),
+                onPressed: () {
+                  bloc.add(const SettingsAlertsCleared());
+                  bloc.add(const SaveAlertsRequested());
+                },
                 icon: const Icon(Icons.clear_all),
                 label: Text(s.alerts_clear_all),
               ),
@@ -59,9 +62,12 @@ class AlertsSection extends StatelessWidget {
   void _showAddAlert(BuildContext context, SettingsBloc bloc) {
     showDialog(
       context: context,
-      builder: (context) => _AlertEditDialog(onAdd: (alert) {
-        bloc.add(SettingsAlertAdded(alert));
-      }),
+      builder: (context) => _AlertEditDialog(
+        onAdd: (alert) {
+          bloc.add(SettingsAlertAdded(alert));
+          bloc.add(const SaveAlertsRequested());
+        },
+      ),
     );
   }
 }
@@ -84,7 +90,10 @@ class _AlertCard extends StatelessWidget {
         subtitle: Text(alert.subtitle ?? ''),
         trailing: IconButton(
           icon: const Icon(Icons.delete_outline, color: Colors.grey),
-          onPressed: () => bloc.add(SettingsAlertRemoved(alert.id)),
+          onPressed: () {
+            bloc.add(SettingsAlertRemoved(alert.id));
+            bloc.add(const SaveAlertsRequested());
+          },
         ),
       ),
     );

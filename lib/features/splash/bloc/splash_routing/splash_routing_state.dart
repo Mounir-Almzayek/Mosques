@@ -17,8 +17,6 @@ class SplashError extends SplashRoutingState {
   const SplashError(this.message);
 }
 
-enum SplashDestination { login, mobileSettings, screenDisplay }
-
 class SplashLoaded extends SplashRoutingState {
   final SplashDestination destination;
   const SplashLoaded({required this.destination});

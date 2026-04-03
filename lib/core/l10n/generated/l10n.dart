@@ -2469,6 +2469,386 @@ class S {
       args: [],
     );
   }
+
+  /// `Create Account`
+  String get register_title {
+    return Intl.message(
+      'Create Account',
+      name: 'register_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Join Miqat system as a mosque administrator`
+  String get register_subtitle {
+    return Intl.message(
+      'Join Miqat system as a mosque administrator',
+      name: 'register_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create Account`
+  String get register_button {
+    return Intl.message(
+      'Create Account',
+      name: 'register_button',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Register New Mosque`
+  String get register_type_new {
+    return Intl.message(
+      'Register New Mosque',
+      name: 'register_type_new',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Join Existing Mosque`
+  String get register_type_existing {
+    return Intl.message(
+      'Join Existing Mosque',
+      name: 'register_type_existing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unique Mosque ID (English)`
+  String get mosque_id_label {
+    return Intl.message(
+      'Unique Mosque ID (English)',
+      name: 'mosque_id_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `example: al_rowda_mosque`
+  String get mosque_id_hint {
+    return Intl.message(
+      'example: al_rowda_mosque',
+      name: 'mosque_id_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This ID is already taken`
+  String get mosque_id_taken {
+    return Intl.message(
+      'This ID is already taken',
+      name: 'mosque_id_taken',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Suggested ID: {id}`
+  String mosque_id_suggestion(Object id) {
+    return Intl.message(
+      'Suggested ID: $id',
+      name: 'mosque_id_suggestion',
+      desc: '',
+      args: [id],
+    );
+  }
+
+  /// `Account and mosque created successfully!`
+  String get registration_success_new {
+    return Intl.message(
+      'Account and mosque created successfully!',
+      name: 'registration_success_new',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Account created. Please contact support to link it to your mosque.`
+  String get registration_success_existing {
+    return Intl.message(
+      'Account created. Please contact support to link it to your mosque.',
+      name: 'registration_success_existing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Already have an account? Sign in`
+  String get login_link {
+    return Intl.message(
+      'Already have an account? Sign in',
+      name: 'login_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Don't have an account? Register now`
+  String get register_link {
+    return Intl.message(
+      'Don\'t have an account? Register now',
+      name: 'register_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mosque ID is required for a new mosque`
+  String get validation_mosque_id_required {
+    return Intl.message(
+      'Mosque ID is required for a new mosque',
+      name: 'validation_mosque_id_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To join an existing mosque, please create your account first, then contact support at {phone} to link your account.`
+  String contact_dev_message(Object phone) {
+    return Intl.message(
+      'To join an existing mosque, please create your account first, then contact support at $phone to link your account.',
+      name: 'contact_dev_message',
+      desc: '',
+      args: [phone],
+    );
+  }
+
+  /// `Profile`
+  String get tab_profile {
+    return Intl.message(
+      'Profile',
+      name: 'tab_profile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `About App`
+  String get tab_about {
+    return Intl.message(
+      'About App',
+      name: 'tab_about',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email`
+  String get profile_email {
+    return Intl.message(
+      'Email',
+      name: 'profile_email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current Password`
+  String get profile_password {
+    return Intl.message(
+      'Current Password',
+      name: 'profile_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New Password`
+  String get profile_new_password {
+    return Intl.message(
+      'New Password',
+      name: 'profile_new_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Terminate other sessions`
+  String get profile_terminate_other {
+    return Intl.message(
+      'Terminate other sessions',
+      name: 'profile_terminate_other',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save Changes`
+  String get profile_save_changes {
+    return Intl.message(
+      'Save Changes',
+      name: 'profile_save_changes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `General Information`
+  String get about_category_default {
+    return Intl.message(
+      'General Information',
+      name: 'about_category_default',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Note: Changing password automatically signs out most other sessions.`
+  String get profile_terminate_hint {
+    return Intl.message(
+      'Note: Changing password automatically signs out most other sessions.',
+      name: 'profile_terminate_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `App Update`
+  String get tab_update {
+    return Intl.message(
+      'App Update',
+      name: 'tab_update',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New Update Available!`
+  String get update_title {
+    return Intl.message(
+      'New Update Available!',
+      name: 'update_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current Version: {version}`
+  String update_current_version(Object version) {
+    return Intl.message(
+      'Current Version: $version',
+      name: 'update_current_version',
+      desc: '',
+      args: [version],
+    );
+  }
+
+  /// `Latest Version: {version}`
+  String update_latest_version(Object version) {
+    return Intl.message(
+      'Latest Version: $version',
+      name: 'update_latest_version',
+      desc: '',
+      args: [version],
+    );
+  }
+
+  /// `Download & Install Update`
+  String get update_download {
+    return Intl.message(
+      'Download & Install Update',
+      name: 'update_download',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Downloading... {progress}%`
+  String update_downloading(Object progress) {
+    return Intl.message(
+      'Downloading... $progress%',
+      name: 'update_downloading',
+      desc: '',
+      args: [progress],
+    );
+  }
+
+  /// `Download complete! Installing...`
+  String get update_success {
+    return Intl.message(
+      'Download complete! Installing...',
+      name: 'update_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Download failed. Please try again later.`
+  String get update_failure {
+    return Intl.message(
+      'Download failed. Please try again later.',
+      name: 'update_failure',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No download link available for this platform.`
+  String get update_no_link {
+    return Intl.message(
+      'No download link available for this platform.',
+      name: 'update_no_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contact Tech Support`
+  String get contact_developers {
+    return Intl.message(
+      'Contact Tech Support',
+      name: 'contact_developers',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Phone Number (For fast contact)`
+  String get registration_phone {
+    return Intl.message(
+      'Phone Number (For fast contact)',
+      name: 'registration_phone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contact Phone Number`
+  String get profile_phone_label {
+    return Intl.message(
+      'Contact Phone Number',
+      name: 'profile_phone_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please ensure you enter your correct number. Tech support will use it to contact you and ensure your account and mosque remain active.`
+  String get profile_phone_hint {
+    return Intl.message(
+      'Please ensure you enter your correct number. Tech support will use it to contact you and ensure your account and mosque remain active.',
+      name: 'profile_phone_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your app is up to date`
+  String get update_up_to_date {
+    return Intl.message(
+      'Your app is up to date',
+      name: 'update_up_to_date',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

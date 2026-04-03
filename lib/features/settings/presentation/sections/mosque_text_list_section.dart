@@ -5,7 +5,7 @@ import 'package:uuid/uuid.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../data/models/mosque_model.dart';
-import '../../bloc/settings_bloc.dart';
+import '../../bloc/settings/settings_bloc.dart';
 
 class _MosqueTextL10n {
   const _MosqueTextL10n({
@@ -152,13 +152,21 @@ class _MosqueTextListSectionState extends State<MosqueTextListSection> {
         title: Text(labels.deleteTitle),
         content: Text(labels.deleteBody),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(s.cancel)),
-          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(s.delete)),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(s.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(s.delete),
+          ),
         ],
       ),
     );
     if (ok == true && mounted) {
-      context.read<SettingsBloc>().add(SettingsMosqueTextRemoved(widget.kind, item.id));
+      context.read<SettingsBloc>().add(
+        SettingsMosqueTextRemoved(widget.kind, item.id),
+      );
     }
   }
 
@@ -183,22 +191,24 @@ class _MosqueTextListSectionState extends State<MosqueTextListSection> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(labels.emptyIcon, size: 72, color: scheme.outlineVariant),
+                        Icon(
+                          labels.emptyIcon,
+                          size: 72,
+                          color: scheme.outlineVariant,
+                        ),
                         const SizedBox(height: 16),
                         Text(
                           labels.emptyTitle,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           labels.emptySubtitle,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: scheme.onSurfaceVariant,
-                              ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(color: scheme.onSurfaceVariant),
                         ),
                       ],
                     ),
@@ -210,12 +220,16 @@ class _MosqueTextListSectionState extends State<MosqueTextListSection> {
                 child: ListView.separated(
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
                   itemCount: items.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: 10),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 10),
                   itemBuilder: (context, index) {
                     final h = items[index];
                     return Material(
+                      key: ValueKey('mosque_text_${h.id}'),
                       elevation: 0,
-                      color: scheme.surfaceContainerHighest.withValues(alpha: 0.6),
+                      color: scheme.surfaceContainerHighest.withValues(
+                        alpha: 0.6,
+                      ),
                       borderRadius: BorderRadius.circular(16),
                       child: InkWell(
                         borderRadius: BorderRadius.circular(16),
@@ -226,44 +240,86 @@ class _MosqueTextListSectionState extends State<MosqueTextListSection> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Expanded(
                                     child: Text(
                                       h.narrator.isNotEmpty ? h.narrator : '—',
-                                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall
+                                          ?.copyWith(
                                             fontWeight: FontWeight.w700,
-                                            color: AppColors.primary,
+                                            color: h.isActive
+                                                ? AppColors.primary
+                                                : scheme.outline,
                                           ),
                                     ),
                                   ),
+                                  Transform.scale(
+                                    scale: 0.8,
+                                    child: Switch(
+                                      value: h.isActive,
+                                      onChanged: (val) {
+                                        context.read<SettingsBloc>().add(
+                                          SettingsMosqueTextUpdated(
+                                            widget.kind,
+                                            h.copyWith(isActive: val),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
                                   IconButton(
+                                    visualDensity: VisualDensity.compact,
                                     tooltip: s.edit,
-                                    icon: Icon(Icons.edit_outlined, color: scheme.primary, size: 22),
+                                    icon: Icon(
+                                      Icons.edit_outlined,
+                                      color: scheme.primary,
+                                      size: 20,
+                                    ),
                                     onPressed: () => _openEditor(h),
                                   ),
                                   IconButton(
+                                    visualDensity: VisualDensity.compact,
                                     tooltip: s.delete,
-                                    icon: Icon(Icons.delete_outline_rounded, color: scheme.error, size: 22),
+                                    icon: Icon(
+                                      Icons.delete_outline_rounded,
+                                      color: scheme.error,
+                                      size: 20,
+                                    ),
                                     onPressed: () => _confirmDelete(h),
                                   ),
                                 ],
                               ),
                               const SizedBox(height: 6),
-                              Text(
-                                h.text,
-                                maxLines: 4,
-                                overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context).textTheme.bodyMedium,
+                              Opacity(
+                                opacity: h.isActive ? 1.0 : 0.6,
+                                child: Text(
+                                  h.text,
+                                  maxLines: 4,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context).textTheme.bodyMedium
+                                      ?.copyWith(
+                                        fontStyle: h.isActive
+                                            ? FontStyle.normal
+                                            : FontStyle.italic,
+                                      ),
+                                ),
                               ),
                               if (h.source.isNotEmpty) ...[
                                 const SizedBox(height: 8),
-                                Text(
-                                  h.source,
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        color: scheme.onSurfaceVariant,
-                                        fontStyle: FontStyle.italic,
-                                      ),
+                                Opacity(
+                                  opacity: h.isActive ? 1.0 : 0.6,
+                                  child: Text(
+                                    h.source,
+                                    style: Theme.of(context).textTheme.bodySmall
+                                        ?.copyWith(
+                                          color: scheme.onSurfaceVariant,
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                  ),
                                 ),
                               ],
                             ],
@@ -296,8 +352,8 @@ class _MosqueTextListSectionState extends State<MosqueTextListSection> {
                       labels.saveBarHint,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: scheme.onSurfaceVariant,
-                          ),
+                        color: scheme.onSurfaceVariant,
+                      ),
                     ),
                     const SizedBox(height: 10),
                     SizedBox(
@@ -382,9 +438,7 @@ class _MosqueTextEditorSheetState extends State<_MosqueTextEditorSheet> {
     final labels = widget.labels;
 
     return Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.viewInsetsOf(context).bottom,
-      ),
+      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
       child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
         child: Column(
@@ -393,9 +447,9 @@ class _MosqueTextEditorSheetState extends State<_MosqueTextEditorSheet> {
           children: [
             Text(
               existing == null ? labels.editorNew : labels.editorEdit,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             TextField(
@@ -404,7 +458,9 @@ class _MosqueTextEditorSheetState extends State<_MosqueTextEditorSheet> {
               decoration: InputDecoration(
                 labelText: labels.narratorLabel,
                 filled: true,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
             ),
             const SizedBox(height: 14),
@@ -417,7 +473,9 @@ class _MosqueTextEditorSheetState extends State<_MosqueTextEditorSheet> {
                 alignLabelWithHint: true,
                 labelText: labels.textLabel,
                 filled: true,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
             ),
             const SizedBox(height: 14),
@@ -427,7 +485,9 @@ class _MosqueTextEditorSheetState extends State<_MosqueTextEditorSheet> {
               decoration: InputDecoration(
                 labelText: labels.sourceLabel,
                 filled: true,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
             ),
             const SizedBox(height: 24),
@@ -439,6 +499,8 @@ class _MosqueTextEditorSheetState extends State<_MosqueTextEditorSheet> {
                   narrator: _narratorCtrl.text.trim(),
                   text: _textCtrl.text.trim(),
                   source: _sourceCtrl.text.trim(),
+                  isActive: existing?.isActive ?? true,
+                  order: existing?.order ?? 0,
                 );
                 if (existing == null) {
                   bloc.add(SettingsMosqueTextAdded(widget.kind, item));
@@ -451,7 +513,9 @@ class _MosqueTextEditorSheetState extends State<_MosqueTextEditorSheet> {
               label: Text(s.save),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
             ),
           ],

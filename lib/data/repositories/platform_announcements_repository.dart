@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/announcement_model.dart';
+import 'platform_announcements_local_repository.dart';
 
 /// إعلانات المنصة (كل المساجد) — تُدار من خارج تطبيق الجوال (كونسول، سكربت Admin SDK، لوحة داخلية).
 /// نفس شكل حقول [AnnouncementModel] مثل `mosque_ads` داخل المسجد.
@@ -22,14 +23,18 @@ class PlatformAnnouncementsRepository {
     return _db
         .collection(_collection)
         .snapshots()
-        .map((snap) {
+        .asyncMap((snap) async {
       final now = DateTime.now();
       final list = snap.docs
           .map((d) => AnnouncementModel.fromMap(d.data(), d.id))
           .where((a) => _isInWindow(a, now))
           .toList()
         ..sort((a, b) => a.order.compareTo(b.order));
+        
+      await PlatformAnnouncementsLocalRepository.saveAnnouncements(list);
       return list;
+    }).handleError((_) async {
+       return await PlatformAnnouncementsLocalRepository.getCached() ?? [];
     });
   }
 
@@ -45,9 +50,11 @@ class PlatformAnnouncementsRepository {
           .where((a) => _isInWindow(a, now))
           .toList()
         ..sort((a, b) => a.order.compareTo(b.order));
+        
+      await PlatformAnnouncementsLocalRepository.saveAnnouncements(list);
       return list;
     } catch (_) {
-      return [];
+      return await PlatformAnnouncementsLocalRepository.getCached() ?? [];
     }
   }
 }

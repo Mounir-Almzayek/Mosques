@@ -7,11 +7,11 @@ import 'package:go_router/go_router.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/utils/responsive_layout.dart';
-import '../../../core/widgets/custom_elevated_button.dart';
-import '../../../core/widgets/custom_text_field.dart';
+import '../../../core/widgets/feedback/unified_snackbar.dart';
+import '../../../core/widgets/forms/custom_elevated_button.dart';
+import '../../../core/widgets/forms/custom_text_field.dart';
 import '../../../core/l10n/generated/l10n.dart';
-import '../../../core/widgets/unified_snackbar.dart';
-import '../../../core/widgets/optimized_image.dart';
+import '../../../data/repositories/app_settings_repository.dart';
 import '../bloc/login/login_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -254,6 +254,31 @@ class _LoginScreenState extends State<LoginScreen> {
                                 fontStyle: FontStyle.italic,
                               ),
                             ),
+                            SizedBox(height: 24.h),
+                            FutureBuilder(
+                              future: AppSettingsRepository.getAppSettings(),
+                              builder: (context, snapshot) {
+                                final canOpenRegistration =
+                                    snapshot.data?.allowRegistration ?? true;
+                                if (!canOpenRegistration) {
+                                  return const SizedBox.shrink();
+                                }
+                                return TextButton(
+                                  onPressed: () =>
+                                      context.push(Routes.registrationPath),
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: AppColors.goldDeep,
+                                  ),
+                                  child: Text(
+                                    s.register_link,
+                                    style: TextStyle(
+                                      fontSize: context.adaptiveFont(14.sp),
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                           ],
                         ),
                       ),
@@ -293,10 +318,13 @@ class _BrandMark extends StatelessWidget {
         ),
         child: Padding(
           padding: EdgeInsets.all(size * 0.14),
-          child: OptimizedImage.asset(
-            'assets/logo.jpg',
-            cacheWidth: 200,
+          child: FittedBox(
             fit: BoxFit.contain,
+            child: Icon(
+              Icons.mosque_outlined,
+              color: Colors.white,
+              size: size * 0.58,
+            ),
           ),
         ),
       ),

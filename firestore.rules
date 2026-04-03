@@ -57,6 +57,13 @@ service cloud.firestore {
       allow create, update, delete: if false;
     }
 
+    // Global app settings (update links, support phone, about info) — public read
+    // Written only from Admin Console or Admin SDK, never from the mobile app.
+    match /app_settings/{docId} {
+      allow read: if true;
+      allow create, update, delete: if false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }

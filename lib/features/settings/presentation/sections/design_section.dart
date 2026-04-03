@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../../../core/styles/app_theme.dart';
 import '../../../../core/l10n/generated/l10n.dart';
-import '../../../settings/bloc/settings_event.dart';
-import '../../bloc/settings_bloc.dart';
-import '../../bloc/settings_state.dart';
+import '../../bloc/settings/settings_event.dart';
+import '../../bloc/settings/settings_bloc.dart';
+import '../../bloc/settings/settings_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../widgets/background_settings_section.dart';
-import '../widgets/color_settings_section.dart';
-import '../widgets/font_size_settings_section.dart';
-import '../widgets/typography_settings_section.dart';
-import '../widgets/behavior_settings_section.dart';
+import '../widgets/design/design_widgets.dart';
 
 class DesignSection extends StatelessWidget {
   const DesignSection({super.key});
@@ -17,7 +13,7 @@ class DesignSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    
+
     return BlocBuilder<SettingsBloc, SettingsState>(
       builder: (context, state) {
         final mosque = state.request.mosque;
@@ -37,31 +33,48 @@ class DesignSection extends StatelessWidget {
                     // 1. Background Settings
                     BackgroundSettingsSection(
                       settings: design.background,
-                      onTypeChanged: (type) => bloc.add(SettingsDesignBackgroundTypeChanged(type)),
-                      onValueChanged: (val) => bloc.add(SettingsDesignBackgroundValueChanged(val)),
+                      onTypeChanged: (type) =>
+                          bloc.add(SettingsDesignBackgroundTypeChanged(type)),
+                      onValueChanged: (val) =>
+                          bloc.add(SettingsDesignBackgroundValueChanged(val)),
                     ),
                     const SizedBox(height: 20),
 
                     // 2. Color Settings
                     ColorSettingsSection(
                       colors: design.colors,
-                      onPrimaryChanged: (val) => bloc.add(SettingsDesignPrimaryColorChanged(val)),
-                      onSecondaryChanged: (val) => bloc.add(SettingsDesignSecondaryColorChanged(val)),
-                      onActiveCardChanged: (val) => bloc.add(SettingsDesignActiveCardColorChanged(val)),
-                      onActiveCardTextChanged: (val) => bloc.add(SettingsDesignActiveCardTextColorChanged(val)),
-                      onInactiveCardTextChanged: (val) => bloc.add(SettingsDesignInactiveCardTextColorChanged(val)),
-                      onPrayerOverlayChanged: (val) => bloc.add(SettingsDesignPrayerOverlayChanged(val)),
+                      onPrimaryChanged: (val) =>
+                          bloc.add(SettingsDesignPrimaryColorChanged(val)),
+                      onSecondaryChanged: (val) =>
+                          bloc.add(SettingsDesignSecondaryColorChanged(val)),
+                      onActiveCardChanged: (val) =>
+                          bloc.add(SettingsDesignActiveCardColorChanged(val)),
+                      onActiveCardTextChanged: (val) => bloc.add(
+                        SettingsDesignActiveCardTextColorChanged(val),
+                      ),
+                      onInactiveCardTextChanged: (val) => bloc.add(
+                        SettingsDesignInactiveCardTextColorChanged(val),
+                      ),
+                      onPrayerOverlayChanged: (val) =>
+                          bloc.add(SettingsDesignPrayerOverlayChanged(val)),
                     ),
                     const SizedBox(height: 20),
 
                     // 3. Font Size Settings
                     FontSizeSettingsSection(
                       fontSizes: design.fontSizes,
-                      onClockSizeChanged: (val) => bloc.add(SettingsDesignClockFontSizeChanged(val)),
-                      onMosqueInfoSizeChanged: (val) => bloc.add(SettingsDesignMosqueInfoFontSizeChanged(val)),
-                      onPrayersSizeChanged: (val) => bloc.add(SettingsDesignPrayersFontSizeChanged(val)),
-                      onAnnouncementsSizeChanged: (val) => bloc.add(SettingsDesignAnnouncementsFontSizeChanged(val)),
-                      onContentSizeChanged: (val) => bloc.add(SettingsDesignContentFontSizeChanged(val)),
+                      onClockSizeChanged: (val) =>
+                          bloc.add(SettingsDesignClockFontSizeChanged(val)),
+                      onMosqueInfoSizeChanged: (val) => bloc.add(
+                        SettingsDesignMosqueInfoFontSizeChanged(val),
+                      ),
+                      onPrayersSizeChanged: (val) =>
+                          bloc.add(SettingsDesignPrayersFontSizeChanged(val)),
+                      onAnnouncementsSizeChanged: (val) => bloc.add(
+                        SettingsDesignAnnouncementsFontSizeChanged(val),
+                      ),
+                      onContentSizeChanged: (val) =>
+                          bloc.add(SettingsDesignContentFontSizeChanged(val)),
                     ),
                     const SizedBox(height: 20),
 
@@ -69,17 +82,22 @@ class DesignSection extends StatelessWidget {
                     TypographySettingsSection(
                       fontFamily: design.fontFamily,
                       numeralFormat: design.numeralFormat,
-                      onFontFamilyChanged: (val) => bloc.add(SettingsDesignFontFamilyChanged(val)),
-                      onNumeralFormatChanged: (val) => bloc.add(SettingsDesignNumeralFormatChanged(val)),
+                      onFontFamilyChanged: (val) =>
+                          bloc.add(SettingsDesignFontFamilyChanged(val)),
+                      onNumeralFormatChanged: (val) =>
+                          bloc.add(SettingsDesignNumeralFormatChanged(val)),
                     ),
                     const SizedBox(height: 20),
 
                     // 5. Behavior Settings
                     BehaviorSettingsSection(
                       tickerSpeed: design.tickerSpeed,
-                      onTickerSpeedChanged: (val) => bloc.add(SettingsDesignTickerSpeedChanged(val)),
+                      onTickerSpeedChanged: (val) =>
+                          bloc.add(SettingsDesignTickerSpeedChanged(val)),
                     ),
-                    const SizedBox(height: 120), // Extra space for bottom save bar
+                    const SizedBox(
+                      height: 120,
+                    ), // Extra space for bottom save bar
                   ],
                 ),
               ),
@@ -94,7 +112,9 @@ class DesignSection extends StatelessWidget {
                     decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
-                          color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                          color: Theme.of(
+                            context,
+                          ).primaryColor.withValues(alpha: 0.3),
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),

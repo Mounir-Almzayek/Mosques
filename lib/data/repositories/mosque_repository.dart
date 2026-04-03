@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
 
 import '../../features/auth/repository/auth_repository.dart';
 import '../../features/auth/repository/user_active_mosque_repository.dart';
@@ -174,12 +175,29 @@ class MosqueRepository {
     final ref = _mosqueRef;
     if (ref == null) return Stream.value(null);
 
-    return ref.snapshots().asyncMap((doc) async {
-      if (!doc.exists || doc.data() == null) return null;
-      final mosque =
-          MosqueModel.fromMap(doc.data() as Map<String, dynamic>, doc.id);
-      await MosqueLocalRepository.saveMosque(mosque);
-      return mosque;
+    return Stream<MosqueModel?>.multi((controller) {
+      final sub = ref.snapshots().listen(
+        (doc) async {
+          if (!doc.exists || doc.data() == null) {
+            controller.add(null);
+            return;
+          }
+          final mosque =
+              MosqueModel.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+          await MosqueLocalRepository.saveMosque(mosque);
+          controller.add(mosque);
+        },
+        onError: (error, stackTrace) async {
+          final cached = await MosqueLocalRepository.getCachedForActiveMosque();
+          if (cached != null) {
+            controller.add(cached);
+            return;
+          }
+          controller.addError(error, stackTrace);
+        },
+      );
+
+      controller.onCancel = () => sub.cancel();
     });
   }
 }
