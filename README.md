@@ -1,6 +1,9 @@
 # Mosque Smart Display & Settings 🕌
 
+
 A comprehensive, real-time Smart Mosque solution built with Flutter. This project provides a beautiful, customizable display for prayer times, announcements, and spiritual content, seamlessly synchronized across devices via Firebase.
+
+![App Screenshot](assets/Screenshot.png)
 
 ---
 
