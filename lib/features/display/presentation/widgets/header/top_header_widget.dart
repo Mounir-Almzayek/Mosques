@@ -1,11 +1,11 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import '../../../../../core/utils/app_number_format.dart';
-import '../../../../../data/models/mosque_model.dart';
+import '../../../../../data/models/mosque/mosque_model.dart';
 import 'top_header_clock_block.dart';
 import 'top_header_date_block.dart';
 import 'top_header_mosque_block.dart';
@@ -129,3 +129,4 @@ class _TopHeaderWidgetState extends State<TopHeaderWidget> {
     );
   }
 }
+

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/app_settings_model.dart';
+import '../models/app/app_settings_model.dart';
 import 'app_settings_local_repository.dart';
 
 class AppSettingsRepository {

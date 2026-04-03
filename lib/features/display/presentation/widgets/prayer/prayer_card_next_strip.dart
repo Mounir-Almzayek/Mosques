@@ -1,11 +1,11 @@
-import 'dart:ui';
+﻿import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/l10n/generated/l10n.dart';
 import '../../../../../core/utils/app_number_format.dart';
 import '../../../../../core/utils/prayer_times_helper.dart';
 import '../../../../../core/utils/app_font_loader.dart';
-import '../../../../../data/models/design_settings_model.dart';
+import '../../../../../data/models/design/design_settings_model.dart';
 import '../../../../../data/models/prayer_display_slot.dart';
 
 /// شريط مضغوط داخل بطاقة صلاة واحدة — «التالية» + العدّ التنازلي.
@@ -150,3 +150,4 @@ class PrayerCardNextStrip extends StatelessWidget {
     );
   }
 }
+

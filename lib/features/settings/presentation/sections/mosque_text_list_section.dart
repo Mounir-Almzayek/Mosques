@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
-import '../../../../data/models/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_model.dart';
 import '../../bloc/settings/settings_bloc.dart';
 
 class _MosqueTextL10n {
@@ -524,3 +524,4 @@ class _MosqueTextEditorSheetState extends State<_MosqueTextEditorSheet> {
     );
   }
 }
+

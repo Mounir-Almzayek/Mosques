@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../core/services/hive_service.dart';
 import '../../features/auth/repository/auth_repository.dart';
-import '../models/mosque_model.dart';
+import '../models/mosque/mosque_model.dart';
 
 /// تخزين آخر نسخة معروفة من بيانات المسجد النشط في Hive (بدون Timestamp).
 /// يعمل مع [UserActiveMosqueRepository] و [AsyncRunner.offlineTask].

@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../../../../core/enums/app_numeral_format.dart';
 import '../../../../../core/utils/app_number_format.dart';
 import '../../../../../core/utils/app_font_loader.dart';
-import '../../../../../data/models/ticker_segment.dart';
+import '../../../../../data/models/display/ticker_segment.dart';
 
 class TickerItemWidget extends StatelessWidget {
   final TickerSegment item;
@@ -79,3 +79,4 @@ class TickerItemWidget extends StatelessWidget {
     );
   }
 }
+

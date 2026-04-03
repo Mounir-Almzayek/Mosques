@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import '../../../../../data/models/about_section_model.dart';
+﻿import 'package:flutter/material.dart';
+import '../../../../../data/models/about/about_section_model.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -115,3 +115,4 @@ class AboutItemView extends StatelessWidget {
     }
   }
 }
+

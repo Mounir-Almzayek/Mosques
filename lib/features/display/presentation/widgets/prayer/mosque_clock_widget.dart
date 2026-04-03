@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import 'package:flutter/material.dart';
 import '../../../../../core/utils/app_font_loader.dart';
@@ -9,7 +9,7 @@ import '../../../../../core/utils/app_time_format.dart';
 import '../../../../../core/utils/color_extensions.dart';
 import '../../../../../core/utils/next_prayer_event.dart';
 import '../../../../../core/utils/prayer_times_helper.dart';
-import '../../../../../data/models/mosque_model.dart';
+import '../../../../../data/models/mosque/mosque_model.dart';
 
 /// Full-screen clock with a countdown to the next adhan or iqama.
 class MosqueClockWidget extends StatefulWidget {
@@ -208,3 +208,4 @@ class _MosqueClockWidgetState extends State<MosqueClockWidget> {
     );
   }
 }
+

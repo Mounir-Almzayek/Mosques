@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/announcement_model.dart';
+import '../models/mosque/announcement_model.dart';
 import 'platform_announcements_local_repository.dart';
 
 /// إعلانات المنصة (كل المساجد) — تُدار من خارج تطبيق الجوال (كونسول، سكربت Admin SDK، لوحة داخلية).

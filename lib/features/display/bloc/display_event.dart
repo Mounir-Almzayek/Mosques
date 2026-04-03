@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../data/models/announcement_model.dart';
-import '../../../data/models/app_settings_model.dart';
-import '../../../data/models/mosque_model.dart';
+import '../../../data/models/app/app_settings_model.dart';
+import '../../../data/models/mosque/announcement_model.dart';
+import '../../../data/models/mosque/mosque_model.dart';
 
 /// Base class for all display-screen events.
 abstract class DisplayEvent extends Equatable {

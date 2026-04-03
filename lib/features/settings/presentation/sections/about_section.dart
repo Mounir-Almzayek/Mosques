@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import '../../../../data/models/app_settings_model.dart';
+﻿import 'package:flutter/material.dart';
+import '../../../../data/models/app/app_settings_model.dart';
 import '../../../../data/repositories/app_settings_repository.dart';
 import '../widgets/about/about_widgets.dart';
 
@@ -32,3 +32,4 @@ class AboutSection extends StatelessWidget {
     );
   }
 }
+

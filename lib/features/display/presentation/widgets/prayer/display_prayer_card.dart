@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../../../core/l10n/generated/l10n.dart';
 import '../../../../../core/utils/app_number_format.dart';
 import '../../../../../core/utils/app_time_format.dart';
-import '../../../../../data/models/design_settings_model.dart';
+import '../../../../../data/models/design/design_settings_model.dart';
 import '../../../../../data/models/prayer_display_slot.dart';
 import '../../../../../core/utils/prayer_times_helper.dart';
 import '../../../../../core/utils/app_font_loader.dart';
@@ -242,3 +242,4 @@ class _DisplayPrayerCardState extends State<DisplayPrayerCard> with SingleTicker
     );
   }
 }
+

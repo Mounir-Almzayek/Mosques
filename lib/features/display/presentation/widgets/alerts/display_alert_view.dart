@@ -1,9 +1,9 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../../../core/enums/app_numeral_format.dart';
 import '../../../../../core/utils/app_font_loader.dart';
 import '../../../../../core/utils/app_number_format.dart';
-import '../../../../../data/models/announcement_model.dart';
+import '../../../../../data/models/mosque/announcement_model.dart';
 
 /// صفحة التنبيهات العاجلة - تظهر ملء الشاشة عند وجود تنبيه نشط.
 class DisplayAlertView extends StatefulWidget {
@@ -158,3 +158,4 @@ class _DisplayAlertViewState extends State<DisplayAlertView> {
     );
   }
 }
+

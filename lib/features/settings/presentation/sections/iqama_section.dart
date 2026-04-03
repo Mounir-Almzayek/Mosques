@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/l10n/generated/l10n.dart';
-import '../../../../data/models/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_model.dart';
 import '../../bloc/settings/settings_bloc.dart';
 
 import '../widgets/common/common_widgets.dart';
@@ -86,3 +86,4 @@ class _IqamaSectionState extends State<IqamaSection> {
     );
   }
 }
+

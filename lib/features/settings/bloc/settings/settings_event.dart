@@ -1,6 +1,6 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
-import '../../../../data/models/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_model.dart';
 
 import '../../../../core/enums/app_language.dart';
 import '../../../../core/enums/app_numeral_format.dart';
@@ -402,3 +402,4 @@ class SettingsAlertsCleared extends SettingsEvent {
 class SaveAlertsRequested extends SettingsEvent {
   const SaveAlertsRequested();
 }
+

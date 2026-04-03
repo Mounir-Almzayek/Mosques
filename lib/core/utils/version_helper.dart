@@ -1,7 +1,7 @@
-import 'dart:io';
+﻿import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import '../../data/models/app_update_model.dart';
+import '../../data/models/app/app_update_model.dart';
 
 class VersionHelper {
   VersionHelper._();
@@ -42,3 +42,4 @@ class VersionHelper {
     }
   }
 }
+

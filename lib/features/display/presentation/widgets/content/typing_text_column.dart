@@ -1,11 +1,11 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import 'package:flutter/material.dart';
 
 import '../../../../../core/utils/app_number_format.dart';
 import '../../../../../core/utils/app_font_loader.dart';
-import '../../../../../data/models/design_settings_model.dart';
-import '../../../../../data/models/mosque_text_entry_model.dart';
+import '../../../../../data/models/design/design_settings_model.dart';
+import '../../../../../data/models/mosque/mosque_text_entry_model.dart';
 
 /// Counts grapheme clusters (visible characters, important for Arabic).
 int graphemeLength(String s) => Characters(s).length;
@@ -272,3 +272,4 @@ class _TypingTextColumnState extends State<TypingTextColumn> {
     );
   }
 }
+

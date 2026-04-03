@@ -1,7 +1,7 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../data/models/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_model.dart';
 import '../../../../data/repositories/mosque_repository.dart';
 import '../../models/settings_edit_request.dart';
 import 'handlers/announcement_handler.dart';
@@ -204,3 +204,4 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
     return super.close();
   }
 }
+

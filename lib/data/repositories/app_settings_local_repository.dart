@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/services/hive_service.dart';
-import '../models/app_settings_model.dart';
+import '../models/app/app_settings_model.dart';
 
 class AppSettingsLocalRepository {
   AppSettingsLocalRepository._();

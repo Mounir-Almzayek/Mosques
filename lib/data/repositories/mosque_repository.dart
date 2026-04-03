@@ -3,7 +3,7 @@ import 'dart:async';
 
 import '../../features/auth/repository/auth_repository.dart';
 import '../../features/auth/repository/user_active_mosque_repository.dart';
-import '../models/mosque_model.dart';
+import '../models/mosque/mosque_model.dart';
 import 'mosque_local_repository.dart';
 import '../../core/enums/app_language.dart';
 

@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../data/models/announcement_model.dart';
-import '../../../data/models/app_settings_model.dart';
-import '../../../data/models/mosque_model.dart';
+import '../../../data/models/app/app_settings_model.dart';
+import '../../../data/models/mosque/announcement_model.dart';
+import '../../../data/models/mosque/mosque_model.dart';
 import '../../../data/repositories/app_settings_repository.dart';
 import '../../../data/repositories/mosque_local_repository.dart';
 import '../../../data/repositories/mosque_repository.dart';

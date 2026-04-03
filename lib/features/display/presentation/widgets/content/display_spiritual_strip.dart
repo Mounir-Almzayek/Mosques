@@ -1,12 +1,12 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
 import '../../../../../core/l10n/generated/l10n.dart';
 import '../../../../../core/utils/app_font_loader.dart';
-import '../../../../../data/models/mosque_model.dart';
-import '../../../../../data/models/mosque_text_entry_model.dart';
+import '../../../../../data/models/mosque/mosque_model.dart';
+import '../../../../../data/models/mosque/mosque_text_entry_model.dart';
 import '../../../../../data/models/mosque_text_list_kind.dart';
 import 'typing_text_column.dart';
 
@@ -391,3 +391,4 @@ class _DisplaySpiritualStripState extends State<DisplaySpiritualStrip> {
     );
   }
 }
+

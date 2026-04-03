@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/enums/registration_type.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/styles/app_colors.dart';
-import '../../../data/models/app_settings_model.dart';
+import '../../../data/models/app/app_settings_model.dart';
 import '../../../data/repositories/app_settings_repository.dart';
 import '../bloc/registration/registration_bloc.dart';
 import '../bloc/registration/registration_event.dart';
@@ -366,3 +366,4 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 }
+

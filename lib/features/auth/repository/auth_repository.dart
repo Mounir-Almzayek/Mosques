@@ -1,11 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../core/enums/app_mode.dart';
 import '../../../core/enums/registration_type.dart';
 import '../../../core/services/storage_service.dart';
-import '../../../data/models/design_settings_model.dart';
-import '../../../data/models/mosque_model.dart';
+import '../../../data/models/design/design_settings_model.dart';
+import '../../../data/models/mosque/mosque_model.dart';
 import '../../../data/repositories/mosque_local_repository.dart';
 import 'user_active_mosque_repository.dart';
 
@@ -174,3 +174,4 @@ class AuthRepository {
     await StorageService.setString(_appModeKey, mode.name);
   }
 }
+

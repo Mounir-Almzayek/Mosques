@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../../../core/enums/display_background_preset.dart';
 import '../../../../../core/enums/display_background_type.dart';
 import '../../../../../core/utils/color_parser.dart';
 import '../../../../../core/widgets/media/optimized_image.dart';
-import '../../../../../data/models/design_background_settings.dart';
+import '../../../../../data/models/design/design_background_settings.dart';
 
 const String kDisplayBackgroundFallbackAsset = 'assets/logo.jpg';
 
@@ -56,3 +56,4 @@ class DisplayBackgroundImage extends StatelessWidget {
     );
   }
 }
+

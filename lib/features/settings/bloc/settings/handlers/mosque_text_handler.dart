@@ -1,6 +1,6 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+﻿import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../data/models/mosque_model.dart';
+import '../../../../../data/models/mosque/mosque_model.dart';
 import '../../../models/settings_edit_request.dart';
 import '../settings_event.dart';
 import '../settings_state.dart';
@@ -74,3 +74,4 @@ mixin MosqueTextHandler on Bloc<SettingsEvent, SettingsState> {
     );
   }
 }
+

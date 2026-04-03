@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -9,8 +9,8 @@ import '../../../core/enums/display_background_preset.dart';
 import '../../../core/enums/display_background_type.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/routes/app_routes.dart';
-import '../../../data/models/announcement_model.dart';
-import '../../../data/models/mosque_model.dart';
+import '../../../data/models/mosque/announcement_model.dart';
+import '../../../data/models/mosque/mosque_model.dart';
 import '../../../core/enums/app_mode.dart';
 import '../../auth/repository/auth_repository.dart';
 import '../bloc/display_bloc.dart';
@@ -247,3 +247,4 @@ class _DisplayScreenState extends State<DisplayScreen> {
     );
   }
 }
+

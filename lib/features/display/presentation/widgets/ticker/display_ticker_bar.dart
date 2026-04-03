@@ -1,11 +1,12 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../../../../data/models/announcement_model.dart';
-import '../../../../../data/models/app_settings_model.dart';
-import '../../../../../data/models/mosque_model.dart';
-import '../../../../../data/models/ticker_segment.dart';
+import '../../../../../data/models/display/ticker_segment_builder.dart';
+import '../../../../../data/models/mosque/announcement_model.dart';
+import '../../../../../data/models/app/app_settings_model.dart';
+import '../../../../../data/models/mosque/mosque_model.dart';
+import '../../../../../data/models/display/ticker_segment.dart';
 import 'ticker_item_widget.dart';
 import 'ticker_side_label_widget.dart';
 
@@ -35,7 +36,7 @@ class DisplayTickerBar extends StatefulWidget {
 
 class _DisplayTickerBarState extends State<DisplayTickerBar> {
   static const _cream = Color(0xFFFFF8F0);
-  
+
   // High-frequency tick for sub-pixel smoothness.
   static const _scrollTick = Duration(milliseconds: 12);
 
@@ -86,7 +87,8 @@ class _DisplayTickerBarState extends State<DisplayTickerBar> {
 
       // Base speed * configurable multiplier * time delta.
       final speedMultiplier = widget.mosque.designSettings.tickerSpeed;
-      final pxPerTick = (30 * speedMultiplier) * (_scrollTick.inMilliseconds / 1000);
+      final pxPerTick =
+          (30 * speedMultiplier) * (_scrollTick.inMilliseconds / 1000);
       final next = _scrollController.offset + pxPerTick;
 
       if (next >= maxExtent) {
@@ -123,7 +125,7 @@ class _DisplayTickerBarState extends State<DisplayTickerBar> {
     final locale = Localizations.localeOf(context);
     final isArabic = locale.languageCode.toLowerCase().startsWith('ar');
     final dir = isArabic ? TextDirection.rtl : Directionality.of(context);
-    
+
     final media = MediaQuery.sizeOf(context);
     final shortest = media.shortestSide;
     final barHeight = (shortest * 0.105).clamp(56.0, 92.0);
@@ -167,12 +169,12 @@ class _DisplayTickerBarState extends State<DisplayTickerBar> {
                   itemBuilder: (context, index) {
                     final item = duplicated[index];
                     return TickerItemWidget(
-                    item: item,
-                    fontSize: fontSize,
-                    qrSize: qrSize,
-                    fontFamily: fontFamily,
-                    numeralFormat: numeralFormat,
-                    textColor: _cream,
+                      item: item,
+                      fontSize: fontSize,
+                      qrSize: qrSize,
+                      fontFamily: fontFamily,
+                      numeralFormat: numeralFormat,
+                      textColor: _cream,
                     );
                   },
                 ),

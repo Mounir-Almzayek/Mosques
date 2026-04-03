@@ -1,8 +1,8 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/utils/prayer_times_helper.dart';
-import '../../../../../data/models/mosque_model.dart';
+import '../../../../../data/models/mosque/mosque_model.dart';
 import '../../../../../data/models/prayer_display_slot.dart';
 import '../prayer/display_prayer_card.dart';
 import 'display_spiritual_strip.dart';
@@ -206,3 +206,4 @@ class _DisplayBeigeAreaState extends State<DisplayBeigeArea> {
     );
   }
 }
+

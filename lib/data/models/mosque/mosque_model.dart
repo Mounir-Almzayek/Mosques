@@ -2,18 +2,26 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../core/utils/firestore_date_parse.dart';
+import 'adhkar_model.dart';
 import 'announcement_model.dart';
 import '../design/design_settings_model.dart';
+import 'dua_model.dart';
 import 'hadith_model.dart';
 import 'iqama_settings_model.dart';
+import 'mosque_text_entry_model.dart';
 import 'prayer_offsets_model.dart';
+import 'verse_model.dart';
 import '../../../core/enums/settings/mosque_text_list_kind.dart';
 
+export 'adhkar_model.dart';
 export 'announcement_model.dart';
 export '../design/design_settings_model.dart';
+export 'dua_model.dart';
 export 'hadith_model.dart';
 export 'iqama_settings_model.dart';
+export 'mosque_text_entry_model.dart';
 export 'prayer_offsets_model.dart';
+export 'verse_model.dart';
 export '../../../core/enums/settings/mosque_text_list_kind.dart';
 
 class MosqueModel extends Equatable {

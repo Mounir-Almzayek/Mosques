@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/enums/update/update_status.dart';
 import '../../../../core/l10n/generated/l10n.dart';
-import '../../../../data/models/app_settings_model.dart';
+import '../../../../data/models/app/app_settings_model.dart';
 import '../../../../data/repositories/app_settings_repository.dart';
 import '../../../../core/utils/version_helper.dart';
 import '../../bloc/update/update_bloc.dart';
@@ -292,3 +292,4 @@ class _UpdateSectionState extends State<UpdateSection> {
     );
   }
 }
+

@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../../../core/enums/app_language.dart';
 import '../../../../core/l10n/generated/l10n.dart';
-import '../../../../data/models/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_model.dart';
 import '../../../language/bloc/language/language_bloc.dart';
 import '../../bloc/settings/settings_bloc.dart';
 
@@ -276,3 +276,4 @@ class _GeneralSectionState extends State<GeneralSection> {
     );
   }
 }
+

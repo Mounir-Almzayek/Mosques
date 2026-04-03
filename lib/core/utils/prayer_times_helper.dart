@@ -1,14 +1,15 @@
-import 'package:adhan/adhan.dart';
+﻿import 'package:adhan/adhan.dart';
 
-import '../../data/models/adjusted_prayer_times.dart';
-import '../../data/models/mosque_model.dart';
+import '../../data/models/display/adjusted_prayer_times.dart';
+import '../../data/models/display/prayer_time_item.dart';
+import '../../data/models/mosque/mosque_model.dart';
 import '../../data/models/prayer_display_slot.dart';
 import 'next_prayer_event.dart';
 import 'prayer_display_phase.dart';
 
 export 'next_prayer_event.dart';
 export 'prayer_display_phase.dart';
-export '../../data/models/adjusted_prayer_times.dart';
+export '../../data/models/display/adjusted_prayer_times.dart';
 
 /// Optimized helper for prayer time calculations and display phase management.
 /// Uses a continuous timeline approach to handle large offsets and transitions correctly.
@@ -54,11 +55,7 @@ class PrayerTimesHelper {
   AdjustedPrayerTimes buildAdjustedPrayerTimes(DateTime date) {
     final coordinates = Coordinates(mosque.latitude, mosque.longitude);
     final params = _getParams();
-    final prayers = PrayerTimes(
-      coordinates,
-      DateComponents.from(date),
-      params,
-    );
+    final prayers = PrayerTimes(coordinates, DateComponents.from(date), params);
 
     final List<PrayerTimeItem> items = [];
     final prayersToProcess = [
@@ -76,18 +73,23 @@ class PrayerTimesHelper {
 
       final offset = _getOffsetFor(p);
       final adhanTime = rawTime.add(Duration(minutes: offset));
-      
+
       final slotKey = _mapPrayerToSlot(p).name.toUpperCase();
-      final iqamaOffset = getIqamaOffset(p, isFriday: date.weekday == DateTime.friday);
+      final iqamaOffset = getIqamaOffset(
+        p,
+        isFriday: date.weekday == DateTime.friday,
+      );
       final iqamaTime = adhanTime.add(Duration(minutes: iqamaOffset));
 
-      items.add(PrayerTimeItem(
-        prayer: p,
-        prayerName: slotKey,
-        adhanTime: adhanTime,
-        iqamaTime: iqamaTime,
-        offset: offset,
-      ));
+      items.add(
+        PrayerTimeItem(
+          prayer: p,
+          prayerName: slotKey,
+          adhanTime: adhanTime,
+          iqamaTime: iqamaTime,
+          offset: offset,
+        ),
+      );
     }
 
     // Sort items chronologically by adhanTime
@@ -98,13 +100,20 @@ class PrayerTimesHelper {
 
   PrayerDisplaySlot _mapPrayerToSlot(Prayer p) {
     switch (p) {
-      case Prayer.fajr: return PrayerDisplaySlot.fajr;
-      case Prayer.sunrise: return PrayerDisplaySlot.sunrise;
-      case Prayer.dhuhr: return PrayerDisplaySlot.dhuhr;
-      case Prayer.asr: return PrayerDisplaySlot.asr;
-      case Prayer.maghrib: return PrayerDisplaySlot.maghrib;
-      case Prayer.isha: return PrayerDisplaySlot.isha;
-      default: return PrayerDisplaySlot.fajr;
+      case Prayer.fajr:
+        return PrayerDisplaySlot.fajr;
+      case Prayer.sunrise:
+        return PrayerDisplaySlot.sunrise;
+      case Prayer.dhuhr:
+        return PrayerDisplaySlot.dhuhr;
+      case Prayer.asr:
+        return PrayerDisplaySlot.asr;
+      case Prayer.maghrib:
+        return PrayerDisplaySlot.maghrib;
+      case Prayer.isha:
+        return PrayerDisplaySlot.isha;
+      default:
+        return PrayerDisplaySlot.fajr;
     }
   }
 
@@ -133,8 +142,8 @@ class PrayerTimesHelper {
       case Prayer.fajr:
         return mosque.iqamaSettings.fajrOffset;
       case Prayer.dhuhr:
-        return isFriday 
-            ? mosque.iqamaSettings.jummahOffset 
+        return isFriday
+            ? mosque.iqamaSettings.jummahOffset
             : mosque.iqamaSettings.dhuhrOffset;
       case Prayer.asr:
         return mosque.iqamaSettings.asrOffset;
@@ -150,7 +159,9 @@ class PrayerTimesHelper {
   /// Returns a combined list of adjusted prayer times for yesterday, today, and tomorrow.
   /// This creates a continuous timeline that survives large offsets and midnight crossings.
   List<PrayerTimeItem> _buildContinuousTimeline(DateTime now) {
-    final yesterday = buildAdjustedPrayerTimes(now.subtract(const Duration(days: 1)));
+    final yesterday = buildAdjustedPrayerTimes(
+      now.subtract(const Duration(days: 1)),
+    );
     final today = buildAdjustedPrayerTimes(now);
     final tomorrow = buildAdjustedPrayerTimes(now.add(const Duration(days: 1)));
 
@@ -168,10 +179,12 @@ class PrayerTimesHelper {
       if (!item.isIqamaApplicable) {
         // For Sunrise or prayers with no iqama, we stay focused for a "Post-Adhan" grace period.
         final postAdhanGrace = item.adhanTime.add(const Duration(minutes: 10));
-        if ((now.isAfter(item.adhanTime) || now.isAtSameMomentAs(item.adhanTime)) 
-             && now.isBefore(postAdhanGrace)) {
+        if ((now.isAfter(item.adhanTime) ||
+                now.isAtSameMomentAs(item.adhanTime)) &&
+            now.isBefore(postAdhanGrace)) {
           return PrayerDisplayPhase(
-            kind: PrayerDisplayPhaseKind.iqama, // Using iqama kind to indicate high-focus
+            kind: PrayerDisplayPhaseKind
+                .iqama, // Using iqama kind to indicate high-focus
             prayerNameKey: item.prayerName,
             focusTime: postAdhanGrace,
           );
@@ -180,8 +193,9 @@ class PrayerTimesHelper {
       }
 
       // Check Iqama countdown
-      if ((now.isAfter(item.adhanTime) || now.isAtSameMomentAs(item.adhanTime)) 
-          && now.isBefore(item.iqamaTime)) {
+      if ((now.isAfter(item.adhanTime) ||
+              now.isAtSameMomentAs(item.adhanTime)) &&
+          now.isBefore(item.iqamaTime)) {
         return PrayerDisplayPhase(
           kind: PrayerDisplayPhaseKind.iqama,
           prayerNameKey: item.prayerName,
@@ -191,8 +205,9 @@ class PrayerTimesHelper {
 
       // Check Grace after iqama
       final graceEnd = item.iqamaTime.add(const Duration(minutes: 1));
-      if ((now.isAfter(item.iqamaTime) || now.isAtSameMomentAs(item.iqamaTime)) 
-          && now.isBefore(graceEnd)) {
+      if ((now.isAfter(item.iqamaTime) ||
+              now.isAtSameMomentAs(item.iqamaTime)) &&
+          now.isBefore(graceEnd)) {
         return PrayerDisplayPhase(
           kind: PrayerDisplayPhaseKind.graceAfterIqama,
           prayerNameKey: item.prayerName,
@@ -223,7 +238,7 @@ class PrayerTimesHelper {
   /// Returns the countdown details for the clock and other labels.
   NextPrayerEvent getNextEvent(DateTime now) {
     final phase = getPrayerDisplayPhase(now);
-    
+
     return NextPrayerEvent(
       isIqama: phase.kind == PrayerDisplayPhaseKind.iqama,
       targetTime: phase.focusTime,

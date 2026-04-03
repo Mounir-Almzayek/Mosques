@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/services/hive_service.dart';
-import '../models/announcement_model.dart';
+import '../models/mosque/announcement_model.dart';
 
 class PlatformAnnouncementsLocalRepository {
   PlatformAnnouncementsLocalRepository._();

@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import '../../../../../core/enums/display_background_type.dart';
 import '../../../../../core/l10n/generated/l10n.dart';
 import '../../../../../core/utils/color_converter.dart';
-import '../../../../../data/models/design_background_settings.dart';
+import '../../../../../data/models/design/design_background_settings.dart';
 import 'design_card.dart';
 import 'display_background_picker.dart';
 
@@ -120,3 +120,4 @@ class BackgroundSettingsSection extends StatelessWidget {
     );
   }
 }
+

@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/enums/app_language.dart';
-import '../../../../data/models/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_model.dart';
 import '../../../../data/repositories/mosque_repository.dart';
 import '../../../splash/repositories/settings_local_repository.dart';
 import '../../../auth/repository/user_active_mosque_repository.dart';
