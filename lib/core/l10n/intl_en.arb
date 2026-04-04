@@ -208,6 +208,7 @@
   "design_section_typography": "Typography & Layout",
   "design_section_ticker": "Ticker & Symbols",
   "design_ticker_speed": "Ticker Speed",
+  "design_strip_speed": "Content Strip Speed",
   "design_numeral_format": "Numeral Format",
   "design_numeral_arabic": "Arabic (١٢٣)",
   "design_numeral_english": "English (123)",

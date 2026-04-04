@@ -94,6 +94,9 @@ class DesignSection extends StatelessWidget {
                       tickerSpeed: design.tickerSpeed,
                       onTickerSpeedChanged: (val) =>
                           bloc.add(SettingsDesignTickerSpeedChanged(val)),
+                      stripSpeed: design.stripSpeed,
+                      onStripSpeedChanged: (val) =>
+                          bloc.add(SettingsDesignStripSpeedChanged(val)),
                     ),
                     const SizedBox(
                       height: 120,

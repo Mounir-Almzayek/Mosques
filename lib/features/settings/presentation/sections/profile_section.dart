@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/widgets/feedback/unified_snackbar.dart';
 import '../../bloc/profile/profile_bloc.dart';
 import '../widgets/profile/profile_widgets.dart';
 
@@ -32,16 +33,15 @@ class _ProfileSectionState extends State<ProfileSection> {
         listener: (context, state) {
           final s = S.of(context);
           if (state.status == ProfileStatus.success) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(s.saved_successfully)),
+            UnifiedSnackbar.success(
+              context,
+              message: s.saved_successfully,
             );
             _passwordController.clear();
           } else if (state.status == ProfileStatus.failure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.error ?? s.error_occurred),
-                backgroundColor: Colors.red,
-              ),
+            UnifiedSnackbar.error(
+              context,
+              message: state.error ?? s.error_occurred,
             );
           }
         },

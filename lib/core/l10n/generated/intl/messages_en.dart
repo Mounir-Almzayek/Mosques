@@ -223,6 +223,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Ticker & Symbols"),
         "design_section_typography":
             MessageLookupByLibrary.simpleMessage("Typography & Layout"),
+        "design_strip_speed":
+            MessageLookupByLibrary.simpleMessage("Content Strip Speed"),
         "design_ticker_speed":
             MessageLookupByLibrary.simpleMessage("Ticker Speed"),
         "design_typography_title":

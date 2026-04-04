@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 
 import '../../../../core/enums/app_language.dart';
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/widgets/feedback/unified_snackbar.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
 import '../../../language/bloc/language/language_bloc.dart';
 import '../../bloc/settings/settings_bloc.dart';
@@ -90,9 +91,10 @@ class _GeneralSectionState extends State<GeneralSection> {
       if (perm == LocationPermission.denied ||
           perm == LocationPermission.deniedForever) {
         if (!mounted) return;
-        ScaffoldMessenger.of(
+        UnifiedSnackbar.warning(
           context,
-        ).showSnackBar(SnackBar(content: Text(s.location_permission_denied)));
+          message: s.location_permission_denied,
+        );
         return;
       }
 
@@ -108,14 +110,16 @@ class _GeneralSectionState extends State<GeneralSection> {
           longitude: pos.longitude,
         ),
       );
-      ScaffoldMessenger.of(
+      UnifiedSnackbar.success(
         context,
-      ).showSnackBar(SnackBar(content: Text(s.location_updated)));
+        message: s.location_updated,
+      );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
+      UnifiedSnackbar.error(
         context,
-      ).showSnackBar(SnackBar(content: Text(s.location_unavailable)));
+        message: s.location_unavailable,
+      );
     } finally {
       if (mounted) setState(() => _locating = false);
     }

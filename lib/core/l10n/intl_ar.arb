@@ -208,6 +208,7 @@
   "design_section_typography": "الخطوط والتنسيق",
   "design_section_ticker": "شريط المعلومات والرموز",
   "design_ticker_speed": "سرعة الشريط",
+  "design_strip_speed": "سرعة شريط المحتوى",
   "design_numeral_format": "تنسيق الأرقام",
   "design_numeral_arabic": "عربي (١٢٣)",
   "design_numeral_english": "إنجليزي (123)",

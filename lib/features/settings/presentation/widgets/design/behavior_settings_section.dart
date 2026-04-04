@@ -5,11 +5,15 @@ import 'design_card.dart';
 class BehaviorSettingsSection extends StatelessWidget {
   final double tickerSpeed;
   final ValueChanged<double> onTickerSpeedChanged;
+  final double stripSpeed;
+  final ValueChanged<double> onStripSpeedChanged;
 
   const BehaviorSettingsSection({
     super.key,
     required this.tickerSpeed,
     required this.onTickerSpeedChanged,
+    required this.stripSpeed,
+    required this.onStripSpeedChanged,
   });
 
   @override
@@ -52,6 +56,32 @@ class BehaviorSettingsSection extends StatelessWidget {
                   max: 3.0,
                   divisions: 28,
                   onChanged: (v) => onTickerSpeedChanged(double.parse(v.toStringAsFixed(1))),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    const Icon(Icons.article_rounded, size: 18),
+                    const SizedBox(width: 8),
+                    Text(
+                      s.design_strip_speed,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    const Spacer(),
+                    Text(
+                      '${stripSpeed.toStringAsFixed(1)}x',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ],
+                ),
+                Slider(
+                  value: stripSpeed,
+                  min: 0.2,
+                  max: 3.0,
+                  divisions: 28,
+                  onChanged: (v) => onStripSpeedChanged(double.parse(v.toStringAsFixed(1))),
                 ),
               ],
             ),

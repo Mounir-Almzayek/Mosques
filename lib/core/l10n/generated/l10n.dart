@@ -2030,6 +2030,16 @@ class S {
     );
   }
 
+  /// `Content Strip Speed`
+  String get design_strip_speed {
+    return Intl.message(
+      'Content Strip Speed',
+      name: 'design_strip_speed',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Numeral Format`
   String get design_numeral_format {
     return Intl.message(

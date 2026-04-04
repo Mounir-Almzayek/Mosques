@@ -180,17 +180,24 @@ class _SnackbarContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = _palette;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: _getBackgroundColor(),
+        color: palette.background,
         borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: _getBorderColor(), width: 1),
+        border: Border.all(color: palette.border, width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacityCompat(0.1),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
+            color: palette.accent.withOpacityCompat(0.14),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
+            spreadRadius: -2,
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacityCompat(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -205,7 +212,7 @@ class _SnackbarContent extends StatelessWidget {
               style: TextStyle(
                 fontSize: context.adaptiveFont(13.sp),
                 fontWeight: FontWeight.w600,
-                color: _getTextColor(),
+                color: palette.text,
               ),
             ),
           ),
@@ -223,15 +230,16 @@ class _SnackbarContent extends StatelessWidget {
   }
 
   Widget _buildIcon(BuildContext context) {
+    final palette = _palette;
     return Container(
       width: 28.w,
       height: 28.w,
       decoration: BoxDecoration(
-        color: _getIconBackgroundColor(),
+        color: palette.accent,
         shape: BoxShape.circle,
       ),
       child: Icon(
-        _getIcon(),
+        palette.icon,
         size: context.adaptiveIcon(16.sp),
         color: Colors.white,
       ),
@@ -239,12 +247,13 @@ class _SnackbarContent extends StatelessWidget {
   }
 
   Widget _buildActionButton(BuildContext context) {
+    final palette = _palette;
     return GestureDetector(
       onTap: onActionTap,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
         decoration: BoxDecoration(
-          color: _getActionButtonColor(),
+          color: palette.accent,
           borderRadius: BorderRadius.circular(8.r),
         ),
         child: Text(
@@ -260,6 +269,7 @@ class _SnackbarContent extends StatelessWidget {
   }
 
   Widget _buildCloseButton(BuildContext context) {
+    final palette = _palette;
     return GestureDetector(
       onTap:
           onClose ?? () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
@@ -267,86 +277,70 @@ class _SnackbarContent extends StatelessWidget {
         width: 20.w,
         height: 20.w,
         decoration: BoxDecoration(
-          color: _getTextColor().withOpacityCompat(0.1),
+          color: palette.text.withOpacityCompat(0.08),
           shape: BoxShape.circle,
         ),
         child: Icon(
           Icons.close_rounded,
           size: context.adaptiveIcon(10.sp),
-          color: _getTextColor().withOpacityCompat(0.6),
+          color: palette.text.withOpacityCompat(0.6),
         ),
       ),
     );
   }
 
-  Color _getBackgroundColor() {
+  _SnackbarPalette get _palette {
     switch (type) {
       case SnackbarType.success:
-        return const Color(0xFFF0F9F4);
+        return const _SnackbarPalette(
+          background: Color(0xFFF4FBF7),
+          border: Color(0xFFCFE9DA),
+          text: Color(0xFF214E3C),
+          accent: AppColors.success,
+          icon: Icons.check_rounded,
+        );
       case SnackbarType.error:
-        return const Color(0xFFFEF2F2);
+        return const _SnackbarPalette(
+          background: Color(0xFFFFF5F4),
+          border: Color(0xFFF2CFCA),
+          text: Color(0xFF7F2B26),
+          accent: AppColors.error,
+          icon: Icons.error_outline_rounded,
+        );
       case SnackbarType.warning:
-        return const Color(0xFFFEFBF0);
+        return const _SnackbarPalette(
+          background: Color(0xFFFFFAF1),
+          border: Color(0xFFEEDFB2),
+          text: Color(0xFF7B5A12),
+          accent: AppColors.warning,
+          icon: Icons.warning_amber_rounded,
+        );
       case SnackbarType.info:
-        return const Color(0xFFF0F8FF);
+        return const _SnackbarPalette(
+          background: Color(0xFFFFFAF1),
+          border: Color(0xFFE7D3A0),
+          text: Color(0xFF6C5110),
+          accent: AppColors.primary,
+          icon: Icons.info_outline_rounded,
+        );
     }
   }
+}
 
-  Color _getBorderColor() {
-    switch (type) {
-      case SnackbarType.success:
-        return const Color(0xFFD1FAE5);
-      case SnackbarType.error:
-        return const Color(0xFFFECACA);
-      case SnackbarType.warning:
-        return const Color(0xFFFDE68A);
-      case SnackbarType.info:
-        return const Color(0xFFBFDBFE);
-    }
-  }
+class _SnackbarPalette {
+  final Color background;
+  final Color border;
+  final Color text;
+  final Color accent;
+  final IconData icon;
 
-  Color _getTextColor() {
-    switch (type) {
-      case SnackbarType.success:
-        return const Color(0xFF065F46);
-      case SnackbarType.error:
-        return const Color(0xFF991B1B);
-      case SnackbarType.warning:
-        return const Color(0xFF92400E);
-      case SnackbarType.info:
-        return const Color(0xFF1E40AF);
-    }
-  }
-
-  Color _getIconBackgroundColor() {
-    switch (type) {
-      case SnackbarType.success:
-        return AppColors.success;
-      case SnackbarType.error:
-        return AppColors.error;
-      case SnackbarType.warning:
-        return AppColors.warning;
-      case SnackbarType.info:
-        return AppColors.primary;
-    }
-  }
-
-  IconData _getIcon() {
-    switch (type) {
-      case SnackbarType.success:
-        return Icons.check_rounded;
-      case SnackbarType.error:
-        return Icons.error_outline_rounded;
-      case SnackbarType.warning:
-        return Icons.warning_amber_rounded;
-      case SnackbarType.info:
-        return Icons.info_outline_rounded;
-    }
-  }
-
-  Color _getActionButtonColor() {
-    return _getIconBackgroundColor();
-  }
+  const _SnackbarPalette({
+    required this.background,
+    required this.border,
+    required this.text,
+    required this.accent,
+    required this.icon,
+  });
 }
 
 class _OverlaySnackbarWidget extends StatefulWidget {

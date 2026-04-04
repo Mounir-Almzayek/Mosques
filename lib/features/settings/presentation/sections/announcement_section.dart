@@ -5,6 +5,7 @@ import 'package:uuid/uuid.dart';
 import '../../../../core/enums/settings/announcement_schedule.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
+import '../../../../core/widgets/feedback/unified_snackbar.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
 import '../../bloc/settings/settings_bloc.dart';
 
@@ -499,8 +500,9 @@ class _AnnouncementEditorSheetState extends State<_AnnouncementEditorSheet> {
               onPressed: () {
                 if (_titleCtrl.text.trim().isEmpty) return;
                 if (_endDate.isBefore(_startDate)) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(s.announcement_dates_invalid)),
+                  UnifiedSnackbar.warning(
+                    context,
+                    message: s.announcement_dates_invalid,
                   );
                   return;
                 }

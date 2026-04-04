@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -r \"Directionality\\\\|textDirection\" --include=*.dart lib/main.dart lib/app.dart)",
+      "Bash(xargs grep:*)",
+      "Bash(flutter gen-l10n:*)",
+      "Bash(dart run:*)"
+    ]
+  }
+}

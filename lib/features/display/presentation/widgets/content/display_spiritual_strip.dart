@@ -2,6 +2,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../../../core/l10n/generated/l10n.dart';
 import '../../../../../core/utils/app_font_loader.dart';
@@ -46,10 +47,15 @@ class DisplaySpiritualStrip extends StatefulWidget {
 }
 
 class _DisplaySpiritualStripState extends State<DisplaySpiritualStrip> {
-  static const _rotateInterval = Duration(seconds: 14);
+  // Longer window so the marquee has time to reveal the full text.
+  static const _rotateInterval = Duration(seconds: 20);
   static const _cream = Color(0xFFFFF8F0);
 
   final math.Random _random = math.Random();
+  final FocusNode _focusNode = FocusNode(debugLabel: 'SpiritualStrip');
+  // History for back-navigation (D-pad left on TV remote)
+  final List<int> _history = [];
+
   Timer? _timer;
   List<_SpiritualSlide> _pool = [];
   int _index = 0;
@@ -76,6 +82,7 @@ class _DisplaySpiritualStripState extends State<DisplaySpiritualStrip> {
   @override
   void dispose() {
     _timer?.cancel();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -146,11 +153,50 @@ class _DisplaySpiritualStripState extends State<DisplaySpiritualStrip> {
       setState(() {});
       return;
     }
+    _history.add(_index);
+    if (_history.length > 20) _history.removeAt(0);
     int next;
     do {
       next = _random.nextInt(_pool.length);
     } while (next == _index);
     setState(() => _index = next);
+  }
+
+  /// Goes back to the previous slide (TV remote D-pad left).
+  void _pickPrevious() {
+    if (_pool.isEmpty || _history.isEmpty) return;
+    final prev = _history.removeLast().clamp(0, _pool.length - 1);
+    setState(() => _index = prev);
+  }
+
+  void _resetTimer() {
+    _timer?.cancel();
+    _startTimer();
+  }
+
+  /// Handles key events from the Android TV remote (D-pad).
+  KeyEventResult _handleKeyEvent(FocusNode node, KeyEvent event) {
+    if (event is! KeyDownEvent && event is! KeyRepeatEvent) {
+      return KeyEventResult.ignored;
+    }
+    final key = event.logicalKey;
+    // D-pad right / media-forward → next slide
+    if (key == LogicalKeyboardKey.arrowRight ||
+        key == LogicalKeyboardKey.mediaFastForward ||
+        key == LogicalKeyboardKey.mediaSkipForward) {
+      _pickNextRandom();
+      _resetTimer();
+      return KeyEventResult.handled;
+    }
+    // D-pad left / media-rewind → previous slide
+    if (key == LogicalKeyboardKey.arrowLeft ||
+        key == LogicalKeyboardKey.mediaRewind ||
+        key == LogicalKeyboardKey.mediaSkipBackward) {
+      _pickPrevious();
+      _resetTimer();
+      return KeyEventResult.handled;
+    }
+    return KeyEventResult.ignored;
   }
 
   // ---------------------------------------------------------------------------
@@ -186,7 +232,9 @@ class _DisplaySpiritualStripState extends State<DisplaySpiritualStrip> {
 
     final labelFs = (base * 1.1).clamp(15.0, 24.0);
     final contextFs = (base * 1.05).clamp(14.0, 22.0);
-    final bodyFs = (base * 2.1).clamp(24.0, 52.0);
+    // Slightly smaller than before so typical hadiths finish scrolling
+    // within the rotation window without exceeding a comfortable speed.
+    final bodyFs = (base * 1.8).clamp(22.0, 44.0);
     final sourceFs = (base * 0.95).clamp(13.0, 20.0);
 
     final p = widget.primaryColor;
@@ -195,8 +243,12 @@ class _DisplaySpiritualStripState extends State<DisplaySpiritualStrip> {
     final fillA = Color.lerp(c, Colors.white, 0.06)!.withValues(alpha: 0.6);
     final fillB = c.withValues(alpha: 0.6);
 
-    return LayoutBuilder(
-      builder: (context, stripConstraints) {
+    return Focus(
+      focusNode: _focusNode,
+      autofocus: true,
+      onKeyEvent: _handleKeyEvent,
+      child: LayoutBuilder(
+        builder: (context, stripConstraints) {
         final stripW = stripConstraints.maxWidth;
         final narrow = stripW < 600;
         final labelMinW = narrow ? 64.0 : 80.0;
@@ -304,6 +356,7 @@ class _DisplaySpiritualStripState extends State<DisplaySpiritualStrip> {
                               bodyFs: bodyFs,
                               sourceFs: sourceFs,
                               design: widget.mosque.designSettings,
+                              scrollSpeed: widget.mosque.designSettings.stripSpeed,
                             ),
                           ),
                         ],
@@ -316,6 +369,7 @@ class _DisplaySpiritualStripState extends State<DisplaySpiritualStrip> {
           ),
         );
       },
+      ),
     );
   }
 

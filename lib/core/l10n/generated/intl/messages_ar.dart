@@ -222,6 +222,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("شريط المعلومات والرموز"),
         "design_section_typography":
             MessageLookupByLibrary.simpleMessage("الخطوط والتنسيق"),
+        "design_strip_speed":
+            MessageLookupByLibrary.simpleMessage("سرعة شريط المحتوى"),
         "design_ticker_speed":
             MessageLookupByLibrary.simpleMessage("سرعة الشريط"),
         "design_typography_title":

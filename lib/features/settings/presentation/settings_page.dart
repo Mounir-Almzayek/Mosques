@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/enums/settings/mosque_text_list_kind.dart';
+import '../../../core/widgets/feedback/unified_snackbar.dart';
 import '../bloc/settings/settings_bloc.dart';
 import 'widgets/common/common_widgets.dart';
 
@@ -134,21 +135,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
         },
         listener: (context, state) {
           if (state.isSaving) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(S.of(context).saving)));
+            UnifiedSnackbar.info(context, message: S.of(context).saving);
           } else if (state.error != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.error!),
-                backgroundColor: Colors.red,
-              ),
-            );
+            UnifiedSnackbar.error(context, message: state.error!);
           } else {
-            // Saved successfully
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(S.of(context).saved_successfully)),
+            UnifiedSnackbar.hide(context);
+            UnifiedSnackbar.success(
+              context,
+              message: S.of(context).saved_successfully,
             );
           }
         },

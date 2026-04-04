@@ -226,6 +226,15 @@ class SettingsDesignTickerSpeedChanged extends SettingsEvent {
   List<Object?> get props => [speed];
 }
 
+class SettingsDesignStripSpeedChanged extends SettingsEvent {
+  final double speed;
+
+  const SettingsDesignStripSpeedChanged(this.speed);
+
+  @override
+  List<Object?> get props => [speed];
+}
+
 class SettingsDesignNumeralFormatChanged extends SettingsEvent {
   final AppNumeralFormat format;
 

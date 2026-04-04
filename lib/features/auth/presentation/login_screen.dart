@@ -25,11 +25,15 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _emailFocusNode = FocusNode(debugLabel: 'login_email');
+  final _passwordFocusNode = FocusNode(debugLabel: 'login_password');
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
     super.dispose();
   }
 
@@ -183,7 +187,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   children: [
                                     CustomTextField(
                                       controller: _emailController,
+                                      focusNode: _emailFocusNode,
+                                      nextFocusNode: _passwordFocusNode,
                                       keyboardType: TextInputType.emailAddress,
+                                      textInputAction: TextInputAction.next,
                                       label: s.email_label,
                                       hintText: s.email_hint,
                                       labelColor: AppColors.primaryText,
@@ -206,8 +213,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                     SizedBox(height: 18.h),
                                     CustomTextField(
                                       controller: _passwordController,
+                                      focusNode: _passwordFocusNode,
                                       isPassword: true,
                                       obscureText: true,
+                                      textInputAction: TextInputAction.done,
                                       label: s.password_label,
                                       hintText: s.password_hint,
                                       labelColor: AppColors.primaryText,
@@ -219,6 +228,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           .read<LoginBloc>()
                                           .add(UpdatePassword(v)),
                                       validator: (v) => _validatePassword(v, s),
+                                      onFieldSubmitted: (_) => _submit(),
                                       prefixIcon: Icon(
                                         Icons.lock_outline_rounded,
                                         color: AppColors.goldDeep.withValues(

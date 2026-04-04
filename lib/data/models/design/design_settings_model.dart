@@ -18,6 +18,7 @@ class DesignSettingsModel extends Equatable {
   final DesignColorSettings colors;
 
   final double tickerSpeed;
+  final double stripSpeed;
   final AppNumeralFormat numeralFormat;
   final String fontFamily;
 
@@ -26,6 +27,7 @@ class DesignSettingsModel extends Equatable {
     this.fontSizes = const FontSizeSettings(),
     this.colors = const DesignColorSettings(),
     this.tickerSpeed = 1.0,
+    this.stripSpeed = 1.0,
     this.numeralFormat = AppNumeralFormat.english,
     this.fontFamily = 'Beiruti',
   });
@@ -36,6 +38,7 @@ class DesignSettingsModel extends Equatable {
       fontSizes: FontSizeSettings.fromMap(map),
       colors: DesignColorSettings.fromMap(map),
       tickerSpeed: (map['ticker_speed'] ?? 1.0).toDouble(),
+      stripSpeed: (map['strip_speed'] ?? 1.0).toDouble(),
       numeralFormat: AppNumeralFormat.fromCode(map['numeral_format'] ?? 'en'),
       fontFamily: map['font_family'] ?? 'Beiruti',
     );
@@ -47,6 +50,7 @@ class DesignSettingsModel extends Equatable {
       ...fontSizes.toMap(),
       ...colors.toMap(),
       'ticker_speed': tickerSpeed,
+      'strip_speed': stripSpeed,
       'numeral_format': numeralFormat.code,
       'font_family': fontFamily,
     };
@@ -57,6 +61,7 @@ class DesignSettingsModel extends Equatable {
     FontSizeSettings? fontSizes,
     DesignColorSettings? colors,
     double? tickerSpeed,
+    double? stripSpeed,
     AppNumeralFormat? numeralFormat,
     String? fontFamily,
   }) {
@@ -65,6 +70,7 @@ class DesignSettingsModel extends Equatable {
       fontSizes: fontSizes ?? this.fontSizes,
       colors: colors ?? this.colors,
       tickerSpeed: tickerSpeed ?? this.tickerSpeed,
+      stripSpeed: stripSpeed ?? this.stripSpeed,
       numeralFormat: numeralFormat ?? this.numeralFormat,
       fontFamily: fontFamily ?? this.fontFamily,
     );
@@ -76,6 +82,7 @@ class DesignSettingsModel extends Equatable {
     fontSizes,
     colors,
     tickerSpeed,
+    stripSpeed,
     numeralFormat,
     fontFamily,
   ];

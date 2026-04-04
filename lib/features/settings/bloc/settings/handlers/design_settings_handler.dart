@@ -227,6 +227,19 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
     );
   }
 
+  void onDesignStripSpeedChanged(
+    SettingsDesignStripSpeedChanged event,
+    Emitter<SettingsState> emit,
+  ) {
+    final m = currentMosque;
+    if (m == null) return;
+    final d = m.designSettings.copyWith(stripSpeed: event.speed);
+    emitDraftUpdated(
+      emit,
+      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
+    );
+  }
+
   void onDesignNumeralFormatChanged(
     SettingsDesignNumeralFormatChanged event,
     Emitter<SettingsState> emit,

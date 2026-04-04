@@ -66,6 +66,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
     );
     on<SettingsDesignContentFontSizeChanged>(onDesignContentFontSizeChanged);
     on<SettingsDesignTickerSpeedChanged>(onDesignTickerSpeedChanged);
+    on<SettingsDesignStripSpeedChanged>(onDesignStripSpeedChanged);
     on<SettingsDesignNumeralFormatChanged>(onDesignNumeralFormatChanged);
     on<SettingsDesignFontFamilyChanged>(onDesignFontFamilyChanged);
     on<SaveDesignSettingsRequested>(_onSaveDesign);

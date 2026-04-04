@@ -1,16 +1,50 @@
-﻿import 'package:flutter/material.dart';
-import '../../../../../data/models/about/about_section_model.dart';
+import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../../../core/l10n/generated/l10n.dart';
+import '../../../../../core/widgets/feedback/unified_snackbar.dart';
+import '../../../../../data/models/about/about_section_model.dart';
 
 class AboutItemView extends StatelessWidget {
   final AboutSectionModel section;
 
   const AboutItemView({super.key, required this.section});
 
-  Future<void> _launchURL() async {
-    final uri = Uri.parse(section.content);
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
+  Uri? _normalizeUri(String raw) {
+    final trimmed = raw.trim();
+    if (trimmed.isEmpty) return null;
+
+    final direct = Uri.tryParse(trimmed);
+    if (direct != null && direct.hasScheme) {
+      return direct;
+    }
+
+    return Uri.tryParse('https://$trimmed');
+  }
+
+  Future<void> _launchUrl(BuildContext context) async {
+    final uri = _normalizeUri(section.content);
+    final s = S.of(context);
+
+    if (uri == null) {
+      UnifiedSnackbar.warning(context, message: s.error_occurred);
+      return;
+    }
+
+    try {
+      if (await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+        return;
+      }
+      if (await launchUrl(uri, mode: LaunchMode.platformDefault)) {
+        return;
+      }
+      if (!context.mounted) return;
+      UnifiedSnackbar.warning(context, message: s.error_occurred);
+    } catch (_) {
+      if (!context.mounted) return;
+      UnifiedSnackbar.error(context, message: s.error_occurred);
+    }
   }
 
   @override
@@ -45,7 +79,7 @@ class AboutItemView extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: InkWell(
-            onTap: _launchURL,
+            onTap: () => _launchUrl(context),
             borderRadius: BorderRadius.circular(8),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 4),
@@ -89,7 +123,6 @@ class AboutItemView extends StatelessWidget {
                   version: QrVersions.auto,
                   size: 160.0,
                   gapless: false,
-                  // QR foreground uses theme primary
                   eyeStyle: QrEyeStyle(
                     eyeShape: QrEyeShape.square,
                     color: primary,
@@ -115,4 +148,3 @@ class AboutItemView extends StatelessWidget {
     }
   }
 }
-
