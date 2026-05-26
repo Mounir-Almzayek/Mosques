@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../data/repositories/interfaces/auth_repository_interface.dart';
 import '../../features/splash/presentation/splash_page.dart';
 import '../../features/auth/presentation/login_page.dart';
 import '../../features/auth/bloc/registration/registration_page.dart';
 import '../../features/settings/presentation/settings_page.dart';
 import '../../features/display/presentation/display_page.dart';
+import '../di/service_locator.dart';
 import 'app_routes.dart';
 
 class Pages {
@@ -12,9 +14,21 @@ class Pages {
       GlobalKey<NavigatorState>();
 }
 
+String? _authGuard(BuildContext context, GoRouterState state) {
+  final authRepo = sl<IAuthRepository>();
+  final loggedIn = authRepo.currentUser != null;
+  final isPublicRoute = state.matchedLocation == Routes.splashPath ||
+      state.matchedLocation == Routes.loginPath ||
+      state.matchedLocation == Routes.registrationPath;
+
+  if (!loggedIn && !isPublicRoute) return Routes.loginPath;
+  return null;
+}
+
 final appPages = GoRouter(
   navigatorKey: Pages.navigatorKey,
   initialLocation: Routes.splashPath,
+  redirect: _authGuard,
   routes: [
     GoRoute(
       path: Routes.splashPath,
