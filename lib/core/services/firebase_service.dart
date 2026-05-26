@@ -5,7 +5,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
-import '../../features/auth/repository/auth_repository.dart';
 import '../../firebase_options.dart';
 import 'local_notification_service.dart';
 import '../routes/app_pages.dart';
@@ -15,6 +14,14 @@ class FirebaseService {
   static FirebaseMessaging? _messaging;
   static String? _fcmToken;
   static int _notificationId = 0;
+  static Future<void> Function(String token)? _onSaveFcmToken;
+
+  /// Wire the FCM token callback after DI is ready.
+  static void setFcmTokenCallback(
+    Future<void> Function(String token) callback,
+  ) {
+    _onSaveFcmToken = callback;
+  }
 
   static Future<void> init() async {
     try {
@@ -142,7 +149,7 @@ class FirebaseService {
     final token = _fcmToken;
     if (token == null || token.isEmpty) return;
     try {
-      await AuthRepository.saveFcmToken(token);
+      await _onSaveFcmToken?.call(token);
     } catch (e) {
       if (kDebugMode) {
         debugPrint('FCM token sync failed: $e');

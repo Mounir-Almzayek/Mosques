@@ -8,8 +8,10 @@ import 'core/l10n/generated/l10n.dart';
 import 'core/routes/app_pages.dart';
 import 'core/services/hive_service.dart';
 import 'core/services/storage_service.dart';
+import 'core/di/service_locator.dart';
 import 'core/services/firebase_service.dart';
 import 'core/styles/app_theme.dart' show AppTheme;
+import 'data/repositories/interfaces/auth_repository_interface.dart';
 import 'features/language/bloc/language/language_bloc.dart';
 
 void main() async {
@@ -29,6 +31,14 @@ void main() async {
   await StorageService.init();
   await HiveService.init();
   await FirebaseService.init();
+
+  // Set up DI after Firebase is initialized
+  setupServiceLocator();
+
+  // Wire the FCM token callback now that DI is ready
+  FirebaseService.setFcmTokenCallback(
+    (token) => sl<IAuthRepository>().saveFcmToken(token),
+  );
 
   runApp(const MyApp());
 }
