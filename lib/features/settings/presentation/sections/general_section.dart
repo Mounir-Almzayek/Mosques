@@ -105,7 +105,7 @@ class _GeneralSectionState extends State<GeneralSection> {
       );
       if (!mounted) return;
       bloc.add(
-        SettingsMosqueCoordinatesChanged(
+        CoordinatesChanged(
           latitude: pos.latitude,
           longitude: pos.longitude,
         ),
@@ -150,7 +150,7 @@ class _GeneralSectionState extends State<GeneralSection> {
                   onChanged: (v) {
                     if (v != null) {
                       context.read<SettingsBloc>().add(
-                        SettingsMosqueLanguageChanged(v),
+                        LanguageChanged(v),
                       );
                       context.read<LanguageBloc>().add(ChangeLanguage(v));
                     }
@@ -164,14 +164,14 @@ class _GeneralSectionState extends State<GeneralSection> {
             controller: _nameController,
             decoration: InputDecoration(labelText: s.mosque_name_label),
             validator: (v) => v!.isEmpty ? s.required_field : null,
-            onChanged: (v) => bloc.add(SettingsMosqueNameChanged(v)),
+            onChanged: (v) => bloc.add(GeneralSettingChanged(GeneralField.name, v)),
           ),
           const SizedBox(height: 16),
           TextFormField(
             controller: _cityController,
             decoration: InputDecoration(labelText: s.city_label),
             validator: (v) => v!.isEmpty ? s.required_field : null,
-            onChanged: (v) => bloc.add(SettingsMosqueCityChanged(v)),
+            onChanged: (v) => bloc.add(GeneralSettingChanged(GeneralField.city, v)),
           ),
           const SizedBox(height: 16),
           DropdownButtonFormField<String>(
@@ -186,7 +186,7 @@ class _GeneralSectionState extends State<GeneralSection> {
             onChanged: (v) {
               if (v != null) {
                 setState(() => _calculationMethod = v);
-                bloc.add(SettingsPrayerCalculationMethodChanged(v));
+                bloc.add(GeneralSettingChanged(GeneralField.calculationMethod, v));
               }
             },
           ),
@@ -238,37 +238,37 @@ class _GeneralSectionState extends State<GeneralSection> {
             label: s.prayer_fajr,
             value: widget.mosque.prayerOffsets.fajr,
             suffix: s.minutes_short,
-            onChanged: (v) => bloc.add(SettingsPrayerOffsetFajrChanged(v)),
+            onChanged: (v) => bloc.add(PrayerOffsetChanged(PrayerOffsetField.fajr, v)),
           ),
           OffsetStepperField(
             label: s.prayer_sunrise,
             value: widget.mosque.prayerOffsets.sunrise,
             suffix: s.minutes_short,
-            onChanged: (v) => bloc.add(SettingsPrayerOffsetSunriseChanged(v)),
+            onChanged: (v) => bloc.add(PrayerOffsetChanged(PrayerOffsetField.sunrise, v)),
           ),
           OffsetStepperField(
             label: s.prayer_dhuhr,
             value: widget.mosque.prayerOffsets.dhuhr,
             suffix: s.minutes_short,
-            onChanged: (v) => bloc.add(SettingsPrayerOffsetDhuhrChanged(v)),
+            onChanged: (v) => bloc.add(PrayerOffsetChanged(PrayerOffsetField.dhuhr, v)),
           ),
           OffsetStepperField(
             label: s.prayer_asr,
             value: widget.mosque.prayerOffsets.asr,
             suffix: s.minutes_short,
-            onChanged: (v) => bloc.add(SettingsPrayerOffsetAsrChanged(v)),
+            onChanged: (v) => bloc.add(PrayerOffsetChanged(PrayerOffsetField.asr, v)),
           ),
           OffsetStepperField(
             label: s.prayer_maghrib,
             value: widget.mosque.prayerOffsets.maghrib,
             suffix: s.minutes_short,
-            onChanged: (v) => bloc.add(SettingsPrayerOffsetMaghribChanged(v)),
+            onChanged: (v) => bloc.add(PrayerOffsetChanged(PrayerOffsetField.maghrib, v)),
           ),
           OffsetStepperField(
             label: s.prayer_isha,
             value: widget.mosque.prayerOffsets.isha,
             suffix: s.minutes_short,
-            onChanged: (v) => bloc.add(SettingsPrayerOffsetIshaChanged(v)),
+            onChanged: (v) => bloc.add(PrayerOffsetChanged(PrayerOffsetField.isha, v)),
           ),
           const SizedBox(height: 32),
           ElevatedButton(

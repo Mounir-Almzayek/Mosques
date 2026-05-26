@@ -50,7 +50,7 @@ class _AnnouncementSectionState extends State<AnnouncementSection> {
       ),
     );
     if (ok == true && mounted) {
-      context.read<SettingsBloc>().add(SettingsAnnouncementRemoved(ad.id));
+      context.read<SettingsBloc>().add(AnnouncementRemoved(ad.id));
     }
   }
 
@@ -199,7 +199,7 @@ class _AnnouncementSectionState extends State<AnnouncementSection> {
                                       value: a.isActive,
                                       onChanged: (val) {
                                         context.read<SettingsBloc>().add(
-                                          SettingsAnnouncementUpdated(
+                                          AnnouncementUpdated(
                                             a.copyWith(isActive: val),
                                           ),
                                         );
@@ -524,9 +524,9 @@ class _AnnouncementEditorSheetState extends State<_AnnouncementEditorSheet> {
                       existing?.displayDurationSeconds ?? 30,
                 );
                 if (existing == null) {
-                  bloc.add(SettingsAnnouncementAdded(newAd));
+                  bloc.add(AnnouncementAdded(newAd));
                 } else {
-                  bloc.add(SettingsAnnouncementUpdated(newAd));
+                  bloc.add(AnnouncementUpdated(newAd));
                 }
                 Navigator.pop(context);
               },

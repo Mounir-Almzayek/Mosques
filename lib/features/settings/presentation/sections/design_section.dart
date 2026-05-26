@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/styles/app_theme.dart';
 import '../../../../core/l10n/generated/l10n.dart';
-import '../../bloc/settings/settings_event.dart';
 import '../../bloc/settings/settings_bloc.dart';
 import '../../bloc/settings/settings_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,9 +33,9 @@ class DesignSection extends StatelessWidget {
                     BackgroundSettingsSection(
                       settings: design.background,
                       onTypeChanged: (type) =>
-                          bloc.add(SettingsDesignBackgroundTypeChanged(type)),
+                          bloc.add(DesignBackgroundTypeChanged(type)),
                       onValueChanged: (val) =>
-                          bloc.add(SettingsDesignBackgroundValueChanged(val)),
+                          bloc.add(DesignBackgroundValueChanged(val)),
                     ),
                     const SizedBox(height: 20),
 
@@ -44,19 +43,19 @@ class DesignSection extends StatelessWidget {
                     ColorSettingsSection(
                       colors: design.colors,
                       onPrimaryChanged: (val) =>
-                          bloc.add(SettingsDesignPrimaryColorChanged(val)),
+                          bloc.add(DesignColorChanged(DesignColorField.primary, val)),
                       onSecondaryChanged: (val) =>
-                          bloc.add(SettingsDesignSecondaryColorChanged(val)),
+                          bloc.add(DesignColorChanged(DesignColorField.secondary, val)),
                       onActiveCardChanged: (val) =>
-                          bloc.add(SettingsDesignActiveCardColorChanged(val)),
+                          bloc.add(DesignColorChanged(DesignColorField.activeCard, val)),
                       onActiveCardTextChanged: (val) => bloc.add(
-                        SettingsDesignActiveCardTextColorChanged(val),
+                        DesignColorChanged(DesignColorField.activeCardText, val),
                       ),
                       onInactiveCardTextChanged: (val) => bloc.add(
-                        SettingsDesignInactiveCardTextColorChanged(val),
+                        DesignColorChanged(DesignColorField.inactiveCardText, val),
                       ),
                       onPrayerOverlayChanged: (val) =>
-                          bloc.add(SettingsDesignPrayerOverlayChanged(val)),
+                          bloc.add(DesignColorChanged(DesignColorField.prayerOverlay, val)),
                     ),
                     const SizedBox(height: 20),
 
@@ -64,17 +63,17 @@ class DesignSection extends StatelessWidget {
                     FontSizeSettingsSection(
                       fontSizes: design.fontSizes,
                       onClockSizeChanged: (val) =>
-                          bloc.add(SettingsDesignClockFontSizeChanged(val)),
+                          bloc.add(DesignFontSizeChanged(DesignFontSizeField.clock, val)),
                       onMosqueInfoSizeChanged: (val) => bloc.add(
-                        SettingsDesignMosqueInfoFontSizeChanged(val),
+                        DesignFontSizeChanged(DesignFontSizeField.mosqueInfo, val),
                       ),
                       onPrayersSizeChanged: (val) =>
-                          bloc.add(SettingsDesignPrayersFontSizeChanged(val)),
+                          bloc.add(DesignFontSizeChanged(DesignFontSizeField.prayers, val)),
                       onAnnouncementsSizeChanged: (val) => bloc.add(
-                        SettingsDesignAnnouncementsFontSizeChanged(val),
+                        DesignFontSizeChanged(DesignFontSizeField.announcements, val),
                       ),
                       onContentSizeChanged: (val) =>
-                          bloc.add(SettingsDesignContentFontSizeChanged(val)),
+                          bloc.add(DesignFontSizeChanged(DesignFontSizeField.content, val)),
                     ),
                     const SizedBox(height: 20),
 
@@ -83,9 +82,9 @@ class DesignSection extends StatelessWidget {
                       fontFamily: design.fontFamily,
                       numeralFormat: design.numeralFormat,
                       onFontFamilyChanged: (val) =>
-                          bloc.add(SettingsDesignFontFamilyChanged(val)),
+                          bloc.add(DesignFontFamilyChanged(val)),
                       onNumeralFormatChanged: (val) =>
-                          bloc.add(SettingsDesignNumeralFormatChanged(val)),
+                          bloc.add(DesignNumeralFormatChanged(val)),
                     ),
                     const SizedBox(height: 20),
 
@@ -93,10 +92,10 @@ class DesignSection extends StatelessWidget {
                     BehaviorSettingsSection(
                       tickerSpeed: design.tickerSpeed,
                       onTickerSpeedChanged: (val) =>
-                          bloc.add(SettingsDesignTickerSpeedChanged(val)),
+                          bloc.add(DesignTickerSpeedChanged(val)),
                       stripSpeed: design.stripSpeed,
                       onStripSpeedChanged: (val) =>
-                          bloc.add(SettingsDesignStripSpeedChanged(val)),
+                          bloc.add(DesignStripSpeedChanged(val)),
                     ),
                     const SizedBox(
                       height: 120,

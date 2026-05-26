@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../data/models/mosque/mosque_model.dart';
@@ -31,84 +31,50 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
     on<LoadSettings>(_onLoad);
 
     // General
-    on<SettingsMosqueNameChanged>(onMosqueNameChanged);
-    on<SettingsMosqueCityChanged>(onMosqueCityChanged);
-    on<SettingsPrayerCalculationMethodChanged>(
-      onPrayerCalculationMethodChanged,
-    );
-    on<SettingsMosqueLanguageChanged>(onMosqueLanguageChanged);
-    on<SettingsMosqueCoordinatesChanged>(onMosqueCoordinatesChanged);
-    on<SettingsPrayerOffsetFajrChanged>(onPrayerOffsetFajrChanged);
-    on<SettingsPrayerOffsetSunriseChanged>(onPrayerOffsetSunriseChanged);
-    on<SettingsPrayerOffsetDhuhrChanged>(onPrayerOffsetDhuhrChanged);
-    on<SettingsPrayerOffsetAsrChanged>(onPrayerOffsetAsrChanged);
-    on<SettingsPrayerOffsetMaghribChanged>(onPrayerOffsetMaghribChanged);
-    on<SettingsPrayerOffsetIshaChanged>(onPrayerOffsetIshaChanged);
+    on<GeneralSettingChanged>(onGeneralSettingChanged);
+    on<LanguageChanged>(onLanguageChanged);
+    on<CoordinatesChanged>(onCoordinatesChanged);
+    on<PrayerOffsetChanged>(onPrayerOffsetChanged);
     on<SaveGeneralSettingsRequested>(_onSaveGeneral);
 
     // Design
-    on<SettingsDesignBackgroundValueChanged>(onDesignBackgroundValueChanged);
-    on<SettingsDesignBackgroundTypeChanged>(onDesignBackgroundTypeChanged);
-    on<SettingsDesignPrimaryColorChanged>(onDesignPrimaryColorChanged);
-    on<SettingsDesignSecondaryColorChanged>(onDesignSecondaryColorChanged);
-    on<SettingsDesignPrayerOverlayChanged>(onDesignPrayerOverlayChanged);
-    on<SettingsDesignActiveCardColorChanged>(onDesignActiveCardColorChanged);
-    on<SettingsDesignActiveCardTextColorChanged>(
-      onDesignActiveCardTextColorChanged,
-    );
-    on<SettingsDesignInactiveCardTextColorChanged>(
-      onDesignInactiveCardTextColorChanged,
-    );
-    on<SettingsDesignClockFontSizeChanged>(onDesignClockFontSizeChanged);
-    on<SettingsDesignMosqueInfoFontSizeChanged>(
-      onDesignMosqueInfoFontSizeChanged,
-    );
-    on<SettingsDesignPrayersFontSizeChanged>(onDesignPrayersFontSizeChanged);
-    on<SettingsDesignAnnouncementsFontSizeChanged>(
-      onDesignAnnouncementsFontSizeChanged,
-    );
-    on<SettingsDesignContentFontSizeChanged>(onDesignContentFontSizeChanged);
-    on<SettingsDesignTickerSpeedChanged>(onDesignTickerSpeedChanged);
-    on<SettingsDesignStripSpeedChanged>(onDesignStripSpeedChanged);
-    on<SettingsDesignNumeralFormatChanged>(onDesignNumeralFormatChanged);
-    on<SettingsDesignFontFamilyChanged>(onDesignFontFamilyChanged);
+    on<DesignBackgroundValueChanged>(onDesignBackgroundValueChanged);
+    on<DesignBackgroundTypeChanged>(onDesignBackgroundTypeChanged);
+    on<DesignColorChanged>(onDesignColorChanged);
+    on<DesignFontSizeChanged>(onDesignFontSizeChanged);
+    on<DesignTickerSpeedChanged>(onDesignTickerSpeedChanged);
+    on<DesignStripSpeedChanged>(onDesignStripSpeedChanged);
+    on<DesignNumeralFormatChanged>(onDesignNumeralFormatChanged);
+    on<DesignFontFamilyChanged>(onDesignFontFamilyChanged);
+    on<DisplayTimingChanged>(onDisplayTimingChanged);
+    on<BackgroundCustomUrlChanged>(onBackgroundCustomUrlChanged);
     on<SaveDesignSettingsRequested>(_onSaveDesign);
 
-    // Display Timing & Photo Studio
-    on<SettingsPreAdhanMinutesChanged>(onPreAdhanMinutesChanged);
-    on<SettingsAdhanMomentDurationChanged>(onAdhanMomentDurationChanged);
-    on<SettingsReligiousContentWaitChanged>(onReligiousContentWaitChanged);
-    on<SettingsReligiousContentDisplayChanged>(onReligiousContentDisplayChanged);
-    on<SettingsPhotoStudioUrlAdded>(onPhotoStudioUrlAdded);
-    on<SettingsPhotoStudioUrlRemoved>(onPhotoStudioUrlRemoved);
-    on<SettingsBackgroundCustomUrlChanged>(onBackgroundCustomUrlChanged);
+    // Photo Studio
+    on<PhotoStudioUrlAdded>(onPhotoStudioUrlAdded);
+    on<PhotoStudioUrlRemoved>(onPhotoStudioUrlRemoved);
     on<SavePhotoStudioRequested>(_onSavePhotoStudio);
 
     // Iqama
-    on<SettingsIqamaFajrOffsetChanged>(onIqamaFajrChanged);
-    on<SettingsIqamaDhuhrOffsetChanged>(onIqamaDhuhrChanged);
-    on<SettingsIqamaAsrOffsetChanged>(onIqamaAsrChanged);
-    on<SettingsIqamaMaghribOffsetChanged>(onIqamaMaghribChanged);
-    on<SettingsIqamaIshaOffsetChanged>(onIqamaIshaChanged);
-    on<SettingsIqamaJummahOffsetChanged>(onIqamaJummahChanged);
+    on<IqamaOffsetChanged>(onIqamaOffsetChanged);
     on<SaveIqamaSettingsRequested>(_onSaveIqama);
 
     // Mosque Text Lists
-    on<SettingsMosqueTextAdded>(onMosqueTextAdded);
-    on<SettingsMosqueTextUpdated>(onMosqueTextUpdated);
-    on<SettingsMosqueTextRemoved>(onMosqueTextRemoved);
+    on<MosqueTextAdded>(onMosqueTextAdded);
+    on<MosqueTextUpdated>(onMosqueTextUpdated);
+    on<MosqueTextRemoved>(onMosqueTextRemoved);
     on<SaveMosqueTextListRequested>(_onSaveTextList);
 
     // Announcements
-    on<SettingsAnnouncementAdded>(onAnnouncementAdded);
-    on<SettingsAnnouncementUpdated>(onAnnouncementUpdated);
-    on<SettingsAnnouncementRemoved>(onAnnouncementRemoved);
+    on<AnnouncementAdded>(onAnnouncementAdded);
+    on<AnnouncementUpdated>(onAnnouncementUpdated);
+    on<AnnouncementRemoved>(onAnnouncementRemoved);
     on<SaveAnnouncementsRequested>(_onSaveAnnouncements);
 
     // Alerts
-    on<SettingsAlertAdded>(onAlertAdded);
-    on<SettingsAlertRemoved>(onAlertRemoved);
-    on<SettingsAlertsCleared>(onAlertsCleared);
+    on<AlertAdded>(onAlertAdded);
+    on<AlertRemoved>(onAlertRemoved);
+    on<AlertsCleared>(onAlertsCleared);
     on<SaveAlertsRequested>(_onSaveAlerts);
   }
 
@@ -227,4 +193,3 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
     return super.close();
   }
 }
-

@@ -1,4 +1,4 @@
-﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/enums/display_background_type.dart';
 import '../../../../../data/models/mosque/mosque_model.dart';
@@ -13,7 +13,7 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
   MosqueModel? get currentMosque;
 
   void onDesignBackgroundValueChanged(
-    SettingsDesignBackgroundValueChanged event,
+    DesignBackgroundValueChanged event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
@@ -30,7 +30,7 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
   }
 
   void onDesignBackgroundTypeChanged(
-    SettingsDesignBackgroundTypeChanged event,
+    DesignBackgroundTypeChanged event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
@@ -44,171 +44,52 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
     );
   }
 
-  void onDesignPrimaryColorChanged(
-    SettingsDesignPrimaryColorChanged event,
+  void onDesignColorChanged(
+    DesignColorChanged event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
     if (m == null) return;
-    final d = m.designSettings.copyWith(
-      colors: m.designSettings.colors.copyWith(primary: event.primaryColor),
-    );
+    final colors = switch (event.field) {
+      DesignColorField.primary =>
+        m.designSettings.colors.copyWith(primary: event.color),
+      DesignColorField.secondary =>
+        m.designSettings.colors.copyWith(secondary: event.color),
+      DesignColorField.prayerOverlay =>
+        m.designSettings.colors.copyWith(prayerOverlay: event.color),
+      DesignColorField.activeCard =>
+        m.designSettings.colors.copyWith(activeCard: event.color),
+      DesignColorField.activeCardText =>
+        m.designSettings.colors.copyWith(activeCardText: event.color),
+      DesignColorField.inactiveCardText =>
+        m.designSettings.colors.copyWith(inactiveCardText: event.color),
+    };
+    final d = m.designSettings.copyWith(colors: colors);
     emitDraftUpdated(
       emit,
       state.request.copyWith(mosque: m.copyWith(designSettings: d)),
     );
   }
 
-  void onDesignSecondaryColorChanged(
-    SettingsDesignSecondaryColorChanged event,
+  void onDesignFontSizeChanged(
+    DesignFontSizeChanged event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
     if (m == null) return;
-    final d = m.designSettings.copyWith(
-      colors: m.designSettings.colors.copyWith(secondary: event.secondaryColor),
-    );
-    emitDraftUpdated(
-      emit,
-      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
-    );
-  }
-
-  void onDesignPrayerOverlayChanged(
-    SettingsDesignPrayerOverlayChanged event,
-    Emitter<SettingsState> emit,
-  ) {
-    final m = currentMosque;
-    if (m == null) return;
-    final d = m.designSettings.copyWith(
-      colors: m.designSettings.colors.copyWith(
-        prayerOverlay: event.prayerOverlayColor,
-      ),
-    );
-    emitDraftUpdated(
-      emit,
-      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
-    );
-  }
-
-  void onDesignActiveCardColorChanged(
-    SettingsDesignActiveCardColorChanged event,
-    Emitter<SettingsState> emit,
-  ) {
-    final m = currentMosque;
-    if (m == null) return;
-    final d = m.designSettings.copyWith(
-      colors: m.designSettings.colors.copyWith(activeCard: event.color),
-    );
-    emitDraftUpdated(
-      emit,
-      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
-    );
-  }
-
-  void onDesignActiveCardTextColorChanged(
-    SettingsDesignActiveCardTextColorChanged event,
-    Emitter<SettingsState> emit,
-  ) {
-    final m = currentMosque;
-    if (m == null) return;
-    final d = m.designSettings.copyWith(
-      colors: m.designSettings.colors.copyWith(activeCardText: event.color),
-    );
-    emitDraftUpdated(
-      emit,
-      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
-    );
-  }
-
-  void onDesignInactiveCardTextColorChanged(
-    SettingsDesignInactiveCardTextColorChanged event,
-    Emitter<SettingsState> emit,
-  ) {
-    final m = currentMosque;
-    if (m == null) return;
-    final d = m.designSettings.copyWith(
-      colors: m.designSettings.colors.copyWith(inactiveCardText: event.color),
-    );
-    emitDraftUpdated(
-      emit,
-      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
-    );
-  }
-
-  void onDesignClockFontSizeChanged(
-    SettingsDesignClockFontSizeChanged event,
-    Emitter<SettingsState> emit,
-  ) {
-    final m = currentMosque;
-    if (m == null) return;
-    final d = m.designSettings.copyWith(
-      fontSizes: m.designSettings.fontSizes.copyWith(clock: event.fontSize),
-    );
-    emitDraftUpdated(
-      emit,
-      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
-    );
-  }
-
-  void onDesignMosqueInfoFontSizeChanged(
-    SettingsDesignMosqueInfoFontSizeChanged event,
-    Emitter<SettingsState> emit,
-  ) {
-    final m = currentMosque;
-    if (m == null) return;
-    final d = m.designSettings.copyWith(
-      fontSizes: m.designSettings.fontSizes.copyWith(
-        mosqueInfo: event.fontSize,
-      ),
-    );
-    emitDraftUpdated(
-      emit,
-      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
-    );
-  }
-
-  void onDesignPrayersFontSizeChanged(
-    SettingsDesignPrayersFontSizeChanged event,
-    Emitter<SettingsState> emit,
-  ) {
-    final m = currentMosque;
-    if (m == null) return;
-    final d = m.designSettings.copyWith(
-      fontSizes: m.designSettings.fontSizes.copyWith(prayers: event.fontSize),
-    );
-    emitDraftUpdated(
-      emit,
-      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
-    );
-  }
-
-  void onDesignAnnouncementsFontSizeChanged(
-    SettingsDesignAnnouncementsFontSizeChanged event,
-    Emitter<SettingsState> emit,
-  ) {
-    final m = currentMosque;
-    if (m == null) return;
-    final d = m.designSettings.copyWith(
-      fontSizes: m.designSettings.fontSizes.copyWith(
-        announcements: event.fontSize,
-      ),
-    );
-    emitDraftUpdated(
-      emit,
-      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
-    );
-  }
-
-  void onDesignContentFontSizeChanged(
-    SettingsDesignContentFontSizeChanged event,
-    Emitter<SettingsState> emit,
-  ) {
-    final m = currentMosque;
-    if (m == null) return;
-    final d = m.designSettings.copyWith(
-      fontSizes: m.designSettings.fontSizes.copyWith(content: event.fontSize),
-    );
+    final fontSizes = switch (event.field) {
+      DesignFontSizeField.clock =>
+        m.designSettings.fontSizes.copyWith(clock: event.fontSize),
+      DesignFontSizeField.mosqueInfo =>
+        m.designSettings.fontSizes.copyWith(mosqueInfo: event.fontSize),
+      DesignFontSizeField.prayers =>
+        m.designSettings.fontSizes.copyWith(prayers: event.fontSize),
+      DesignFontSizeField.announcements =>
+        m.designSettings.fontSizes.copyWith(announcements: event.fontSize),
+      DesignFontSizeField.content =>
+        m.designSettings.fontSizes.copyWith(content: event.fontSize),
+    };
+    final d = m.designSettings.copyWith(fontSizes: fontSizes);
     emitDraftUpdated(
       emit,
       state.request.copyWith(mosque: m.copyWith(designSettings: d)),
@@ -216,7 +97,7 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
   }
 
   void onDesignTickerSpeedChanged(
-    SettingsDesignTickerSpeedChanged event,
+    DesignTickerSpeedChanged event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
@@ -229,7 +110,7 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
   }
 
   void onDesignStripSpeedChanged(
-    SettingsDesignStripSpeedChanged event,
+    DesignStripSpeedChanged event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
@@ -242,7 +123,7 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
   }
 
   void onDesignNumeralFormatChanged(
-    SettingsDesignNumeralFormatChanged event,
+    DesignNumeralFormatChanged event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
@@ -255,7 +136,7 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
   }
 
   void onDesignFontFamilyChanged(
-    SettingsDesignFontFamilyChanged event,
+    DesignFontFamilyChanged event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
@@ -267,52 +148,22 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
     );
   }
 
-  void onPreAdhanMinutesChanged(
-    SettingsPreAdhanMinutesChanged event,
+  void onDisplayTimingChanged(
+    DisplayTimingChanged event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
     if (m == null) return;
-    final d = m.designSettings.copyWith(preAdhanMinutes: event.minutes);
-    emitDraftUpdated(
-      emit,
-      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
-    );
-  }
-
-  void onAdhanMomentDurationChanged(
-    SettingsAdhanMomentDurationChanged event,
-    Emitter<SettingsState> emit,
-  ) {
-    final m = currentMosque;
-    if (m == null) return;
-    final d = m.designSettings.copyWith(adhanMomentDurationSeconds: event.seconds);
-    emitDraftUpdated(
-      emit,
-      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
-    );
-  }
-
-  void onReligiousContentWaitChanged(
-    SettingsReligiousContentWaitChanged event,
-    Emitter<SettingsState> emit,
-  ) {
-    final m = currentMosque;
-    if (m == null) return;
-    final d = m.designSettings.copyWith(religiousContentWaitSeconds: event.seconds);
-    emitDraftUpdated(
-      emit,
-      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
-    );
-  }
-
-  void onReligiousContentDisplayChanged(
-    SettingsReligiousContentDisplayChanged event,
-    Emitter<SettingsState> emit,
-  ) {
-    final m = currentMosque;
-    if (m == null) return;
-    final d = m.designSettings.copyWith(religiousContentDisplaySeconds: event.seconds);
+    final d = switch (event.field) {
+      DisplayTimingField.preAdhanMinutes =>
+        m.designSettings.copyWith(preAdhanMinutes: event.value),
+      DisplayTimingField.adhanMomentDuration =>
+        m.designSettings.copyWith(adhanMomentDurationSeconds: event.value),
+      DisplayTimingField.religiousContentWait =>
+        m.designSettings.copyWith(religiousContentWaitSeconds: event.value),
+      DisplayTimingField.religiousContentDisplay =>
+        m.designSettings.copyWith(religiousContentDisplaySeconds: event.value),
+    };
     emitDraftUpdated(
       emit,
       state.request.copyWith(mosque: m.copyWith(designSettings: d)),
@@ -320,7 +171,7 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
   }
 
   void onPhotoStudioUrlAdded(
-    SettingsPhotoStudioUrlAdded event,
+    PhotoStudioUrlAdded event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
@@ -333,7 +184,7 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
   }
 
   void onPhotoStudioUrlRemoved(
-    SettingsPhotoStudioUrlRemoved event,
+    PhotoStudioUrlRemoved event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
@@ -346,7 +197,7 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
   }
 
   void onBackgroundCustomUrlChanged(
-    SettingsBackgroundCustomUrlChanged event,
+    BackgroundCustomUrlChanged event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
@@ -363,4 +214,3 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
     );
   }
 }
-

@@ -1,4 +1,4 @@
-﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../data/models/mosque/mosque_model.dart';
 import '../../../models/settings_edit_request.dart';
@@ -29,7 +29,7 @@ mixin MosqueTextHandler on Bloc<SettingsEvent, SettingsState> {
   }
 
   void onMosqueTextAdded(
-    SettingsMosqueTextAdded event,
+    MosqueTextAdded event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
@@ -43,7 +43,7 @@ mixin MosqueTextHandler on Bloc<SettingsEvent, SettingsState> {
   }
 
   void onMosqueTextUpdated(
-    SettingsMosqueTextUpdated event,
+    MosqueTextUpdated event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
@@ -59,7 +59,7 @@ mixin MosqueTextHandler on Bloc<SettingsEvent, SettingsState> {
   }
 
   void onMosqueTextRemoved(
-    SettingsMosqueTextRemoved event,
+    MosqueTextRemoved event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
@@ -74,4 +74,3 @@ mixin MosqueTextHandler on Bloc<SettingsEvent, SettingsState> {
     );
   }
 }
-

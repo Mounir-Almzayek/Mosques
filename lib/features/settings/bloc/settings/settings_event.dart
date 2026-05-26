@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 import '../../../../data/models/mosque/mosque_model.dart';
 
@@ -6,7 +6,35 @@ import '../../../../core/enums/app_language.dart';
 import '../../../../core/enums/app_numeral_format.dart';
 import '../../../../core/enums/display_background_type.dart';
 
-abstract class SettingsEvent extends Equatable {
+// ——— Enums for parameterized events ———
+
+enum GeneralField { name, city, calculationMethod }
+
+enum PrayerOffsetField { fajr, sunrise, dhuhr, asr, maghrib, isha }
+
+enum DesignColorField {
+  primary,
+  secondary,
+  prayerOverlay,
+  activeCard,
+  activeCardText,
+  inactiveCardText,
+}
+
+enum DesignFontSizeField { clock, mosqueInfo, prayers, announcements, content }
+
+enum DisplayTimingField {
+  preAdhanMinutes,
+  adhanMomentDuration,
+  religiousContentWait,
+  religiousContentDisplay,
+}
+
+enum IqamaField { fajr, dhuhr, asr, maghrib, isha, jummah }
+
+// ——— Base ———
+
+sealed class SettingsEvent extends Equatable {
   const SettingsEvent();
 
   @override
@@ -19,47 +47,30 @@ class LoadSettings extends SettingsEvent {
 
 // ——— General ———
 
-class SettingsMosqueNameChanged extends SettingsEvent {
-  final String name;
+class GeneralSettingChanged extends SettingsEvent {
+  final GeneralField field;
+  final Object value;
 
-  const SettingsMosqueNameChanged(this.name);
-
-  @override
-  List<Object?> get props => [name];
-}
-
-class SettingsMosqueCityChanged extends SettingsEvent {
-  final String city;
-
-  const SettingsMosqueCityChanged(this.city);
+  const GeneralSettingChanged(this.field, this.value);
 
   @override
-  List<Object?> get props => [city];
+  List<Object?> get props => [field, value];
 }
 
-class SettingsPrayerCalculationMethodChanged extends SettingsEvent {
-  final String calculationMethod;
-
-  const SettingsPrayerCalculationMethodChanged(this.calculationMethod);
-
-  @override
-  List<Object?> get props => [calculationMethod];
-}
-
-class SettingsMosqueLanguageChanged extends SettingsEvent {
+class LanguageChanged extends SettingsEvent {
   final AppLanguage language;
 
-  const SettingsMosqueLanguageChanged(this.language);
+  const LanguageChanged(this.language);
 
   @override
   List<Object?> get props => [language];
 }
 
-class SettingsMosqueCoordinatesChanged extends SettingsEvent {
+class CoordinatesChanged extends SettingsEvent {
   final double latitude;
   final double longitude;
 
-  const SettingsMosqueCoordinatesChanged({
+  const CoordinatesChanged({
     required this.latitude,
     required this.longitude,
   });
@@ -68,46 +79,14 @@ class SettingsMosqueCoordinatesChanged extends SettingsEvent {
   List<Object?> get props => [latitude, longitude];
 }
 
-class SettingsPrayerOffsetFajrChanged extends SettingsEvent {
+class PrayerOffsetChanged extends SettingsEvent {
+  final PrayerOffsetField prayer;
   final int offset;
-  const SettingsPrayerOffsetFajrChanged(this.offset);
-  @override
-  List<Object?> get props => [offset];
-}
 
-class SettingsPrayerOffsetSunriseChanged extends SettingsEvent {
-  final int offset;
-  const SettingsPrayerOffsetSunriseChanged(this.offset);
-  @override
-  List<Object?> get props => [offset];
-}
+  const PrayerOffsetChanged(this.prayer, this.offset);
 
-class SettingsPrayerOffsetDhuhrChanged extends SettingsEvent {
-  final int offset;
-  const SettingsPrayerOffsetDhuhrChanged(this.offset);
   @override
-  List<Object?> get props => [offset];
-}
-
-class SettingsPrayerOffsetAsrChanged extends SettingsEvent {
-  final int offset;
-  const SettingsPrayerOffsetAsrChanged(this.offset);
-  @override
-  List<Object?> get props => [offset];
-}
-
-class SettingsPrayerOffsetMaghribChanged extends SettingsEvent {
-  final int offset;
-  const SettingsPrayerOffsetMaghribChanged(this.offset);
-  @override
-  List<Object?> get props => [offset];
-}
-
-class SettingsPrayerOffsetIshaChanged extends SettingsEvent {
-  final int offset;
-  const SettingsPrayerOffsetIshaChanged(this.offset);
-  @override
-  List<Object?> get props => [offset];
+  List<Object?> get props => [prayer, offset];
 }
 
 class SaveGeneralSettingsRequested extends SettingsEvent {
@@ -116,141 +95,97 @@ class SaveGeneralSettingsRequested extends SettingsEvent {
 
 // ——— Design ———
 
-class SettingsDesignBackgroundValueChanged extends SettingsEvent {
+class DesignBackgroundValueChanged extends SettingsEvent {
   final String backgroundValue;
 
-  const SettingsDesignBackgroundValueChanged(this.backgroundValue);
+  const DesignBackgroundValueChanged(this.backgroundValue);
 
   @override
   List<Object?> get props => [backgroundValue];
 }
 
-class SettingsDesignBackgroundTypeChanged extends SettingsEvent {
+class DesignBackgroundTypeChanged extends SettingsEvent {
   final DisplayBackgroundType type;
 
-  const SettingsDesignBackgroundTypeChanged(this.type);
+  const DesignBackgroundTypeChanged(this.type);
 
   @override
   List<Object?> get props => [type];
 }
 
-class SettingsDesignPrimaryColorChanged extends SettingsEvent {
-  final String primaryColor;
-
-  const SettingsDesignPrimaryColorChanged(this.primaryColor);
-
-  @override
-  List<Object?> get props => [primaryColor];
-}
-
-class SettingsDesignSecondaryColorChanged extends SettingsEvent {
-  final String secondaryColor;
-
-  const SettingsDesignSecondaryColorChanged(this.secondaryColor);
-
-  @override
-  List<Object?> get props => [secondaryColor];
-}
-
-class SettingsDesignPrayerOverlayChanged extends SettingsEvent {
-  final String prayerOverlayColor;
-
-  const SettingsDesignPrayerOverlayChanged(this.prayerOverlayColor);
-
-  @override
-  List<Object?> get props => [prayerOverlayColor];
-}
-
-class SettingsDesignActiveCardColorChanged extends SettingsEvent {
+class DesignColorChanged extends SettingsEvent {
+  final DesignColorField field;
   final String color;
-  const SettingsDesignActiveCardColorChanged(this.color);
+
+  const DesignColorChanged(this.field, this.color);
+
   @override
-  List<Object?> get props => [color];
+  List<Object?> get props => [field, color];
 }
 
-class SettingsDesignActiveCardTextColorChanged extends SettingsEvent {
-  final String color;
-  const SettingsDesignActiveCardTextColorChanged(this.color);
-  @override
-  List<Object?> get props => [color];
-}
-
-class SettingsDesignInactiveCardTextColorChanged extends SettingsEvent {
-  final String color;
-  const SettingsDesignInactiveCardTextColorChanged(this.color);
-  @override
-  List<Object?> get props => [color];
-}
-
-class SettingsDesignClockFontSizeChanged extends SettingsEvent {
+class DesignFontSizeChanged extends SettingsEvent {
+  final DesignFontSizeField field;
   final double fontSize;
-  const SettingsDesignClockFontSizeChanged(this.fontSize);
+
+  const DesignFontSizeChanged(this.field, this.fontSize);
+
   @override
-  List<Object?> get props => [fontSize];
+  List<Object?> get props => [field, fontSize];
 }
 
-class SettingsDesignMosqueInfoFontSizeChanged extends SettingsEvent {
-  final double fontSize;
-  const SettingsDesignMosqueInfoFontSizeChanged(this.fontSize);
-  @override
-  List<Object?> get props => [fontSize];
-}
-
-class SettingsDesignPrayersFontSizeChanged extends SettingsEvent {
-  final double fontSize;
-  const SettingsDesignPrayersFontSizeChanged(this.fontSize);
-  @override
-  List<Object?> get props => [fontSize];
-}
-
-class SettingsDesignAnnouncementsFontSizeChanged extends SettingsEvent {
-  final double fontSize;
-  const SettingsDesignAnnouncementsFontSizeChanged(this.fontSize);
-  @override
-  List<Object?> get props => [fontSize];
-}
-
-class SettingsDesignContentFontSizeChanged extends SettingsEvent {
-  final double fontSize;
-  const SettingsDesignContentFontSizeChanged(this.fontSize);
-  @override
-  List<Object?> get props => [fontSize];
-}
-
-class SettingsDesignTickerSpeedChanged extends SettingsEvent {
+class DesignTickerSpeedChanged extends SettingsEvent {
   final double speed;
 
-  const SettingsDesignTickerSpeedChanged(this.speed);
+  const DesignTickerSpeedChanged(this.speed);
 
   @override
   List<Object?> get props => [speed];
 }
 
-class SettingsDesignStripSpeedChanged extends SettingsEvent {
+class DesignStripSpeedChanged extends SettingsEvent {
   final double speed;
 
-  const SettingsDesignStripSpeedChanged(this.speed);
+  const DesignStripSpeedChanged(this.speed);
 
   @override
   List<Object?> get props => [speed];
 }
 
-class SettingsDesignNumeralFormatChanged extends SettingsEvent {
+class DesignNumeralFormatChanged extends SettingsEvent {
   final AppNumeralFormat format;
 
-  const SettingsDesignNumeralFormatChanged(this.format);
+  const DesignNumeralFormatChanged(this.format);
 
   @override
   List<Object?> get props => [format];
 }
 
-class SettingsDesignFontFamilyChanged extends SettingsEvent {
+class DesignFontFamilyChanged extends SettingsEvent {
   final String fontFamily;
 
-  const SettingsDesignFontFamilyChanged(this.fontFamily);
+  const DesignFontFamilyChanged(this.fontFamily);
 
   @override
   List<Object?> get props => [fontFamily];
+}
+
+class DisplayTimingChanged extends SettingsEvent {
+  final DisplayTimingField field;
+  final int value;
+
+  const DisplayTimingChanged(this.field, this.value);
+
+  @override
+  List<Object?> get props => [field, value];
+}
+
+class BackgroundCustomUrlChanged extends SettingsEvent {
+  final String url;
+
+  const BackgroundCustomUrlChanged(this.url);
+
+  @override
+  List<Object?> get props => [url];
 }
 
 class SaveDesignSettingsRequested extends SettingsEvent {
@@ -259,91 +194,47 @@ class SaveDesignSettingsRequested extends SettingsEvent {
 
 // ——— Iqama ———
 
-class SettingsIqamaFajrOffsetChanged extends SettingsEvent {
+class IqamaOffsetChanged extends SettingsEvent {
+  final IqamaField prayer;
   final int offset;
 
-  const SettingsIqamaFajrOffsetChanged(this.offset);
+  const IqamaOffsetChanged(this.prayer, this.offset);
 
   @override
-  List<Object?> get props => [offset];
-}
-
-class SettingsIqamaDhuhrOffsetChanged extends SettingsEvent {
-  final int offset;
-
-  const SettingsIqamaDhuhrOffsetChanged(this.offset);
-
-  @override
-  List<Object?> get props => [offset];
-}
-
-class SettingsIqamaAsrOffsetChanged extends SettingsEvent {
-  final int offset;
-
-  const SettingsIqamaAsrOffsetChanged(this.offset);
-
-  @override
-  List<Object?> get props => [offset];
-}
-
-class SettingsIqamaMaghribOffsetChanged extends SettingsEvent {
-  final int offset;
-
-  const SettingsIqamaMaghribOffsetChanged(this.offset);
-
-  @override
-  List<Object?> get props => [offset];
-}
-
-class SettingsIqamaIshaOffsetChanged extends SettingsEvent {
-  final int offset;
-
-  const SettingsIqamaIshaOffsetChanged(this.offset);
-
-  @override
-  List<Object?> get props => [offset];
-}
-
-class SettingsIqamaJummahOffsetChanged extends SettingsEvent {
-  final int offset;
-
-  const SettingsIqamaJummahOffsetChanged(this.offset);
-
-  @override
-  List<Object?> get props => [offset];
+  List<Object?> get props => [prayer, offset];
 }
 
 class SaveIqamaSettingsRequested extends SettingsEvent {
   const SaveIqamaSettingsRequested();
 }
 
-// ——— نصوص العرض (أحاديث، آيات، أدعية، أذكار) ———
+// ——— Mosque Text Lists ———
 
-class SettingsMosqueTextAdded extends SettingsEvent {
+class MosqueTextAdded extends SettingsEvent {
   final MosqueTextListKind kind;
   final MosqueTextEntryModel item;
 
-  const SettingsMosqueTextAdded(this.kind, this.item);
+  const MosqueTextAdded(this.kind, this.item);
 
   @override
   List<Object?> get props => [kind, item];
 }
 
-class SettingsMosqueTextUpdated extends SettingsEvent {
+class MosqueTextUpdated extends SettingsEvent {
   final MosqueTextListKind kind;
   final MosqueTextEntryModel item;
 
-  const SettingsMosqueTextUpdated(this.kind, this.item);
+  const MosqueTextUpdated(this.kind, this.item);
 
   @override
   List<Object?> get props => [kind, item];
 }
 
-class SettingsMosqueTextRemoved extends SettingsEvent {
+class MosqueTextRemoved extends SettingsEvent {
   final MosqueTextListKind kind;
   final String itemId;
 
-  const SettingsMosqueTextRemoved(this.kind, this.itemId);
+  const MosqueTextRemoved(this.kind, this.itemId);
 
   @override
   List<Object?> get props => [kind, itemId];
@@ -357,28 +248,28 @@ class SaveMosqueTextListRequested extends SettingsEvent {
 
 // ——— Announcements ———
 
-class SettingsAnnouncementAdded extends SettingsEvent {
+class AnnouncementAdded extends SettingsEvent {
   final AnnouncementModel announcement;
 
-  const SettingsAnnouncementAdded(this.announcement);
+  const AnnouncementAdded(this.announcement);
 
   @override
   List<Object?> get props => [announcement];
 }
 
-class SettingsAnnouncementUpdated extends SettingsEvent {
+class AnnouncementUpdated extends SettingsEvent {
   final AnnouncementModel announcement;
 
-  const SettingsAnnouncementUpdated(this.announcement);
+  const AnnouncementUpdated(this.announcement);
 
   @override
   List<Object?> get props => [announcement];
 }
 
-class SettingsAnnouncementRemoved extends SettingsEvent {
+class AnnouncementRemoved extends SettingsEvent {
   final String announcementId;
 
-  const SettingsAnnouncementRemoved(this.announcementId);
+  const AnnouncementRemoved(this.announcementId);
 
   @override
   List<Object?> get props => [announcementId];
@@ -388,77 +279,50 @@ class SaveAnnouncementsRequested extends SettingsEvent {
   const SaveAnnouncementsRequested();
 }
 
-// ——— Instant Announcements (Alerts) ———
+// ——— Instant Alerts ———
 
-class SettingsAlertAdded extends SettingsEvent {
+class AlertAdded extends SettingsEvent {
   final AnnouncementModel alert;
-  const SettingsAlertAdded(this.alert);
+
+  const AlertAdded(this.alert);
+
   @override
   List<Object?> get props => [alert];
 }
 
-class SettingsAlertRemoved extends SettingsEvent {
+class AlertRemoved extends SettingsEvent {
   final String alertId;
-  const SettingsAlertRemoved(this.alertId);
+
+  const AlertRemoved(this.alertId);
+
   @override
   List<Object?> get props => [alertId];
 }
 
-class SettingsAlertsCleared extends SettingsEvent {
-  const SettingsAlertsCleared();
+class AlertsCleared extends SettingsEvent {
+  const AlertsCleared();
 }
 
 class SaveAlertsRequested extends SettingsEvent {
   const SaveAlertsRequested();
 }
 
-// ——— Display Timing & Photo Studio ———
+// ——— Photo Studio ———
 
-class SettingsPreAdhanMinutesChanged extends SettingsEvent {
-  final int minutes;
-  const SettingsPreAdhanMinutesChanged(this.minutes);
-  @override
-  List<Object?> get props => [minutes];
-}
-
-class SettingsAdhanMomentDurationChanged extends SettingsEvent {
-  final int seconds;
-  const SettingsAdhanMomentDurationChanged(this.seconds);
-  @override
-  List<Object?> get props => [seconds];
-}
-
-class SettingsReligiousContentWaitChanged extends SettingsEvent {
-  final int seconds;
-  const SettingsReligiousContentWaitChanged(this.seconds);
-  @override
-  List<Object?> get props => [seconds];
-}
-
-class SettingsReligiousContentDisplayChanged extends SettingsEvent {
-  final int seconds;
-  const SettingsReligiousContentDisplayChanged(this.seconds);
-  @override
-  List<Object?> get props => [seconds];
-}
-
-class SettingsPhotoStudioUrlAdded extends SettingsEvent {
+class PhotoStudioUrlAdded extends SettingsEvent {
   final String url;
-  const SettingsPhotoStudioUrlAdded(this.url);
+
+  const PhotoStudioUrlAdded(this.url);
+
   @override
   List<Object?> get props => [url];
 }
 
-class SettingsPhotoStudioUrlRemoved extends SettingsEvent {
+class PhotoStudioUrlRemoved extends SettingsEvent {
   final String url;
-  const SettingsPhotoStudioUrlRemoved(this.url);
-  @override
-  List<Object?> get props => [url];
-}
 
-class SettingsBackgroundCustomUrlChanged extends SettingsEvent {
-  final String url;
-  const SettingsBackgroundCustomUrlChanged(this.url);
+  const PhotoStudioUrlRemoved(this.url);
+
   @override
   List<Object?> get props => [url];
 }
@@ -466,4 +330,3 @@ class SettingsBackgroundCustomUrlChanged extends SettingsEvent {
 class SavePhotoStudioRequested extends SettingsEvent {
   const SavePhotoStudioRequested();
 }
-

@@ -165,7 +165,7 @@ class _MosqueTextListSectionState extends State<MosqueTextListSection> {
     );
     if (ok == true && mounted) {
       context.read<SettingsBloc>().add(
-        SettingsMosqueTextRemoved(widget.kind, item.id),
+        MosqueTextRemoved(widget.kind, item.id),
       );
     }
   }
@@ -262,7 +262,7 @@ class _MosqueTextListSectionState extends State<MosqueTextListSection> {
                                       value: h.isActive,
                                       onChanged: (val) {
                                         context.read<SettingsBloc>().add(
-                                          SettingsMosqueTextUpdated(
+                                          MosqueTextUpdated(
                                             widget.kind,
                                             h.copyWith(isActive: val),
                                           ),
@@ -503,9 +503,9 @@ class _MosqueTextEditorSheetState extends State<_MosqueTextEditorSheet> {
                   order: existing?.order ?? 0,
                 );
                 if (existing == null) {
-                  bloc.add(SettingsMosqueTextAdded(widget.kind, item));
+                  bloc.add(MosqueTextAdded(widget.kind, item));
                 } else {
-                  bloc.add(SettingsMosqueTextUpdated(widget.kind, item));
+                  bloc.add(MosqueTextUpdated(widget.kind, item));
                 }
                 Navigator.pop(context);
               },

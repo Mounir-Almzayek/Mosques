@@ -48,7 +48,7 @@ class AlertsSection extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: FilledButton.tonalIcon(
                 onPressed: () {
-                  bloc.add(const SettingsAlertsCleared());
+                  bloc.add(const AlertsCleared());
                   bloc.add(const SaveAlertsRequested());
                 },
                 icon: const Icon(Icons.clear_all),
@@ -64,7 +64,7 @@ class AlertsSection extends StatelessWidget {
       context: context,
       builder: (context) => _AlertEditDialog(
         onAdd: (alert) {
-          bloc.add(SettingsAlertAdded(alert));
+          bloc.add(AlertAdded(alert));
           bloc.add(const SaveAlertsRequested());
         },
       ),
@@ -91,7 +91,7 @@ class _AlertCard extends StatelessWidget {
         trailing: IconButton(
           icon: const Icon(Icons.delete_outline, color: Colors.grey),
           onPressed: () {
-            bloc.add(SettingsAlertRemoved(alert.id));
+            bloc.add(AlertRemoved(alert.id));
             bloc.add(const SaveAlertsRequested());
           },
         ),

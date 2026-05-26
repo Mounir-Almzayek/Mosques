@@ -1,4 +1,4 @@
-﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../data/models/mosque/mosque_model.dart';
 import '../../../models/settings_edit_request.dart';
@@ -11,46 +11,23 @@ mixin GeneralSettingsHandler on Bloc<SettingsEvent, SettingsState> {
   get emitDraftUpdated;
   MosqueModel? get currentMosque;
 
-  void onMosqueNameChanged(
-    SettingsMosqueNameChanged event,
+  void onGeneralSettingChanged(
+    GeneralSettingChanged event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
     if (m == null) return;
-    emitDraftUpdated(
-      emit,
-      state.request.copyWith(mosque: m.copyWith(name: event.name)),
-    );
+    final updated = switch (event.field) {
+      GeneralField.name => m.copyWith(name: event.value as String),
+      GeneralField.city => m.copyWith(city: event.value as String),
+      GeneralField.calculationMethod =>
+        m.copyWith(prayerCalculationMethod: event.value as String),
+    };
+    emitDraftUpdated(emit, state.request.copyWith(mosque: updated));
   }
 
-  void onMosqueCityChanged(
-    SettingsMosqueCityChanged event,
-    Emitter<SettingsState> emit,
-  ) {
-    final m = currentMosque;
-    if (m == null) return;
-    emitDraftUpdated(
-      emit,
-      state.request.copyWith(mosque: m.copyWith(city: event.city)),
-    );
-  }
-
-  void onPrayerCalculationMethodChanged(
-    SettingsPrayerCalculationMethodChanged event,
-    Emitter<SettingsState> emit,
-  ) {
-    final m = currentMosque;
-    if (m == null) return;
-    emitDraftUpdated(
-      emit,
-      state.request.copyWith(
-        mosque: m.copyWith(prayerCalculationMethod: event.calculationMethod),
-      ),
-    );
-  }
-
-  void onMosqueLanguageChanged(
-    SettingsMosqueLanguageChanged event,
+  void onLanguageChanged(
+    LanguageChanged event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
@@ -63,8 +40,8 @@ mixin GeneralSettingsHandler on Bloc<SettingsEvent, SettingsState> {
     );
   }
 
-  void onMosqueCoordinatesChanged(
-    SettingsMosqueCoordinatesChanged event,
+  void onCoordinatesChanged(
+    CoordinatesChanged event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
@@ -80,84 +57,25 @@ mixin GeneralSettingsHandler on Bloc<SettingsEvent, SettingsState> {
     );
   }
 
-  // --- Per-Prayer Offsets ---
-
-  void onPrayerOffsetFajrChanged(
-    SettingsPrayerOffsetFajrChanged event,
+  void onPrayerOffsetChanged(
+    PrayerOffsetChanged event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
     if (m == null) return;
-    final o = m.prayerOffsets.copyWith(fajr: event.offset);
-    emitDraftUpdated(
-      emit,
-      state.request.copyWith(mosque: m.copyWith(prayerOffsets: o)),
-    );
-  }
-
-  void onPrayerOffsetSunriseChanged(
-    SettingsPrayerOffsetSunriseChanged event,
-    Emitter<SettingsState> emit,
-  ) {
-    final m = currentMosque;
-    if (m == null) return;
-    final o = m.prayerOffsets.copyWith(sunrise: event.offset);
-    emitDraftUpdated(
-      emit,
-      state.request.copyWith(mosque: m.copyWith(prayerOffsets: o)),
-    );
-  }
-
-  void onPrayerOffsetDhuhrChanged(
-    SettingsPrayerOffsetDhuhrChanged event,
-    Emitter<SettingsState> emit,
-  ) {
-    final m = currentMosque;
-    if (m == null) return;
-    final o = m.prayerOffsets.copyWith(dhuhr: event.offset);
-    emitDraftUpdated(
-      emit,
-      state.request.copyWith(mosque: m.copyWith(prayerOffsets: o)),
-    );
-  }
-
-  void onPrayerOffsetAsrChanged(
-    SettingsPrayerOffsetAsrChanged event,
-    Emitter<SettingsState> emit,
-  ) {
-    final m = currentMosque;
-    if (m == null) return;
-    final o = m.prayerOffsets.copyWith(asr: event.offset);
-    emitDraftUpdated(
-      emit,
-      state.request.copyWith(mosque: m.copyWith(prayerOffsets: o)),
-    );
-  }
-
-  void onPrayerOffsetMaghribChanged(
-    SettingsPrayerOffsetMaghribChanged event,
-    Emitter<SettingsState> emit,
-  ) {
-    final m = currentMosque;
-    if (m == null) return;
-    final o = m.prayerOffsets.copyWith(maghrib: event.offset);
-    emitDraftUpdated(
-      emit,
-      state.request.copyWith(mosque: m.copyWith(prayerOffsets: o)),
-    );
-  }
-
-  void onPrayerOffsetIshaChanged(
-    SettingsPrayerOffsetIshaChanged event,
-    Emitter<SettingsState> emit,
-  ) {
-    final m = currentMosque;
-    if (m == null) return;
-    final o = m.prayerOffsets.copyWith(isha: event.offset);
+    final o = switch (event.prayer) {
+      PrayerOffsetField.fajr => m.prayerOffsets.copyWith(fajr: event.offset),
+      PrayerOffsetField.sunrise =>
+        m.prayerOffsets.copyWith(sunrise: event.offset),
+      PrayerOffsetField.dhuhr => m.prayerOffsets.copyWith(dhuhr: event.offset),
+      PrayerOffsetField.asr => m.prayerOffsets.copyWith(asr: event.offset),
+      PrayerOffsetField.maghrib =>
+        m.prayerOffsets.copyWith(maghrib: event.offset),
+      PrayerOffsetField.isha => m.prayerOffsets.copyWith(isha: event.offset),
+    };
     emitDraftUpdated(
       emit,
       state.request.copyWith(mosque: m.copyWith(prayerOffsets: o)),
     );
   }
 }
-

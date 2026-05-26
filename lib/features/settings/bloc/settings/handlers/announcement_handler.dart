@@ -1,4 +1,4 @@
-﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../data/models/mosque/mosque_model.dart';
 import '../../../models/settings_edit_request.dart';
@@ -12,7 +12,7 @@ mixin AnnouncementHandler on Bloc<SettingsEvent, SettingsState> {
   MosqueModel? get currentMosque;
 
   void onAnnouncementAdded(
-    SettingsAnnouncementAdded event,
+    AnnouncementAdded event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
@@ -26,7 +26,7 @@ mixin AnnouncementHandler on Bloc<SettingsEvent, SettingsState> {
   }
 
   void onAnnouncementUpdated(
-    SettingsAnnouncementUpdated event,
+    AnnouncementUpdated event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
@@ -41,7 +41,7 @@ mixin AnnouncementHandler on Bloc<SettingsEvent, SettingsState> {
   }
 
   void onAnnouncementRemoved(
-    SettingsAnnouncementRemoved event,
+    AnnouncementRemoved event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
@@ -57,7 +57,7 @@ mixin AnnouncementHandler on Bloc<SettingsEvent, SettingsState> {
 
   // --- Instant Alerts ---
 
-  void onAlertAdded(SettingsAlertAdded event, Emitter<SettingsState> emit) {
+  void onAlertAdded(AlertAdded event, Emitter<SettingsState> emit) {
     final m = currentMosque;
     if (m == null) return;
     final list = List<AnnouncementModel>.from(m.activeAlerts)..add(event.alert);
@@ -67,7 +67,7 @@ mixin AnnouncementHandler on Bloc<SettingsEvent, SettingsState> {
     );
   }
 
-  void onAlertRemoved(SettingsAlertRemoved event, Emitter<SettingsState> emit) {
+  void onAlertRemoved(AlertRemoved event, Emitter<SettingsState> emit) {
     final m = currentMosque;
     if (m == null) return;
     final list = m.activeAlerts.where((a) => a.id != event.alertId).toList();
@@ -78,7 +78,7 @@ mixin AnnouncementHandler on Bloc<SettingsEvent, SettingsState> {
   }
 
   void onAlertsCleared(
-    SettingsAlertsCleared event,
+    AlertsCleared event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
@@ -89,4 +89,3 @@ mixin AnnouncementHandler on Bloc<SettingsEvent, SettingsState> {
     );
   }
 }
-
