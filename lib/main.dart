@@ -13,7 +13,7 @@ import 'core/services/firebase_service.dart';
 import 'core/styles/app_theme.dart' show AppTheme;
 import 'data/repositories/interfaces/auth_repository_interface.dart';
 import 'data/repositories/interfaces/mosque_repository_interface.dart';
-import 'features/language/bloc/language/language_bloc.dart';
+import 'features/language/language.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

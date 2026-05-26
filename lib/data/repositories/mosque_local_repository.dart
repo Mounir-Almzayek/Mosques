@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../core/constants/firestore_schema.dart';
 import '../../core/services/hive_service.dart';
-import '../../features/auth/repository/user_active_mosque_repository.dart';
+import '../../features/auth/auth.dart' show UserActiveMosqueRepository;
 import '../models/mosque/mosque_model.dart';
 
 /// Local cache for the active mosque data in Hive (Timestamp-free).

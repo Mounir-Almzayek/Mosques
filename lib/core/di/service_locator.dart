@@ -9,8 +9,7 @@ import '../../data/repositories/interfaces/mosque_repository_interface.dart';
 import '../../data/repositories/interfaces/platform_announcements_repository_interface.dart';
 import '../../data/repositories/mosque_repository.dart';
 import '../../data/repositories/platform_announcements_repository.dart';
-import '../../features/auth/repository/auth_repository.dart';
-import '../../features/auth/repository/user_active_mosque_repository.dart';
+import '../../features/auth/auth.dart' show AuthRepository, UserActiveMosqueRepository;
 
 final sl = GetIt.instance;
 
