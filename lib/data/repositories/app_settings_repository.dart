@@ -1,15 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../core/constants/firestore_schema.dart';
 import '../models/app/app_settings_model.dart';
 import 'app_settings_local_repository.dart';
+import 'interfaces/app_settings_repository_interface.dart';
 
-class AppSettingsRepository {
-  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+class AppSettingsRepository implements IAppSettingsRepository {
+  final FirebaseFirestore _firestore;
 
-  /// جلب الإعدادات العامة من كولكشن منفصلة 'app_settings'.
-  /// نعيد الكاش المحلي في حال فشل الاتصال.
-  static Future<AppSettingsModel?> getAppSettings() async {
+  AppSettingsRepository({required FirebaseFirestore firestore})
+      : _firestore = firestore;
+
+  @override
+  Future<AppSettingsModel?> getAppSettings() async {
     try {
-      final doc = await _firestore.collection('app_settings').doc('global').get();
+      final doc = await _firestore
+          .collection(FirestoreSchema.appSettingsCollection)
+          .doc(FirestoreSchema.globalDocId)
+          .get();
       if (!doc.exists || doc.data() == null) {
         return AppSettingsLocalRepository.getCached();
       }
@@ -21,11 +29,11 @@ class AppSettingsRepository {
     }
   }
 
-  /// بث مباشر للإعدادات العامة لمراقبة التحديثات فورياً.
-  static Stream<AppSettingsModel?> get streamAppSettings {
+  @override
+  Stream<AppSettingsModel?> get streamAppSettings {
     return _firestore
-        .collection('app_settings')
-        .doc('global')
+        .collection(FirestoreSchema.appSettingsCollection)
+        .doc(FirestoreSchema.globalDocId)
         .snapshots()
         .asyncMap((doc) async {
       if (!doc.exists || doc.data() == null) return null;

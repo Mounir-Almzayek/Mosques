@@ -1,15 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../core/constants/firestore_schema.dart';
 import '../../core/services/hive_service.dart';
-import '../../features/auth/repository/auth_repository.dart';
+import '../../features/auth/repository/user_active_mosque_repository.dart';
 import '../models/mosque/mosque_model.dart';
 
-/// تخزين آخر نسخة معروفة من بيانات المسجد النشط في Hive (بدون Timestamp).
-/// يعمل مع [UserActiveMosqueRepository] و [AsyncRunner.offlineTask].
+/// Local cache for the active mosque data in Hive (Timestamp-free).
+/// Works with [UserActiveMosqueRepository] and offline fallback.
 class MosqueLocalRepository {
   MosqueLocalRepository._();
 
-  static const String _cacheKey = 'active_mosque_cache_v1';
+  static const String _cacheKey = FirestoreSchema.activeMosqueCacheKey;
 
   static dynamic _sanitizeForHive(dynamic value) {
     if (value is Timestamp) {
@@ -37,9 +38,9 @@ class MosqueLocalRepository {
     await HiveService.saveData(_cacheKey, storable);
   }
 
-  /// يعيد النسخة المحفوظة فقط إذا طابقت [AuthRepository.getActiveMosqueId].
+  /// Returns the cached mosque only if it matches the locally-stored active mosque ID.
   static Future<MosqueModel?> getCachedForActiveMosque() async {
-    final activeId = AuthRepository.getActiveMosqueId();
+    final activeId = UserActiveMosqueRepository.getCachedActiveMosqueId();
     if (activeId == null || activeId.isEmpty) return null;
 
     final raw = await HiveService.getData(_cacheKey);

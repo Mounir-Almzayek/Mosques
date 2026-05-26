@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../core/constants/firestore_schema.dart';
 import '../../core/services/hive_service.dart';
 import '../models/mosque/announcement_model.dart';
 
 class PlatformAnnouncementsLocalRepository {
   PlatformAnnouncementsLocalRepository._();
 
-  static const String _cacheKey = 'platform_announcements_cache_v1';
+  static const String _cacheKey = FirestoreSchema.platformAnnouncementsCacheKey;
 
   static dynamic _sanitizeForHive(dynamic value) {
     if (value is Timestamp) {

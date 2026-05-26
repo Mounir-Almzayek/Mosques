@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../core/constants/firestore_schema.dart';
 import '../../core/services/hive_service.dart';
 import '../models/app/app_settings_model.dart';
 
 class AppSettingsLocalRepository {
   AppSettingsLocalRepository._();
 
-  static const String _cacheKey = 'app_settings_cache_v1';
+  static const String _cacheKey = FirestoreSchema.appSettingsCacheKey;
 
   static dynamic _sanitizeForHive(dynamic value) {
     if (value is Timestamp) {
