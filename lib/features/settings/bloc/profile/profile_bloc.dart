@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../auth/repository/auth_repository.dart';
+import '../../../../data/repositories/interfaces/auth_repository_interface.dart';
 import 'profile_event.dart';
 import 'profile_state.dart';
 
@@ -8,7 +8,11 @@ export 'profile_event.dart';
 export 'profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
-  ProfileBloc() : super(const ProfileState()) {
+  final IAuthRepository _authRepo;
+
+  ProfileBloc({required IAuthRepository authRepository})
+      : _authRepo = authRepository,
+        super(const ProfileState()) {
     on<LoadProfileRequested>(_onLoadProfile);
     on<UpdatePasswordRequested>(_onUpdatePassword);
     on<UpdatePhoneRequested>(_onUpdatePhone);
@@ -19,7 +23,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     Emitter<ProfileState> emit,
   ) async {
     try {
-      final phone = await AuthRepository.getPhone();
+      final phone = await _authRepo.getPhone();
       if (phone != null) {
         emit(state.copyWith(phone: phone));
       }
@@ -36,7 +40,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         throw 'Password is too short. Minimum 6 characters.';
       }
 
-      await AuthRepository.updatePassword(event.newPassword);
+      await _authRepo.updatePassword(event.newPassword);
       emit(state.copyWith(status: ProfileStatus.success));
     } catch (e) {
       emit(state.copyWith(status: ProfileStatus.failure, error: e.toString()));
@@ -52,7 +56,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       if (event.newPhone.isEmpty) {
         throw 'Phone number cannot be empty.';
       }
-      await AuthRepository.updatePhone(event.newPhone);
+      await _authRepo.updatePhone(event.newPhone);
       emit(state.copyWith(status: ProfileStatus.success, phone: event.newPhone));
     } catch (e) {
       emit(state.copyWith(status: ProfileStatus.failure, error: e.toString()));

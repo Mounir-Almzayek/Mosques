@@ -1,12 +1,16 @@
 import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
-import '../../repository/auth_repository.dart';
+import '../../../../data/repositories/interfaces/auth_repository_interface.dart';
 import 'registration_event.dart';
 import '../../presentation/registration_state.dart';
 
 class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
-  RegistrationBloc() : super(const RegistrationState()) {
+  final IAuthRepository _authRepo;
+
+  RegistrationBloc({required IAuthRepository authRepository})
+      : _authRepo = authRepository,
+        super(const RegistrationState()) {
     on<RegistrationTypeChanged>(_onTypeChanged);
     on<RegistrationMosqueIdChanged>(
       _onMosqueIdChanged,
@@ -62,7 +66,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     emit(state.copyWith(status: RegistrationStatus.loading));
 
     try {
-      await AuthRepository.register(
+      await _authRepo.register(
         email: event.email,
         password: event.password,
         phone: event.phone,

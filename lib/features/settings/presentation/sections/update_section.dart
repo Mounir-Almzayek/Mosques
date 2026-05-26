@@ -4,7 +4,8 @@ import '../../../../core/enums/update/update_status.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/widgets/feedback/unified_snackbar.dart';
 import '../../../../data/models/app/app_settings_model.dart';
-import '../../../../data/repositories/app_settings_repository.dart';
+import '../../../../core/di/service_locator.dart';
+import '../../../../data/repositories/interfaces/app_settings_repository_interface.dart';
 import '../../../../core/utils/version_helper.dart';
 import '../../bloc/update/update_bloc.dart';
 
@@ -38,7 +39,7 @@ class _UpdateSectionState extends State<UpdateSection> {
     return BlocProvider(
       create: (context) => UpdateBloc(),
       child: StreamBuilder<AppSettingsModel?>(
-        stream: AppSettingsRepository.streamAppSettings,
+        stream: sl<IAppSettingsRepository>().streamAppSettings,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator(color: primary));

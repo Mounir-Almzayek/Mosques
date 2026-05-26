@@ -12,6 +12,7 @@ import 'core/di/service_locator.dart';
 import 'core/services/firebase_service.dart';
 import 'core/styles/app_theme.dart' show AppTheme;
 import 'data/repositories/interfaces/auth_repository_interface.dart';
+import 'data/repositories/interfaces/mosque_repository_interface.dart';
 import 'features/language/bloc/language/language_bloc.dart';
 
 void main() async {
@@ -94,7 +95,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => LanguageBloc()..add(const LoadLanguage())),
+        BlocProvider(create: (_) => LanguageBloc(mosqueRepository: sl<IMosqueRepository>())..add(const LoadLanguage())),
       ],
       child: _KeepScreenOnLifecycle(
         child: BlocBuilder<LanguageBloc, LanguageState>(

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../../core/di/service_locator.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/widgets/feedback/unified_snackbar.dart';
+import '../../../../data/repositories/interfaces/auth_repository_interface.dart';
 import '../../bloc/profile/profile_bloc.dart';
 import '../widgets/profile/profile_widgets.dart';
 
@@ -28,7 +30,7 @@ class _ProfileSectionState extends State<ProfileSection> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ProfileBloc()..add(LoadProfileRequested()),
+      create: (_) => ProfileBloc(authRepository: sl<IAuthRepository>())..add(LoadProfileRequested()),
       child: BlocConsumer<ProfileBloc, ProfileState>(
         listener: (context, state) {
           final s = S.of(context);

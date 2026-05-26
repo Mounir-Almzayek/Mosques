@@ -7,7 +7,8 @@ import '../../../../../core/l10n/generated/l10n.dart';
 import '../../../../../core/styles/app_colors.dart';
 import '../../../../../core/utils/version_helper.dart';
 import '../../../../../core/widgets/media/media_widgets.dart';
-import '../../../../../data/repositories/app_settings_repository.dart';
+import '../../../../../core/di/service_locator.dart';
+import '../../../../../data/repositories/interfaces/app_settings_repository_interface.dart';
 
 /// Side navigation for settings: brand header + section shortcuts + sign out.
 class SettingsDrawer extends StatelessWidget {
@@ -278,7 +279,7 @@ class SettingsDrawer extends StatelessWidget {
               ),
               onTap: () async {
                 final appSettings =
-                    await AppSettingsRepository.getAppSettings();
+                    await sl<IAppSettingsRepository>().getAppSettings();
                 final phone = appSettings?.supportPhone ?? '';
                 if (phone.isNotEmpty) {
                   final Uri whatsappUrl = Uri.parse("https://wa.me/$phone");

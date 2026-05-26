@@ -2,7 +2,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../data/models/mosque/mosque_model.dart';
-import '../../../../data/repositories/mosque_repository.dart';
+import '../../../../data/repositories/interfaces/mosque_repository_interface.dart';
 import '../../models/settings_edit_request.dart';
 import 'handlers/announcement_handler.dart';
 import 'handlers/design_settings_handler.dart';
@@ -22,9 +22,12 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
         IqamaSettingsHandler,
         MosqueTextHandler,
         AnnouncementHandler {
+  final IMosqueRepository _mosqueRepo;
   StreamSubscription? _sub;
 
-  SettingsBloc() : super(const SettingsState()) {
+  SettingsBloc({required IMosqueRepository mosqueRepository})
+      : _mosqueRepo = mosqueRepository,
+        super(const SettingsState()) {
     on<LoadSettings>(_onLoad);
 
     // General
@@ -122,7 +125,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
     _sub?.cancel();
     emit(state.copyWith(isLoading: true));
     await emit.forEach(
-      MosqueRepository.streamActiveMosque,
+      _mosqueRepo.streamActiveMosque,
       onData: (mosque) => state.copyWith(
         isLoading: false,
         request: SettingsEditRequest(mosque: mosque),
@@ -143,7 +146,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
   ) async {
     final m = state.request.mosque;
     if (m == null) return;
-    await _save(emit, () => MosqueRepository.updateMosque(m));
+    await _save(emit, () => _mosqueRepo.updateMosque(m));
   }
 
   Future<void> _onSaveDesign(
@@ -152,7 +155,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
   ) async {
     final m = state.request.mosque;
     if (m == null) return;
-    await _save(emit, () => MosqueRepository.updateDesignSettings(m));
+    await _save(emit, () => _mosqueRepo.updateDesignSettings(m));
   }
 
   Future<void> _onSaveIqama(
@@ -161,7 +164,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
   ) async {
     final m = state.request.mosque;
     if (m == null) return;
-    await _save(emit, () => MosqueRepository.updateIqamaSettings(m));
+    await _save(emit, () => _mosqueRepo.updateIqamaSettings(m));
   }
 
   Future<void> _onSaveTextList(
@@ -172,7 +175,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
     if (m == null) return;
     await _save(
       emit,
-      () => MosqueRepository.updateMosqueTextList(m, event.kind),
+      () => _mosqueRepo.updateMosqueTextList(m, event.kind),
     );
   }
 
@@ -182,7 +185,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
   ) async {
     final m = state.request.mosque;
     if (m == null) return;
-    await _save(emit, () => MosqueRepository.updateAnnouncements(m));
+    await _save(emit, () => _mosqueRepo.updateAnnouncements(m));
   }
 
   Future<void> _onSaveAlerts(
@@ -191,7 +194,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
   ) async {
     final m = state.request.mosque;
     if (m == null) return;
-    await _save(emit, () => MosqueRepository.updateActiveAlerts(m));
+    await _save(emit, () => _mosqueRepo.updateActiveAlerts(m));
   }
 
   Future<void> _onSavePhotoStudio(
@@ -200,7 +203,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
   ) async {
     final m = state.request.mosque;
     if (m == null) return;
-    await _save(emit, () => MosqueRepository.updateMosque(m));
+    await _save(emit, () => _mosqueRepo.updateMosque(m));
   }
 
   Future<void> _save(

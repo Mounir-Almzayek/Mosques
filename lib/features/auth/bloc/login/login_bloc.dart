@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/services/firebase_service.dart';
 import '../../../../core/utils/async_runner.dart';
 import '../../../../core/utils/error_helper.dart';
+import '../../../../data/repositories/interfaces/auth_repository_interface.dart';
 import '../../models/login_request.dart';
 import '../../models/login_success_response.dart';
-import '../../repository/auth_repository.dart';
 import 'login_event.dart';
 import 'login_state.dart';
 
@@ -14,9 +14,12 @@ export 'login_event.dart';
 export 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
+  final IAuthRepository _authRepo;
   final AsyncRunner<UserCredential> loginRunner = AsyncRunner();
 
-  LoginBloc() : super(LoginInitial(request: LoginRequest())) {
+  LoginBloc({required IAuthRepository authRepository})
+      : _authRepo = authRepository,
+        super(LoginInitial(request: LoginRequest())) {
     on<UpdateEmail>(_onUpdateEmail);
     on<UpdatePassword>(_onUpdatePassword);
     on<UpdateDeviceToken>(_onUpdateDeviceToken);
@@ -54,7 +57,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
     await loginRunner.run(
       onlineTask: (_) async {
-        return AuthRepository.login(
+        return _authRepo.login(
           updatedRequest.email,
           updatedRequest.password,
         );

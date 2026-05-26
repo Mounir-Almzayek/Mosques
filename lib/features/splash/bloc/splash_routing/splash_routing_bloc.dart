@@ -1,14 +1,18 @@
 import 'dart:ui' as ui;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/enums/splash/splash_destination.dart';
-import '../../../auth/repository/auth_repository.dart';
+import '../../../../data/repositories/interfaces/auth_repository_interface.dart';
 import '../../../auth/repository/user_active_mosque_repository.dart';
 
 part 'splash_routing_event.dart';
 part 'splash_routing_state.dart';
 
 class SplashRoutingBloc extends Bloc<SplashRoutingEvent, SplashRoutingState> {
-  SplashRoutingBloc() : super(const SplashInitial()) {
+  final IAuthRepository _authRepo;
+
+  SplashRoutingBloc({required IAuthRepository authRepository})
+      : _authRepo = authRepository,
+        super(const SplashInitial()) {
     on<SplashCheckStatus>(_checkStatus);
   }
 
@@ -21,7 +25,7 @@ class SplashRoutingBloc extends Bloc<SplashRoutingEvent, SplashRoutingState> {
     // Delay to show splash nicely
     await Future.delayed(const Duration(seconds: 2));
 
-    final currentUser = AuthRepository.currentUser;
+    final currentUser = _authRepo.currentUser;
 
     if (currentUser == null) {
       emit(const SplashLoaded(destination: SplashDestination.login));
@@ -32,7 +36,7 @@ class SplashRoutingBloc extends Bloc<SplashRoutingEvent, SplashRoutingState> {
     await UserActiveMosqueRepository.syncBestEffort(currentUser.uid);
 
     // Check local override using the new AppMode enum
-    final savedMode = AuthRepository.getAppModeOverride();
+    final savedMode = _authRepo.getAppModeOverride();
     bool isDisplayMode;
 
     if (savedMode != null) {

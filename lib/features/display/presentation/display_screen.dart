@@ -13,7 +13,8 @@ import '../../../core/utils/prayer_times_helper.dart';
 import '../../../core/widgets/media/media_widgets.dart';
 import '../../../data/models/mosque/mosque_model.dart';
 import '../../../core/enums/app_mode.dart';
-import '../../auth/repository/auth_repository.dart';
+import '../../../core/di/service_locator.dart';
+import '../../../data/repositories/interfaces/auth_repository_interface.dart';
 import '../bloc/display_bloc.dart';
 import '../controller/display_layer_controller.dart';
 import 'widgets/background/background_widgets.dart';
@@ -81,7 +82,7 @@ class _DisplayScreenState extends State<DisplayScreen> {
   }
 
   void _backToSettings(BuildContext context) async {
-    await AuthRepository.setAppModeOverride(AppMode.mobileSettings);
+    await sl<IAuthRepository>().setAppModeOverride(AppMode.mobileSettings);
     if (!context.mounted) return;
     context.go(Routes.settingsPath);
   }

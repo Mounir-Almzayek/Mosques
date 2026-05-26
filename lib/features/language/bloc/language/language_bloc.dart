@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/enums/app_language.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
-import '../../../../data/repositories/mosque_repository.dart';
+import '../../../../data/repositories/interfaces/mosque_repository_interface.dart';
 import '../../../splash/repositories/settings_local_repository.dart';
 import '../../../auth/repository/user_active_mosque_repository.dart';
 import 'dart:async';
@@ -11,12 +11,14 @@ part 'language_event.dart';
 part 'language_state.dart';
 
 class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
+  final IMosqueRepository _mosqueRepo;
   late final AppLanguage _deviceLanguage;
   StreamSubscription<User?>? _authSubscription;
   StreamSubscription<MosqueModel?>? _mosqueSubscription;
 
-  LanguageBloc()
-    : super(
+  LanguageBloc({required IMosqueRepository mosqueRepository})
+    : _mosqueRepo = mosqueRepository,
+      super(
         LanguageInitial(
           language: AppLanguage.fromCode(
               SettingsLocalRepository.loadDeviceLanguage().languageCode,
@@ -62,7 +64,7 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
 
       // Apply remote language once immediately (helps initial navigation).
       try {
-        final firstMosque = await MosqueRepository.getActiveMosque();
+        final firstMosque = await _mosqueRepo.getActiveMosque();
         final remoteCode = firstMosque?.appLanguageCode;
         if (remoteCode != null && remoteCode.isNotEmpty) {
           final newLang = AppLanguage.fromCode(remoteCode);
@@ -74,7 +76,7 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
 
       // Restart mosque subscription (depends on `active_mosque_id`).
       await _mosqueSubscription?.cancel();
-      _mosqueSubscription = MosqueRepository.streamActiveMosque.listen(
+      _mosqueSubscription = _mosqueRepo.streamActiveMosque.listen(
         (mosque) {
           if (mosque == null) return;
           final remoteCode = mosque.appLanguageCode;
@@ -101,7 +103,7 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
 
     // Persist to Firebase (active mosque document).
     try {
-      await MosqueRepository.updateLanguageCode(event.language);
+      await _mosqueRepo.updateLanguageCode(event.language);
     } catch (_) {
       // If there is no active mosque ref (e.g. edge timing), keep local change.
     }

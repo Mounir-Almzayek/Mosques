@@ -11,7 +11,8 @@ import '../../../core/widgets/feedback/unified_snackbar.dart';
 import '../../../core/widgets/forms/custom_elevated_button.dart';
 import '../../../core/widgets/forms/custom_text_field.dart';
 import '../../../core/l10n/generated/l10n.dart';
-import '../../../data/repositories/app_settings_repository.dart';
+import '../../../core/di/service_locator.dart';
+import '../../../data/repositories/interfaces/app_settings_repository_interface.dart';
 import '../bloc/login/login_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -266,7 +267,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             SizedBox(height: 24.h),
                             FutureBuilder(
-                              future: AppSettingsRepository.getAppSettings(),
+                              future: sl<IAppSettingsRepository>().getAppSettings(),
                               builder: (context, snapshot) {
                                 final canOpenRegistration =
                                     snapshot.data?.allowRegistration ?? true;

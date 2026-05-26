@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
+import '../../../../core/di/service_locator.dart';
 import '../../../../data/models/app/app_settings_model.dart';
-import '../../../../data/repositories/app_settings_repository.dart';
+import '../../../../data/repositories/interfaces/app_settings_repository_interface.dart';
 import '../widgets/about/about_widgets.dart';
 
 class AboutSection extends StatelessWidget {
@@ -9,7 +10,7 @@ class AboutSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<AppSettingsModel?>(
-      stream: AppSettingsRepository.streamAppSettings,
+      stream: sl<IAppSettingsRepository>().streamAppSettings,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());

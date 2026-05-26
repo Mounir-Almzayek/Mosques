@@ -6,10 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/models/app/app_settings_model.dart';
 import '../../../data/models/mosque/announcement_model.dart';
 import '../../../data/models/mosque/mosque_model.dart';
-import '../../../data/repositories/app_settings_repository.dart';
-import '../../../data/repositories/mosque_local_repository.dart';
-import '../../../data/repositories/mosque_repository.dart';
-import '../../../data/repositories/platform_announcements_repository.dart';
+import '../../../data/repositories/interfaces/app_settings_repository_interface.dart';
+import '../../../data/repositories/interfaces/mosque_repository_interface.dart';
+import '../../../data/repositories/interfaces/platform_announcements_repository_interface.dart';
 import '../../../core/utils/version_helper.dart';
 import 'display_event.dart';
 import 'display_state.dart';
@@ -19,6 +18,10 @@ export 'display_state.dart';
 
 /// Manages real-time mosque data and platform announcements for the display screen.
 class DisplayBloc extends Bloc<DisplayEvent, DisplayState> {
+  final IMosqueRepository _mosqueRepo;
+  final IPlatformAnnouncementsRepository _platformRepo;
+  final IAppSettingsRepository _appSettingsRepo;
+
   StreamSubscription<MosqueModel?>? _mosqueSubscription;
   StreamSubscription<List<AnnouncementModel>>? _platformSubscription;
   StreamSubscription<AppSettingsModel?>? _appSettingsSubscription;
@@ -28,7 +31,14 @@ class DisplayBloc extends Bloc<DisplayEvent, DisplayState> {
   AppSettingsModel? _appSettings;
   String? _currentVersion;
 
-  DisplayBloc() : super(DisplayInitial()) {
+  DisplayBloc({
+    required IMosqueRepository mosqueRepository,
+    required IPlatformAnnouncementsRepository platformAnnouncementsRepository,
+    required IAppSettingsRepository appSettingsRepository,
+  })  : _mosqueRepo = mosqueRepository,
+        _platformRepo = platformAnnouncementsRepository,
+        _appSettingsRepo = appSettingsRepository,
+        super(DisplayInitial()) {
     on<StartDisplaySubscription>(_onStartSubscription);
     on<MosqueUpdated>(_onMosqueUpdated);
     on<PlatformAnnouncementsUpdated>(_onPlatformAnnouncementsUpdated);
@@ -60,23 +70,23 @@ class DisplayBloc extends Bloc<DisplayEvent, DisplayState> {
     VersionHelper.getCurrentVersion().then((v) => add(CurrentVersionUpdated(v)));
 
     // مراقبة الإعدادات العامة والتحديثات
-    _appSettingsSubscription = AppSettingsRepository.streamAppSettings.listen(
+    _appSettingsSubscription = _appSettingsRepo.streamAppSettings.listen(
       (s) => add(AppSettingsUpdated(s)),
     );
 
     // Show cached data immediately while waiting for network.
-    final cached = await MosqueLocalRepository.getCachedForActiveMosque();
+    final cached = await _mosqueRepo.getActiveMosque();
     if (cached != null) {
       add(MosqueUpdated(cached));
     }
 
     _platformSubscription =
-        PlatformAnnouncementsRepository.watchActiveForDisplay().listen(
+        _platformRepo.watchActiveForDisplay().listen(
       (list) => add(PlatformAnnouncementsUpdated(list)),
       onError: (error, stackTrace) {},
     );
 
-    _mosqueSubscription = MosqueRepository.streamActiveMosque.listen(
+    _mosqueSubscription = _mosqueRepo.streamActiveMosque.listen(
       (mosque) {
         if (mosque != null) {
           add(MosqueUpdated(mosque));
@@ -103,16 +113,16 @@ class DisplayBloc extends Bloc<DisplayEvent, DisplayState> {
       final connectivity = await Connectivity().checkConnectivity();
       if (connectivity.contains(ConnectivityResult.none)) return;
 
-      final mosque = await MosqueRepository.fetchActiveMosqueFromServer();
+      final mosque = await _mosqueRepo.fetchActiveMosqueFromServer();
       if (mosque != null && !isClosed) {
         add(MosqueUpdated(mosque));
       }
       final platform =
-          await PlatformAnnouncementsRepository.fetchActiveForDisplayFromServer();
+          await _platformRepo.fetchActiveForDisplayFromServer();
       if (!isClosed) {
         add(PlatformAnnouncementsUpdated(platform));
       }
-      final global = await AppSettingsRepository.getAppSettings();
+      final global = await _appSettingsRepo.getAppSettings();
       if (!isClosed) {
         add(AppSettingsUpdated(global));
       }

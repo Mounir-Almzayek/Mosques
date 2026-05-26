@@ -5,7 +5,8 @@ import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/feedback/unified_snackbar.dart';
 import '../../../data/models/app/app_settings_model.dart';
-import '../../../data/repositories/app_settings_repository.dart';
+import '../../../core/di/service_locator.dart';
+import '../../../data/repositories/interfaces/app_settings_repository_interface.dart';
 import '../bloc/registration/registration_bloc.dart';
 import '../bloc/registration/registration_event.dart';
 import 'registration_state.dart';
@@ -51,7 +52,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     final theme = Theme.of(context);
 
     return FutureBuilder<AppSettingsModel?>(
-      future: AppSettingsRepository.getAppSettings(),
+      future: sl<IAppSettingsRepository>().getAppSettings(),
       builder: (context, snapshot) {
         final canOpenRegistration = snapshot.data?.allowRegistration ?? true;
 
@@ -232,7 +233,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   Widget _buildExistingMosqueMessage(S s) {
     return FutureBuilder<AppSettingsModel?>(
-      future: AppSettingsRepository.getAppSettings(),
+      future: sl<IAppSettingsRepository>().getAppSettings(),
       builder: (context, snapshot) {
         final phone = snapshot.data?.supportPhone ?? '...';
         return Container(

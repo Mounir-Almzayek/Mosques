@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/enums/app_mode.dart';
-import '../../auth/repository/auth_repository.dart';
+import '../../../core/di/service_locator.dart';
+import '../../../data/repositories/interfaces/auth_repository_interface.dart';
+import '../../../data/repositories/interfaces/mosque_repository_interface.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/routes/app_routes.dart';
@@ -26,7 +28,7 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SettingsBloc()..add(const LoadSettings()),
+      create: (_) => SettingsBloc(mosqueRepository: sl<IMosqueRepository>())..add(const LoadSettings()),
       child: const SettingsScreen(),
     );
   }
@@ -43,7 +45,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   int _sectionIndex = 0;
 
   void _signOut() async {
-    await AuthRepository.logout();
+    await sl<IAuthRepository>().logout();
     if (mounted) {
       context.go(Routes.splashPath);
     }
@@ -109,7 +111,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             iconSize: 28,
             onSelected: (value) async {
               if (value == 'smart_screen') {
-                await AuthRepository.setAppModeOverride(AppMode.deviceDisplay);
+                await sl<IAuthRepository>().setAppModeOverride(AppMode.deviceDisplay);
                 if (!context.mounted) return;
                 context.go(Routes.displayPath);
               }
