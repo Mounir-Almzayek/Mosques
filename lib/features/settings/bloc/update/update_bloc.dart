@@ -1,10 +1,11 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_filex/open_filex.dart';
 
 import '../../../../core/enums/update/update_status.dart';
-import '../../../../data/repositories/app_update_repository.dart';
 
 part 'update_event.dart';
 part 'update_state.dart';
@@ -29,19 +30,30 @@ class UpdateBloc extends Bloc<UpdateEvent, UpdateState> {
     );
     try {
       final tempDir = await getTemporaryDirectory();
-      // استخراج اسم الملف من الرابط أو استخدام اسم ثابت
       final fileName = event.url.split('/').last.split('?').first;
       final savePath = '${tempDir.path}/$fileName';
 
-      await AppUpdateRepository.downloadUpdate(
-        url: event.url,
-        savePath: savePath,
-        onProgress: (received, total) {
-          if (total != -1) {
-            emit(state.copyWith(progress: received / total));
+      final client = HttpClient();
+      try {
+        final request = await client.getUrl(Uri.parse(event.url));
+        final response = await request.close();
+
+        final contentLength = response.contentLength;
+        int received = 0;
+
+        final file = File(savePath);
+        final sink = file.openWrite();
+        await for (final chunk in response) {
+          sink.add(chunk);
+          received += chunk.length;
+          if (contentLength > 0) {
+            emit(state.copyWith(progress: received / contentLength));
           }
-        },
-      );
+        }
+        await sink.close();
+      } finally {
+        client.close();
+      }
 
       emit(state.copyWith(status: UpdateStatus.success, localPath: savePath));
       add(InstallUpdateRequested());

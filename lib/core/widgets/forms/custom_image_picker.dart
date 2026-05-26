@@ -8,7 +8,6 @@ import '../../l10n/generated/l10n.dart';
 import '../../styles/app_colors.dart';
 import '../../utils/color_extensions.dart';
 import '../../utils/responsive_layout.dart';
-import '../../../data/network/api_config.dart';
 
 class CustomImagePicker extends StatelessWidget {
   final String title;
@@ -103,7 +102,7 @@ class CustomImagePicker extends StatelessWidget {
                   height: double.infinity,
                 )
               : Image.network(
-                  APIConfig.getFullImageUrl(existingImageUrl!),
+                  existingImageUrl!,
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: double.infinity,

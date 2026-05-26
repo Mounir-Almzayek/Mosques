@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:async/async.dart';
-import 'package:dio/dio.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 import '../enums/async/multiple_calls_behavior.dart';
@@ -9,7 +8,6 @@ export '../enums/async/multiple_calls_behavior.dart';
 
 class AsyncRunner<T> {
   CancelableOperation<T>? _currentOperation;
-  CancelToken? dioCancelToken;
   T? _currentValue;
 
   final MultipleCallsBehavior multipleCallsBehavior;
@@ -49,7 +47,6 @@ class AsyncRunner<T> {
       }
     }
 
-    dioCancelToken = CancelToken();
     onStart?.call();
 
     int attempt = 0;
@@ -117,14 +114,12 @@ class AsyncRunner<T> {
   void cancel({void Function()? onCancel}) {
     onCancel?.call();
     _currentOperation?.cancel();
-    dioCancelToken?.cancel("Cancelled by AsyncRunner");
     _currentOperation = null;
   }
 
   void reset() {
     _currentValue = null;
     _currentOperation = null;
-    dioCancelToken = null;
   }
 
   static Future<bool> _checkNetworkConnectivity() async {

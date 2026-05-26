@@ -63,7 +63,6 @@ dependencies:
   hijri: ^3.0.0
   marquee: ^2.3.0
   flutter_svg: ^2.2.3
-  dio: ^5.9.2
   async: ^2.13.0
   rxdart: ^0.28.0
   package_info_plus: ^9.0.0

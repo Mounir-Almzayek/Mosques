@@ -11,7 +11,6 @@ export 'display/prayer_display_slot.dart';
 export 'display/ticker_kind.dart';
 export 'feedback/snackbar_type.dart';
 export 'loading_type.dart';
-export 'network/api_request_enums.dart';
 export 'profile/profile_status.dart';
 export 'registration_type.dart';
 export 'settings/mosque_text_list_kind.dart';
