@@ -52,3 +52,8 @@ firebase-debug.log
 .env
 assets/.env
 
+mosques-250bd-firebase-adminsdk-fbsvc-7ce21c0e52.json
+upload.js
+node_modules/
+package-lock.json
+package.json

@@ -170,26 +170,45 @@ class PrayerTimesHelper {
     return combined;
   }
 
-  /// Determines the current UI display phase (Adhan, Iqama, or countdown to Next).
-  PrayerDisplayPhase getPrayerDisplayPhase(DateTime now) {
+  /// Determines the current UI display phase (PreAdhan, AdhanMoment, Iqama, Grace, or NextAdhan).
+  PrayerDisplayPhase getPrayerDisplayPhase(DateTime now, {int preAdhanMinutes = 5}) {
     final timeline = _buildContinuousTimeline(now);
 
-    // 1. Check if we are currently in an Iqama window or Grace period.
+    // 1. Check if we are currently in an Iqama window, Adhan moment, or Grace period.
     for (final item in timeline) {
       if (!item.isIqamaApplicable) {
-        // For Sunrise or prayers with no iqama, we stay focused for a "Post-Adhan" grace period.
         final postAdhanGrace = item.adhanTime.add(const Duration(minutes: 10));
         if ((now.isAfter(item.adhanTime) ||
                 now.isAtSameMomentAs(item.adhanTime)) &&
             now.isBefore(postAdhanGrace)) {
+          // Check adhan moment (exact minute)
+          if (now.hour == item.adhanTime.hour &&
+              now.minute == item.adhanTime.minute &&
+              now.day == item.adhanTime.day) {
+            return PrayerDisplayPhase(
+              kind: PrayerDisplayPhaseKind.adhanMoment,
+              prayerNameKey: item.prayerName,
+              focusTime: item.adhanTime.add(const Duration(minutes: 1)),
+            );
+          }
           return PrayerDisplayPhase(
-            kind: PrayerDisplayPhaseKind
-                .iqama, // Using iqama kind to indicate high-focus
+            kind: PrayerDisplayPhaseKind.iqama,
             prayerNameKey: item.prayerName,
             focusTime: postAdhanGrace,
           );
         }
         continue;
+      }
+
+      // Check Adhan Moment (exact minute of adhan)
+      if (now.hour == item.adhanTime.hour &&
+          now.minute == item.adhanTime.minute &&
+          now.day == item.adhanTime.day) {
+        return PrayerDisplayPhase(
+          kind: PrayerDisplayPhaseKind.adhanMoment,
+          prayerNameKey: item.prayerName,
+          focusTime: item.adhanTime.add(const Duration(minutes: 1)),
+        );
       }
 
       // Check Iqama countdown
@@ -216,7 +235,26 @@ class PrayerTimesHelper {
       }
     }
 
-    // 2. Default: Find the next upcoming event (Adhan).
+    // 2. Check Pre-Adhan phase
+    if (preAdhanMinutes > 0) {
+      for (final item in timeline) {
+        if (now.isBefore(item.adhanTime)) {
+          final preAdhanStart =
+              item.adhanTime.subtract(Duration(minutes: preAdhanMinutes));
+          if (now.isAfter(preAdhanStart) ||
+              now.isAtSameMomentAs(preAdhanStart)) {
+            return PrayerDisplayPhase(
+              kind: PrayerDisplayPhaseKind.preAdhan,
+              prayerNameKey: item.prayerName,
+              focusTime: item.adhanTime,
+            );
+          }
+          break;
+        }
+      }
+    }
+
+    // 3. Default: Find the next upcoming event (Adhan).
     for (final item in timeline) {
       if (now.isBefore(item.adhanTime)) {
         return PrayerDisplayPhase(

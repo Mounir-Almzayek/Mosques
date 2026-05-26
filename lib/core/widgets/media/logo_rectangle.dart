@@ -60,7 +60,7 @@ class LogoRectangle extends StatelessWidget {
         ),
         child: Center(
           child: Image.asset(
-            big ? "assets/logo.jpg" : "assets/logo.jpg",
+            big ? "assets/logo.png" : "assets/logo.png",
             fit: BoxFit.contain,
           ),
         ),

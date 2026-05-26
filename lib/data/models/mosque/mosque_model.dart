@@ -48,6 +48,9 @@ class MosqueModel extends Equatable {
   /// High-priority full-screen alerts.
   final List<AnnouncementModel> activeAlerts;
 
+  /// Photo studio image URLs for fullscreen display.
+  final List<String> photoStudioUrls;
+
   final DateTime? lastSeen;
   final DateTime? updatedAt;
 
@@ -68,6 +71,7 @@ class MosqueModel extends Equatable {
     this.adhkar = const [],
     this.announcements = const [],
     this.activeAlerts = const [],
+    this.photoStudioUrls = const [],
     this.lastSeen,
     this.updatedAt,
   });
@@ -118,6 +122,10 @@ class MosqueModel extends Equatable {
                   e as Map<String, dynamic>, e['id'] ?? ''))
               .toList() ??
           [],
+      photoStudioUrls: (map['photo_studio_urls'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
       lastSeen: parseFirestoreOrMillis(map['last_seen']),
       updatedAt: parseFirestoreOrMillis(map['updated_at']),
     );
@@ -139,6 +147,7 @@ class MosqueModel extends Equatable {
       'adhkar': adhkar.map((a) => a.toMap()).toList(),
       'mosque_ads': announcements.map((a) => a.toMap()).toList(),
       'active_alerts': activeAlerts.map((a) => a.toMap()).toList(),
+      'photo_studio_urls': photoStudioUrls,
       'last_seen': lastSeen != null ? Timestamp.fromDate(lastSeen!) : null,
       'updated_at': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
     };
@@ -177,6 +186,7 @@ class MosqueModel extends Equatable {
     List<AdhkarModel>? adhkar,
     List<AnnouncementModel>? announcements,
     List<AnnouncementModel>? activeAlerts,
+    List<String>? photoStudioUrls,
     DateTime? lastSeen,
     DateTime? updatedAt,
   }) {
@@ -198,6 +208,7 @@ class MosqueModel extends Equatable {
       adhkar: adhkar ?? this.adhkar,
       announcements: announcements ?? this.announcements,
       activeAlerts: activeAlerts ?? this.activeAlerts,
+      photoStudioUrls: photoStudioUrls ?? this.photoStudioUrls,
       lastSeen: lastSeen ?? this.lastSeen,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -221,6 +232,7 @@ class MosqueModel extends Equatable {
         adhkar,
         announcements,
         activeAlerts,
+        photoStudioUrls,
         lastSeen,
         updatedAt,
       ];

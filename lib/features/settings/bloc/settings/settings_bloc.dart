@@ -71,6 +71,16 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
     on<SettingsDesignFontFamilyChanged>(onDesignFontFamilyChanged);
     on<SaveDesignSettingsRequested>(_onSaveDesign);
 
+    // Display Timing & Photo Studio
+    on<SettingsPreAdhanMinutesChanged>(onPreAdhanMinutesChanged);
+    on<SettingsAdhanMomentDurationChanged>(onAdhanMomentDurationChanged);
+    on<SettingsReligiousContentWaitChanged>(onReligiousContentWaitChanged);
+    on<SettingsReligiousContentDisplayChanged>(onReligiousContentDisplayChanged);
+    on<SettingsPhotoStudioUrlAdded>(onPhotoStudioUrlAdded);
+    on<SettingsPhotoStudioUrlRemoved>(onPhotoStudioUrlRemoved);
+    on<SettingsBackgroundCustomUrlChanged>(onBackgroundCustomUrlChanged);
+    on<SavePhotoStudioRequested>(_onSavePhotoStudio);
+
     // Iqama
     on<SettingsIqamaFajrOffsetChanged>(onIqamaFajrChanged);
     on<SettingsIqamaDhuhrOffsetChanged>(onIqamaDhuhrChanged);
@@ -182,6 +192,15 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
     final m = state.request.mosque;
     if (m == null) return;
     await _save(emit, () => MosqueRepository.updateActiveAlerts(m));
+  }
+
+  Future<void> _onSavePhotoStudio(
+    SavePhotoStudioRequested event,
+    Emitter<SettingsState> emit,
+  ) async {
+    final m = state.request.mosque;
+    if (m == null) return;
+    await _save(emit, () => MosqueRepository.updateMosque(m));
   }
 
   Future<void> _save(

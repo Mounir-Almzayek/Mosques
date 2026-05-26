@@ -141,7 +141,7 @@ class SettingsDrawer extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: OptimizedImage.asset(
-                        'assets/logo.jpg',
+                        'assets/logo.png',
                         height: 50,
                         cacheHeight: 100, // Roughly 2x for retina density
                         fit: BoxFit.contain,

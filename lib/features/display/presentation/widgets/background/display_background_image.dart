@@ -5,7 +5,7 @@ import '../../../../../core/utils/color_parser.dart';
 import '../../../../../core/widgets/media/optimized_image.dart';
 import '../../../../../data/models/design/design_background_settings.dart';
 
-const String kDisplayBackgroundFallbackAsset = 'assets/logo.jpg';
+const String kDisplayBackgroundFallbackAsset = 'assets/logo.png';
 
 class DisplayBackgroundImage extends StatelessWidget {
   final Color fallbackColor;
@@ -22,6 +22,28 @@ class DisplayBackgroundImage extends StatelessWidget {
     if (settings.type == DisplayBackgroundType.color) {
       final color = parseColorHex(settings.value, fallbackColor);
       return Container(color: color);
+    }
+
+    if (settings.type == DisplayBackgroundType.remoteUrl) {
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          DecoratedBox(
+            decoration: BoxDecoration(color: fallbackColor),
+            child: const SizedBox.expand(),
+          ),
+          Image.network(
+            settings.value,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return DecoratedBox(
+                decoration: BoxDecoration(color: fallbackColor),
+                child: const SizedBox.expand(),
+              );
+            },
+          ),
+        ],
+      );
     }
 
     final preset = DisplayBackgroundPreset.fromStorageId(settings.value);

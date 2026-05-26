@@ -11,23 +11,23 @@ class DesignColorSettings extends Equatable {
   final String inactiveCardText;
 
   const DesignColorSettings({
-    this.primary = '#143B4E',
-    this.secondary = '#F3EEDC',
-    this.activeCard = '#E5DCC3',
-    this.activeCardText = '#143B4E',
-    this.prayerOverlay = '#EFEBE9',
-    this.inactiveCardText = '#5D4037',
+    this.primary = '#1B5E3B',
+    this.secondary = '#E8F5E9',
+    this.activeCard = '#C8E6C9',
+    this.activeCardText = '#1B5E3B',
+    this.prayerOverlay = '#E8F5E9',
+    this.inactiveCardText = '#2E7D32',
   });
 
   factory DesignColorSettings.fromMap(Map<String, dynamic> map) {
     return DesignColorSettings(
-      primary: map['primary_color']?.toString() ?? '#143B4E',
-      secondary: map['secondary_color']?.toString() ?? '#F3EEDC',
-      activeCard: map['active_card_color']?.toString() ?? '#E5DCC3',
-      activeCardText: map['active_card_text_color']?.toString() ?? '#143B4E',
-      prayerOverlay: map['prayer_overlay_color']?.toString() ?? '#EFEBE9',
+      primary: map['primary_color']?.toString() ?? '#1B5E3B',
+      secondary: map['secondary_color']?.toString() ?? '#E8F5E9',
+      activeCard: map['active_card_color']?.toString() ?? '#C8E6C9',
+      activeCardText: map['active_card_text_color']?.toString() ?? '#1B5E3B',
+      prayerOverlay: map['prayer_overlay_color']?.toString() ?? '#E8F5E9',
       inactiveCardText:
-          map['inactive_card_text_color']?.toString() ?? '#5D4037',
+          map['inactive_card_text_color']?.toString() ?? '#2E7D32',
     );
   }
 
@@ -61,16 +61,16 @@ class DesignColorSettings extends Equatable {
   }
 
   // Getters for parsed colors
-  Color get primaryValue => parseColorHex(primary, const Color(0xFF143B4E));
-  Color get secondaryValue => parseColorHex(secondary, const Color(0xFFF3EEDC));
+  Color get primaryValue => parseColorHex(primary, const Color(0xFF1B5E3B));
+  Color get secondaryValue => parseColorHex(secondary, const Color(0xFFE8F5E9));
   Color get activeCardValue =>
-      parseColorHex(activeCard, const Color(0xFFE5DCC3));
+      parseColorHex(activeCard, const Color(0xFFC8E6C9));
   Color get activeCardTextValue =>
-      parseColorHex(activeCardText, const Color(0xFF143B4E));
+      parseColorHex(activeCardText, const Color(0xFF1B5E3B));
   Color get prayerOverlayValue =>
-      parseColorHex(prayerOverlay, const Color(0xFFEFEBE9));
+      parseColorHex(prayerOverlay, const Color(0xFFE8F5E9));
   Color get inactiveCardTextValue =>
-      parseColorHex(inactiveCardText, const Color(0xFF5D4037));
+      parseColorHex(inactiveCardText, const Color(0xFF2E7D32));
 
   @override
   List<Object?> get props => [

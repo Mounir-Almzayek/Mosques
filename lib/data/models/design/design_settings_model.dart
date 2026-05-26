@@ -22,6 +22,11 @@ class DesignSettingsModel extends Equatable {
   final AppNumeralFormat numeralFormat;
   final String fontFamily;
 
+  final int preAdhanMinutes;
+  final int adhanMomentDurationSeconds;
+  final int religiousContentWaitSeconds;
+  final int religiousContentDisplaySeconds;
+
   const DesignSettingsModel({
     this.background = const DesignBackgroundSettings(),
     this.fontSizes = const FontSizeSettings(),
@@ -30,6 +35,10 @@ class DesignSettingsModel extends Equatable {
     this.stripSpeed = 1.0,
     this.numeralFormat = AppNumeralFormat.english,
     this.fontFamily = 'Beiruti',
+    this.preAdhanMinutes = 5,
+    this.adhanMomentDurationSeconds = 60,
+    this.religiousContentWaitSeconds = 120,
+    this.religiousContentDisplaySeconds = 30,
   });
 
   factory DesignSettingsModel.fromMap(Map<String, dynamic> map) {
@@ -41,6 +50,10 @@ class DesignSettingsModel extends Equatable {
       stripSpeed: (map['strip_speed'] ?? 1.0).toDouble(),
       numeralFormat: AppNumeralFormat.fromCode(map['numeral_format'] ?? 'en'),
       fontFamily: map['font_family'] ?? 'Beiruti',
+      preAdhanMinutes: map['pre_adhan_minutes'] ?? 5,
+      adhanMomentDurationSeconds: map['adhan_moment_duration_seconds'] ?? 60,
+      religiousContentWaitSeconds: map['religious_content_wait_seconds'] ?? 120,
+      religiousContentDisplaySeconds: map['religious_content_display_seconds'] ?? 30,
     );
   }
 
@@ -53,6 +66,10 @@ class DesignSettingsModel extends Equatable {
       'strip_speed': stripSpeed,
       'numeral_format': numeralFormat.code,
       'font_family': fontFamily,
+      'pre_adhan_minutes': preAdhanMinutes,
+      'adhan_moment_duration_seconds': adhanMomentDurationSeconds,
+      'religious_content_wait_seconds': religiousContentWaitSeconds,
+      'religious_content_display_seconds': religiousContentDisplaySeconds,
     };
   }
 
@@ -64,6 +81,10 @@ class DesignSettingsModel extends Equatable {
     double? stripSpeed,
     AppNumeralFormat? numeralFormat,
     String? fontFamily,
+    int? preAdhanMinutes,
+    int? adhanMomentDurationSeconds,
+    int? religiousContentWaitSeconds,
+    int? religiousContentDisplaySeconds,
   }) {
     return DesignSettingsModel(
       background: background ?? this.background,
@@ -73,6 +94,10 @@ class DesignSettingsModel extends Equatable {
       stripSpeed: stripSpeed ?? this.stripSpeed,
       numeralFormat: numeralFormat ?? this.numeralFormat,
       fontFamily: fontFamily ?? this.fontFamily,
+      preAdhanMinutes: preAdhanMinutes ?? this.preAdhanMinutes,
+      adhanMomentDurationSeconds: adhanMomentDurationSeconds ?? this.adhanMomentDurationSeconds,
+      religiousContentWaitSeconds: religiousContentWaitSeconds ?? this.religiousContentWaitSeconds,
+      religiousContentDisplaySeconds: religiousContentDisplaySeconds ?? this.religiousContentDisplaySeconds,
     );
   }
 
@@ -85,5 +110,9 @@ class DesignSettingsModel extends Equatable {
     stripSpeed,
     numeralFormat,
     fontFamily,
+    preAdhanMinutes,
+    adhanMomentDurationSeconds,
+    religiousContentWaitSeconds,
+    religiousContentDisplaySeconds,
   ];
 }

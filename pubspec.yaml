@@ -1,5 +1,5 @@
-name: mounir_almzayek_mosques
-description: "A new Flutter project."
+name: tabyan
+description: "تبيان - Mosque display management app"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -102,7 +102,7 @@ flutter_intl:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: assets/logo.jpg
+  image_path: assets/logo.png
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

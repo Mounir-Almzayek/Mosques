@@ -412,3 +412,58 @@ class SaveAlertsRequested extends SettingsEvent {
   const SaveAlertsRequested();
 }
 
+// ——— Display Timing & Photo Studio ———
+
+class SettingsPreAdhanMinutesChanged extends SettingsEvent {
+  final int minutes;
+  const SettingsPreAdhanMinutesChanged(this.minutes);
+  @override
+  List<Object?> get props => [minutes];
+}
+
+class SettingsAdhanMomentDurationChanged extends SettingsEvent {
+  final int seconds;
+  const SettingsAdhanMomentDurationChanged(this.seconds);
+  @override
+  List<Object?> get props => [seconds];
+}
+
+class SettingsReligiousContentWaitChanged extends SettingsEvent {
+  final int seconds;
+  const SettingsReligiousContentWaitChanged(this.seconds);
+  @override
+  List<Object?> get props => [seconds];
+}
+
+class SettingsReligiousContentDisplayChanged extends SettingsEvent {
+  final int seconds;
+  const SettingsReligiousContentDisplayChanged(this.seconds);
+  @override
+  List<Object?> get props => [seconds];
+}
+
+class SettingsPhotoStudioUrlAdded extends SettingsEvent {
+  final String url;
+  const SettingsPhotoStudioUrlAdded(this.url);
+  @override
+  List<Object?> get props => [url];
+}
+
+class SettingsPhotoStudioUrlRemoved extends SettingsEvent {
+  final String url;
+  const SettingsPhotoStudioUrlRemoved(this.url);
+  @override
+  List<Object?> get props => [url];
+}
+
+class SettingsBackgroundCustomUrlChanged extends SettingsEvent {
+  final String url;
+  const SettingsBackgroundCustomUrlChanged(this.url);
+  @override
+  List<Object?> get props => [url];
+}
+
+class SavePhotoStudioRequested extends SettingsEvent {
+  const SavePhotoStudioRequested();
+}
+

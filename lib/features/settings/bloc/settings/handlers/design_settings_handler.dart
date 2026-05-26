@@ -1,5 +1,6 @@
 ﻿import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../core/enums/display_background_type.dart';
 import '../../../../../data/models/mosque/mosque_model.dart';
 import '../../../models/settings_edit_request.dart';
 import '../settings_event.dart';
@@ -260,6 +261,102 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
     final m = currentMosque;
     if (m == null) return;
     final d = m.designSettings.copyWith(fontFamily: event.fontFamily);
+    emitDraftUpdated(
+      emit,
+      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
+    );
+  }
+
+  void onPreAdhanMinutesChanged(
+    SettingsPreAdhanMinutesChanged event,
+    Emitter<SettingsState> emit,
+  ) {
+    final m = currentMosque;
+    if (m == null) return;
+    final d = m.designSettings.copyWith(preAdhanMinutes: event.minutes);
+    emitDraftUpdated(
+      emit,
+      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
+    );
+  }
+
+  void onAdhanMomentDurationChanged(
+    SettingsAdhanMomentDurationChanged event,
+    Emitter<SettingsState> emit,
+  ) {
+    final m = currentMosque;
+    if (m == null) return;
+    final d = m.designSettings.copyWith(adhanMomentDurationSeconds: event.seconds);
+    emitDraftUpdated(
+      emit,
+      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
+    );
+  }
+
+  void onReligiousContentWaitChanged(
+    SettingsReligiousContentWaitChanged event,
+    Emitter<SettingsState> emit,
+  ) {
+    final m = currentMosque;
+    if (m == null) return;
+    final d = m.designSettings.copyWith(religiousContentWaitSeconds: event.seconds);
+    emitDraftUpdated(
+      emit,
+      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
+    );
+  }
+
+  void onReligiousContentDisplayChanged(
+    SettingsReligiousContentDisplayChanged event,
+    Emitter<SettingsState> emit,
+  ) {
+    final m = currentMosque;
+    if (m == null) return;
+    final d = m.designSettings.copyWith(religiousContentDisplaySeconds: event.seconds);
+    emitDraftUpdated(
+      emit,
+      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
+    );
+  }
+
+  void onPhotoStudioUrlAdded(
+    SettingsPhotoStudioUrlAdded event,
+    Emitter<SettingsState> emit,
+  ) {
+    final m = currentMosque;
+    if (m == null) return;
+    final urls = [...m.photoStudioUrls, event.url];
+    emitDraftUpdated(
+      emit,
+      state.request.copyWith(mosque: m.copyWith(photoStudioUrls: urls)),
+    );
+  }
+
+  void onPhotoStudioUrlRemoved(
+    SettingsPhotoStudioUrlRemoved event,
+    Emitter<SettingsState> emit,
+  ) {
+    final m = currentMosque;
+    if (m == null) return;
+    final urls = m.photoStudioUrls.where((u) => u != event.url).toList();
+    emitDraftUpdated(
+      emit,
+      state.request.copyWith(mosque: m.copyWith(photoStudioUrls: urls)),
+    );
+  }
+
+  void onBackgroundCustomUrlChanged(
+    SettingsBackgroundCustomUrlChanged event,
+    Emitter<SettingsState> emit,
+  ) {
+    final m = currentMosque;
+    if (m == null) return;
+    final d = m.designSettings.copyWith(
+      background: m.designSettings.background.copyWith(
+        type: DisplayBackgroundType.remoteUrl,
+        value: event.url,
+      ),
+    );
     emitDraftUpdated(
       emit,
       state.request.copyWith(mosque: m.copyWith(designSettings: d)),

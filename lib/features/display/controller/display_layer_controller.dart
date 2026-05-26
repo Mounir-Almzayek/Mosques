@@ -1,0 +1,142 @@
+import 'dart:async';
+import 'package:flutter/foundation.dart';
+
+import '../../../core/enums/display/display_layer_kind.dart';
+import '../../../core/enums/display/prayer_display_phase_kind.dart';
+import '../../../core/utils/prayer_display_phase.dart';
+import '../../../data/models/display/display_layer_state.dart';
+import '../../../data/models/mosque/announcement_model.dart';
+
+class DisplayLayerController extends ChangeNotifier {
+  DisplayLayerState _state = const DisplayLayerState();
+  DisplayLayerState get state => _state;
+
+  List<AnnouncementModel> _alerts = [];
+  PrayerDisplayPhase? _prayerPhase;
+  bool _photoStudioActive = false;
+  String? _photoStudioUrl;
+
+  Timer? _religiousTimer;
+  bool _religiousVisible = false;
+  int _religiousWaitSeconds = 120;
+  int _religiousDisplaySeconds = 30;
+  int _religiousSlideIndex = 0;
+  int get religiousSlideIndex => _religiousSlideIndex;
+  bool get religiousVisible => _religiousVisible;
+
+  String? get photoStudioUrl => _photoStudioUrl;
+
+  void configure({
+    required int religiousWaitSeconds,
+    required int religiousDisplaySeconds,
+  }) {
+    final changed = _religiousWaitSeconds != religiousWaitSeconds ||
+        _religiousDisplaySeconds != religiousDisplaySeconds;
+    _religiousWaitSeconds = religiousWaitSeconds;
+    _religiousDisplaySeconds = religiousDisplaySeconds;
+    if (changed) _restartReligiousTimer();
+  }
+
+  void updateAlerts(List<AnnouncementModel> alerts) {
+    _alerts = alerts;
+    _resolve();
+  }
+
+  void updatePrayerPhase(PrayerDisplayPhase phase) {
+    _prayerPhase = phase;
+    _resolve();
+  }
+
+  void showPhotoStudio(String imageUrl) {
+    _photoStudioActive = true;
+    _photoStudioUrl = imageUrl;
+    _resolve();
+  }
+
+  void hidePhotoStudio() {
+    _photoStudioActive = false;
+    _photoStudioUrl = null;
+    _resolve();
+  }
+
+  void startReligiousCycle() {
+    _restartReligiousTimer();
+  }
+
+  void _restartReligiousTimer() {
+    _religiousTimer?.cancel();
+    _religiousVisible = false;
+    _scheduleReligiousWait();
+    _resolve();
+  }
+
+  void _scheduleReligiousWait() {
+    _religiousTimer?.cancel();
+    _religiousTimer = Timer(Duration(seconds: _religiousWaitSeconds), () {
+      _religiousVisible = true;
+      _religiousSlideIndex++;
+      _resolve();
+      _scheduleReligiousDisplay();
+    });
+  }
+
+  void _scheduleReligiousDisplay() {
+    _religiousTimer?.cancel();
+    _religiousTimer = Timer(Duration(seconds: _religiousDisplaySeconds), () {
+      _religiousVisible = false;
+      _resolve();
+      _scheduleReligiousWait();
+    });
+  }
+
+  AnnouncementModel? get activeAlert {
+    if (_alerts.isEmpty) return null;
+    final now = DateTime.now();
+    for (final a in _alerts) {
+      final expiry = a.startDate.add(Duration(seconds: a.displayDurationSeconds));
+      if (now.isAfter(a.startDate) && now.isBefore(expiry)) return a;
+    }
+    return null;
+  }
+
+  void _resolve() {
+    final previous = _state.activeLayer;
+    DisplayLayerKind next;
+
+    if (activeAlert != null) {
+      next = DisplayLayerKind.alert;
+    } else if (_photoStudioActive) {
+      next = DisplayLayerKind.photoStudio;
+    } else if (_isIqamaAdhanActive()) {
+      next = DisplayLayerKind.iqamaAdhan;
+    } else if (_religiousVisible) {
+      next = DisplayLayerKind.religious;
+    } else {
+      next = DisplayLayerKind.prayerTimes;
+    }
+
+    if (next != previous) {
+      _state = DisplayLayerState(activeLayer: next, previousLayer: previous);
+      notifyListeners();
+    }
+  }
+
+  bool _isIqamaAdhanActive() {
+    if (_prayerPhase == null) return false;
+    switch (_prayerPhase!.kind) {
+      case PrayerDisplayPhaseKind.preAdhan:
+      case PrayerDisplayPhaseKind.adhanMoment:
+      case PrayerDisplayPhaseKind.iqama:
+        return true;
+      case PrayerDisplayPhaseKind.graceAfterIqama:
+      case PrayerDisplayPhaseKind.nextAdhan:
+        return false;
+    }
+  }
+
+  @override
+  void dispose() {
+    _religiousTimer?.cancel();
+    super.dispose();
+  }
+}
