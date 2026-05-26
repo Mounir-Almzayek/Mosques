@@ -38,30 +38,29 @@ class _DisplayScreenState extends State<DisplayScreen> {
   Timer? _tickTimer;
   final DisplayLayerController _layerController = DisplayLayerController();
   late PrayerTimesHelper _helper;
-  DateTime _now = DateTime.now();
+  final ValueNotifier<DateTime> _now = ValueNotifier(DateTime.now());
+
+  /// Merged listenable that fires when either the layer controller or clock
+  /// ticks — used to rebuild only the overlay portion of the widget tree.
+  late final Listenable _overlayListenable =
+      Listenable.merge([_layerController, _now]);
 
   @override
   void initState() {
     super.initState();
-    _layerController.addListener(_onLayerChange);
     _tickTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (!mounted) return;
-      _now = DateTime.now();
+      _now.value = DateTime.now();
       _updateLayerInputs();
-      setState(() {});
     });
   }
 
   @override
   void dispose() {
     _tickTimer?.cancel();
-    _layerController.removeListener(_onLayerChange);
+    _now.dispose();
     _layerController.dispose();
     super.dispose();
-  }
-
-  void _onLayerChange() {
-    if (mounted) setState(() {});
   }
 
   void _updateLayerInputs() {
@@ -71,7 +70,7 @@ class _DisplayScreenState extends State<DisplayScreen> {
     final design = mosque.designSettings;
 
     _helper = PrayerTimesHelper(mosque);
-    final phase = _helper.getPrayerDisplayPhase(_now, preAdhanMinutes: design.preAdhanMinutes);
+    final phase = _helper.getPrayerDisplayPhase(_now.value, preAdhanMinutes: design.preAdhanMinutes);
 
     _layerController.configure(
       religiousWaitSeconds: design.religiousContentWaitSeconds,
@@ -115,7 +114,6 @@ class _DisplayScreenState extends State<DisplayScreen> {
           final mosque = state.mosque;
           final design = mosque.designSettings;
           final colors = design.colors;
-          final activeLayer = _layerController.state.activeLayer;
 
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
@@ -133,11 +131,19 @@ class _DisplayScreenState extends State<DisplayScreen> {
               fit: StackFit.expand,
               children: [
                 _buildBaseLayer(context, mosque, state),
-                if (activeLayer != DisplayLayerKind.prayerTimes)
-                  LayerTransitionWrapper(
-                    activeLayer: activeLayer,
-                    child: _buildOverlayLayer(activeLayer, mosque, design, colors),
-                  ),
+                ListenableBuilder(
+                  listenable: _overlayListenable,
+                  builder: (context, _) {
+                    final activeLayer = _layerController.state.activeLayer;
+                    if (activeLayer == DisplayLayerKind.prayerTimes) {
+                      return const SizedBox.shrink();
+                    }
+                    return LayerTransitionWrapper(
+                      activeLayer: activeLayer,
+                      child: _buildOverlayLayer(activeLayer, mosque, design, colors),
+                    );
+                  },
+                ),
                 _buildSettingsShortcut(),
               ],
             ),
@@ -217,7 +223,7 @@ class _DisplayScreenState extends State<DisplayScreen> {
           backgroundColor: colors.activeCardValue,
           numeralFormat: design.numeralFormat,
           fontFamily: design.fontFamily,
-          onExpired: () => setState(() {}),
+          onExpired: _updateLayerInputs,
         );
       case DisplayLayerKind.photoStudio:
         return PhotoStudioLayer(
@@ -226,13 +232,14 @@ class _DisplayScreenState extends State<DisplayScreen> {
         );
       case DisplayLayerKind.iqamaAdhan:
         final helper = PrayerTimesHelper(mosque);
-        final phase = helper.getPrayerDisplayPhase(_now, preAdhanMinutes: design.preAdhanMinutes);
-        final remaining = phase.focusTime.difference(_now);
+        final now = _now.value;
+        final phase = helper.getPrayerDisplayPhase(now, preAdhanMinutes: design.preAdhanMinutes);
+        final remaining = phase.focusTime.difference(now);
         return IqamaAdhanLayer(
           phase: phase,
           remaining: remaining,
           designSettings: design,
-          isFriday: _now.weekday == DateTime.friday,
+          isFriday: now.weekday == DateTime.friday,
         );
       case DisplayLayerKind.religious:
         return ReligiousContentLayer(
