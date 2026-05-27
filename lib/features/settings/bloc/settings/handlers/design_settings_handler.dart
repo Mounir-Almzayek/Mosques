@@ -196,6 +196,57 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
     );
   }
 
+  void onPrayerCardScaleChanged(
+    PrayerCardScaleChanged event,
+    Emitter<SettingsState> emit,
+  ) {
+    final m = currentMosque;
+    if (m == null) return;
+    final d = m.designSettings.copyWith(prayerCardScale: event.scale);
+    emitDraftUpdated(
+      emit,
+      state.request.copyWith(mosque: m.copyWith(designSettings: d)),
+    );
+  }
+
+  void onBackgroundAlbumUrlAdded(
+    BackgroundAlbumUrlAdded event,
+    Emitter<SettingsState> emit,
+  ) {
+    final m = currentMosque;
+    if (m == null) return;
+    final urls = [...m.backgroundAlbumUrls, event.url];
+    emitDraftUpdated(
+      emit,
+      state.request.copyWith(mosque: m.copyWith(backgroundAlbumUrls: urls)),
+    );
+  }
+
+  void onBackgroundAlbumUrlRemoved(
+    BackgroundAlbumUrlRemoved event,
+    Emitter<SettingsState> emit,
+  ) {
+    final m = currentMosque;
+    if (m == null) return;
+    final urls = List<String>.from(m.backgroundAlbumUrls)..removeAt(event.index);
+    emitDraftUpdated(
+      emit,
+      state.request.copyWith(mosque: m.copyWith(backgroundAlbumUrls: urls)),
+    );
+  }
+
+  void onBackgroundAlbumUrlsReordered(
+    BackgroundAlbumUrlsReordered event,
+    Emitter<SettingsState> emit,
+  ) {
+    final m = currentMosque;
+    if (m == null) return;
+    emitDraftUpdated(
+      emit,
+      state.request.copyWith(mosque: m.copyWith(backgroundAlbumUrls: event.urls)),
+    );
+  }
+
   void onBackgroundCustomUrlChanged(
     BackgroundCustomUrlChanged event,
     Emitter<SettingsState> emit,

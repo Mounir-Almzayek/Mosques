@@ -48,6 +48,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
     on<DesignFontFamilyChanged>(onDesignFontFamilyChanged);
     on<DisplayTimingChanged>(onDisplayTimingChanged);
     on<BackgroundCustomUrlChanged>(onBackgroundCustomUrlChanged);
+    on<PrayerCardScaleChanged>(onPrayerCardScaleChanged);
+    on<BackgroundAlbumUrlAdded>(onBackgroundAlbumUrlAdded);
+    on<BackgroundAlbumUrlRemoved>(onBackgroundAlbumUrlRemoved);
+    on<BackgroundAlbumUrlsReordered>(onBackgroundAlbumUrlsReordered);
     on<SaveDesignSettingsRequested>(_onSaveDesign);
 
     // Photo Studio

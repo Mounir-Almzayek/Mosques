@@ -188,6 +188,42 @@ class BackgroundCustomUrlChanged extends SettingsEvent {
   List<Object?> get props => [url];
 }
 
+class PrayerCardScaleChanged extends SettingsEvent {
+  final double scale;
+
+  const PrayerCardScaleChanged(this.scale);
+
+  @override
+  List<Object?> get props => [scale];
+}
+
+class BackgroundAlbumUrlAdded extends SettingsEvent {
+  final String url;
+
+  const BackgroundAlbumUrlAdded(this.url);
+
+  @override
+  List<Object?> get props => [url];
+}
+
+class BackgroundAlbumUrlRemoved extends SettingsEvent {
+  final int index;
+
+  const BackgroundAlbumUrlRemoved(this.index);
+
+  @override
+  List<Object?> get props => [index];
+}
+
+class BackgroundAlbumUrlsReordered extends SettingsEvent {
+  final List<String> urls;
+
+  const BackgroundAlbumUrlsReordered(this.urls);
+
+  @override
+  List<Object?> get props => [urls];
+}
+
 class SaveDesignSettingsRequested extends SettingsEvent {
   const SaveDesignSettingsRequested();
 }
