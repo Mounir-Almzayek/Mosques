@@ -59,12 +59,15 @@ class _DisplayBeigeAreaState extends State<DisplayBeigeArea> {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: hPad),
         child: Center(
-          child: PrayerCardsRow(
-            mosque: widget.mosque,
-            designSettings: design,
-            helper: _helper,
-            now: _now,
-            focusScale: 1.3,
+          child: Transform.scale(
+            scale: design.prayerCardScale,
+            child: PrayerCardsRow(
+              mosque: widget.mosque,
+              designSettings: design,
+              helper: _helper,
+              now: _now,
+              focusScale: 1.3,
+            ),
           ),
         ),
       );

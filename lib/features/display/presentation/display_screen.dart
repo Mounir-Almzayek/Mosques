@@ -167,6 +167,7 @@ class _DisplayScreenState extends State<DisplayScreen> {
           child: DisplayBackgroundImage(
             fallbackColor: colors.primaryValue,
             settings: design.background,
+            albumUrls: mosque.backgroundAlbumUrls,
           ),
         ),
         Positioned.fill(
