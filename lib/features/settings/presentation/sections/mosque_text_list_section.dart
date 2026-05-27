@@ -1,14 +1,14 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
 import '../../bloc/settings/settings_bloc.dart';
+import 'widgets/mosque_text_editor_sheet.dart';
 
-class _MosqueTextL10n {
-  const _MosqueTextL10n({
+class MosqueTextL10n {
+  const MosqueTextL10n({
     required this.fabAdd,
     required this.editorNew,
     required this.editorEdit,
@@ -36,10 +36,10 @@ class _MosqueTextL10n {
   final String saveBarHint;
   final IconData emptyIcon;
 
-  static _MosqueTextL10n of(S s, MosqueTextListKind kind) {
+  static MosqueTextL10n of(S s, MosqueTextListKind kind) {
     switch (kind) {
       case MosqueTextListKind.hadith:
-        return _MosqueTextL10n(
+        return MosqueTextL10n(
           fabAdd: s.hadith_fab_add,
           editorNew: s.hadith_editor_title_new,
           editorEdit: s.hadith_editor_title_edit,
@@ -54,7 +54,7 @@ class _MosqueTextL10n {
           emptyIcon: Icons.menu_book_rounded,
         );
       case MosqueTextListKind.verse:
-        return _MosqueTextL10n(
+        return MosqueTextL10n(
           fabAdd: s.verse_fab_add,
           editorNew: s.verse_editor_title_new,
           editorEdit: s.verse_editor_title_edit,
@@ -69,7 +69,7 @@ class _MosqueTextL10n {
           emptyIcon: Icons.format_quote_rounded,
         );
       case MosqueTextListKind.dua:
-        return _MosqueTextL10n(
+        return MosqueTextL10n(
           fabAdd: s.dua_fab_add,
           editorNew: s.dua_editor_title_new,
           editorEdit: s.dua_editor_title_edit,
@@ -84,7 +84,7 @@ class _MosqueTextL10n {
           emptyIcon: Icons.favorite_border_rounded,
         );
       case MosqueTextListKind.adhkar:
-        return _MosqueTextL10n(
+        return MosqueTextL10n(
           fabAdd: s.adhkar_fab_add,
           editorNew: s.adhkar_editor_title_new,
           editorEdit: s.adhkar_editor_title_edit,
@@ -125,7 +125,7 @@ class _MosqueTextListSectionState extends State<MosqueTextListSection> {
   Future<void> _openEditor([MosqueTextEntryModel? existing]) async {
     final bloc = context.read<SettingsBloc>();
     final s = S.of(context);
-    final labels = _MosqueTextL10n.of(s, widget.kind);
+    final labels = MosqueTextL10n.of(s, widget.kind);
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -134,7 +134,7 @@ class _MosqueTextListSectionState extends State<MosqueTextListSection> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (ctx) => _MosqueTextEditorSheet(
+      builder: (ctx) => MosqueTextEditorSheet(
         existing: existing,
         bloc: bloc,
         kind: widget.kind,
@@ -145,7 +145,7 @@ class _MosqueTextListSectionState extends State<MosqueTextListSection> {
 
   Future<void> _confirmDelete(MosqueTextEntryModel item) async {
     final s = S.of(context);
-    final labels = _MosqueTextL10n.of(s, widget.kind);
+    final labels = MosqueTextL10n.of(s, widget.kind);
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -174,7 +174,7 @@ class _MosqueTextListSectionState extends State<MosqueTextListSection> {
   Widget build(BuildContext context) {
     final s = S.of(context);
     final scheme = Theme.of(context).colorScheme;
-    final labels = _MosqueTextL10n.of(s, widget.kind);
+    final labels = MosqueTextL10n.of(s, widget.kind);
     final items = widget.mosque.listByKind(widget.kind);
 
     return Stack(
@@ -391,137 +391,4 @@ class _MosqueTextListSectionState extends State<MosqueTextListSection> {
   }
 }
 
-class _MosqueTextEditorSheet extends StatefulWidget {
-  const _MosqueTextEditorSheet({
-    required this.existing,
-    required this.bloc,
-    required this.kind,
-    required this.labels,
-  });
-
-  final MosqueTextEntryModel? existing;
-  final SettingsBloc bloc;
-  final MosqueTextListKind kind;
-  final _MosqueTextL10n labels;
-
-  @override
-  State<_MosqueTextEditorSheet> createState() => _MosqueTextEditorSheetState();
-}
-
-class _MosqueTextEditorSheetState extends State<_MosqueTextEditorSheet> {
-  late final TextEditingController _narratorCtrl;
-  late final TextEditingController _textCtrl;
-  late final TextEditingController _sourceCtrl;
-
-  @override
-  void initState() {
-    super.initState();
-    final e = widget.existing;
-    _narratorCtrl = TextEditingController(text: e?.narrator ?? '');
-    _textCtrl = TextEditingController(text: e?.text ?? '');
-    _sourceCtrl = TextEditingController(text: e?.source ?? '');
-  }
-
-  @override
-  void dispose() {
-    _narratorCtrl.dispose();
-    _textCtrl.dispose();
-    _sourceCtrl.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final s = S.of(context);
-    final existing = widget.existing;
-    final bloc = widget.bloc;
-    final labels = widget.labels;
-
-    return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              existing == null ? labels.editorNew : labels.editorEdit,
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: _narratorCtrl,
-              textInputAction: TextInputAction.next,
-              decoration: InputDecoration(
-                labelText: labels.narratorLabel,
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
-            ),
-            const SizedBox(height: 14),
-            TextField(
-              controller: _textCtrl,
-              minLines: 4,
-              maxLines: 10,
-              textInputAction: TextInputAction.next,
-              decoration: InputDecoration(
-                alignLabelWithHint: true,
-                labelText: labels.textLabel,
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
-            ),
-            const SizedBox(height: 14),
-            TextField(
-              controller: _sourceCtrl,
-              textInputAction: TextInputAction.done,
-              decoration: InputDecoration(
-                labelText: labels.sourceLabel,
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            FilledButton.icon(
-              onPressed: () {
-                if (_textCtrl.text.trim().isEmpty) return;
-                final item = MosqueTextEntryModel(
-                  id: existing?.id ?? const Uuid().v4(),
-                  narrator: _narratorCtrl.text.trim(),
-                  text: _textCtrl.text.trim(),
-                  source: _sourceCtrl.text.trim(),
-                  isActive: existing?.isActive ?? true,
-                  order: existing?.order ?? 0,
-                );
-                if (existing == null) {
-                  bloc.add(MosqueTextAdded(widget.kind, item));
-                } else {
-                  bloc.add(MosqueTextUpdated(widget.kind, item));
-                }
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.check_rounded),
-              label: Text(s.save),
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 

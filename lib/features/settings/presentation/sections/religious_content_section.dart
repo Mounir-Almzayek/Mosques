@@ -6,7 +6,7 @@ import '../../../../core/styles/app_colors.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
 import '../../bloc/settings/settings_bloc.dart';
 import '../widgets/common/common_widgets.dart';
-import 'mosque_text_list_section.dart';
+import 'widgets/content_panel.dart';
 
 class ReligiousContentSection extends StatelessWidget {
   final MosqueModel mosque;
@@ -62,7 +62,7 @@ class ReligiousContentSection extends StatelessWidget {
           const SizedBox(height: 8),
 
           // ── Accordion panels ─────────────────────────────────────────
-          _ContentPanel(
+          ContentPanel(
             mosque: mosque,
             kind: MosqueTextListKind.hadith,
             icon: Icons.menu_book_rounded,
@@ -70,7 +70,7 @@ class ReligiousContentSection extends StatelessWidget {
             scheme: scheme,
           ),
           const SizedBox(height: 8),
-          _ContentPanel(
+          ContentPanel(
             mosque: mosque,
             kind: MosqueTextListKind.verse,
             icon: Icons.format_quote_rounded,
@@ -78,7 +78,7 @@ class ReligiousContentSection extends StatelessWidget {
             scheme: scheme,
           ),
           const SizedBox(height: 8),
-          _ContentPanel(
+          ContentPanel(
             mosque: mosque,
             kind: MosqueTextListKind.dua,
             icon: Icons.favorite_border_rounded,
@@ -86,7 +86,7 @@ class ReligiousContentSection extends StatelessWidget {
             scheme: scheme,
           ),
           const SizedBox(height: 8),
-          _ContentPanel(
+          ContentPanel(
             mosque: mosque,
             kind: MosqueTextListKind.adhkar,
             icon: Icons.psychology_outlined,
@@ -114,49 +114,3 @@ class ReligiousContentSection extends StatelessWidget {
   }
 }
 
-class _ContentPanel extends StatelessWidget {
-  final MosqueModel mosque;
-  final MosqueTextListKind kind;
-  final IconData icon;
-  final String title;
-  final ColorScheme scheme;
-
-  const _ContentPanel({
-    required this.mosque,
-    required this.kind,
-    required this.icon,
-    required this.title,
-    required this.scheme,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final items = mosque.listByKind(kind);
-    final fullTitle = '$title (${items.length})';
-
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-        side: BorderSide(color: scheme.outlineVariant),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: ExpansionTile(
-        leading: Icon(icon, color: AppColors.primary),
-        title: Text(
-          fullTitle,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        childrenPadding: EdgeInsets.zero,
-        children: [
-          SizedBox(
-            height: 400,
-            child: MosqueTextListSection(mosque: mosque, kind: kind),
-          ),
-        ],
-      ),
-    );
-  }
-}
