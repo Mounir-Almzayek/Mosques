@@ -193,66 +193,16 @@ class SettingsDrawer extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.only(bottom: 8),
                 children: [
-                  navTile(
-                    index: 0,
-                    icon: Icons.manage_accounts_outlined,
-                    label: s.tab_general,
-                  ),
-                  navTile(
-                    index: 1,
-                    icon: Icons.palette_outlined,
-                    label: s.tab_design,
-                  ),
-                  navTile(
-                    index: 2,
-                    icon: Icons.schedule_outlined,
-                    label: s.tab_iqama,
-                  ),
-                  navTile(
-                    index: 3,
-                    icon: Icons.menu_book_rounded,
-                    label: s.tab_hadith,
-                  ),
-                  navTile(
-                    index: 4,
-                    icon: Icons.format_quote_rounded,
-                    label: s.tab_verses,
-                  ),
-                  navTile(
-                    index: 5,
-                    icon: Icons.favorite_border_rounded,
-                    label: s.tab_duas,
-                  ),
-                  navTile(
-                    index: 6,
-                    icon: Icons.psychology_outlined,
-                    label: s.tab_adhkar,
-                  ),
-                  navTile(
-                    index: 7,
-                    icon: Icons.campaign_outlined,
-                    label: s.tab_announcements,
-                  ),
-                  navTile(
-                    index: 8,
-                    icon: Icons.emergency_share_outlined,
-                    label: s.tab_alerts,
-                  ),
-                  navTile(
-                    index: 9,
-                    icon: Icons.person_outline_rounded,
-                    label: s.tab_profile,
-                  ),
-                  navTile(
-                    index: 10,
-                    icon: Icons.info_outline_rounded,
-                    label: s.tab_about,
-                  ),
-                  navTile(
-                    index: 11,
-                    icon: Icons.system_update_rounded,
-                    label: s.tab_update,
-                  ),
+                  navTile(index: 0, icon: Icons.mosque_outlined, label: s.tab_general),
+                  navTile(index: 1, icon: Icons.access_time_outlined, label: s.tab_prayer_iqama),
+                  navTile(index: 2, icon: Icons.menu_book_rounded, label: s.tab_religious_content),
+                  navTile(index: 3, icon: Icons.palette_outlined, label: s.tab_design),
+                  navTile(index: 4, icon: Icons.photo_library_outlined, label: s.tab_photo_studio),
+                  navTile(index: 5, icon: Icons.campaign_outlined, label: s.tab_announcements),
+                  navTile(index: 6, icon: Icons.emergency_share_outlined, label: s.tab_alerts),
+                  navTile(index: 7, icon: Icons.person_outline_rounded, label: s.tab_profile),
+                  navTile(index: 8, icon: Icons.info_outline_rounded, label: s.tab_about),
+                  navTile(index: 9, icon: Icons.system_update_rounded, label: s.tab_update),
                 ],
               ),
             ),

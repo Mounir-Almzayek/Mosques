@@ -7,15 +7,15 @@ import '../../../data/repositories/interfaces/mosque_repository_interface.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/routes/app_routes.dart';
-import '../../../core/enums/settings/mosque_text_list_kind.dart';
 import '../../../core/widgets/feedback/unified_snackbar.dart';
 import '../bloc/settings/settings_bloc.dart';
 import 'widgets/common/common_widgets.dart';
 
 import 'sections/general_section.dart';
+import 'sections/prayer_iqama_section.dart';
+import 'sections/religious_content_section.dart';
 import 'sections/design_section.dart';
-import 'sections/iqama_section.dart';
-import 'sections/mosque_text_list_section.dart';
+import 'sections/photo_studio_section.dart';
 import 'sections/announcement_section.dart';
 import 'sections/alerts_section.dart';
 import 'sections/profile_section.dart';
@@ -53,32 +53,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   String _titleForIndex(S s, int i) {
     switch (i) {
-      case 0:
-        return s.tab_general;
-      case 1:
-        return s.tab_design;
-      case 2:
-        return s.tab_iqama;
-      case 3:
-        return s.tab_hadith;
-      case 4:
-        return s.tab_verses;
-      case 5:
-        return s.tab_duas;
-      case 6:
-        return s.tab_adhkar;
-      case 7:
-        return s.tab_announcements;
-      case 8:
-        return s.tab_alerts;
-      case 9:
-        return s.tab_profile;
-      case 10:
-        return s.tab_about;
-      case 11:
-        return s.tab_update;
-      default:
-        return s.settings_title;
+      case 0: return s.tab_general;
+      case 1: return s.tab_prayer_iqama;
+      case 2: return s.tab_religious_content;
+      case 3: return s.tab_design;
+      case 4: return s.tab_photo_studio;
+      case 5: return s.tab_announcements;
+      case 6: return s.tab_alerts;
+      case 7: return s.tab_profile;
+      case 8: return s.tab_about;
+      case 9: return s.tab_update;
+      default: return s.settings_title;
     }
   }
 
@@ -166,30 +151,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             index: _sectionIndex,
             sizing: StackFit.expand,
             children: [
-              GeneralSection(mosque: mosque),
-              DesignSection(),
-              IqamaSection(mosque: mosque),
-              MosqueTextListSection(
-                mosque: mosque,
-                kind: MosqueTextListKind.hadith,
-              ),
-              MosqueTextListSection(
-                mosque: mosque,
-                kind: MosqueTextListKind.verse,
-              ),
-              MosqueTextListSection(
-                mosque: mosque,
-                kind: MosqueTextListKind.dua,
-              ),
-              MosqueTextListSection(
-                mosque: mosque,
-                kind: MosqueTextListKind.adhkar,
-              ),
-              AnnouncementSection(mosque: mosque),
-              AlertsSection(mosque: mosque),
-              const ProfileSection(),
-              const AboutSection(),
-              const UpdateSection(),
+              GeneralSection(mosque: mosque),           // 0
+              PrayerIqamaSection(mosque: mosque),       // 1
+              ReligiousContentSection(mosque: mosque),   // 2
+              const DesignSection(),                     // 3
+              PhotoStudioSection(mosque: mosque),        // 4
+              AnnouncementSection(mosque: mosque),       // 5
+              AlertsSection(mosque: mosque),             // 6
+              const ProfileSection(),                    // 7
+              const AboutSection(),                     // 8
+              const UpdateSection(),                    // 9
             ],
           );
         },
