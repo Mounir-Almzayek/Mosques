@@ -59,7 +59,7 @@ class FontSizeSettingsSection extends StatelessWidget {
           ),
           DesignFontSizeItem(
             label: s.design_content_font_size,
-            value: fontSizes.content,
+            value: fontSizes.religiousContent,
             onChanged: onContentSizeChanged,
             icon: Icons.description_outlined,
           ),

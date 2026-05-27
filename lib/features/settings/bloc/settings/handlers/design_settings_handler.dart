@@ -87,7 +87,7 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
       DesignFontSizeField.announcements =>
         m.designSettings.fontSizes.copyWith(announcements: event.fontSize),
       DesignFontSizeField.content =>
-        m.designSettings.fontSizes.copyWith(content: event.fontSize),
+        m.designSettings.fontSizes.copyWith(religiousContent: event.fontSize),
     };
     final d = m.designSettings.copyWith(fontSizes: fontSizes);
     emitDraftUpdated(
