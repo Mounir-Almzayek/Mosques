@@ -17,7 +17,7 @@ import 'sections/general_section.dart';
 import 'sections/prayer_iqama_section.dart';
 import 'sections/religious_content_section.dart';
 import 'sections/design_section.dart';
-import 'sections/photo_studio_section.dart';
+import 'sections/album_section.dart';
 import 'sections/announcement_section.dart';
 import 'sections/alerts_section.dart';
 import 'sections/profile_section.dart';
@@ -146,7 +146,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         PrayerIqamaSection(mosque: mosque),       // 1
                         ReligiousContentSection(mosque: mosque),   // 2
                         const DesignSection(),                     // 3
-                        PhotoStudioSection(mosque: mosque),        // 4
+                        AlbumSection(mosque: mosque),              // 4
                         AnnouncementSection(mosque: mosque),       // 5
                         AlertsSection(mosque: mosque),             // 6
                         const ProfileSection(),                    // 7

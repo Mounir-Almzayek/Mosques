@@ -96,7 +96,7 @@ class _SettingsZoomDrawerContentState extends State<SettingsZoomDrawerContent>
       (Icons.access_time_outlined, s.tab_prayer_iqama),
       (Icons.menu_book_rounded, s.tab_religious_content),
       (Icons.palette_outlined, s.tab_design),
-      (Icons.photo_library_outlined, s.tab_photo_studio),
+      (Icons.photo_library_outlined, s.tab_album),
       (Icons.campaign_outlined, s.tab_announcements),
       (Icons.emergency_share_outlined, s.tab_alerts),
       (Icons.person_outline_rounded, s.tab_profile),
@@ -104,7 +104,7 @@ class _SettingsZoomDrawerContentState extends State<SettingsZoomDrawerContent>
       (Icons.system_update_rounded, s.tab_update),
     ];
 
-    return Container(
+    return Material(
       color: const Color(0xFF1A2F2E),
       child: SafeArea(
         child: Column(
@@ -118,7 +118,6 @@ class _SettingsZoomDrawerContentState extends State<SettingsZoomDrawerContent>
                   Container(
                     width: 52,
                     height: 52,
-                    padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(14),
