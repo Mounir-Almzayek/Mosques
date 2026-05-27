@@ -24,7 +24,7 @@ class DisplayBackgroundImage extends StatelessWidget {
       return Container(color: color);
     }
 
-    if (settings.type == DisplayBackgroundType.remoteUrl) {
+    if (settings.type == DisplayBackgroundType.album) {
       return Stack(
         fit: StackFit.expand,
         children: [

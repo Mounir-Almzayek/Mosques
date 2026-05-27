@@ -3,16 +3,18 @@
 enum DisplayBackgroundType {
   image,
   color,
-  remoteUrl;
+  album;
 
   String get code {
-    if (this == remoteUrl) return 'remote_url';
+    if (this == album) return 'album';
     return name;
   }
 
   static DisplayBackgroundType fromCode(String? code) {
     if (code == 'color') return DisplayBackgroundType.color;
-    if (code == 'remote_url' || code == 'remoteUrl') return DisplayBackgroundType.remoteUrl;
+    if (code == 'album' || code == 'remote_url' || code == 'remoteUrl') {
+      return DisplayBackgroundType.album;
+    }
     return DisplayBackgroundType.image;
   }
 }

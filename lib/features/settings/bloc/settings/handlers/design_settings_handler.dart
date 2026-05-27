@@ -204,7 +204,7 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
     if (m == null) return;
     final d = m.designSettings.copyWith(
       background: m.designSettings.background.copyWith(
-        type: DisplayBackgroundType.remoteUrl,
+        type: DisplayBackgroundType.album,
         value: event.url,
       ),
     );

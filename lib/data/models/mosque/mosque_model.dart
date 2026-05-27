@@ -51,6 +51,9 @@ class MosqueModel extends Equatable {
   /// Photo studio image URLs for fullscreen display.
   final List<String> photoStudioUrls;
 
+  /// Background album image URLs for cycling backgrounds.
+  final List<String> backgroundAlbumUrls;
+
   final DateTime? lastSeen;
   final DateTime? updatedAt;
 
@@ -72,6 +75,7 @@ class MosqueModel extends Equatable {
     this.announcements = const [],
     this.activeAlerts = const [],
     this.photoStudioUrls = const [],
+    this.backgroundAlbumUrls = const [],
     this.lastSeen,
     this.updatedAt,
   });
@@ -126,6 +130,10 @@ class MosqueModel extends Equatable {
               ?.map((e) => e.toString())
               .toList() ??
           [],
+      backgroundAlbumUrls: (map['background_album_urls'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList() ??
+          [],
       lastSeen: parseFirestoreOrMillis(map['last_seen']),
       updatedAt: parseFirestoreOrMillis(map['updated_at']),
     );
@@ -148,6 +156,7 @@ class MosqueModel extends Equatable {
       'mosque_ads': announcements.map((a) => a.toMap()).toList(),
       'active_alerts': activeAlerts.map((a) => a.toMap()).toList(),
       'photo_studio_urls': photoStudioUrls,
+      'background_album_urls': backgroundAlbumUrls,
       'last_seen': lastSeen != null ? Timestamp.fromDate(lastSeen!) : null,
       'updated_at': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
     };
@@ -187,6 +196,7 @@ class MosqueModel extends Equatable {
     List<AnnouncementModel>? announcements,
     List<AnnouncementModel>? activeAlerts,
     List<String>? photoStudioUrls,
+    List<String>? backgroundAlbumUrls,
     DateTime? lastSeen,
     DateTime? updatedAt,
   }) {
@@ -209,6 +219,7 @@ class MosqueModel extends Equatable {
       announcements: announcements ?? this.announcements,
       activeAlerts: activeAlerts ?? this.activeAlerts,
       photoStudioUrls: photoStudioUrls ?? this.photoStudioUrls,
+      backgroundAlbumUrls: backgroundAlbumUrls ?? this.backgroundAlbumUrls,
       lastSeen: lastSeen ?? this.lastSeen,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -233,6 +244,7 @@ class MosqueModel extends Equatable {
         announcements,
         activeAlerts,
         photoStudioUrls,
+        backgroundAlbumUrls,
         lastSeen,
         updatedAt,
       ];

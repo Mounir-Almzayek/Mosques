@@ -52,6 +52,7 @@ abstract final class FirestoreSchema {
   static const String mosqueAds = 'mosque_ads';
   static const String activeAlerts = 'active_alerts';
   static const String photoStudioUrls = 'photo_studio_urls';
+  static const String backgroundAlbumUrls = 'background_album_urls';
 
   // ---------------------------------------------------------------------------
   // Mosque fields — timestamps
