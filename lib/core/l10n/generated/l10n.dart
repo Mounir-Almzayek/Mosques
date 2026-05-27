@@ -1729,6 +1729,26 @@ class S {
     );
   }
 
+  /// `It's now time for {prayer} adhan`
+  String display_adhan_now(Object prayer) {
+    return Intl.message(
+      'It\'s now time for $prayer adhan',
+      name: 'display_adhan_now',
+      desc: '',
+      args: [prayer],
+    );
+  }
+
+  /// `It's now time for Sunrise`
+  String get display_sunrise_now {
+    return Intl.message(
+      'It\'s now time for Sunrise',
+      name: 'display_sunrise_now',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Remaining`
   String get display_countdown_label {
     return Intl.message(

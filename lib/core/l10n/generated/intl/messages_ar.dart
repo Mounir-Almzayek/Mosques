@@ -23,25 +23,27 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m0(phone) =>
       "للارتباط بمسجد موجود مسبقاً، يرجى إنشاء حسابك أولاً ثم التواصل مع الدعم الفني على الرقم ${phone} لربط الحساب بالمسجد المطلوب.";
 
-  static String m1(prayer) => "متبقٍ لأذان ${prayer}";
+  static String m1(prayer) => "حان الآن موعد أذان ${prayer}";
 
-  static String m2(prayer) => "متبقٍ لإقامة ${prayer}";
+  static String m2(prayer) => "متبقٍ لأذان ${prayer}";
 
-  static String m3(prayer) => "الوقت المتبقي لأذان ${prayer}";
+  static String m3(prayer) => "متبقٍ لإقامة ${prayer}";
 
-  static String m4(prayer) => "الوقت المتبقي لإقامة ${prayer}";
+  static String m4(prayer) => "الوقت المتبقي لأذان ${prayer}";
 
-  static String m5(value) => "خط العرض: ${value}";
+  static String m5(prayer) => "الوقت المتبقي لإقامة ${prayer}";
 
-  static String m6(value) => "خط الطول: ${value}";
+  static String m6(value) => "خط العرض: ${value}";
 
-  static String m7(id) => "رمز مقترح: ${id}";
+  static String m7(value) => "خط الطول: ${value}";
 
-  static String m8(version) => "الإصدار الحالي: ${version}";
+  static String m8(id) => "رمز مقترح: ${id}";
 
-  static String m9(progress) => "جاري التحميل... ${progress}%";
+  static String m9(version) => "الإصدار الحالي: ${version}";
 
-  static String m10(version) => "الإصدار الأحدث: ${version}";
+  static String m10(progress) => "جاري التحميل... ${progress}%";
+
+  static String m11(version) => "الإصدار الأحدث: ${version}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -306,6 +308,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "disable_smart_screen": MessageLookupByLibrary.simpleMessage(
       "إيقاف الشاشة الذكية",
     ),
+    "display_adhan_now": m1,
     "display_countdown_label": MessageLookupByLibrary.simpleMessage("المتبقي"),
     "display_error_no_mosque": MessageLookupByLibrary.simpleMessage(
       "لا يوجد مسجد مرتبط بهذا الحساب.",
@@ -319,10 +322,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "display_next_prayer_title": MessageLookupByLibrary.simpleMessage(
       "الصلاة القادمة",
     ),
-    "display_remaining_to_adhan_line": m1,
-    "display_remaining_to_iqama_line": m2,
+    "display_remaining_to_adhan_line": m2,
+    "display_remaining_to_iqama_line": m3,
     "display_remaining_to_sunrise_line": MessageLookupByLibrary.simpleMessage(
       "متبقٍ للشروق",
+    ),
+    "display_sunrise_now": MessageLookupByLibrary.simpleMessage(
+      "حان الآن موعد الشروق",
     ),
     "display_ticker_adhkar": MessageLookupByLibrary.simpleMessage("ذكر"),
     "display_ticker_dua": MessageLookupByLibrary.simpleMessage("دعاء"),
@@ -332,8 +338,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "إعلان نظام",
     ),
     "display_ticker_verse": MessageLookupByLibrary.simpleMessage("آية"),
-    "display_time_until_adhan_for": m3,
-    "display_time_until_iqama_for": m4,
+    "display_time_until_adhan_for": m4,
+    "display_time_until_iqama_for": m5,
     "display_timing_title": MessageLookupByLibrary.simpleMessage("توقيت العرض"),
     "dua_delete_body": MessageLookupByLibrary.simpleMessage(
       "سيُزال من القائمة. احفظ على الخادم عند الانتهاء.",
@@ -393,7 +399,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "iqama_minutes_after_adhan": MessageLookupByLibrary.simpleMessage(
       "الدقائق بعد الأذان",
     ),
-    "latitude_coordinate": m5,
+    "latitude_coordinate": m6,
     "location_permission_denied": MessageLookupByLibrary.simpleMessage(
       "يلزم السماح بالموقع لتحديد الإحداثيات",
     ),
@@ -411,7 +417,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "إدارة المسجد — لوحة التحكم",
     ),
     "login_title": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
-    "longitude_coordinate": m6,
+    "longitude_coordinate": m7,
     "minutes_short": MessageLookupByLibrary.simpleMessage("د"),
     "minutes_suffix": MessageLookupByLibrary.simpleMessage("دقيقة"),
     "miqat_ar": MessageLookupByLibrary.simpleMessage("مِيقَات صَلَاة"),
@@ -425,7 +431,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "mosque_id_label": MessageLookupByLibrary.simpleMessage(
       "رمز المسجد المقترح (بالإنجليزي)",
     ),
-    "mosque_id_suggestion": m7,
+    "mosque_id_suggestion": m8,
     "mosque_id_taken": MessageLookupByLibrary.simpleMessage(
       "هذا الرمز مستخدم بالفعل",
     ),
@@ -593,15 +599,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "«وَمَن يَتَوَكَّلْ عَلَى اللَّهِ فَهُوَ حَسْبُهُ»",
     ),
     "unit_seconds": MessageLookupByLibrary.simpleMessage("ث"),
-    "update_current_version": m8,
+    "update_current_version": m9,
     "update_download": MessageLookupByLibrary.simpleMessage(
       "تحميل وتثبيت التحديث",
     ),
-    "update_downloading": m9,
+    "update_downloading": m10,
     "update_failure": MessageLookupByLibrary.simpleMessage(
       "فشل التحميل. يرجى المحاولة لاحقاً.",
     ),
-    "update_latest_version": m10,
+    "update_latest_version": m11,
     "update_no_link": MessageLookupByLibrary.simpleMessage(
       "لا يوجد رابط تحميل متوفر لهذه المنصة.",
     ),

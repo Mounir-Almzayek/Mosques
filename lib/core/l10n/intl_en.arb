@@ -203,6 +203,13 @@
   },
   "display_remaining_to_adhan_line": "Remaining to adhan — {prayer}",
   "display_remaining_to_sunrise_line": "Remaining to Sunrise",
+  "display_adhan_now": "It's now time for {prayer} adhan",
+  "@display_adhan_now": {
+    "placeholders": {
+      "prayer": {}
+    }
+  },
+  "display_sunrise_now": "It's now time for Sunrise",
   "@display_remaining_to_adhan_line": {
     "placeholders": {
       "prayer": {}

@@ -91,8 +91,7 @@ class IqamaAdhanLayer extends StatelessWidget {
   String _resolvePrayerLabel(PrayerDisplaySlot? slot, S s) {
     if (slot == null) return '';
     if (isFriday && slot == PrayerDisplaySlot.dhuhr) {
-      // TODO: replace with s.prayer_jummah once l10n is generated
-      return 'صلاة الجمعة'; // صلاة الجمعة
+      return s.prayer_jummah;
     }
     return slot.labelAr(s);
   }
@@ -108,15 +107,9 @@ class IqamaAdhanLayer extends StatelessWidget {
 
       case PrayerDisplayPhaseKind.adhanMoment:
         if (slot != null && slot.isSunrise) {
-          // TODO: replace with s.display_sunrise_now once l10n is generated
-          return 'حان الآن '
-              'موعد '
-              'الشروق'; // حان الآن موعد الشروق
+          return s.display_sunrise_now;
         }
-        // TODO: replace with s.display_adhan_now(prayerLabel) once l10n is generated
-        return 'حان الآن '
-            'موعد أذان '
-            '$prayerLabel'; // حان الآن موعد أذان $prayerLabel
+        return s.display_adhan_now(prayerLabel);
 
       case PrayerDisplayPhaseKind.iqama:
         return s.display_remaining_to_iqama_line(prayerLabel);

@@ -203,6 +203,13 @@
   },
   "display_remaining_to_adhan_line": "متبقٍ لأذان {prayer}",
   "display_remaining_to_sunrise_line": "متبقٍ للشروق",
+  "display_adhan_now": "حان الآن موعد أذان {prayer}",
+  "@display_adhan_now": {
+    "placeholders": {
+      "prayer": {}
+    }
+  },
+  "display_sunrise_now": "حان الآن موعد الشروق",
   "@display_remaining_to_adhan_line": {
     "placeholders": {
       "prayer": {}
