@@ -47,6 +47,29 @@ class DisplayLayerController extends ChangeNotifier {
     _resolve();
   }
 
+  /// Updates album image state from the mosque's published album fields.
+  void updateAlbumImage({
+    required String? publishedUrl,
+    required DateTime? publishedAt,
+    required int durationSeconds,
+  }) {
+    if (publishedUrl != null &&
+        publishedUrl.isNotEmpty &&
+        publishedAt != null) {
+      final expiry = publishedAt.add(Duration(seconds: durationSeconds));
+      final now = DateTime.now();
+      if (now.isBefore(expiry)) {
+        _photoStudioActive = true;
+        _photoStudioUrl = publishedUrl;
+        _resolve();
+        return;
+      }
+    }
+    _photoStudioActive = false;
+    _photoStudioUrl = null;
+    _resolve();
+  }
+
   void showPhotoStudio(String imageUrl) {
     _photoStudioActive = true;
     _photoStudioUrl = imageUrl;
@@ -93,8 +116,9 @@ class DisplayLayerController extends ChangeNotifier {
     if (_alerts.isEmpty) return null;
     final now = DateTime.now();
     for (final a in _alerts) {
-      final expiry = a.startDate.add(Duration(seconds: a.displayDurationSeconds));
-      if (now.isAfter(a.startDate) && now.isBefore(expiry)) return a;
+      if (!a.isPublished || a.publishedAt == null) continue;
+      final expiry = a.publishedAt!.add(Duration(seconds: a.publishDurationSeconds));
+      if (now.isBefore(expiry)) return a;
     }
     return null;
   }

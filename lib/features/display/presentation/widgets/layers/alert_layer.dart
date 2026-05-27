@@ -81,10 +81,11 @@ class _AlertLayerState extends State<AlertLayer> {
     AnnouncementModel? found;
 
     for (final alert in widget.alerts) {
-      final expiry = alert.startDate.add(
-        Duration(seconds: alert.displayDurationSeconds),
+      if (!alert.isPublished || alert.publishedAt == null) continue;
+      final expiry = alert.publishedAt!.add(
+        Duration(seconds: alert.publishDurationSeconds),
       );
-      if (now.isAfter(alert.startDate) && now.isBefore(expiry)) {
+      if (now.isBefore(expiry)) {
         found = alert;
         break;
       }

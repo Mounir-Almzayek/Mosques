@@ -21,7 +21,6 @@ import 'widgets/layers/alert_layer.dart';
 import 'widgets/layers/iqama_adhan_layer.dart';
 import 'widgets/layers/layer_transition_wrapper.dart';
 import 'widgets/layers/photo_studio_layer.dart';
-import 'widgets/layers/religious_content_layer.dart';
 import 'widgets/ticker/ticker_widgets.dart';
 
 class DisplayScreen extends StatefulWidget {
@@ -74,6 +73,11 @@ class _DisplayScreenState extends State<DisplayScreen> {
       religiousDisplaySeconds: design.religiousContentDisplaySeconds,
     );
     _layerController.updateAlerts(mosque.savedAlerts);
+    _layerController.updateAlbumImage(
+      publishedUrl: mosque.publishedAlbumImageUrl,
+      publishedAt: mosque.publishedAlbumImageAt,
+      durationSeconds: mosque.publishedAlbumImageDuration,
+    );
     _layerController.updatePrayerPhase(phase);
   }
 
@@ -121,7 +125,8 @@ class _DisplayScreenState extends State<DisplayScreen> {
                   listenable: _overlayListenable,
                   builder: (context, _) {
                     final activeLayer = _layerController.state.activeLayer;
-                    if (activeLayer == DisplayLayerKind.prayerTimes) {
+                    if (activeLayer == DisplayLayerKind.prayerTimes ||
+                        activeLayer == DisplayLayerKind.religious) {
                       return const SizedBox.shrink();
                     }
                     return LayerTransitionWrapper(
@@ -171,7 +176,11 @@ class _DisplayScreenState extends State<DisplayScreen> {
                         child: TopHeaderWidget(mosque: mosque, designSettings: design),
                       ),
                       Expanded(
-                        child: DisplayBeigeArea(mosque: mosque, designSettings: design),
+                        child: DisplayBeigeArea(
+                          mosque: mosque,
+                          designSettings: design,
+                          showReligiousContent: _layerController.state.activeLayer == DisplayLayerKind.religious,
+                        ),
                       ),
                     ],
                   ),
@@ -206,6 +215,7 @@ class _DisplayScreenState extends State<DisplayScreen> {
       case DisplayLayerKind.alert:
         return AlertLayer(
           alerts: mosque.savedAlerts,
+          alertsFontSize: design.fontSizes.alerts,
           primaryColor: colors.activeCardTextValue,
           backgroundColor: colors.activeCardValue,
           numeralFormat: design.numeralFormat,
@@ -213,7 +223,7 @@ class _DisplayScreenState extends State<DisplayScreen> {
           onExpired: _updateLayerInputs,
         );
       case DisplayLayerKind.photoStudio:
-        return PhotoStudioLayer(
+        return AlbumImageLayer(
           imageUrl: _layerController.photoStudioUrl ?? '',
           backgroundColor: colors.primaryValue,
         );
@@ -227,13 +237,10 @@ class _DisplayScreenState extends State<DisplayScreen> {
           remaining: remaining,
           designSettings: design,
           isFriday: now.weekday == DateTime.friday,
+          countdownFontSize: design.fontSizes.countdown,
         );
       case DisplayLayerKind.religious:
-        return ReligiousContentLayer(
-          mosque: mosque,
-          designSettings: design,
-          slideIndex: _layerController.religiousSlideIndex,
-        );
+        return const SizedBox.shrink(); // Handled inline by DisplayBeigeArea
       case DisplayLayerKind.prayerTimes:
         return const SizedBox.shrink();
     }

@@ -1,16 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-/// Fullscreen photo display overlay (priority 2).
+/// Fullscreen album image display overlay (priority 2).
 ///
 /// Loads a single network image from [imageUrl] with disk caching
 /// for offline support. Fills the screen with optional progress indicator.
-class PhotoStudioLayer extends StatelessWidget {
+class AlbumImageLayer extends StatelessWidget {
   final String imageUrl;
   final BoxFit fit;
   final Color backgroundColor;
 
-  const PhotoStudioLayer({
+  const AlbumImageLayer({
     super.key,
     required this.imageUrl,
     this.fit = BoxFit.contain,
