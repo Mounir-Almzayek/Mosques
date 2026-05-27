@@ -4,53 +4,108 @@ import 'package:uuid/uuid.dart';
 import '../../../../../core/l10n/generated/l10n.dart';
 import '../../../../../data/models/mosque/announcement_model.dart';
 
+/// Dialog for creating a new alert or editing an existing one.
+///
+/// When [initialAlert] is provided, the dialog operates in edit mode,
+/// pre-filling all fields from the existing alert.
 class AlertEditDialog extends StatefulWidget {
+  /// Called with the created or updated [AnnouncementModel].
   final void Function(AnnouncementModel) onAdd;
 
-  const AlertEditDialog({super.key, required this.onAdd});
+  /// When provided, the dialog pre-fills fields for editing.
+  final AnnouncementModel? initialAlert;
+
+  const AlertEditDialog({
+    super.key,
+    required this.onAdd,
+    this.initialAlert,
+  });
 
   @override
   State<AlertEditDialog> createState() => _AlertEditDialogState();
 }
 
 class _AlertEditDialogState extends State<AlertEditDialog> {
-  final _titleCtrl = TextEditingController();
-  final _contentCtrl = TextEditingController();
-  int _seconds = 30;
+  late final TextEditingController _titleCtrl;
+  late final TextEditingController _subtitleCtrl;
+
+  @override
+  void initState() {
+    super.initState();
+    final existing = widget.initialAlert;
+    _titleCtrl = TextEditingController(text: existing?.title ?? '');
+    _subtitleCtrl = TextEditingController(text: existing?.subtitle ?? '');
+  }
+
+  @override
+  void dispose() {
+    _titleCtrl.dispose();
+    _subtitleCtrl.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    final title = _titleCtrl.text.trim();
+    if (title.isEmpty) return;
+
+    final existing = widget.initialAlert;
+    final now = DateTime.now();
+    final alert = AnnouncementModel(
+      id: existing?.id ?? const Uuid().v4(),
+      title: title,
+      subtitle: _subtitleCtrl.text.trim().isEmpty
+          ? null
+          : _subtitleCtrl.text.trim(),
+      startDate: existing?.startDate ?? now,
+      endDate: existing?.endDate ?? now.add(const Duration(days: 365)),
+      isPriority: true,
+      isActive: existing?.isActive ?? true,
+      order: existing?.order ?? 0,
+      displayDurationSeconds: existing?.displayDurationSeconds ?? 30,
+      isPublished: existing?.isPublished ?? false,
+      publishedAt: existing?.publishedAt,
+      publishDurationSeconds: existing?.publishDurationSeconds ?? 30,
+    );
+
+    widget.onAdd(alert);
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    final isEditing = widget.initialAlert != null;
+
     return AlertDialog(
-      title: Text(s.alert_editor_title),
+      title: Text(isEditing ? s.alert_edit : s.alert_create),
       content: SingleChildScrollView(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: _titleCtrl,
-              decoration: InputDecoration(labelText: s.alert_field_headline),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _contentCtrl,
-              decoration: InputDecoration(labelText: s.alert_field_message),
-              maxLines: 3,
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Text(s.alert_field_duration),
-                Expanded(
-                  child: Slider(
-                    value: _seconds.toDouble(),
-                    min: 10,
-                    max: 600,
-                    divisions: 59,
-                    onChanged: (v) => setState(() => _seconds = v.toInt()),
-                  ),
+              textInputAction: TextInputAction.next,
+              decoration: InputDecoration(
+                labelText: s.alert_field_headline,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                Text('$_seconds ${s.unit_seconds}'),
-              ],
+              ),
+            ),
+            const SizedBox(height: 14),
+            TextField(
+              controller: _subtitleCtrl,
+              textInputAction: TextInputAction.done,
+              maxLines: 3,
+              onSubmitted: (_) => _submit(),
+              decoration: InputDecoration(
+                labelText: s.alert_field_message,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
             ),
           ],
         ),
@@ -61,24 +116,12 @@ class _AlertEditDialogState extends State<AlertEditDialog> {
           child: Text(s.cancel),
         ),
         FilledButton(
-          onPressed: () {
-            if (_titleCtrl.text.isNotEmpty && _contentCtrl.text.isNotEmpty) {
-              final now = DateTime.now();
-              final alert = AnnouncementModel(
-                id: const Uuid().v4(),
-                title: _titleCtrl.text,
-                subtitle: _contentCtrl.text,
-                startDate: now,
-                endDate: now.add(const Duration(hours: 4)), // Temporary alert
-                isPriority: true,
-                displayDurationSeconds: _seconds,
-                isActive: true,
-              );
-              widget.onAdd(alert);
-              Navigator.pop(context);
-            }
-          },
-          child: Text(s.alert_send_action),
+          onPressed: _submit,
+          style: FilledButton.styleFrom(
+            backgroundColor: const Color(0xFF1A3C34),
+            foregroundColor: Colors.white,
+          ),
+          child: Text(isEditing ? s.save : s.alert_create),
         ),
       ],
     );
