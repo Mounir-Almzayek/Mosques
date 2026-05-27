@@ -112,7 +112,7 @@ class SettingsAppBar extends StatelessWidget implements PreferredSizeWidget {
       case 1: return s.tab_prayer_iqama;
       case 2: return s.tab_religious_content;
       case 3: return s.tab_design;
-      case 4: return s.tab_photo_studio;
+      case 4: return s.tab_album;
       case 5: return s.tab_announcements;
       case 6: return s.tab_alerts;
       case 7: return s.tab_profile;
