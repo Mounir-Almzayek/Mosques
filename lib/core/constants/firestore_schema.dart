@@ -55,6 +55,16 @@ abstract final class FirestoreSchema {
   static const String backgroundAlbumUrls = 'background_album_urls';
 
   // ---------------------------------------------------------------------------
+  // Design settings fields
+  // ---------------------------------------------------------------------------
+  static const String prayerCardScale = 'prayer_card_scale';
+
+  // ---------------------------------------------------------------------------
+  // App settings fields
+  // ---------------------------------------------------------------------------
+  static const String backgroundFolderUrl = 'background_folder_url';
+
+  // ---------------------------------------------------------------------------
   // Mosque fields — timestamps
   // ---------------------------------------------------------------------------
   static const String updatedAt = 'updated_at';

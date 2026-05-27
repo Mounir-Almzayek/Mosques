@@ -27,6 +27,9 @@ class DesignSettingsModel extends Equatable {
   final int religiousContentWaitSeconds;
   final int religiousContentDisplaySeconds;
 
+  /// Scale factor for prayer cards on the display screen (0.5–2.0).
+  final double prayerCardScale;
+
   const DesignSettingsModel({
     this.background = const DesignBackgroundSettings(),
     this.fontSizes = const FontSizeSettings(),
@@ -39,6 +42,7 @@ class DesignSettingsModel extends Equatable {
     this.adhanMomentDurationSeconds = 60,
     this.religiousContentWaitSeconds = 120,
     this.religiousContentDisplaySeconds = 30,
+    this.prayerCardScale = 1.0,
   });
 
   factory DesignSettingsModel.fromMap(Map<String, dynamic> map) {
@@ -54,6 +58,7 @@ class DesignSettingsModel extends Equatable {
       adhanMomentDurationSeconds: map['adhan_moment_duration_seconds'] ?? 60,
       religiousContentWaitSeconds: map['religious_content_wait_seconds'] ?? 120,
       religiousContentDisplaySeconds: map['religious_content_display_seconds'] ?? 30,
+      prayerCardScale: (map['prayer_card_scale'] ?? 1.0).toDouble(),
     );
   }
 
@@ -70,6 +75,7 @@ class DesignSettingsModel extends Equatable {
       'adhan_moment_duration_seconds': adhanMomentDurationSeconds,
       'religious_content_wait_seconds': religiousContentWaitSeconds,
       'religious_content_display_seconds': religiousContentDisplaySeconds,
+      'prayer_card_scale': prayerCardScale,
     };
   }
 
@@ -85,6 +91,7 @@ class DesignSettingsModel extends Equatable {
     int? adhanMomentDurationSeconds,
     int? religiousContentWaitSeconds,
     int? religiousContentDisplaySeconds,
+    double? prayerCardScale,
   }) {
     return DesignSettingsModel(
       background: background ?? this.background,
@@ -98,6 +105,7 @@ class DesignSettingsModel extends Equatable {
       adhanMomentDurationSeconds: adhanMomentDurationSeconds ?? this.adhanMomentDurationSeconds,
       religiousContentWaitSeconds: religiousContentWaitSeconds ?? this.religiousContentWaitSeconds,
       religiousContentDisplaySeconds: religiousContentDisplaySeconds ?? this.religiousContentDisplaySeconds,
+      prayerCardScale: prayerCardScale ?? this.prayerCardScale,
     );
   }
 
@@ -114,5 +122,6 @@ class DesignSettingsModel extends Equatable {
     adhanMomentDurationSeconds,
     religiousContentWaitSeconds,
     religiousContentDisplaySeconds,
+    prayerCardScale,
   ];
 }
