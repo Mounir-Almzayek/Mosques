@@ -8,8 +8,9 @@ import 'package:go_router/go_router.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/widgets/feedback/unified_snackbar.dart';
+import '../../../core/widgets/navigation/zoom_drawer.dart';
 import '../bloc/settings/settings_bloc.dart';
-import 'widgets/common/common_widgets.dart';
+import 'widgets/common/settings_zoom_drawer_content.dart';
 
 import 'sections/general_section.dart';
 import 'sections/prayer_iqama_section.dart';
@@ -43,8 +44,16 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   int _sectionIndex = 0;
+  final ZoomDrawerController _drawerController = ZoomDrawerController();
+
+  @override
+  void dispose() {
+    _drawerController.dispose();
+    super.dispose();
+  }
 
   void _signOut() async {
+    _drawerController.close();
     await sl<IAuthRepository>().logout();
     if (mounted) {
       context.go(Routes.splashPath);
@@ -70,101 +79,118 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    return Scaffold(
-      drawer: SettingsDrawer(
-        selectedIndex: _sectionIndex,
-        onSelectSection: (i) => setState(() => _sectionIndex = i),
-        onSignOut: _signOut,
-      ),
-      appBar: AppBar(
-        toolbarHeight: 72,
-        titleTextStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
-          fontSize: 23,
-          fontWeight: FontWeight.w600,
-        ),
-        title: Text(_titleForIndex(s, _sectionIndex)),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            iconSize: 28,
-            tooltip: s.refresh,
-            onPressed: () {
-              context.read<SettingsBloc>().add(const LoadSettings());
+    return ListenableBuilder(
+      listenable: _drawerController,
+      builder: (context, _) {
+        return ZoomDrawer(
+          controller: _drawerController,
+          menuScreen: SettingsZoomDrawerContent(
+            selectedIndex: _sectionIndex,
+            isOpen: _drawerController.isOpen,
+            onSelectSection: (i) {
+              _drawerController.close();
+              setState(() => _sectionIndex = i);
             },
+            onSignOut: _signOut,
           ),
-          PopupMenuButton<String>(
-            iconSize: 28,
-            onSelected: (value) async {
-              if (value == 'smart_screen') {
-                await sl<IAuthRepository>().setAppModeOverride(AppMode.deviceDisplay);
-                if (!context.mounted) return;
-                context.go(Routes.displayPath);
-              }
-            },
-            itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem<String>(
-                  value: 'smart_screen',
-                  child: Text(s.enable_smart_screen),
+          mainScreen: Scaffold(
+            appBar: AppBar(
+              toolbarHeight: 72,
+              titleTextStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontSize: 23,
+                fontWeight: FontWeight.w600,
+              ),
+              leading: IconButton(
+                icon: const Icon(Icons.menu_rounded),
+                iconSize: 28,
+                onPressed: _drawerController.toggle,
+              ),
+              title: Text(_titleForIndex(s, _sectionIndex)),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.refresh),
+                  iconSize: 28,
+                  tooltip: s.refresh,
+                  onPressed: () {
+                    context.read<SettingsBloc>().add(const LoadSettings());
+                  },
                 ),
-              ];
-            },
+                PopupMenuButton<String>(
+                  iconSize: 28,
+                  onSelected: (value) async {
+                    if (value == 'smart_screen') {
+                      await sl<IAuthRepository>().setAppModeOverride(AppMode.deviceDisplay);
+                      if (!context.mounted) return;
+                      context.go(Routes.displayPath);
+                    }
+                  },
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      PopupMenuItem<String>(
+                        value: 'smart_screen',
+                        child: Text(s.enable_smart_screen),
+                      ),
+                    ];
+                  },
+                ),
+              ],
+            ),
+            body: BlocConsumer<SettingsBloc, SettingsState>(
+              listenWhen: (prev, curr) {
+                if (curr.isSaving && !prev.isSaving) return true;
+                if (curr.error != null && prev.error == null) return true;
+                if (!curr.isSaving && prev.isSaving && curr.error == null)
+                  return true;
+                return false;
+              },
+              listener: (context, state) {
+                if (state.isSaving) {
+                  UnifiedSnackbar.info(context, message: S.of(context).saving);
+                } else if (state.error != null) {
+                  UnifiedSnackbar.error(context, message: state.error!);
+                } else {
+                  UnifiedSnackbar.hide(context);
+                  UnifiedSnackbar.success(
+                    context,
+                    message: S.of(context).saved_successfully,
+                  );
+                }
+              },
+              builder: (context, state) {
+                if (state.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                final mosque = state.request.mosque;
+                if (state.error != null && mosque == null) {
+                  return Center(child: Text(state.error!));
+                }
+
+                if (mosque == null) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                return IndexedStack(
+                  index: _sectionIndex,
+                  sizing: StackFit.expand,
+                  children: [
+                    GeneralSection(mosque: mosque),           // 0
+                    PrayerIqamaSection(mosque: mosque),       // 1
+                    ReligiousContentSection(mosque: mosque),   // 2
+                    const DesignSection(),                     // 3
+                    PhotoStudioSection(mosque: mosque),        // 4
+                    AnnouncementSection(mosque: mosque),       // 5
+                    AlertsSection(mosque: mosque),             // 6
+                    const ProfileSection(),                    // 7
+                    const AboutSection(),                     // 8
+                    const UpdateSection(),                    // 9
+                  ],
+                );
+              },
+            ),
           ),
-        ],
-      ),
-      body: BlocConsumer<SettingsBloc, SettingsState>(
-        listenWhen: (prev, curr) {
-          if (curr.isSaving && !prev.isSaving) return true;
-          if (curr.error != null && prev.error == null) return true;
-          if (!curr.isSaving && prev.isSaving && curr.error == null)
-            return true;
-          return false;
-        },
-        listener: (context, state) {
-          if (state.isSaving) {
-            UnifiedSnackbar.info(context, message: S.of(context).saving);
-          } else if (state.error != null) {
-            UnifiedSnackbar.error(context, message: state.error!);
-          } else {
-            UnifiedSnackbar.hide(context);
-            UnifiedSnackbar.success(
-              context,
-              message: S.of(context).saved_successfully,
-            );
-          }
-        },
-        builder: (context, state) {
-          if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          final mosque = state.request.mosque;
-          if (state.error != null && mosque == null) {
-            return Center(child: Text(state.error!));
-          }
-
-          if (mosque == null) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          return IndexedStack(
-            index: _sectionIndex,
-            sizing: StackFit.expand,
-            children: [
-              GeneralSection(mosque: mosque),           // 0
-              PrayerIqamaSection(mosque: mosque),       // 1
-              ReligiousContentSection(mosque: mosque),   // 2
-              const DesignSection(),                     // 3
-              PhotoStudioSection(mosque: mosque),        // 4
-              AnnouncementSection(mosque: mosque),       // 5
-              AlertsSection(mosque: mosque),             // 6
-              const ProfileSection(),                    // 7
-              const AboutSection(),                     // 8
-              const UpdateSection(),                    // 9
-            ],
-          );
-        },
-      ),
+        );
+      },
     );
   }
 }
