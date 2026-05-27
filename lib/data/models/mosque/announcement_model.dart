@@ -20,6 +20,15 @@ class AnnouncementModel extends Equatable {
   /// Duration in seconds to show the alert once it enters the view.
   final int displayDurationSeconds;
 
+  /// Whether this alert is currently published to the display.
+  final bool isPublished;
+
+  /// When this alert was last published.
+  final DateTime? publishedAt;
+
+  /// Duration in seconds for how long to show when published.
+  final int publishDurationSeconds;
+
   const AnnouncementModel({
     required this.id,
     required this.title,
@@ -31,6 +40,9 @@ class AnnouncementModel extends Equatable {
     this.order = 0,
     this.isPriority = false,
     this.displayDurationSeconds = 30,
+    this.isPublished = false,
+    this.publishedAt,
+    this.publishDurationSeconds = 30,
   });
 
   factory AnnouncementModel.fromMap(Map<String, dynamic> map, String id) {
@@ -46,6 +58,9 @@ class AnnouncementModel extends Equatable {
     final order = map['order'] ?? 0;
     final isPriority = map['is_priority'] ?? false;
     final duration = map['display_duration_seconds'] ?? 30;
+    final isPublished = map['is_published'] ?? false;
+    final publishedAt = parseFirestoreOrMillis(map['published_at']);
+    final publishDurationSeconds = map['publish_duration_seconds'] ?? 30;
 
     return AnnouncementModel(
       id: id,
@@ -58,6 +73,9 @@ class AnnouncementModel extends Equatable {
       order: order,
       isPriority: isPriority,
       displayDurationSeconds: duration,
+      isPublished: isPublished,
+      publishedAt: publishedAt,
+      publishDurationSeconds: publishDurationSeconds,
     );
   }
 
@@ -73,6 +91,9 @@ class AnnouncementModel extends Equatable {
       'order': order,
       'is_priority': isPriority,
       'display_duration_seconds': displayDurationSeconds,
+      'is_published': isPublished,
+      'published_at': publishedAt != null ? Timestamp.fromDate(publishedAt!) : null,
+      'publish_duration_seconds': publishDurationSeconds,
     };
   }
 
@@ -87,6 +108,9 @@ class AnnouncementModel extends Equatable {
     int? order,
     bool? isPriority,
     int? displayDurationSeconds,
+    bool? isPublished,
+    DateTime? publishedAt,
+    int? publishDurationSeconds,
   }) {
     return AnnouncementModel(
       id: id ?? this.id,
@@ -100,6 +124,10 @@ class AnnouncementModel extends Equatable {
       isPriority: isPriority ?? this.isPriority,
       displayDurationSeconds:
           displayDurationSeconds ?? this.displayDurationSeconds,
+      isPublished: isPublished ?? this.isPublished,
+      publishedAt: publishedAt ?? this.publishedAt,
+      publishDurationSeconds:
+          publishDurationSeconds ?? this.publishDurationSeconds,
     );
   }
 
@@ -115,5 +143,8 @@ class AnnouncementModel extends Equatable {
     order,
     isPriority,
     displayDurationSeconds,
+    isPublished,
+    publishedAt,
+    publishDurationSeconds,
   ];
 }
