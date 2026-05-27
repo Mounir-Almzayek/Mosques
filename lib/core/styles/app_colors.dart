@@ -1,50 +1,47 @@
 import 'package:flutter/material.dart';
 
-/// لوحة ألوان التطبيق الإسلامية: كريمي/أبيض، ذهبي فاخر، أسود ناعم، وحالات واضحة للنجاح/الخطأ.
+/// App color palette: deep teal-green brand, warm neutral surfaces.
 abstract final class AppColors {
-  // —— ذهبي ——
-  static const Color goldDeep = Color(0xFF8B6914);
-  static const Color goldRich = Color(0xFFC9A227);
-  static const Color goldBright = Color(0xFFD4AF37);
-  static const Color goldLight = Color(0xFFE8D5A3);
-  static const Color goldWhisper = Color(0xFFF3EAD8);
+  // —— Brand teal ——
+  static const Color primaryDark = Color(0xFF2A3A39);
+  static const Color primary = Color(0xFF384C4B);
+  static const Color primaryLight = Color(0xFF4D6362);
+  static const Color primarySurface = Color(0xFFA8BFBE);
+  static const Color primaryWhisper = Color(0xFFDCE8E7);
 
-  // —— أسطح ومحايدات دافئة ——
+  // —— Warm surfaces ——
   static const Color creamWhite = Color(0xFFFFFBF7);
   static const Color pearlMist = Color(0xFFF7F3ED);
 
-  /// لون العلامة والأزرار الرئيسية
-  static const Color primary = goldRich;
+  /// Alias for primary brand color
+  static const Color primaryStart = primaryLight;
+  static const Color primaryEnd = primaryDark;
 
-  /// حواف التدرجات والظلال الخفيفة (بديل اسم قديم: primaryStart / primaryEnd)
-  static const Color primaryStart = goldBright;
-  static const Color primaryEnd = goldDeep;
-
-  // —— نص ——
+  // —— Text ——
   static const Color primaryText = Color(0xFF2A2A2A);
   static const Color secondaryText = Color(0xFF5E5E5E);
   static const Color mutedForeground = secondaryText;
   static const Color foreground = primaryText;
 
-  // —— خلفيات وبطاقات ——
+  // —— Backgrounds & cards ——
   static const Color background = pearlMist;
   static const Color surface = Color(0xFFFFFFFF);
   static const Color card = surface;
   static const Color brightWhite = surface;
-  static const Color muted = goldWhisper;
+  static const Color muted = primaryWhisper;
 
-  // —— حدود وحقول ——
-  static const Color border = Color(0xFFE5DCC8);
-  static const Color input = Color(0xFFD4C4B0);
+  // —— Borders & inputs ——
+  static const Color border = Color(0xFFD4DBD9);
+  static const Color input = Color(0xFFB8C4C3);
 
   static const Color textOnPrimary = Color(0xFFFFFFFF);
 
-  // —— حالات (مختصرة، متناسقة مع الواجهة) ——
+  // —— States ——
   static const Color error = Color(0xFFC53030);
   static const Color success = Color(0xFF2D6A4F);
   static const Color warning = Color(0xFFB8860B);
 
-  // —— تدرجات ——
+  // —— Gradients ——
   static const LinearGradient loginBackgroundGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
@@ -52,22 +49,18 @@ abstract final class AppColors {
     stops: [0.0, 0.45, 1.0],
   );
 
-  static const LinearGradient goldLuxuryGradient = LinearGradient(
+  static const LinearGradient primaryGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFFE6CF7A), goldBright, goldRich, goldDeep],
-    stops: [0.0, 0.35, 0.7, 1.0],
+    colors: [primaryLight, primary, primaryDark],
   );
 
-  static const LinearGradient goldHairlineGradient = LinearGradient(
-    colors: [Color(0x00D4AF37), goldLight, Color(0x00D4AF37)],
+  static const LinearGradient accentGradient = LinearGradient(
+    colors: [Color(0x00384C4B), primarySurface, Color(0x00384C4B)],
   );
-
-  /// أزرار وترويسات تستخدم تدرجاً ذهبياً افتراضياً
-  static const LinearGradient primaryGradient = goldLuxuryGradient;
 
   static const LinearGradient secondaryGradient = LinearGradient(
-    colors: [Color(0x1AD4AF37), Color(0x26C9A227)],
+    colors: [Color(0x1A384C4B), Color(0x26384C4B)],
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
   );

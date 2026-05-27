@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Container(
                   height: 5.h,
                   decoration: const BoxDecoration(
-                    gradient: AppColors.goldHairlineGradient,
+                    gradient: AppColors.accentGradient,
                   ),
                 ),
               ),
@@ -127,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: TextStyle(
                                 fontSize: context.adaptiveFont(13.sp),
                                 fontWeight: FontWeight.w500,
-                                color: AppColors.goldDeep.withValues(
+                                color: AppColors.primaryDark.withValues(
                                   alpha: 0.85,
                                 ),
                                 height: 1.6,
@@ -166,13 +166,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(22.r),
                                 border: Border.all(
-                                  color: AppColors.goldWhisper.withValues(
+                                  color: AppColors.primaryWhisper.withValues(
                                     alpha: 0.9,
                                   ),
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.goldDeep.withValues(
+                                    color: AppColors.primaryDark.withValues(
                                       alpha: 0.07,
                                     ),
                                     blurRadius: 28,
@@ -196,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       hintText: s.email_hint,
                                       labelColor: AppColors.primaryText,
                                       textColor: AppColors.primaryText,
-                                      focusBorderColor: AppColors.goldRich,
+                                      focusBorderColor: AppColors.primary,
                                       fillColor: AppColors.creamWhite,
                                       enabled: !loading,
                                       onChanged: (v) => context
@@ -205,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       validator: (v) => _validateEmail(v, s),
                                       prefixIcon: Icon(
                                         Icons.alternate_email_rounded,
-                                        color: AppColors.goldDeep.withValues(
+                                        color: AppColors.primaryDark.withValues(
                                           alpha: 0.85,
                                         ),
                                         size: context.adaptiveIcon(22.sp),
@@ -222,7 +222,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       hintText: s.password_hint,
                                       labelColor: AppColors.primaryText,
                                       textColor: AppColors.primaryText,
-                                      focusBorderColor: AppColors.goldRich,
+                                      focusBorderColor: AppColors.primary,
                                       fillColor: AppColors.creamWhite,
                                       enabled: !loading,
                                       onChanged: (v) => context
@@ -232,7 +232,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       onFieldSubmitted: (_) => _submit(),
                                       prefixIcon: Icon(
                                         Icons.lock_outline_rounded,
-                                        color: AppColors.goldDeep.withValues(
+                                        color: AppColors.primaryDark.withValues(
                                           alpha: 0.85,
                                         ),
                                         size: context.adaptiveIcon(22.sp),
@@ -278,7 +278,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   onPressed: () =>
                                       context.push(Routes.registrationPath),
                                   style: TextButton.styleFrom(
-                                    foregroundColor: AppColors.goldDeep,
+                                    foregroundColor: AppColors.primaryDark,
                                   ),
                                   child: Text(
                                     s.register_link,
@@ -318,10 +318,10 @@ class _BrandMark extends StatelessWidget {
         height: size,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          gradient: AppColors.goldLuxuryGradient,
+          gradient: AppColors.primaryGradient,
           boxShadow: [
             BoxShadow(
-              color: AppColors.goldRich.withValues(alpha: 0.35),
+              color: AppColors.primary.withValues(alpha: 0.35),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),

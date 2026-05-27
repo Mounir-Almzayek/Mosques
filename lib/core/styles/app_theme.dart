@@ -79,7 +79,7 @@ abstract final class AppTheme {
       brightness: Brightness.light,
       primary: AppColors.primary,
       onPrimary: AppColors.textOnPrimary,
-      secondary: AppColors.goldWhisper,
+      secondary: AppColors.primaryWhisper,
       onSecondary: AppColors.primaryText,
       error: AppColors.error,
       onError: AppColors.brightWhite,
