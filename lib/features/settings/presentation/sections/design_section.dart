@@ -32,10 +32,15 @@ class DesignSection extends StatelessWidget {
                     // 1. Background Settings
                     BackgroundSettingsSection(
                       settings: design.background,
+                      albumUrls: mosque.backgroundAlbumUrls,
                       onTypeChanged: (type) =>
                           bloc.add(DesignBackgroundTypeChanged(type)),
                       onValueChanged: (val) =>
                           bloc.add(DesignBackgroundValueChanged(val)),
+                      onAlbumUrlAdded: (url) =>
+                          bloc.add(BackgroundAlbumUrlAdded(url)),
+                      onAlbumUrlRemoved: (idx) =>
+                          bloc.add(BackgroundAlbumUrlRemoved(idx)),
                     ),
                     const SizedBox(height: 20),
 
@@ -77,7 +82,45 @@ class DesignSection extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
 
-                    // 4. Typography Settings
+                    // 4. Prayer Card Scale
+                    DesignCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          DesignSectionTitle(
+                            title: s.prayer_card_scale,
+                            icon: Icons.aspect_ratio_outlined,
+                          ),
+                          Row(
+                            children: [
+                              const Text('0.5x'),
+                              Expanded(
+                                child: Slider(
+                                  value: design.prayerCardScale,
+                                  min: 0.5,
+                                  max: 2.0,
+                                  divisions: 15,
+                                  label: '${design.prayerCardScale.toStringAsFixed(1)}x',
+                                  onChanged: (v) => bloc.add(
+                                    PrayerCardScaleChanged(v),
+                                  ),
+                                ),
+                              ),
+                              const Text('2.0x'),
+                            ],
+                          ),
+                          Center(
+                            child: Text(
+                              '${design.prayerCardScale.toStringAsFixed(1)}x',
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // 5. Typography Settings
                     TypographySettingsSection(
                       fontFamily: design.fontFamily,
                       numeralFormat: design.numeralFormat,
@@ -88,7 +131,7 @@ class DesignSection extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
 
-                    // 5. Behavior Settings
+                    // 6. Behavior Settings
                     BehaviorSettingsSection(
                       tickerSpeed: design.tickerSpeed,
                       onTickerSpeedChanged: (val) =>
