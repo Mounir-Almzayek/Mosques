@@ -1264,6 +1264,106 @@ class S {
     );
   }
 
+  /// `LIVE`
+  String get alert_status_live {
+    return Intl.message('LIVE', name: 'alert_status_live', desc: '', args: []);
+  }
+
+  /// `Ready`
+  String get alert_status_ready {
+    return Intl.message(
+      'Ready',
+      name: 'alert_status_ready',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Publish to Display`
+  String get alert_publish {
+    return Intl.message(
+      'Publish to Display',
+      name: 'alert_publish',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove from Display`
+  String get alert_unpublish {
+    return Intl.message(
+      'Remove from Display',
+      name: 'alert_unpublish',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Display duration`
+  String get alert_publish_duration {
+    return Intl.message(
+      'Display duration',
+      name: 'alert_publish_duration',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Alert`
+  String get alert_edit {
+    return Intl.message('Edit Alert', name: 'alert_edit', desc: '', args: []);
+  }
+
+  /// `Delete Alert`
+  String get alert_delete {
+    return Intl.message(
+      'Delete Alert',
+      name: 'alert_delete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create Alert`
+  String get alert_create {
+    return Intl.message(
+      'Create Alert',
+      name: 'alert_create',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete All Alerts`
+  String get alerts_delete_all {
+    return Intl.message(
+      'Delete All Alerts',
+      name: 'alerts_delete_all',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No alerts yet`
+  String get alerts_empty_new_title {
+    return Intl.message(
+      'No alerts yet',
+      name: 'alerts_empty_new_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create an alert and publish it when needed`
+  String get alerts_empty_new_subtitle {
+    return Intl.message(
+      'Create an alert and publish it when needed',
+      name: 'alerts_empty_new_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Send Instant Alert`
   String get alert_editor_title {
     return Intl.message(
@@ -2164,6 +2264,36 @@ class S {
     );
   }
 
+  /// `Religious content font size`
+  String get design_religious_content_font_size {
+    return Intl.message(
+      'Religious content font size',
+      name: 'design_religious_content_font_size',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Alerts font size`
+  String get design_alerts_font_size {
+    return Intl.message(
+      'Alerts font size',
+      name: 'design_alerts_font_size',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Countdown font size`
+  String get design_countdown_font_size {
+    return Intl.message(
+      'Countdown font size',
+      name: 'design_countdown_font_size',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Arabic (١٢٣)`
   String get numeral_format_arabic {
     return Intl.message(
@@ -2569,6 +2699,76 @@ class S {
     return Intl.message(
       'Photo Studio',
       name: 'tab_photo_studio',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Album`
+  String get tab_album {
+    return Intl.message('Album', name: 'tab_album', desc: '', args: []);
+  }
+
+  /// `No images added yet`
+  String get album_empty {
+    return Intl.message(
+      'No images added yet',
+      name: 'album_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Image URL`
+  String get album_add_url {
+    return Intl.message(
+      'Add Image URL',
+      name: 'album_add_url',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Publish to Display`
+  String get album_publish {
+    return Intl.message(
+      'Publish to Display',
+      name: 'album_publish',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Display duration`
+  String get album_publish_duration {
+    return Intl.message(
+      'Display duration',
+      name: 'album_publish_duration',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `LIVE`
+  String get album_live_badge {
+    return Intl.message('LIVE', name: 'album_live_badge', desc: '', args: []);
+  }
+
+  /// `Remove from Display`
+  String get album_unpublish {
+    return Intl.message(
+      'Remove from Display',
+      name: 'album_unpublish',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `seconds`
+  String get album_seconds_suffix {
+    return Intl.message(
+      'seconds',
+      name: 'album_seconds_suffix',
       desc: '',
       args: [],
     );

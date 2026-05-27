@@ -71,6 +71,16 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "adhkar_source": MessageLookupByLibrary.simpleMessage("تعليق (اختياري)"),
     "adhkar_text": MessageLookupByLibrary.simpleMessage("النص"),
+    "album_add_url": MessageLookupByLibrary.simpleMessage("إضافة رابط صورة"),
+    "album_empty": MessageLookupByLibrary.simpleMessage("لم تتم إضافة صور بعد"),
+    "album_live_badge": MessageLookupByLibrary.simpleMessage("مباشر"),
+    "album_publish": MessageLookupByLibrary.simpleMessage("نشر على الشاشة"),
+    "album_publish_duration": MessageLookupByLibrary.simpleMessage("مدة العرض"),
+    "album_seconds_suffix": MessageLookupByLibrary.simpleMessage("ثانية"),
+    "album_unpublish": MessageLookupByLibrary.simpleMessage("إزالة من الشاشة"),
+    "alert_create": MessageLookupByLibrary.simpleMessage("إنشاء تنبيه"),
+    "alert_delete": MessageLookupByLibrary.simpleMessage("حذف التنبيه"),
+    "alert_edit": MessageLookupByLibrary.simpleMessage("تعديل التنبيه"),
     "alert_editor_title": MessageLookupByLibrary.simpleMessage(
       "إرسال تنبيه عاجل",
     ),
@@ -81,9 +91,23 @@ class MessageLookup extends MessageLookupByLibrary {
     "alert_field_message": MessageLookupByLibrary.simpleMessage(
       "الرسالة العاجلة",
     ),
+    "alert_publish": MessageLookupByLibrary.simpleMessage("نشر على الشاشة"),
+    "alert_publish_duration": MessageLookupByLibrary.simpleMessage("مدة العرض"),
     "alert_send_action": MessageLookupByLibrary.simpleMessage("إرسال للشاشة"),
+    "alert_status_live": MessageLookupByLibrary.simpleMessage("مباشر"),
+    "alert_status_ready": MessageLookupByLibrary.simpleMessage("جاهز"),
+    "alert_unpublish": MessageLookupByLibrary.simpleMessage("إزالة من الشاشة"),
     "alerts_clear_all": MessageLookupByLibrary.simpleMessage(
       "مسح جميع التنبيهات النشطة",
+    ),
+    "alerts_delete_all": MessageLookupByLibrary.simpleMessage(
+      "حذف جميع التنبيهات",
+    ),
+    "alerts_empty_new_subtitle": MessageLookupByLibrary.simpleMessage(
+      "أنشئ تنبيهاً وانشره عند الحاجة",
+    ),
+    "alerts_empty_new_title": MessageLookupByLibrary.simpleMessage(
+      "لا توجد تنبيهات بعد",
     ),
     "alerts_empty_subtitle": MessageLookupByLibrary.simpleMessage(
       "تنبيهات عاجلة تظهر بملء الشاشة على العرض.",
@@ -150,6 +174,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "design_active_card_text_color": MessageLookupByLibrary.simpleMessage(
       "لون خط الكارد المحددة",
     ),
+    "design_alerts_font_size": MessageLookupByLibrary.simpleMessage(
+      "حجم خط التنبيهات",
+    ),
     "design_announcements_font_size": MessageLookupByLibrary.simpleMessage(
       "حجم خط الإعلانات",
     ),
@@ -208,6 +235,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "design_content_font_size": MessageLookupByLibrary.simpleMessage(
       "حجم خط المحتوى (أحاديث، آيات...)",
     ),
+    "design_countdown_font_size": MessageLookupByLibrary.simpleMessage(
+      "حجم خط العد التنازلي",
+    ),
     "design_display_background_image": MessageLookupByLibrary.simpleMessage(
       "خلفية شاشة العرض",
     ),
@@ -259,6 +289,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "design_primary_color": MessageLookupByLibrary.simpleMessage(
       "لون الساعة والوقت",
+    ),
+    "design_religious_content_font_size": MessageLookupByLibrary.simpleMessage(
+      "حجم خط المحتوى الديني",
     ),
     "design_secondary_color": MessageLookupByLibrary.simpleMessage(
       "لون شريط الإعلانات",
@@ -546,6 +579,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "tab_about": MessageLookupByLibrary.simpleMessage("حول التطبيق"),
     "tab_adhkar": MessageLookupByLibrary.simpleMessage("الأذكار"),
+    "tab_album": MessageLookupByLibrary.simpleMessage("الألبوم"),
     "tab_alerts": MessageLookupByLibrary.simpleMessage("تنبيهات عاجلة"),
     "tab_announcements": MessageLookupByLibrary.simpleMessage("الإعلانات"),
     "tab_design": MessageLookupByLibrary.simpleMessage("التصميم"),

@@ -75,6 +75,20 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "adhkar_source": MessageLookupByLibrary.simpleMessage("Note (optional)"),
     "adhkar_text": MessageLookupByLibrary.simpleMessage("Text"),
+    "album_add_url": MessageLookupByLibrary.simpleMessage("Add Image URL"),
+    "album_empty": MessageLookupByLibrary.simpleMessage("No images added yet"),
+    "album_live_badge": MessageLookupByLibrary.simpleMessage("LIVE"),
+    "album_publish": MessageLookupByLibrary.simpleMessage("Publish to Display"),
+    "album_publish_duration": MessageLookupByLibrary.simpleMessage(
+      "Display duration",
+    ),
+    "album_seconds_suffix": MessageLookupByLibrary.simpleMessage("seconds"),
+    "album_unpublish": MessageLookupByLibrary.simpleMessage(
+      "Remove from Display",
+    ),
+    "alert_create": MessageLookupByLibrary.simpleMessage("Create Alert"),
+    "alert_delete": MessageLookupByLibrary.simpleMessage("Delete Alert"),
+    "alert_edit": MessageLookupByLibrary.simpleMessage("Edit Alert"),
     "alert_editor_title": MessageLookupByLibrary.simpleMessage(
       "Send Instant Alert",
     ),
@@ -85,9 +99,27 @@ class MessageLookup extends MessageLookupByLibrary {
     "alert_field_message": MessageLookupByLibrary.simpleMessage(
       "Urgent Message",
     ),
+    "alert_publish": MessageLookupByLibrary.simpleMessage("Publish to Display"),
+    "alert_publish_duration": MessageLookupByLibrary.simpleMessage(
+      "Display duration",
+    ),
     "alert_send_action": MessageLookupByLibrary.simpleMessage("Send to Screen"),
+    "alert_status_live": MessageLookupByLibrary.simpleMessage("LIVE"),
+    "alert_status_ready": MessageLookupByLibrary.simpleMessage("Ready"),
+    "alert_unpublish": MessageLookupByLibrary.simpleMessage(
+      "Remove from Display",
+    ),
     "alerts_clear_all": MessageLookupByLibrary.simpleMessage(
       "Clear All Active Alerts",
+    ),
+    "alerts_delete_all": MessageLookupByLibrary.simpleMessage(
+      "Delete All Alerts",
+    ),
+    "alerts_empty_new_subtitle": MessageLookupByLibrary.simpleMessage(
+      "Create an alert and publish it when needed",
+    ),
+    "alerts_empty_new_title": MessageLookupByLibrary.simpleMessage(
+      "No alerts yet",
     ),
     "alerts_empty_subtitle": MessageLookupByLibrary.simpleMessage(
       "These alerts appear full-screen on the display.",
@@ -162,6 +194,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "design_active_card_text_color": MessageLookupByLibrary.simpleMessage(
       "Active card text color",
     ),
+    "design_alerts_font_size": MessageLookupByLibrary.simpleMessage(
+      "Alerts font size",
+    ),
     "design_announcements_font_size": MessageLookupByLibrary.simpleMessage(
       "Announcements Font Size",
     ),
@@ -222,6 +257,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "design_content_font_size": MessageLookupByLibrary.simpleMessage(
       "Hadiths & Content Font Size",
     ),
+    "design_countdown_font_size": MessageLookupByLibrary.simpleMessage(
+      "Countdown font size",
+    ),
     "design_display_background_image": MessageLookupByLibrary.simpleMessage(
       "Display background image",
     ),
@@ -277,6 +315,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "design_primary_color": MessageLookupByLibrary.simpleMessage(
       "Clock and Time color",
+    ),
+    "design_religious_content_font_size": MessageLookupByLibrary.simpleMessage(
+      "Religious content font size",
     ),
     "design_secondary_color": MessageLookupByLibrary.simpleMessage(
       "Ticker bar color",
@@ -584,6 +625,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "tab_about": MessageLookupByLibrary.simpleMessage("About App"),
     "tab_adhkar": MessageLookupByLibrary.simpleMessage("Dhikr"),
+    "tab_album": MessageLookupByLibrary.simpleMessage("Album"),
     "tab_alerts": MessageLookupByLibrary.simpleMessage("Instant Alerts"),
     "tab_announcements": MessageLookupByLibrary.simpleMessage("Announcements"),
     "tab_design": MessageLookupByLibrary.simpleMessage("Design"),
