@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
 import '../../bloc/settings/settings_bloc.dart';
 
@@ -77,9 +78,10 @@ class _IqamaSectionState extends State<IqamaSection> {
             onChanged: (n) => bloc.add(IqamaOffsetChanged(IqamaField.jummah, n)),
           ),
           const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () => _save(),
-            child: Text(s.save_iqama_settings),
+          AppButton.elevated(
+            label: s.save_iqama_settings,
+            onPressed: _save,
+            icon: Icons.save_rounded,
           ),
         ],
       ),

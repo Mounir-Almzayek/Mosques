@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/enums/app_language.dart';
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
 import '../../../language/bloc/language/language_bloc.dart';
@@ -238,9 +239,10 @@ class _PrayerIqamaSectionState extends State<PrayerIqamaSection> {
         const SizedBox(height: 24),
 
         // ── Save button ─────────────────────────────────────────────────
-        ElevatedButton(
+        AppButton.elevated(
+          label: s.save_general_settings,
           onPressed: _save,
-          child: Text(s.save_general_settings),
+          icon: Icons.save_rounded,
         ),
 
         const SizedBox(height: 16),

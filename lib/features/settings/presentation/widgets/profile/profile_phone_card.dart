@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../../../core/l10n/generated/l10n.dart';
-import '../../../bloc/profile/profile_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../core/l10n/generated/l10n.dart';
+import '../../../../../core/widgets/buttons/app_button.dart';
+import '../../../bloc/profile/profile_bloc.dart';
 
 class ProfilePhoneCard extends StatefulWidget {
   final ProfileState state;
@@ -81,34 +82,15 @@ class _ProfilePhoneCardState extends State<ProfilePhoneCard> {
               ),
             ),
             const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              height: 54,
-              child: ElevatedButton(
-                onPressed: isLoading
-                    ? null
-                    : () {
-                        context.read<ProfileBloc>().add(
-                              UpdatePhoneRequested(widget.phoneController.text),
-                            );
-                      },
-                child: isLoading
-                    ? SizedBox(
-                        height: 24,
-                        width: 24,
-                        child: CircularProgressIndicator(
-                          color: theme.colorScheme.onPrimary,
-                          strokeWidth: 2,
-                        ),
-                      )
-                    : Text(
-                        s.profile_save_changes,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-              ),
+            AppButton.elevated(
+              label: s.profile_save_changes,
+              isLoading: isLoading,
+              disabled: isLoading,
+              onPressed: () {
+                context.read<ProfileBloc>().add(
+                      UpdatePhoneRequested(widget.phoneController.text),
+                    );
+              },
             ),
           ],
         ),

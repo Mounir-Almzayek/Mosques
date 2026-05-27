@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/feedback/unified_snackbar.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
 import '../../bloc/settings/settings_bloc.dart';
@@ -159,9 +160,10 @@ class _GeneralSectionState extends State<GeneralSection> {
             ],
           ),
           const SizedBox(height: 32),
-          ElevatedButton(
-            onPressed: () => _save(),
-            child: Text(s.save_general_settings),
+          AppButton.elevated(
+            label: s.save_general_settings,
+            onPressed: _save,
+            icon: Icons.save_rounded,
           ),
         ],
       ),

@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/enums/registration_type.dart';
+import '../../../core/widgets/buttons/app_button.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/feedback/unified_snackbar.dart';
@@ -307,32 +308,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Widget _buildAction(S s) {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
       builder: (context, state) {
-        if (state.status == RegistrationStatus.loading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        return ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
+        return AppButton.elevated(
+          label: s.register_button,
+          isLoading: state.status == RegistrationStatus.loading,
+          disabled: state.status == RegistrationStatus.loading,
           onPressed: _submit,
-          child: Text(
-            s.register_button,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
         );
       },
     );
   }
 
   Widget _buildLoginLink(ThemeData theme, S s) {
-    return TextButton(
+    return AppButton.text(
+      label: s.login_link,
       onPressed: () => Navigator.of(context).pop(),
-      child: Text(s.login_link, style: TextStyle(color: theme.primaryColor)),
+      foregroundColor: theme.primaryColor,
     );
   }
 

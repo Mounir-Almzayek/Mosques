@@ -7,8 +7,8 @@ import 'package:go_router/go_router.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/utils/responsive_layout.dart';
+import '../../../core/widgets/buttons/app_button.dart';
 import '../../../core/widgets/feedback/unified_snackbar.dart';
-import '../../../core/widgets/forms/custom_elevated_button.dart';
 import '../../../core/widgets/forms/custom_text_field.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/di/service_locator.dart';
@@ -239,14 +239,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     ),
                                     SizedBox(height: 28.h),
-                                    CustomElevatedButton(
-                                      title: s.login_button,
+                                    AppButton.elevated(
+                                      label: s.login_button,
                                       isLoading: loading,
                                       disabled: loading,
                                       onPressed: _submit,
                                       icon: Icons.login_rounded,
-                                      useGradient: false,
-                                      useShadow: false,
                                     ),
                                   ],
                                 ),
@@ -274,19 +272,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 if (!canOpenRegistration) {
                                   return const SizedBox.shrink();
                                 }
-                                return TextButton(
-                                  onPressed: () =>
-                                      context.push(Routes.registrationPath),
-                                  style: TextButton.styleFrom(
-                                    foregroundColor: AppColors.primaryDark,
-                                  ),
-                                  child: Text(
-                                    s.register_link,
-                                    style: TextStyle(
-                                      fontSize: context.adaptiveFont(14.sp),
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
+                                return AppButton.text(
+                                  label: s.register_link,
+                                  onPressed: () => context.push(Routes.registrationPath),
+                                  foregroundColor: AppColors.primaryDark,
+                                  fontSize: context.adaptiveFont(14.sp),
                                 );
                               },
                             ),

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../l10n/generated/l10n.dart';
 import '../../styles/app_colors.dart';
 import '../../utils/responsive_layout.dart';
+import '../buttons/app_button.dart';
 
 class ErrorStateWidget extends StatelessWidget {
   final String? title;
@@ -113,35 +114,10 @@ class ErrorStateWidget extends StatelessWidget {
           SizedBox(
             height: context.responsive(24.h, tablet: 28.h, desktop: 32.h),
           ),
-          ElevatedButton(
+          AppButton.elevated(
+            label: s.retry,
             onPressed: onRetry,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
-              padding: EdgeInsets.symmetric(
-                horizontal: context.responsive(
-                  24.w,
-                  tablet: 32.w,
-                  desktop: 40.w,
-                ),
-                vertical: context.responsive(12.h, tablet: 14.h, desktop: 16.h),
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(
-                  context.responsive(12.r, tablet: 14.r, desktop: 16.r),
-                ),
-              ),
-              elevation: 0,
-            ),
-            child: Text(
-              s.retry,
-              style: TextStyle(
-                fontSize: context.adaptiveFont(
-                  context.responsive(14.sp, tablet: 16.sp, desktop: 18.sp),
-                ),
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            expand: false,
           ),
         ],
       ],
@@ -202,27 +178,10 @@ class ErrorStateWidget extends StatelessWidget {
               // Retry Button
               if (onRetry != null) ...[
                 SizedBox(height: 32.h),
-                ElevatedButton(
+                AppButton.elevated(
+                  label: s.retry,
                   onPressed: onRetry,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 40.w,
-                      vertical: 16.h,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.r),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                    s.retry,
-                    style: TextStyle(
-                      fontSize: context.adaptiveFont(18.sp),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  expand: false,
                 ),
               ],
             ],
