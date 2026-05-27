@@ -10,7 +10,9 @@ class FontSizeSettingsSection extends StatelessWidget {
   final ValueChanged<double> onMosqueInfoSizeChanged;
   final ValueChanged<double> onPrayersSizeChanged;
   final ValueChanged<double> onAnnouncementsSizeChanged;
-  final ValueChanged<double> onContentSizeChanged;
+  final ValueChanged<double> onReligiousContentSizeChanged;
+  final ValueChanged<double> onAlertsSizeChanged;
+  final ValueChanged<double> onCountdownSizeChanged;
 
   const FontSizeSettingsSection({
     super.key,
@@ -19,7 +21,9 @@ class FontSizeSettingsSection extends StatelessWidget {
     required this.onMosqueInfoSizeChanged,
     required this.onPrayersSizeChanged,
     required this.onAnnouncementsSizeChanged,
-    required this.onContentSizeChanged,
+    required this.onReligiousContentSizeChanged,
+    required this.onAlertsSizeChanged,
+    required this.onCountdownSizeChanged,
   });
 
   @override
@@ -58,10 +62,22 @@ class FontSizeSettingsSection extends StatelessWidget {
             icon: Icons.campaign_outlined,
           ),
           DesignFontSizeItem(
-            label: s.design_content_font_size,
+            label: s.design_religious_content_font_size,
             value: fontSizes.religiousContent,
-            onChanged: onContentSizeChanged,
-            icon: Icons.description_outlined,
+            onChanged: onReligiousContentSizeChanged,
+            icon: Icons.auto_stories_outlined,
+          ),
+          DesignFontSizeItem(
+            label: s.design_alerts_font_size,
+            value: fontSizes.alerts,
+            onChanged: onAlertsSizeChanged,
+            icon: Icons.notification_important_outlined,
+          ),
+          DesignFontSizeItem(
+            label: s.design_countdown_font_size,
+            value: fontSizes.countdown,
+            onChanged: onCountdownSizeChanged,
+            icon: Icons.timer_outlined,
           ),
         ],
       ),

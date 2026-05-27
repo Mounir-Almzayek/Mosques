@@ -86,8 +86,12 @@ class DesignSection extends StatelessWidget {
                       onAnnouncementsSizeChanged: (val) => bloc.add(
                         DesignFontSizeChanged(DesignFontSizeField.announcements, val),
                       ),
-                      onContentSizeChanged: (val) =>
+                      onReligiousContentSizeChanged: (val) =>
                           bloc.add(DesignFontSizeChanged(DesignFontSizeField.religiousContent, val)),
+                      onAlertsSizeChanged: (val) =>
+                          bloc.add(DesignFontSizeChanged(DesignFontSizeField.alerts, val)),
+                      onCountdownSizeChanged: (val) =>
+                          bloc.add(DesignFontSizeChanged(DesignFontSizeField.countdown, val)),
                     ),
                     const SizedBox(height: 20),
 
