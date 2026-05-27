@@ -310,5 +310,23 @@
   "registration_phone": "رقم الهاتف (للتواصل السريع)",
   "profile_phone_label": "رقم الهاتف للتواصل",
   "profile_phone_hint": "تأكد من إدخال رقمك الصحيح، سيقوم فريق الدعم الفني بالتواصل معك من خلاله للحفاظ على حسابك ومسجدك مفعلاً دائماً.",
-  "update_up_to_date": "التطبيق محدّث إلى آخر إصدار"
+  "update_up_to_date": "التطبيق محدّث إلى آخر إصدار",
+
+  "tab_prayer_iqama": "الصلاة والإقامة",
+  "tab_religious_content": "المحتوى الديني",
+  "tab_photo_studio": "معرض الصور",
+  "prayer_offsets_title": "تعديلات أوقات الصلاة",
+  "display_timing_title": "توقيت العرض",
+  "pre_adhan_minutes": "دقائق قبل الأذان",
+  "adhan_moment_duration": "مدة الأذان (ثواني)",
+  "religious_content_timing": "توقيت المحتوى",
+  "religious_content_wait": "الانتظار بين المحتوى (ثواني)",
+  "religious_content_display": "مدة العرض (ثواني)",
+  "photo_studio_empty": "لم تتم إضافة صور بعد",
+  "photo_studio_add_url": "إضافة رابط صورة",
+  "prayer_card_scale": "حجم بطاقات الصلاة",
+  "design_bg_type_album": "ألبوم",
+  "url_label": "رابط",
+  "add_label": "إضافة",
+  "settings_language": "اللغة"
 }

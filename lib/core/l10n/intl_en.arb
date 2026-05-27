@@ -310,5 +310,23 @@
   "registration_phone": "Phone Number (For fast contact)",
   "profile_phone_label": "Contact Phone Number",
   "profile_phone_hint": "Please ensure you enter your correct number. Tech support will use it to contact you and ensure your account and mosque remain active.",
-  "update_up_to_date": "Your app is up to date"
+  "update_up_to_date": "Your app is up to date",
+
+  "tab_prayer_iqama": "Prayer & Iqama",
+  "tab_religious_content": "Religious Content",
+  "tab_photo_studio": "Photo Studio",
+  "prayer_offsets_title": "Prayer Time Offsets",
+  "display_timing_title": "Display Timing",
+  "pre_adhan_minutes": "Minutes before Adhan",
+  "adhan_moment_duration": "Adhan duration (seconds)",
+  "religious_content_timing": "Content Timing",
+  "religious_content_wait": "Wait between content (seconds)",
+  "religious_content_display": "Display duration (seconds)",
+  "photo_studio_empty": "No photos added yet",
+  "photo_studio_add_url": "Add Image URL",
+  "prayer_card_scale": "Prayer Card Size",
+  "design_bg_type_album": "Album",
+  "url_label": "URL",
+  "add_label": "Add",
+  "settings_language": "Language"
 }
