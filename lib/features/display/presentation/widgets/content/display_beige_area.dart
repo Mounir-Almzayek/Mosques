@@ -5,15 +5,18 @@ import '../../../../../core/utils/prayer_times_helper.dart';
 import '../../../../../data/models/design/design_settings_model.dart';
 import '../../../../../data/models/mosque/mosque_model.dart';
 import '../prayer/prayer_cards_row.dart';
+import 'religious_content_inline.dart';
 
 class DisplayBeigeArea extends StatefulWidget {
   final MosqueModel mosque;
   final DesignSettingsModel designSettings;
+  final bool showReligiousContent;
 
   const DisplayBeigeArea({
     super.key,
     required this.mosque,
     required this.designSettings,
+    this.showReligiousContent = false,
   });
 
   @override
@@ -56,19 +59,26 @@ class _DisplayBeigeAreaState extends State<DisplayBeigeArea> {
     final design = widget.designSettings;
     return LayoutBuilder(builder: (context, outer) {
       final hPad = (outer.maxWidth * 0.012).clamp(6.0, 22.0);
+      final vPad = (outer.maxHeight * 0.02).clamp(6.0, 22.0);
       return Padding(
-        padding: EdgeInsets.symmetric(horizontal: hPad),
-        child: Center(
-          child: Transform.scale(
-            scale: design.prayerCardScale,
-            child: PrayerCardsRow(
-              mosque: widget.mosque,
-              designSettings: design,
-              helper: _helper,
-              now: _now,
-              focusScale: 1.3,
-            ),
-          ),
+        padding: EdgeInsets.symmetric(horizontal: hPad,vertical: vPad),
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 600),
+          child: widget.showReligiousContent
+              ? ReligiousContentInline(
+                  key: const ValueKey('religious'),
+                  mosque: widget.mosque,
+                  designSettings: design,
+                  religiousContentFontSize: design.fontSizes.religiousContent,
+                )
+              : PrayerCardsRow(
+                  key: const ValueKey('prayers'),
+                  mosque: widget.mosque,
+                  designSettings: design,
+                  helper: _helper,
+                  now: _now,
+                  focusScale: design.prayerCardScale,
+                ),
         ),
       );
     });
