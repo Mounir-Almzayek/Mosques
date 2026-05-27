@@ -134,8 +134,30 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             SizedBox(height: 20.h),
-                            _BrandMark(
-                              size: context.responsive(88.r, tablet: 100.r),
+                            Center(
+                              child: Container(
+                                width: context.responsive(120.w, tablet: 140.w),
+                                padding: EdgeInsets.all(
+                                  context.responsive(14.w, tablet: 18.w),
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20.r),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: AppColors.primary.withValues(
+                                        alpha: 0.10,
+                                      ),
+                                      blurRadius: 24,
+                                      offset: const Offset(0, 8),
+                                    ),
+                                  ],
+                                ),
+                                child: Image.asset(
+                                  'assets/logo.png',
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
                             ),
                             SizedBox(height: 24.h),
                             Text(
@@ -288,44 +310,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _BrandMark extends StatelessWidget {
-  const _BrandMark({required this.size});
-
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: AppColors.primaryGradient,
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primary.withValues(alpha: 0.35),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(size * 0.14),
-          child: FittedBox(
-            fit: BoxFit.contain,
-            child: Icon(
-              Icons.mosque_outlined,
-              color: Colors.white,
-              size: size * 0.58,
-            ),
           ),
         ),
       ),
