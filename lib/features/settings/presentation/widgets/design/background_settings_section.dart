@@ -16,6 +16,9 @@ class BackgroundSettingsSection extends StatelessWidget {
   final ValueChanged<String> onAlbumUrlAdded;
   final void Function(int) onAlbumUrlRemoved;
 
+  /// Available background images from the global library (app_settings).
+  final List<String> libraryUrls;
+
   const BackgroundSettingsSection({
     super.key,
     required this.settings,
@@ -24,6 +27,7 @@ class BackgroundSettingsSection extends StatelessWidget {
     required this.albumUrls,
     required this.onAlbumUrlAdded,
     required this.onAlbumUrlRemoved,
+    this.libraryUrls = const [],
   });
 
   void _showColorPicker(BuildContext context) {
@@ -125,12 +129,10 @@ class BackgroundSettingsSection extends StatelessWidget {
               onUrlRemoved: onAlbumUrlRemoved,
             )
           else
-            SizedBox(
-              height: 120,
-              child: DisplayBackgroundPicker(
-                selectedValue: settings.value,
-                onSelected: onValueChanged,
-              ),
+            DisplayBackgroundPicker(
+              selectedValue: settings.value,
+              libraryUrls: libraryUrls,
+              onSelected: onValueChanged,
             ),
         ],
       ),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import '../../../../core/di/service_locator.dart';
 import '../../../../core/styles/app_theme.dart';
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../data/models/app/app_settings_model.dart';
+import '../../../../data/repositories/interfaces/app_settings_repository_interface.dart';
 import '../../bloc/settings/settings_bloc.dart';
-import '../../bloc/settings/settings_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/design/design_widgets.dart';
 
@@ -20,6 +22,12 @@ class DesignSection extends StatelessWidget {
         final design = mosque.designSettings;
         final bloc = context.read<SettingsBloc>();
 
+        return StreamBuilder<AppSettingsModel?>(
+          stream: sl<IAppSettingsRepository>().streamAppSettings,
+          builder: (context, appSettingsSnapshot) {
+            final libraryUrls =
+                appSettingsSnapshot.data?.backgroundLibraryUrls ?? [];
+
         return Theme(
           data: AppTheme.light(context),
           child: Stack(
@@ -33,6 +41,7 @@ class DesignSection extends StatelessWidget {
                     BackgroundSettingsSection(
                       settings: design.background,
                       albumUrls: mosque.backgroundAlbumUrls,
+                      libraryUrls: libraryUrls,
                       onTypeChanged: (type) =>
                           bloc.add(DesignBackgroundTypeChanged(type)),
                       onValueChanged: (val) =>
@@ -198,6 +207,8 @@ class DesignSection extends StatelessWidget {
                 ),
             ],
           ),
+        );
+          },
         );
       },
     );

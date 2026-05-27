@@ -4,13 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/enums/display/display_layer_kind.dart';
-import '../../../core/enums/display_background_preset.dart';
-import '../../../core/enums/display_background_type.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/styles/app_theme.dart';
 import '../../../core/utils/prayer_times_helper.dart';
-import '../../../core/widgets/media/media_widgets.dart';
 import '../../../data/models/mosque/mosque_model.dart';
 import '../../../core/enums/app_mode.dart';
 import '../../../core/di/service_locator.dart';
@@ -86,16 +83,6 @@ class _DisplayScreenState extends State<DisplayScreen> {
     context.go(Routes.settingsPath);
   }
 
-  void _precacheBackgrounds(MosqueModel mosque) {
-    final d = mosque.designSettings;
-    if (d.background.type == DisplayBackgroundType.image) {
-      final path = DisplayBackgroundPreset.fromStorageId(d.background.value).assetPath;
-      final media = MediaQuery.of(context);
-      final cappedWidth = (media.size.width * media.devicePixelRatio).round().clamp(0, 1920);
-      precacheOptimizedAsset(context, path, cacheWidth: cappedWidth);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,7 +104,6 @@ class _DisplayScreenState extends State<DisplayScreen> {
 
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
-              _precacheBackgrounds(mosque);
               _updateLayerInputs();
               _layerController.startReligiousCycle();
             }

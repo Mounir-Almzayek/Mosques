@@ -63,6 +63,7 @@ abstract final class FirestoreSchema {
   // App settings fields
   // ---------------------------------------------------------------------------
   static const String backgroundFolderUrl = 'background_folder_url';
+  static const String backgroundLibraryUrls = 'background_library_urls';
 
   // ---------------------------------------------------------------------------
   // Mosque fields — timestamps

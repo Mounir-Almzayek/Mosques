@@ -1,9 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 /// Fullscreen photo display overlay (priority 2).
 ///
-/// Loads a single network image from [imageUrl] and fills the screen.
-/// Shows a progress indicator while loading and a broken-image icon on error.
+/// Loads a single network image from [imageUrl] with disk caching
+/// for offline support. Fills the screen with optional progress indicator.
 class PhotoStudioLayer extends StatelessWidget {
   final String imageUrl;
   final BoxFit fit;
@@ -23,48 +24,30 @@ class PhotoStudioLayer extends StatelessWidget {
       body: SizedBox(
         width: double.infinity,
         height: double.infinity,
-        child: Image.network(
-          imageUrl,
+        child: CachedNetworkImage(
+          imageUrl: imageUrl,
           fit: fit,
           width: double.infinity,
           height: double.infinity,
-          loadingBuilder: _loadingBuilder,
-          errorBuilder: _errorBuilder,
+          fadeInDuration: const Duration(milliseconds: 300),
+          progressIndicatorBuilder: (context, url, progress) {
+            return Center(
+              child: CircularProgressIndicator(
+                value: progress.progress,
+                color: Colors.white70,
+              ),
+            );
+          },
+          errorWidget: (context, url, error) {
+            return const Center(
+              child: Icon(
+                Icons.broken_image_rounded,
+                size: 80,
+                color: Colors.white38,
+              ),
+            );
+          },
         ),
-      ),
-    );
-  }
-
-  Widget _loadingBuilder(
-    BuildContext context,
-    Widget child,
-    ImageChunkEvent? loadingProgress,
-  ) {
-    if (loadingProgress == null) return child;
-
-    final expectedBytes = loadingProgress.expectedTotalBytes;
-    final progress = expectedBytes != null
-        ? loadingProgress.cumulativeBytesLoaded / expectedBytes
-        : null;
-
-    return Center(
-      child: CircularProgressIndicator(
-        value: progress,
-        color: Colors.white70,
-      ),
-    );
-  }
-
-  Widget _errorBuilder(
-    BuildContext context,
-    Object error,
-    StackTrace? stackTrace,
-  ) {
-    return const Center(
-      child: Icon(
-        Icons.broken_image_rounded,
-        size: 80,
-        color: Colors.white38,
       ),
     );
   }

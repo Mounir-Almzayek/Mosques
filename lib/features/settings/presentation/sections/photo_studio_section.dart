@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
+import '../../../../core/widgets/media/media_widgets.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
 import '../../bloc/settings/settings_bloc.dart';
 
@@ -83,23 +84,10 @@ class PhotoStudioSection extends StatelessWidget {
               final url = urls[index];
               return Card(
                 child: ListTile(
-                  leading: ClipRRect(
+                  leading: CachedImage.thumbnail(
+                    url: url,
+                    size: 56,
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      url,
-                      width: 56,
-                      height: 56,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        width: 56,
-                        height: 56,
-                        color: AppColors.primaryWhisper,
-                        child: const Icon(
-                          Icons.broken_image_outlined,
-                          color: AppColors.primarySurface,
-                        ),
-                      ),
-                    ),
                   ),
                   title: Text(
                     url,

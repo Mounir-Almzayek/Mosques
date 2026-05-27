@@ -11,6 +11,11 @@ class AppSettingsModel extends Equatable {
   /// Global background folder URL (set in Firebase app_settings/global).
   final String? backgroundFolderUrl;
 
+  /// List of available background image URLs (set in Firebase app_settings/global).
+  /// These replace the old hardcoded asset presets and serve as the selectable
+  /// background library in the design settings.
+  final List<String> backgroundLibraryUrls;
+
   // Backward compatibility fields
   String get latestVersion => update.latestVersion;
   String get updateMessage => update.releaseNotes;
@@ -21,6 +26,7 @@ class AppSettingsModel extends Equatable {
     this.supportPhone = '',
     this.allowRegistration = true,
     this.backgroundFolderUrl,
+    this.backgroundLibraryUrls = const [],
   });
 
   factory AppSettingsModel.fromMap(Map<String, dynamic> map) {
@@ -35,6 +41,10 @@ class AppSettingsModel extends Equatable {
               .toList() ??
           [],
       backgroundFolderUrl: map['background_folder_url'] as String?,
+      backgroundLibraryUrls: (map['background_library_urls'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
       update: AppUpdateModel.fromMap(
         map['update'] ??
             {
@@ -52,9 +62,10 @@ class AppSettingsModel extends Equatable {
       'about_categories': aboutCategories.map((e) => e.toMap()).toList(),
       'update': update.toMap(),
       if (backgroundFolderUrl != null) 'background_folder_url': backgroundFolderUrl,
+      if (backgroundLibraryUrls.isNotEmpty) 'background_library_urls': backgroundLibraryUrls,
     };
   }
 
   @override
-  List<Object?> get props => [aboutCategories, update, supportPhone, allowRegistration, backgroundFolderUrl];
+  List<Object?> get props => [aboutCategories, update, supportPhone, allowRegistration, backgroundFolderUrl, backgroundLibraryUrls];
 }

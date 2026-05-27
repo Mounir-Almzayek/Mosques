@@ -1,13 +1,10 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import '../../../../../core/enums/display_background_preset.dart';
 import '../../../../../core/enums/display_background_type.dart';
 import '../../../../../core/utils/color_parser.dart';
-import '../../../../../core/widgets/media/optimized_image.dart';
 import '../../../../../data/models/design/design_background_settings.dart';
-
-const String kDisplayBackgroundFallbackAsset = 'assets/logo.png';
 
 /// Duration between album background image transitions.
 const Duration _kAlbumCycleDuration = Duration(seconds: 30);
@@ -84,11 +81,19 @@ class _DisplayBackgroundImageState extends State<DisplayBackgroundImage> {
       return _buildAlbumBackground();
     }
 
-    // Image preset background
-    final preset =
-        DisplayBackgroundPreset.fromStorageId(widget.settings.value);
-    final primaryPath = preset.assetPath;
+    // Image type — remote URL stored in background_value
+    final url = widget.settings.value;
 
+    // If value looks like a URL, load from network with caching.
+    // Otherwise (empty, 'default', or old preset ID), show fallback color.
+    if (url.startsWith('http')) {
+      return _buildCachedImage(url);
+    }
+
+    return Container(color: widget.fallbackColor);
+  }
+
+  Widget _buildCachedImage(String url) {
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -96,23 +101,17 @@ class _DisplayBackgroundImageState extends State<DisplayBackgroundImage> {
           decoration: BoxDecoration(color: widget.fallbackColor),
           child: const SizedBox.expand(),
         ),
-        OptimizedImage.background(
-          primaryPath,
-          context: context,
+        CachedNetworkImage(
+          imageUrl: url,
           fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return OptimizedImage.background(
-              kDisplayBackgroundFallbackAsset,
-              context: context,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return DecoratedBox(
-                  decoration: BoxDecoration(color: widget.fallbackColor),
-                  child: const SizedBox.expand(),
-                );
-              },
-            );
-          },
+          width: double.infinity,
+          height: double.infinity,
+          fadeInDuration: const Duration(milliseconds: 500),
+          placeholder: (context, url) => const SizedBox.shrink(),
+          errorWidget: (context, url, error) => DecoratedBox(
+            decoration: BoxDecoration(color: widget.fallbackColor),
+            child: const SizedBox.expand(),
+          ),
         ),
       ],
     );
@@ -125,8 +124,8 @@ class _DisplayBackgroundImageState extends State<DisplayBackgroundImage> {
     // or the fallback color.
     if (urls.isEmpty) {
       final singleUrl = widget.settings.value;
-      if (singleUrl.isNotEmpty) {
-        return _buildNetworkImage(singleUrl);
+      if (singleUrl.isNotEmpty && singleUrl.startsWith('http')) {
+        return _buildCachedImage(singleUrl);
       }
       return Container(color: widget.fallbackColor);
     }
@@ -143,41 +142,19 @@ class _DisplayBackgroundImageState extends State<DisplayBackgroundImage> {
         ),
         AnimatedSwitcher(
           duration: _kAlbumCrossfadeDuration,
-          child: Image.network(
-            currentUrl,
+          child: CachedNetworkImage(
             key: ValueKey(currentUrl),
+            imageUrl: currentUrl,
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
-            errorBuilder: (context, error, stackTrace) {
-              return DecoratedBox(
-                decoration: BoxDecoration(color: widget.fallbackColor),
-                child: const SizedBox.expand(),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildNetworkImage(String url) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        DecoratedBox(
-          decoration: BoxDecoration(color: widget.fallbackColor),
-          child: const SizedBox.expand(),
-        ),
-        Image.network(
-          url,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return DecoratedBox(
+            fadeInDuration: const Duration(milliseconds: 300),
+            placeholder: (context, url) => const SizedBox.shrink(),
+            errorWidget: (context, url, error) => DecoratedBox(
               decoration: BoxDecoration(color: widget.fallbackColor),
               child: const SizedBox.expand(),
-            );
-          },
+            ),
+          ),
         ),
       ],
     );
