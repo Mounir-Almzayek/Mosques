@@ -11,6 +11,9 @@ class PrayerCardsRow extends StatelessWidget {
   final DesignSettingsModel designSettings;
   final PrayerTimesHelper helper;
   final DateTime now;
+
+  /// Ratio of the focused card width to an inactive card width.
+  /// 1.0 = all equal, 2.0 = active card is 2× wider.
   final double focusScale;
 
   const PrayerCardsRow({
@@ -29,8 +32,26 @@ class PrayerCardsRow extends StatelessWidget {
     final phase = helper.getPrayerDisplayPhase(now, preAdhanMinutes: preAdhanMin);
     final slots = PrayerDisplaySlot.values;
     final isFriday = now.weekday == DateTime.friday;
+    final slotCount = slots.length;
+
+    // Clamp focusScale to sensible range (at least 1.0)
+    final effectiveScale = focusScale.clamp(1.0, 5.0);
+
+    // Calculate width fractions:
+    // denominator = effectiveScale + (slotCount - 1) * 1.0
+    // activeWidth  = effectiveScale / denominator
+    // inactiveWidth = 1.0 / denominator
+    final denominator = effectiveScale + (slotCount - 1);
+    final activeFraction = effectiveScale / denominator;
+    final inactiveFraction = 1.0 / denominator;
 
     return LayoutBuilder(builder: (context, outer) {
+      final totalWidth = outer.maxWidth;
+      final hPad = (totalWidth * 0.006).clamp(3.0, 10.0);
+      // Total padding consumed by all cards
+      final totalPadding = hPad * 2 * slotCount;
+      final usableWidth = totalWidth - totalPadding;
+
       return Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: slots.map((slot) {
@@ -41,14 +62,16 @@ class PrayerCardsRow extends StatelessWidget {
                   now.day == azanTime.day) ||
               (isFocusCard && phase.kind == PrayerDisplayPhaseKind.graceAfterIqama);
 
-          final flex = isFocusCard ? (focusScale * 10).round() : 10;
+          final targetWidth = isFocusCard
+              ? usableWidth * activeFraction
+              : usableWidth * inactiveFraction;
 
-          return Expanded(
-            flex: flex,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: (outer.maxWidth * 0.006).clamp(3.0, 10.0),
-              ),
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: hPad),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 600),
+              curve: Curves.easeInOutCubic,
+              width: targetWidth,
               child: DisplayPrayerCard(
                 slot: slot,
                 azanTime: azanTime,

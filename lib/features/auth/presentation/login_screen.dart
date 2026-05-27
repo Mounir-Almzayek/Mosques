@@ -83,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 left: 0,
                 right: 0,
                 child: Container(
-                  height: 5.h,
+                  height: context.responsive(5.h, tablet: 4, desktop: 4),
                   decoration: const BoxDecoration(
                     gradient: AppColors.accentGradient,
                   ),
@@ -107,20 +107,28 @@ class _LoginScreenState extends State<LoginScreen> {
                     return SingleChildScrollView(
                       physics: const BouncingScrollPhysics(),
                       padding: EdgeInsets.symmetric(
-                        horizontal: context.responsive(20.w, tablet: 48.w),
-                        vertical: 12.h,
+                        horizontal: context.responsive(20.w, tablet: 48, desktop: 48),
+                        vertical: context.responsive(12.h, tablet: 12, desktop: 12),
                       ),
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minHeight:
-                              MediaQuery.sizeOf(context).height -
-                              MediaQuery.paddingOf(context).vertical -
-                              24,
-                        ),
-                        child: Column(
+                      child: Center(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight:
+                                MediaQuery.sizeOf(context).height -
+                                MediaQuery.paddingOf(context).vertical -
+                                24,
+                            maxWidth: context.responsive(
+                              double.infinity,
+                              tablet: 500,
+                              desktop: 480,
+                            ),
+                          ),
+                          child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            SizedBox(height: 30.h),
+                            SizedBox(
+                              height: context.responsive(30.h, tablet: 30, desktop: 24),
+                            ),
                             Text(
                               s.bismillah,
                               textAlign: TextAlign.center,
@@ -133,16 +141,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                 height: 1.6,
                               ),
                             ),
-                            SizedBox(height: 20.h),
+                            SizedBox(
+                              height: context.responsive(20.h, tablet: 20, desktop: 16),
+                            ),
                             Center(
                               child: Container(
-                                width: context.responsive(120.w, tablet: 140.w),
+                                width: context.responsive(120.w, tablet: 130, desktop: 120),
                                 padding: EdgeInsets.all(
-                                  context.responsive(14.w, tablet: 18.w),
+                                  context.responsive(14.w, tablet: 14, desktop: 14),
                                 ),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20.r),
+                                  borderRadius: BorderRadius.circular(
+                                    context.responsive(20.r, tablet: 20, desktop: 20),
+                                  ),
                                   boxShadow: [
                                     BoxShadow(
                                       color: AppColors.primary.withValues(
@@ -159,7 +171,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 24.h),
+                            SizedBox(
+                              height: context.responsive(24.h, tablet: 24, desktop: 20),
+                            ),
                             Text(
                               s.login_title,
                               textAlign: TextAlign.center,
@@ -170,7 +184,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 letterSpacing: 0.3,
                               ),
                             ),
-                            SizedBox(height: 8.h),
+                            SizedBox(
+                              height: context.responsive(8.h, tablet: 8, desktop: 8),
+                            ),
                             Text(
                               s.login_subtitle,
                               textAlign: TextAlign.center,
@@ -179,14 +195,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: AppColors.secondaryText,
                               ),
                             ),
-                            SizedBox(height: 28.h),
+                            SizedBox(
+                              height: context.responsive(28.h, tablet: 28, desktop: 24),
+                            ),
                             Container(
                               padding: EdgeInsets.all(
-                                context.responsive(20.w, tablet: 28.w),
+                                context.responsive(20.w, tablet: 24, desktop: 24),
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(22.r),
+                                borderRadius: BorderRadius.circular(
+                                  context.responsive(22.r, tablet: 22, desktop: 22),
+                                ),
                                 border: Border.all(
                                   color: AppColors.primaryWhisper.withValues(
                                     alpha: 0.9,
@@ -233,7 +253,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                         size: context.adaptiveIcon(22.sp),
                                       ),
                                     ),
-                                    SizedBox(height: 18.h),
+                                    SizedBox(
+                                      height: context.responsive(18.h, tablet: 18, desktop: 16),
+                                    ),
                                     CustomTextField(
                                       controller: _passwordController,
                                       focusNode: _passwordFocusNode,
@@ -260,7 +282,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                         size: context.adaptiveIcon(22.sp),
                                       ),
                                     ),
-                                    SizedBox(height: 28.h),
+                                    SizedBox(
+                                      height: context.responsive(28.h, tablet: 28, desktop: 24),
+                                    ),
                                     AppButton.elevated(
                                       label: s.login_button,
                                       isLoading: loading,
@@ -272,7 +296,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 24.h),
+                            SizedBox(
+                              height: context.responsive(24.h, tablet: 24, desktop: 20),
+                            ),
                             Text(
                               s.tawakkul_quote,
                               textAlign: TextAlign.center,
@@ -285,7 +311,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 fontStyle: FontStyle.italic,
                               ),
                             ),
-                            SizedBox(height: 24.h),
+                            SizedBox(
+                              height: context.responsive(24.h, tablet: 24, desktop: 20),
+                            ),
                             FutureBuilder(
                               future: sl<IAppSettingsRepository>().getAppSettings(),
                               builder: (context, snapshot) {
@@ -304,6 +332,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ],
                         ),
+                      ),
                       ),
                     );
                   },

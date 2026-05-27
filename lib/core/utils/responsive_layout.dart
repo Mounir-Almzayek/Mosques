@@ -53,10 +53,10 @@ class ResponsiveLayout {
   }
 
   static double getTabletFontSize(double mobileSize) => mobileSize * 0.8;
-  static double getDesktopFontSize(double mobileSize) => mobileSize * 0.3;
+  static double getDesktopFontSize(double mobileSize) => mobileSize * 0.75;
 
   static double getTabletIconSize(double mobileSize) => mobileSize * 0.8;
-  static double getDesktopIconSize(double mobileSize) => mobileSize * 0.3;
+  static double getDesktopIconSize(double mobileSize) => mobileSize * 0.75;
 }
 
 extension ResponsiveContext on BuildContext {

@@ -136,11 +136,11 @@ class _SplashScreenState extends State<SplashScreen>
             children: [
               // ── Decorative blob: top-right ─────────────────────
               Positioned(
-                top: -150.h,
-                right: -150.w,
+                top: context.responsive(-150.h, tablet: -100, desktop: -100),
+                right: context.responsive(-150.w, tablet: -100, desktop: -100),
                 child: Container(
-                  width: 450.w,
-                  height: 450.w,
+                  width: context.responsive(450.w, tablet: 350, desktop: 400),
+                  height: context.responsive(450.w, tablet: 350, desktop: 400),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.primaryStart.withOpacityCompat(0.07),
@@ -150,11 +150,11 @@ class _SplashScreenState extends State<SplashScreen>
 
               // ── Decorative blob: bottom-left ───────────────────
               Positioned(
-                bottom: -100.h,
-                left: -100.w,
+                bottom: context.responsive(-100.h, tablet: -60, desktop: -60),
+                left: context.responsive(-100.w, tablet: -60, desktop: -60),
                 child: Container(
-                  width: 350.w,
-                  height: 350.w,
+                  width: context.responsive(350.w, tablet: 280, desktop: 320),
+                  height: context.responsive(350.w, tablet: 280, desktop: 320),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.primaryEnd.withOpacityCompat(0.07),
@@ -163,86 +163,96 @@ class _SplashScreenState extends State<SplashScreen>
               ),
 
               // ── Main content ───────────────────────────────────
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Logo with staggered fade + scale
-                  AnimatedBuilder(
-                    animation: _logoController,
-                    builder: (context, child) {
-                      return Opacity(
-                        opacity: _logoOpacity.value,
-                        child: Transform.scale(
-                          scale: _logoScale.value,
-                          child: child,
-                        ),
-                      );
-                    },
-                    child: Container(
-                      width: context.responsive(
-                        160.w,
-                        tablet: 180.w,
-                        desktop: 200.w,
-                      ),
-                      padding: EdgeInsets.all(16.w),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(24.r),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.primary.withOpacityCompat(0.15),
-                            blurRadius: 24,
-                            offset: const Offset(0, 8),
-                            spreadRadius: 0,
-                          ),
-                          BoxShadow(
-                            color: AppColors.primaryLight.withOpacityCompat(
-                              0.08,
+              Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Logo with staggered fade + scale
+                      AnimatedBuilder(
+                        animation: _logoController,
+                        builder: (context, child) {
+                          return Opacity(
+                            opacity: _logoOpacity.value,
+                            child: Transform.scale(
+                              scale: _logoScale.value,
+                              child: child,
                             ),
-                            blurRadius: 48,
-                            offset: const Offset(0, 16),
-                            spreadRadius: 4,
+                          );
+                        },
+                        child: Container(
+                          width: context.responsive(
+                            160.w,
+                            tablet: 180,
+                            desktop: 180,
                           ),
-                        ],
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(
+                              context.responsive(24.r, tablet: 24, desktop: 24),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.primary.withOpacityCompat(0.15),
+                                blurRadius: 24,
+                                offset: const Offset(0, 8),
+                                spreadRadius: 0,
+                              ),
+                              BoxShadow(
+                                color: AppColors.primaryLight.withOpacityCompat(
+                                  0.08,
+                                ),
+                                blurRadius: 48,
+                                offset: const Offset(0, 16),
+                                spreadRadius: 4,
+                              ),
+                            ],
+                          ),
+                          child: Image.asset(
+                            'assets/logo.png',
+                            fit: BoxFit.contain,
+                          ),
+                        ),
                       ),
-                      child: Image.asset(
-                        'assets/logo.png',
-                        fit: BoxFit.contain,
+
+                      SizedBox(
+                        height: context.responsive(28.h, tablet: 28, desktop: 28),
                       ),
-                    ),
+
+                      // Tagline with staggered fade
+                      FadeTransition(
+                        opacity: _taglineOpacity,
+                        child: Text(
+                          s.splash_app_tagline,
+                          style: TextStyle(
+                            fontSize: context.adaptiveFont(20.sp),
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.primary,
+                            letterSpacing: 0.8,
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(
+                        height: context.responsive(48.h, tablet: 48, desktop: 48),
+                      ),
+
+                      // Loading spinner with staggered fade
+                      FadeTransition(
+                        opacity: _spinnerOpacity,
+                        child: SizedBox(
+                          width: context.responsive(28.r, tablet: 28, desktop: 28),
+                          height: context.responsive(28.r, tablet: 28, desktop: 28),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.5,
+                            color: AppColors.primary.withValues(alpha: 0.5),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-
-                  SizedBox(height: 28.h),
-
-                  // Tagline with staggered fade
-                  FadeTransition(
-                    opacity: _taglineOpacity,
-                    child: Text(
-                      s.splash_app_tagline,
-                      style: TextStyle(
-                        fontSize: context.adaptiveFont(20.sp),
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.primary,
-                        letterSpacing: 0.8,
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: 48.h),
-
-                  // Loading spinner with staggered fade
-                  FadeTransition(
-                    opacity: _spinnerOpacity,
-                    child: SizedBox(
-                      width: 28.r,
-                      height: 28.r,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2.5,
-                        color: AppColors.primary.withValues(alpha: 0.5),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),
