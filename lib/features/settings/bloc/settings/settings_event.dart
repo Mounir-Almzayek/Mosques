@@ -21,7 +21,7 @@ enum DesignColorField {
   inactiveCardText,
 }
 
-enum DesignFontSizeField { clock, mosqueInfo, prayers, announcements, content }
+enum DesignFontSizeField { clock, mosqueInfo, prayers, announcements, religiousContent, alerts, countdown }
 
 enum DisplayTimingField {
   preAdhanMinutes,
@@ -335,34 +335,64 @@ class AlertRemoved extends SettingsEvent {
   List<Object?> get props => [alertId];
 }
 
-class AlertsCleared extends SettingsEvent {
-  const AlertsCleared();
+class AlertPublished extends SettingsEvent {
+  final String alertId;
+  final int durationSeconds;
+  const AlertPublished(this.alertId, this.durationSeconds);
+  @override
+  List<Object?> get props => [alertId, durationSeconds];
+}
+
+class AlertUnpublished extends SettingsEvent {
+  final String alertId;
+  const AlertUnpublished(this.alertId);
+  @override
+  List<Object?> get props => [alertId];
+}
+
+class AlertUpdated extends SettingsEvent {
+  final AnnouncementModel alert;
+  const AlertUpdated(this.alert);
+  @override
+  List<Object?> get props => [alert];
+}
+
+class AllAlertsDeleted extends SettingsEvent {
+  const AllAlertsDeleted();
 }
 
 class SaveAlertsRequested extends SettingsEvent {
   const SaveAlertsRequested();
 }
 
-// ——— Photo Studio ———
+// ——— Album ———
 
-class PhotoStudioUrlAdded extends SettingsEvent {
+class AlbumImageAdded extends SettingsEvent {
   final String url;
-
-  const PhotoStudioUrlAdded(this.url);
-
+  const AlbumImageAdded(this.url);
   @override
   List<Object?> get props => [url];
 }
 
-class PhotoStudioUrlRemoved extends SettingsEvent {
+class AlbumImageRemoved extends SettingsEvent {
   final String url;
-
-  const PhotoStudioUrlRemoved(this.url);
-
+  const AlbumImageRemoved(this.url);
   @override
   List<Object?> get props => [url];
 }
 
-class SavePhotoStudioRequested extends SettingsEvent {
-  const SavePhotoStudioRequested();
+class AlbumImagePublished extends SettingsEvent {
+  final String url;
+  final int durationSeconds;
+  const AlbumImagePublished(this.url, this.durationSeconds);
+  @override
+  List<Object?> get props => [url, durationSeconds];
+}
+
+class AlbumImageUnpublished extends SettingsEvent {
+  const AlbumImageUnpublished();
+}
+
+class SaveAlbumRequested extends SettingsEvent {
+  const SaveAlbumRequested();
 }

@@ -86,8 +86,12 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
         m.designSettings.fontSizes.copyWith(prayers: event.fontSize),
       DesignFontSizeField.announcements =>
         m.designSettings.fontSizes.copyWith(announcements: event.fontSize),
-      DesignFontSizeField.content =>
+      DesignFontSizeField.religiousContent =>
         m.designSettings.fontSizes.copyWith(religiousContent: event.fontSize),
+      DesignFontSizeField.alerts =>
+        m.designSettings.fontSizes.copyWith(alerts: event.fontSize),
+      DesignFontSizeField.countdown =>
+        m.designSettings.fontSizes.copyWith(countdown: event.fontSize),
     };
     final d = m.designSettings.copyWith(fontSizes: fontSizes);
     emitDraftUpdated(
@@ -170,8 +174,8 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
     );
   }
 
-  void onPhotoStudioUrlAdded(
-    PhotoStudioUrlAdded event,
+  void onAlbumImageAdded(
+    AlbumImageAdded event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
@@ -183,8 +187,8 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
     );
   }
 
-  void onPhotoStudioUrlRemoved(
-    PhotoStudioUrlRemoved event,
+  void onAlbumImageRemoved(
+    AlbumImageRemoved event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;
@@ -194,6 +198,32 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
       emit,
       state.request.copyWith(mosque: m.copyWith(albumImageUrls: urls)),
     );
+  }
+
+  void onAlbumImagePublished(
+    AlbumImagePublished event,
+    Emitter<SettingsState> emit,
+  ) {
+    final m = currentMosque;
+    if (m == null) return;
+    emitDraftUpdated(emit, state.request.copyWith(
+      mosque: m.copyWith(
+        publishedAlbumImageUrl: event.url,
+        publishedAlbumImageAt: DateTime.now(),
+        publishedAlbumImageDuration: event.durationSeconds,
+      ),
+    ));
+  }
+
+  void onAlbumImageUnpublished(
+    AlbumImageUnpublished event,
+    Emitter<SettingsState> emit,
+  ) {
+    final m = currentMosque;
+    if (m == null) return;
+    emitDraftUpdated(emit, state.request.copyWith(
+      mosque: m.copyWith(publishedAlbumImageUrl: ''),
+    ));
   }
 
   void onPrayerCardScaleChanged(

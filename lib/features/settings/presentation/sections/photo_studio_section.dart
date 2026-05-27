@@ -38,7 +38,7 @@ class PhotoStudioSection extends StatelessWidget {
             onPressed: () {
               final url = controller.text.trim();
               if (url.isNotEmpty) {
-                bloc.add(PhotoStudioUrlAdded(url));
+                bloc.add(AlbumImageAdded(url));
               }
               Navigator.pop(ctx);
             },
@@ -102,7 +102,7 @@ class PhotoStudioSection extends StatelessWidget {
                     ),
                     onPressed: () {
                       context.read<SettingsBloc>().add(
-                        PhotoStudioUrlRemoved(url),
+                        AlbumImageRemoved(url),
                       );
                     },
                   ),
@@ -135,7 +135,7 @@ class PhotoStudioSection extends StatelessWidget {
                     ? null
                     : () => context
                         .read<SettingsBloc>()
-                        .add(const SavePhotoStudioRequested()),
+                        .add(const SaveAlbumRequested()),
                 icon: state.isSaving
                     ? const SizedBox(
                         width: 20,

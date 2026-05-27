@@ -48,7 +48,7 @@ class AlertsSection extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: FilledButton.tonalIcon(
                 onPressed: () {
-                  bloc.add(const AlertsCleared());
+                  bloc.add(const AllAlertsDeleted());
                   bloc.add(const SaveAlertsRequested());
                 },
                 icon: const Icon(Icons.clear_all),

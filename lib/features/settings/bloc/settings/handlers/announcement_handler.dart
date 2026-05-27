@@ -77,8 +77,63 @@ mixin AnnouncementHandler on Bloc<SettingsEvent, SettingsState> {
     );
   }
 
-  void onAlertsCleared(
-    AlertsCleared event,
+  void onAlertPublished(
+    AlertPublished event,
+    Emitter<SettingsState> emit,
+  ) {
+    final m = currentMosque;
+    if (m == null) return;
+    final list = m.savedAlerts.map((a) {
+      if (a.id == event.alertId) {
+        return a.copyWith(
+          isPublished: true,
+          publishedAt: DateTime.now(),
+          publishDurationSeconds: event.durationSeconds,
+        );
+      }
+      return a;
+    }).toList();
+    emitDraftUpdated(
+      emit,
+      state.request.copyWith(mosque: m.copyWith(savedAlerts: list)),
+    );
+  }
+
+  void onAlertUnpublished(
+    AlertUnpublished event,
+    Emitter<SettingsState> emit,
+  ) {
+    final m = currentMosque;
+    if (m == null) return;
+    final list = m.savedAlerts.map((a) {
+      if (a.id == event.alertId) {
+        return a.copyWith(isPublished: false);
+      }
+      return a;
+    }).toList();
+    emitDraftUpdated(
+      emit,
+      state.request.copyWith(mosque: m.copyWith(savedAlerts: list)),
+    );
+  }
+
+  void onAlertUpdated(
+    AlertUpdated event,
+    Emitter<SettingsState> emit,
+  ) {
+    final m = currentMosque;
+    if (m == null) return;
+    final list = m.savedAlerts
+        .map((a) => a.id == event.alert.id ? event.alert : a)
+        .toList();
+    emitDraftUpdated(
+      emit,
+      state.request.copyWith(mosque: m.copyWith(savedAlerts: list)),
+    );
+  }
+
+  void onAllAlertsDeleted(
+    AllAlertsDeleted event,
     Emitter<SettingsState> emit,
   ) {
     final m = currentMosque;

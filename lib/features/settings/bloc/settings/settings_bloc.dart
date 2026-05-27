@@ -54,10 +54,12 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
     on<BackgroundAlbumUrlsReordered>(onBackgroundAlbumUrlsReordered);
     on<SaveDesignSettingsRequested>(_onSaveDesign);
 
-    // Photo Studio
-    on<PhotoStudioUrlAdded>(onPhotoStudioUrlAdded);
-    on<PhotoStudioUrlRemoved>(onPhotoStudioUrlRemoved);
-    on<SavePhotoStudioRequested>(_onSavePhotoStudio);
+    // Album
+    on<AlbumImageAdded>(onAlbumImageAdded);
+    on<AlbumImageRemoved>(onAlbumImageRemoved);
+    on<AlbumImagePublished>(onAlbumImagePublished);
+    on<AlbumImageUnpublished>(onAlbumImageUnpublished);
+    on<SaveAlbumRequested>(_onSaveAlbum);
 
     // Iqama
     on<IqamaOffsetChanged>(onIqamaOffsetChanged);
@@ -78,7 +80,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
     // Alerts
     on<AlertAdded>(onAlertAdded);
     on<AlertRemoved>(onAlertRemoved);
-    on<AlertsCleared>(onAlertsCleared);
+    on<AlertPublished>(onAlertPublished);
+    on<AlertUnpublished>(onAlertUnpublished);
+    on<AlertUpdated>(onAlertUpdated);
+    on<AllAlertsDeleted>(onAllAlertsDeleted);
     on<SaveAlertsRequested>(_onSaveAlerts);
   }
 
@@ -167,8 +172,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
     await _save(emit, () => _mosqueRepo.updateActiveAlerts(m));
   }
 
-  Future<void> _onSavePhotoStudio(
-    SavePhotoStudioRequested event,
+  Future<void> _onSaveAlbum(
+    SaveAlbumRequested event,
     Emitter<SettingsState> emit,
   ) async {
     final m = state.request.mosque;
