@@ -17,7 +17,7 @@ class AlertsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = context.read<SettingsBloc>();
     final s = S.of(context);
-    final alerts = mosque.activeAlerts;
+    final alerts = mosque.savedAlerts;
 
     return Scaffold(
       body: alerts.isEmpty

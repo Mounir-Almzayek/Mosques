@@ -73,7 +73,7 @@ class _DisplayScreenState extends State<DisplayScreen> {
       religiousWaitSeconds: design.religiousContentWaitSeconds,
       religiousDisplaySeconds: design.religiousContentDisplaySeconds,
     );
-    _layerController.updateAlerts(mosque.activeAlerts);
+    _layerController.updateAlerts(mosque.savedAlerts);
     _layerController.updatePrayerPhase(phase);
   }
 
@@ -153,7 +153,7 @@ class _DisplayScreenState extends State<DisplayScreen> {
           child: DisplayBackgroundImage(
             fallbackColor: colors.primaryValue,
             settings: design.background,
-            albumUrls: mosque.backgroundAlbumUrls,
+            albumUrls: mosque.albumImageUrls,
           ),
         ),
         Positioned.fill(
@@ -205,7 +205,7 @@ class _DisplayScreenState extends State<DisplayScreen> {
     switch (layer) {
       case DisplayLayerKind.alert:
         return AlertLayer(
-          alerts: mosque.activeAlerts,
+          alerts: mosque.savedAlerts,
           primaryColor: colors.activeCardTextValue,
           backgroundColor: colors.activeCardValue,
           numeralFormat: design.numeralFormat,

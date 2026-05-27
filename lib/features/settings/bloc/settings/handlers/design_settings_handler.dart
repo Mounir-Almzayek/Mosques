@@ -176,10 +176,10 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
   ) {
     final m = currentMosque;
     if (m == null) return;
-    final urls = [...m.photoStudioUrls, event.url];
+    final urls = [...m.albumImageUrls, event.url];
     emitDraftUpdated(
       emit,
-      state.request.copyWith(mosque: m.copyWith(photoStudioUrls: urls)),
+      state.request.copyWith(mosque: m.copyWith(albumImageUrls: urls)),
     );
   }
 
@@ -189,10 +189,10 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
   ) {
     final m = currentMosque;
     if (m == null) return;
-    final urls = m.photoStudioUrls.where((u) => u != event.url).toList();
+    final urls = m.albumImageUrls.where((u) => u != event.url).toList();
     emitDraftUpdated(
       emit,
-      state.request.copyWith(mosque: m.copyWith(photoStudioUrls: urls)),
+      state.request.copyWith(mosque: m.copyWith(albumImageUrls: urls)),
     );
   }
 
@@ -215,10 +215,10 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
   ) {
     final m = currentMosque;
     if (m == null) return;
-    final urls = [...m.backgroundAlbumUrls, event.url];
+    final urls = [...m.albumImageUrls, event.url];
     emitDraftUpdated(
       emit,
-      state.request.copyWith(mosque: m.copyWith(backgroundAlbumUrls: urls)),
+      state.request.copyWith(mosque: m.copyWith(albumImageUrls: urls)),
     );
   }
 
@@ -228,10 +228,10 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
   ) {
     final m = currentMosque;
     if (m == null) return;
-    final urls = List<String>.from(m.backgroundAlbumUrls)..removeAt(event.index);
+    final urls = List<String>.from(m.albumImageUrls)..removeAt(event.index);
     emitDraftUpdated(
       emit,
-      state.request.copyWith(mosque: m.copyWith(backgroundAlbumUrls: urls)),
+      state.request.copyWith(mosque: m.copyWith(albumImageUrls: urls)),
     );
   }
 
@@ -243,7 +243,7 @@ mixin DesignSettingsHandler on Bloc<SettingsEvent, SettingsState> {
     if (m == null) return;
     emitDraftUpdated(
       emit,
-      state.request.copyWith(mosque: m.copyWith(backgroundAlbumUrls: event.urls)),
+      state.request.copyWith(mosque: m.copyWith(albumImageUrls: event.urls)),
     );
   }
 

@@ -54,7 +54,7 @@ class PhotoStudioSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    final urls = mosque.photoStudioUrls;
+    final urls = mosque.albumImageUrls;
 
     return Stack(
       fit: StackFit.expand,

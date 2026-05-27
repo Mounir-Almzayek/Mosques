@@ -60,20 +60,20 @@ mixin AnnouncementHandler on Bloc<SettingsEvent, SettingsState> {
   void onAlertAdded(AlertAdded event, Emitter<SettingsState> emit) {
     final m = currentMosque;
     if (m == null) return;
-    final list = List<AnnouncementModel>.from(m.activeAlerts)..add(event.alert);
+    final list = List<AnnouncementModel>.from(m.savedAlerts)..add(event.alert);
     emitDraftUpdated(
       emit,
-      state.request.copyWith(mosque: m.copyWith(activeAlerts: list)),
+      state.request.copyWith(mosque: m.copyWith(savedAlerts: list)),
     );
   }
 
   void onAlertRemoved(AlertRemoved event, Emitter<SettingsState> emit) {
     final m = currentMosque;
     if (m == null) return;
-    final list = m.activeAlerts.where((a) => a.id != event.alertId).toList();
+    final list = m.savedAlerts.where((a) => a.id != event.alertId).toList();
     emitDraftUpdated(
       emit,
-      state.request.copyWith(mosque: m.copyWith(activeAlerts: list)),
+      state.request.copyWith(mosque: m.copyWith(savedAlerts: list)),
     );
   }
 
@@ -85,7 +85,7 @@ mixin AnnouncementHandler on Bloc<SettingsEvent, SettingsState> {
     if (m == null) return;
     emitDraftUpdated(
       emit,
-      state.request.copyWith(mosque: m.copyWith(activeAlerts: [])),
+      state.request.copyWith(mosque: m.copyWith(savedAlerts: [])),
     );
   }
 }

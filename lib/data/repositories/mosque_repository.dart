@@ -162,7 +162,7 @@ class MosqueRepository implements IMosqueRepository {
     if (ref == null) throw Exception('No active mosque');
 
     await ref.update({
-      FirestoreSchema.activeAlerts: mosque.activeAlerts.map((a) => a.toMap()).toList(),
+      FirestoreSchema.activeAlerts: mosque.savedAlerts.map((a) => a.toMap()).toList(),
       FirestoreSchema.updatedAt: FieldValue.serverTimestamp(),
       FirestoreSchema.lastSeen: FieldValue.serverTimestamp(),
     });

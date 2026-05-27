@@ -51,8 +51,10 @@ abstract final class FirestoreSchema {
   // ---------------------------------------------------------------------------
   static const String mosqueAds = 'mosque_ads';
   static const String activeAlerts = 'active_alerts';
-  static const String photoStudioUrls = 'photo_studio_urls';
-  static const String backgroundAlbumUrls = 'background_album_urls';
+  static const String albumImageUrls = 'album_image_urls';
+  static const String publishedAlbumUrl = 'published_album_url';
+  static const String publishedAlbumAt = 'published_album_at';
+  static const String publishedAlbumDuration = 'published_album_duration';
 
   // ---------------------------------------------------------------------------
   // Design settings fields

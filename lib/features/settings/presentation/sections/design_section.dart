@@ -40,7 +40,7 @@ class DesignSection extends StatelessWidget {
                     // 1. Background Settings
                     BackgroundSettingsSection(
                       settings: design.background,
-                      albumUrls: mosque.backgroundAlbumUrls,
+                      albumUrls: mosque.albumImageUrls,
                       libraryUrls: libraryUrls,
                       onTypeChanged: (type) =>
                           bloc.add(DesignBackgroundTypeChanged(type)),
@@ -91,7 +91,7 @@ class DesignSection extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
 
-                    // 4. Prayer Card Scale
+                    // 4. Prayer Card Scale (active vs inactive ratio)
                     DesignCard(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -102,20 +102,20 @@ class DesignSection extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              const Text('0.5x'),
+                              const Text('1.0x'),
                               Expanded(
                                 child: Slider(
-                                  value: design.prayerCardScale,
-                                  min: 0.5,
-                                  max: 2.0,
-                                  divisions: 15,
+                                  value: design.prayerCardScale.clamp(1.0, 3.0),
+                                  min: 1.0,
+                                  max: 3.0,
+                                  divisions: 20,
                                   label: '${design.prayerCardScale.toStringAsFixed(1)}x',
                                   onChanged: (v) => bloc.add(
                                     PrayerCardScaleChanged(v),
                                   ),
                                 ),
                               ),
-                              const Text('2.0x'),
+                              const Text('3.0x'),
                             ],
                           ),
                           Center(

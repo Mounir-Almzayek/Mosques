@@ -45,14 +45,20 @@ class MosqueModel extends Equatable {
   final List<AdhkarModel> adhkar;
   final List<AnnouncementModel> announcements;
 
-  /// High-priority full-screen alerts.
-  final List<AnnouncementModel> activeAlerts;
+  /// Saved high-priority alerts (published on demand).
+  final List<AnnouncementModel> savedAlerts;
 
-  /// Photo studio image URLs for fullscreen display.
-  final List<String> photoStudioUrls;
+  /// Unified album image URLs — used for both background cycling and fullscreen display.
+  final List<String> albumImageUrls;
 
-  /// Background album image URLs for cycling backgrounds.
-  final List<String> backgroundAlbumUrls;
+  /// Currently published fullscreen image URL.
+  final String? publishedAlbumImageUrl;
+
+  /// When the album image was published.
+  final DateTime? publishedAlbumImageAt;
+
+  /// How long to show the published image (seconds).
+  final int publishedAlbumImageDuration;
 
   final DateTime? lastSeen;
   final DateTime? updatedAt;
@@ -73,9 +79,11 @@ class MosqueModel extends Equatable {
     this.duas = const [],
     this.adhkar = const [],
     this.announcements = const [],
-    this.activeAlerts = const [],
-    this.photoStudioUrls = const [],
-    this.backgroundAlbumUrls = const [],
+    this.savedAlerts = const [],
+    this.albumImageUrls = const [],
+    this.publishedAlbumImageUrl,
+    this.publishedAlbumImageAt,
+    this.publishedAlbumImageDuration = 30,
     this.lastSeen,
     this.updatedAt,
   });
@@ -96,6 +104,23 @@ class MosqueModel extends Equatable {
           : '${prefix}_${index}_${raw['text']?.hashCode ?? 0}';
       return MosqueTextEntryModel.fromMap(raw, resolvedId);
     }).toList();
+  }
+
+  static List<String> _mergeAlbumUrls(Map<String, dynamic> map) {
+    final album = (map['album_image_urls'] as List<dynamic>?)
+        ?.map((e) => e.toString())
+        .toList();
+    if (album != null && album.isNotEmpty) return album;
+    // Migration: merge old photo_studio_urls + background_album_urls
+    final photo = (map['photo_studio_urls'] as List<dynamic>?)
+            ?.map((e) => e.toString())
+            .toList() ??
+        [];
+    final bg = (map['background_album_urls'] as List<dynamic>?)
+            ?.map((e) => e.toString())
+            .toList() ??
+        [];
+    return {...photo, ...bg}.toList();
   }
 
   factory MosqueModel.fromMap(Map<String, dynamic> map, String id) {
@@ -121,19 +146,16 @@ class MosqueModel extends Equatable {
                   e as Map<String, dynamic>, e['id'] ?? ''))
               .toList() ??
           [],
-      activeAlerts: (map['active_alerts'] as List<dynamic>?)
+      savedAlerts: (map['active_alerts'] as List<dynamic>?)
               ?.map((e) => AnnouncementModel.fromMap(
                   e as Map<String, dynamic>, e['id'] ?? ''))
               .toList() ??
           [],
-      photoStudioUrls: (map['photo_studio_urls'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ??
-          [],
-      backgroundAlbumUrls: (map['background_album_urls'] as List<dynamic>?)
-          ?.map((e) => e.toString())
-          .toList() ??
-          [],
+      albumImageUrls: _mergeAlbumUrls(map),
+      publishedAlbumImageUrl: map['published_album_url']?.toString(),
+      publishedAlbumImageAt: parseFirestoreOrMillis(map['published_album_at']),
+      publishedAlbumImageDuration:
+          (map['published_album_duration'] as num?)?.toInt() ?? 30,
       lastSeen: parseFirestoreOrMillis(map['last_seen']),
       updatedAt: parseFirestoreOrMillis(map['updated_at']),
     );
@@ -154,9 +176,13 @@ class MosqueModel extends Equatable {
       'duas': duas.map((d) => d.toMap()).toList(),
       'adhkar': adhkar.map((a) => a.toMap()).toList(),
       'mosque_ads': announcements.map((a) => a.toMap()).toList(),
-      'active_alerts': activeAlerts.map((a) => a.toMap()).toList(),
-      'photo_studio_urls': photoStudioUrls,
-      'background_album_urls': backgroundAlbumUrls,
+      'active_alerts': savedAlerts.map((a) => a.toMap()).toList(),
+      'album_image_urls': albumImageUrls,
+      'published_album_url': publishedAlbumImageUrl,
+      'published_album_at': publishedAlbumImageAt != null
+          ? Timestamp.fromDate(publishedAlbumImageAt!)
+          : null,
+      'published_album_duration': publishedAlbumImageDuration,
       'last_seen': lastSeen != null ? Timestamp.fromDate(lastSeen!) : null,
       'updated_at': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
     };
@@ -194,9 +220,11 @@ class MosqueModel extends Equatable {
     List<DuaModel>? duas,
     List<AdhkarModel>? adhkar,
     List<AnnouncementModel>? announcements,
-    List<AnnouncementModel>? activeAlerts,
-    List<String>? photoStudioUrls,
-    List<String>? backgroundAlbumUrls,
+    List<AnnouncementModel>? savedAlerts,
+    List<String>? albumImageUrls,
+    String? publishedAlbumImageUrl,
+    DateTime? publishedAlbumImageAt,
+    int? publishedAlbumImageDuration,
     DateTime? lastSeen,
     DateTime? updatedAt,
   }) {
@@ -217,9 +245,14 @@ class MosqueModel extends Equatable {
       duas: duas ?? this.duas,
       adhkar: adhkar ?? this.adhkar,
       announcements: announcements ?? this.announcements,
-      activeAlerts: activeAlerts ?? this.activeAlerts,
-      photoStudioUrls: photoStudioUrls ?? this.photoStudioUrls,
-      backgroundAlbumUrls: backgroundAlbumUrls ?? this.backgroundAlbumUrls,
+      savedAlerts: savedAlerts ?? this.savedAlerts,
+      albumImageUrls: albumImageUrls ?? this.albumImageUrls,
+      publishedAlbumImageUrl:
+          publishedAlbumImageUrl ?? this.publishedAlbumImageUrl,
+      publishedAlbumImageAt:
+          publishedAlbumImageAt ?? this.publishedAlbumImageAt,
+      publishedAlbumImageDuration:
+          publishedAlbumImageDuration ?? this.publishedAlbumImageDuration,
       lastSeen: lastSeen ?? this.lastSeen,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -242,9 +275,11 @@ class MosqueModel extends Equatable {
         duas,
         adhkar,
         announcements,
-        activeAlerts,
-        photoStudioUrls,
-        backgroundAlbumUrls,
+        savedAlerts,
+        albumImageUrls,
+        publishedAlbumImageUrl,
+        publishedAlbumImageAt,
+        publishedAlbumImageDuration,
         lastSeen,
         updatedAt,
       ];
