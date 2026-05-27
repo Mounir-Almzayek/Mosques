@@ -19,6 +19,7 @@ class AlertLayer extends StatefulWidget {
   final AppNumeralFormat numeralFormat;
   final String fontFamily;
   final VoidCallback onExpired;
+  final double alertsFontSize;
 
   const AlertLayer({
     super.key,
@@ -28,6 +29,7 @@ class AlertLayer extends StatefulWidget {
     required this.numeralFormat,
     required this.fontFamily,
     required this.onExpired,
+    required this.alertsFontSize,
   });
 
   @override
@@ -122,7 +124,7 @@ class _AlertLayerState extends State<AlertLayer> {
                 style: AppFontLoader.getStyle(
                   widget.fontFamily,
                   baseStyle: TextStyle(
-                    fontSize: 64,
+                    fontSize: (widget.alertsFontSize * 3.2).clamp(24.0, 120.0),
                     fontWeight: FontWeight.w900,
                     color: widget.primaryColor,
                     height: 1.2,
@@ -137,7 +139,7 @@ class _AlertLayerState extends State<AlertLayer> {
                   style: AppFontLoader.getStyle(
                     widget.fontFamily,
                     baseStyle: TextStyle(
-                      fontSize: 38,
+                      fontSize: (widget.alertsFontSize * 1.9).clamp(14.0, 72.0),
                       fontWeight: FontWeight.w500,
                       color: widget.primaryColor.withValues(alpha: 0.85),
                       height: 1.4,
@@ -159,7 +161,7 @@ class _AlertLayerState extends State<AlertLayer> {
         color: color.withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
-      child: Icon(Icons.campaign_rounded, size: 64, color: color),
+      child: Icon(Icons.campaign_rounded, size: (widget.alertsFontSize * 3.2).clamp(24.0, 120.0), color: color),
     );
   }
 }

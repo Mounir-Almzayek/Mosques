@@ -20,6 +20,7 @@ class IqamaAdhanLayer extends StatelessWidget {
   final Duration remaining;
   final DesignSettingsModel designSettings;
   final bool isFriday;
+  final double countdownFontSize;
 
   const IqamaAdhanLayer({
     super.key,
@@ -27,6 +28,7 @@ class IqamaAdhanLayer extends StatelessWidget {
     required this.remaining,
     required this.designSettings,
     required this.isFriday,
+    required this.countdownFontSize,
   });
 
   @override
@@ -55,13 +57,13 @@ class IqamaAdhanLayer extends StatelessWidget {
           children: [
             // Prayer icon
             if (slot != null)
-              Icon(slot.icon, size: 80, color: textColor),
+              Icon(slot.icon, size: (countdownFontSize * 4.0).clamp(28.0, 150.0), color: textColor),
             if (slot != null) const SizedBox(height: 24),
 
             // Title / announcement line
             Text(
               _buildTitle(slot, prayerLabel, s),
-              style: baseStyle.copyWith(fontSize: 48),
+              style: baseStyle.copyWith(fontSize: (countdownFontSize * 2.4).clamp(16.0, 90.0)),
               textAlign: TextAlign.center,
             ),
 
@@ -72,7 +74,7 @@ class IqamaAdhanLayer extends StatelessWidget {
                 PrayerTimesHelper.formatDuration(remaining)
                     .formatNumerals(fmt),
                 style: baseStyle.copyWith(
-                  fontSize: 96,
+                  fontSize: (countdownFontSize * 4.8).clamp(32.0, 180.0),
                   fontFeatures: const [FontFeature.tabularFigures()],
                 ),
                 textAlign: TextAlign.center,

@@ -16,12 +16,14 @@ class ReligiousContentLayer extends StatefulWidget {
   final MosqueModel mosque;
   final DesignSettingsModel designSettings;
   final int slideIndex;
+  final double religiousContentFontSize;
 
   const ReligiousContentLayer({
     super.key,
     required this.mosque,
     required this.designSettings,
     required this.slideIndex,
+    required this.religiousContentFontSize,
   });
 
   @override
@@ -129,7 +131,7 @@ class _ReligiousContentLayerState extends State<ReligiousContentLayer>
               ),
               child: Text(
                 kindLabel,
-                style: baseStyle.copyWith(fontSize: 20),
+                style: baseStyle.copyWith(fontSize: (widget.religiousContentFontSize * 1.0).clamp(10.0, 38.0)),
               ),
             ),
           ),
@@ -148,7 +150,7 @@ class _ReligiousContentLayerState extends State<ReligiousContentLayer>
                 return Text(
                   visible,
                   style: baseStyle.copyWith(
-                    fontSize: 42,
+                    fontSize: (widget.religiousContentFontSize * 2.1).clamp(14.0, 80.0),
                     height: 1.8,
                   ),
                   textDirection: TextDirection.rtl,
@@ -164,7 +166,7 @@ class _ReligiousContentLayerState extends State<ReligiousContentLayer>
               child: Text(
                 _current.entry.source,
                 style: baseStyle.copyWith(
-                  fontSize: 22,
+                  fontSize: (widget.religiousContentFontSize * 1.1).clamp(10.0, 42.0),
                   fontStyle: FontStyle.italic,
                 ),
                 textDirection: TextDirection.rtl,
