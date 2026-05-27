@@ -1224,20 +1224,20 @@ class S {
     );
   }
 
-  /// `No active priority alerts.`
+  /// `No alerts yet`
   String get alerts_empty_title {
     return Intl.message(
-      'No active priority alerts.',
+      'No alerts yet',
       name: 'alerts_empty_title',
       desc: '',
       args: [],
     );
   }
 
-  /// `These alerts appear full-screen on the display.`
+  /// `Create an alert and publish it when needed`
   String get alerts_empty_subtitle {
     return Intl.message(
-      'These alerts appear full-screen on the display.',
+      'Create an alert and publish it when needed',
       name: 'alerts_empty_subtitle',
       desc: '',
       args: [],
@@ -1339,26 +1339,6 @@ class S {
     return Intl.message(
       'Delete All Alerts',
       name: 'alerts_delete_all',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `No alerts yet`
-  String get alerts_empty_new_title {
-    return Intl.message(
-      'No alerts yet',
-      name: 'alerts_empty_new_title',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Create an alert and publish it when needed`
-  String get alerts_empty_new_subtitle {
-    return Intl.message(
-      'Create an alert and publish it when needed',
-      name: 'alerts_empty_new_subtitle',
       desc: '',
       args: [],
     );

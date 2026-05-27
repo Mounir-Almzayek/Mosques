@@ -115,18 +115,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "alerts_delete_all": MessageLookupByLibrary.simpleMessage(
       "Delete All Alerts",
     ),
-    "alerts_empty_new_subtitle": MessageLookupByLibrary.simpleMessage(
+    "alerts_empty_subtitle": MessageLookupByLibrary.simpleMessage(
       "Create an alert and publish it when needed",
     ),
-    "alerts_empty_new_title": MessageLookupByLibrary.simpleMessage(
-      "No alerts yet",
-    ),
-    "alerts_empty_subtitle": MessageLookupByLibrary.simpleMessage(
-      "These alerts appear full-screen on the display.",
-    ),
-    "alerts_empty_title": MessageLookupByLibrary.simpleMessage(
-      "No active priority alerts.",
-    ),
+    "alerts_empty_title": MessageLookupByLibrary.simpleMessage("No alerts yet"),
     "alerts_fab_add": MessageLookupByLibrary.simpleMessage(
       "New High-Priority Alert",
     ),

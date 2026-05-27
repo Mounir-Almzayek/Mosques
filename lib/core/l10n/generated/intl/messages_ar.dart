@@ -103,17 +103,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "alerts_delete_all": MessageLookupByLibrary.simpleMessage(
       "حذف جميع التنبيهات",
     ),
-    "alerts_empty_new_subtitle": MessageLookupByLibrary.simpleMessage(
+    "alerts_empty_subtitle": MessageLookupByLibrary.simpleMessage(
       "أنشئ تنبيهاً وانشره عند الحاجة",
     ),
-    "alerts_empty_new_title": MessageLookupByLibrary.simpleMessage(
-      "لا توجد تنبيهات بعد",
-    ),
-    "alerts_empty_subtitle": MessageLookupByLibrary.simpleMessage(
-      "تنبيهات عاجلة تظهر بملء الشاشة على العرض.",
-    ),
     "alerts_empty_title": MessageLookupByLibrary.simpleMessage(
-      "لا توجد تنبيهات عاجلة نشطة.",
+      "لا توجد تنبيهات بعد",
     ),
     "alerts_fab_add": MessageLookupByLibrary.simpleMessage("تنبيه عاجل جديد"),
     "announcement_dates_invalid": MessageLookupByLibrary.simpleMessage(
