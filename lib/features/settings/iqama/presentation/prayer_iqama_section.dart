@@ -9,17 +9,8 @@ import '../../../../core/widgets/feedback/unified_snackbar.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../data/repositories/interfaces/mosque_repository_interface.dart';
 import '../../../language/bloc/language/language_bloc.dart';
-import '../../bloc/settings/settings_bloc.dart'
-    hide
-        GeneralSettingChanged,
-        GeneralField,
-        LanguageChanged,
-        CoordinatesChanged,
-        PrayerOffsetChanged,
-        PrayerOffsetField,
-        IqamaOffsetChanged,
-        IqamaField;
 import '../../core/widgets/common_widgets.dart';
+import '../../design/bloc/design_bloc.dart';
 import '../../general/bloc/general_bloc.dart';
 import '../bloc/iqama_bloc.dart';
 
@@ -39,6 +30,11 @@ class PrayerIqamaSection extends StatelessWidget {
           create: (_) =>
               IqamaBloc(mosqueRepository: sl<IMosqueRepository>())
                 ..add(const LoadIqama()),
+        ),
+        BlocProvider<DesignBloc>(
+          create: (_) =>
+              DesignBloc(mosqueRepository: sl<IMosqueRepository>())
+                ..add(const LoadDesign()),
         ),
       ],
       child: const _PrayerIqamaSectionBody(),
@@ -92,13 +88,7 @@ class _PrayerIqamaSectionBodyState extends State<_PrayerIqamaSectionBody> {
   void _save() {
     context.read<GeneralBloc>().add(const SaveGeneralRequested());
     context.read<IqamaBloc>().add(const SaveIqamaRequested());
-    // Display timing (preAdhan/adhanMoment) is still saved via the old SettingsBloc
-    // until DesignBloc is created. If SettingsBloc is still available, save design too.
-    try {
-      context.read<SettingsBloc>().add(const SaveDesignSettingsRequested());
-    } catch (_) {
-      // SettingsBloc not available — design timing will be handled by DesignBloc later.
-    }
+    context.read<DesignBloc>().add(const SaveDesignRequested());
   }
 
   Widget _sectionHeader(BuildContext context, IconData icon, String title) {
@@ -358,7 +348,7 @@ class _PrayerIqamaSectionBodyState extends State<_PrayerIqamaSectionBody> {
                     label: s.pre_adhan_minutes,
                     value: design.preAdhanMinutes,
                     suffix: s.minutes_short,
-                    onChanged: (v) => context.read<SettingsBloc>().add(
+                    onChanged: (v) => context.read<DesignBloc>().add(
                           DisplayTimingChanged(
                             DisplayTimingField.preAdhanMinutes,
                             v,
@@ -368,7 +358,7 @@ class _PrayerIqamaSectionBodyState extends State<_PrayerIqamaSectionBody> {
                   OffsetStepperField(
                     label: s.adhan_moment_duration,
                     value: design.adhanMomentDurationSeconds,
-                    onChanged: (v) => context.read<SettingsBloc>().add(
+                    onChanged: (v) => context.read<DesignBloc>().add(
                           DisplayTimingChanged(
                             DisplayTimingField.adhanMomentDuration,
                             v,

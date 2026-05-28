@@ -1,6 +1,10 @@
-export 'bloc/settings/settings_bloc.dart';
-export 'bloc/settings/settings_event.dart';
-export 'bloc/settings/settings_state.dart';
+export 'general/bloc/general_bloc.dart';
+export 'iqama/bloc/iqama_bloc.dart';
+export 'religious_content/bloc/religious_content_bloc.dart';
+export 'design/bloc/design_bloc.dart';
+export 'album/bloc/album_bloc.dart';
+export 'announcements/bloc/announcements_bloc.dart';
+export 'alerts/bloc/alerts_bloc.dart';
 export 'profile/bloc/profile_bloc.dart';
 export 'update/bloc/update_bloc.dart';
 export 'presentation/settings_page.dart';
