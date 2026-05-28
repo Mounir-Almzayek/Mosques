@@ -10,6 +10,7 @@ class ContentPanel extends StatelessWidget {
   final IconData icon;
   final String title;
   final ColorScheme scheme;
+  final VoidCallback? onAddPressed;
 
   const ContentPanel({
     super.key,
@@ -18,6 +19,7 @@ class ContentPanel extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.scheme,
+    this.onAddPressed,
   });
 
   @override
@@ -34,11 +36,24 @@ class ContentPanel extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: ExpansionTile(
         leading: Icon(icon, color: AppColors.primary),
-        title: Text(
-          fullTitle,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(
+                fullTitle,
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            if (onAddPressed != null)
+              IconButton(
+                icon: const Icon(Icons.add_circle_outline, size: 20),
+                color: AppColors.primary,
+                visualDensity: VisualDensity.compact,
+                onPressed: onAddPressed,
+              ),
+          ],
         ),
         childrenPadding: EdgeInsets.zero,
         children: [

@@ -5,7 +5,7 @@ import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
 import '../../bloc/settings/settings_bloc.dart';
-import 'widgets/mosque_text_editor_sheet.dart';
+import '../../widgets/mosque_text_editor_sheet.dart';
 
 class MosqueTextL10n {
   const MosqueTextL10n({
@@ -118,10 +118,6 @@ class MosqueTextListSection extends StatefulWidget {
 }
 
 class _MosqueTextListSectionState extends State<MosqueTextListSection> {
-  void _save() {
-    context.read<SettingsBloc>().add(SaveMosqueTextListRequested(widget.kind));
-  }
-
   Future<void> _openEditor([MosqueTextEntryModel? existing]) async {
     final bloc = context.read<SettingsBloc>();
     final s = S.of(context);
@@ -177,215 +173,156 @@ class _MosqueTextListSectionState extends State<MosqueTextListSection> {
     final labels = MosqueTextL10n.of(s, widget.kind);
     final items = widget.mosque.listByKind(widget.kind);
 
-    return Stack(
-      fit: StackFit.expand,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (items.isEmpty)
-              Expanded(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(32),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          labels.emptyIcon,
-                          size: 72,
-                          color: scheme.outlineVariant,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          labels.emptyTitle,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          labels.emptySubtitle,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(color: scheme.onSurfaceVariant),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            else
-              Expanded(
-                child: ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
-                  itemCount: items.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 10),
-                  itemBuilder: (context, index) {
-                    final h = items[index];
-                    return Material(
-                      key: ValueKey('mosque_text_${h.id}'),
-                      elevation: 0,
-                      color: scheme.surfaceContainerHighest.withValues(
-                        alpha: 0.6,
-                      ),
-                      borderRadius: BorderRadius.circular(16),
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(16),
-                        onTap: () => _openEditor(h),
-                        child: Padding(
-                          padding: const EdgeInsets.all(14),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      h.narrator.isNotEmpty ? h.narrator : '—',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.w700,
-                                            color: h.isActive
-                                                ? AppColors.primary
-                                                : scheme.outline,
-                                          ),
-                                    ),
-                                  ),
-                                  Transform.scale(
-                                    scale: 0.8,
-                                    child: Switch(
-                                      value: h.isActive,
-                                      onChanged: (val) {
-                                        context.read<SettingsBloc>().add(
-                                          MosqueTextUpdated(
-                                            widget.kind,
-                                            h.copyWith(isActive: val),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  IconButton(
-                                    visualDensity: VisualDensity.compact,
-                                    tooltip: s.edit,
-                                    icon: Icon(
-                                      Icons.edit_outlined,
-                                      color: scheme.primary,
-                                      size: 20,
-                                    ),
-                                    onPressed: () => _openEditor(h),
-                                  ),
-                                  IconButton(
-                                    visualDensity: VisualDensity.compact,
-                                    tooltip: s.delete,
-                                    icon: Icon(
-                                      Icons.delete_outline_rounded,
-                                      color: scheme.error,
-                                      size: 20,
-                                    ),
-                                    onPressed: () => _confirmDelete(h),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 6),
-                              Opacity(
-                                opacity: h.isActive ? 1.0 : 0.6,
-                                child: Text(
-                                  h.text,
-                                  maxLines: 4,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.bodyMedium
-                                      ?.copyWith(
-                                        fontStyle: h.isActive
-                                            ? FontStyle.normal
-                                            : FontStyle.italic,
-                                      ),
-                                ),
-                              ),
-                              if (h.source.isNotEmpty) ...[
-                                const SizedBox(height: 8),
-                                Opacity(
-                                  opacity: h.isActive ? 1.0 : 0.6,
-                                  child: Text(
-                                    h.source,
-                                    style: Theme.of(context).textTheme.bodySmall
-                                        ?.copyWith(
-                                          color: scheme.onSurfaceVariant,
-                                          fontStyle: FontStyle.italic,
-                                        ),
-                                  ),
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
-              decoration: BoxDecoration(
-                color: scheme.surface,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.06),
-                    blurRadius: 12,
-                    offset: const Offset(0, -2),
-                  ),
-                ],
-              ),
-              child: SafeArea(
-                top: false,
+        if (items.isEmpty)
+          Expanded(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      labels.saveBarHint,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: scheme.onSurfaceVariant,
-                      ),
+                    Icon(
+                      labels.emptyIcon,
+                      size: 72,
+                      color: scheme.outlineVariant,
                     ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton.icon(
-                        onPressed: _save,
-                        icon: const Icon(Icons.cloud_upload_rounded),
-                        label: Text(s.save),
-                        style: FilledButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                        ),
-                      ),
+                    const SizedBox(height: 16),
+                    Text(
+                      labels.emptyTitle,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleMedium
+                          ?.copyWith(fontWeight: FontWeight.w600),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      labels.emptySubtitle,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyMedium
+                          ?.copyWith(color: scheme.onSurfaceVariant),
                     ),
                   ],
                 ),
               ),
             ),
-          ],
-        ),
-        Positioned(
-          right: 16,
-          bottom: 120,
-          child: FloatingActionButton.extended(
-            heroTag: 'settings_mosque_text_fab_${widget.kind.name}',
-            onPressed: () => _openEditor(),
-            icon: const Icon(Icons.add_rounded),
-            label: Text(labels.fabAdd),
+          )
+        else
+          Expanded(
+            child: ListView.separated(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+              itemCount: items.length,
+              separatorBuilder: (context, index) =>
+                  const SizedBox(height: 10),
+              itemBuilder: (context, index) {
+                final h = items[index];
+                return Material(
+                  key: ValueKey('mosque_text_${h.id}'),
+                  elevation: 0,
+                  color: scheme.surfaceContainerHighest.withValues(
+                    alpha: 0.6,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(16),
+                    onTap: () => _openEditor(h),
+                    child: Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  h.narrator.isNotEmpty ? h.narrator : '—',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.w700,
+                                        color: h.isActive
+                                            ? AppColors.primary
+                                            : scheme.outline,
+                                      ),
+                                ),
+                              ),
+                              Transform.scale(
+                                scale: 0.8,
+                                child: Switch(
+                                  value: h.isActive,
+                                  onChanged: (val) {
+                                    context.read<SettingsBloc>().add(
+                                      MosqueTextUpdated(
+                                        widget.kind,
+                                        h.copyWith(isActive: val),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              IconButton(
+                                visualDensity: VisualDensity.compact,
+                                tooltip: s.edit,
+                                icon: Icon(
+                                  Icons.edit_outlined,
+                                  color: scheme.primary,
+                                  size: 20,
+                                ),
+                                onPressed: () => _openEditor(h),
+                              ),
+                              IconButton(
+                                visualDensity: VisualDensity.compact,
+                                tooltip: s.delete,
+                                icon: Icon(
+                                  Icons.delete_outline_rounded,
+                                  color: scheme.error,
+                                  size: 20,
+                                ),
+                                onPressed: () => _confirmDelete(h),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 6),
+                          Opacity(
+                            opacity: h.isActive ? 1.0 : 0.6,
+                            child: Text(
+                              h.text,
+                              maxLines: 4,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
+                                    fontStyle: h.isActive
+                                        ? FontStyle.normal
+                                        : FontStyle.italic,
+                                  ),
+                            ),
+                          ),
+                          if (h.source.isNotEmpty) ...[
+                            const SizedBox(height: 8),
+                            Opacity(
+                              opacity: h.isActive ? 1.0 : 0.6,
+                              child: Text(
+                                h.source,
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: scheme.onSurfaceVariant,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
-        ),
       ],
     );
   }
