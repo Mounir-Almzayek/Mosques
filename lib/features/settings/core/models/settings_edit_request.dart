@@ -1,6 +1,6 @@
 ﻿import 'package:equatable/equatable.dart';
 
-import '../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_model.dart';
 
 /// Draft mosque data for the settings screen (mirrors [LoginRequest] pattern).
 class SettingsEditRequest extends Equatable {

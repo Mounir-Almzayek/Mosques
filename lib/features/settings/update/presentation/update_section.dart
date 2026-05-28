@@ -7,7 +7,7 @@ import '../../../../data/models/app/app_settings_model.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../data/repositories/interfaces/app_settings_repository_interface.dart';
 import '../../../../core/utils/version_helper.dart';
-import '../../bloc/update/update_bloc.dart';
+import '../bloc/update_bloc.dart';
 
 class UpdateSection extends StatefulWidget {
   const UpdateSection({super.key});

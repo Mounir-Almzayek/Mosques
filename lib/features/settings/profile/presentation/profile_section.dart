@@ -5,8 +5,8 @@ import '../../../../core/di/service_locator.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/widgets/feedback/unified_snackbar.dart';
 import '../../../../data/repositories/interfaces/auth_repository_interface.dart';
-import '../../bloc/profile/profile_bloc.dart';
-import '../../widgets/profile/profile_widgets.dart';
+import '../bloc/profile_bloc.dart';
+import '../widgets/profile_widgets.dart';
 
 class ProfileSection extends StatefulWidget {
   const ProfileSection({super.key});

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../models/settings_edit_request.dart';
+import '../../core/models/settings_edit_request.dart';
 
 /// Single concrete state for settings to simplify handler logic and copyWith usage.
 class SettingsState extends Equatable {

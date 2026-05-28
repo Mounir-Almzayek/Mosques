@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../core/l10n/generated/l10n.dart';
-import '../../../data/models/mosque/mosque_model.dart';
-import '../bloc/settings/settings_bloc.dart';
-import '../presentation/sections/mosque_text_list_section.dart';
+import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../data/models/mosque/mosque_model.dart';
+import '../../bloc/settings/settings_bloc.dart';
+import 'mosque_text_list_section.dart';
 
 class MosqueTextEditorSheet extends StatefulWidget {
   const MosqueTextEditorSheet({

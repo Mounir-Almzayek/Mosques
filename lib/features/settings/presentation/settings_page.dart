@@ -10,19 +10,19 @@ import '../../../core/routes/app_routes.dart';
 import '../../../core/widgets/feedback/unified_snackbar.dart';
 import '../../../core/widgets/navigation/zoom_drawer.dart';
 import '../bloc/settings/settings_bloc.dart';
-import '../widgets/common/settings_zoom_drawer_content.dart';
-import '../widgets/common/settings_app_bar.dart';
+import '../core/widgets/settings_zoom_drawer_content.dart';
+import '../core/widgets/settings_app_bar.dart';
 
-import 'sections/general_section.dart';
-import 'sections/prayer_iqama_section.dart';
-import 'sections/religious_content_section.dart';
-import 'sections/design_section.dart';
-import 'sections/album_section.dart';
-import 'sections/announcement_section.dart';
-import 'sections/alerts_section.dart';
-import 'sections/profile_section.dart';
-import 'sections/about_section.dart';
-import 'sections/update_section.dart';
+import '../general/presentation/general_section.dart';
+import '../iqama/presentation/prayer_iqama_section.dart';
+import '../religious_content/presentation/religious_content_section.dart';
+import '../design/presentation/design_section.dart';
+import '../album/presentation/album_section.dart';
+import '../announcements/presentation/announcement_section.dart';
+import '../alerts/presentation/alerts_section.dart';
+import '../profile/presentation/profile_section.dart';
+import '../about/presentation/about_section.dart';
+import '../update/presentation/update_section.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});

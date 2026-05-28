@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../data/models/mosque/mosque_model.dart';
 import '../../../../data/repositories/interfaces/mosque_repository_interface.dart';
-import '../../models/settings_edit_request.dart';
+import '../../core/models/settings_edit_request.dart';
 import 'handlers/announcement_handler.dart';
 import 'handlers/design_settings_handler.dart';
 import 'handlers/general_settings_handler.dart';

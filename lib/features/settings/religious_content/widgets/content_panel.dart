@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/styles/app_colors.dart';
-import '../../../data/models/mosque/mosque_model.dart';
-import '../presentation/sections/mosque_text_list_section.dart';
+import '../../../../core/styles/app_colors.dart';
+import '../../../../data/models/mosque/mosque_model.dart';
+import 'mosque_text_list_section.dart';
 
 class ContentPanel extends StatelessWidget {
   final MosqueModel mosque;

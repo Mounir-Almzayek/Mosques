@@ -5,7 +5,7 @@ import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
 import '../../bloc/settings/settings_bloc.dart';
-import '../../widgets/mosque_text_editor_sheet.dart';
+import 'mosque_text_editor_sheet.dart';
 
 class MosqueTextL10n {
   const MosqueTextL10n({

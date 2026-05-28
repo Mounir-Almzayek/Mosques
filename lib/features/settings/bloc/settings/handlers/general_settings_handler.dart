@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../data/models/mosque/mosque_model.dart';
-import '../../../models/settings_edit_request.dart';
+import '../../../core/models/settings_edit_request.dart';
 import '../settings_event.dart';
 import '../settings_state.dart';
 

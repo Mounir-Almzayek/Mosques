@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../core/l10n/generated/l10n.dart';
-import '../../../data/models/mosque/announcement_model.dart';
+import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../data/models/mosque/announcement_model.dart';
 
 /// Dialog for creating a new alert or editing an existing one.
 ///

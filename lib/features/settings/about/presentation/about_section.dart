@@ -2,7 +2,7 @@
 import '../../../../core/di/service_locator.dart';
 import '../../../../data/models/app/app_settings_model.dart';
 import '../../../../data/repositories/interfaces/app_settings_repository_interface.dart';
-import '../../widgets/about/about_widgets.dart';
+import '../widgets/about_widgets.dart';
 
 class AboutSection extends StatelessWidget {
   const AboutSection({super.key});

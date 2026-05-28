@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
-import '../../bloc/profile/profile_bloc.dart';
+import '../bloc/profile_bloc.dart';
 
 class ProfilePhoneCard extends StatefulWidget {
   final ProfileState state;

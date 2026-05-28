@@ -5,10 +5,10 @@ import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
 import '../../bloc/settings/settings_bloc.dart';
-import '../../widgets/common/common_widgets.dart';
-import '../../widgets/content_panel.dart';
-import '../../widgets/mosque_text_editor_sheet.dart';
-import 'mosque_text_list_section.dart';
+import '../../core/widgets/common_widgets.dart';
+import '../widgets/content_panel.dart';
+import '../widgets/mosque_text_editor_sheet.dart';
+import '../widgets/mosque_text_list_section.dart';
 
 class ReligiousContentSection extends StatefulWidget {
   final MosqueModel mosque;

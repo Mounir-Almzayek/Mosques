@@ -6,7 +6,7 @@ import '../../../../data/models/app/app_settings_model.dart';
 import '../../../../data/repositories/interfaces/app_settings_repository_interface.dart';
 import '../../bloc/settings/settings_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../widgets/design/design_widgets.dart';
+import '../widgets/design_widgets.dart';
 
 class DesignSection extends StatelessWidget {
   const DesignSection({super.key});

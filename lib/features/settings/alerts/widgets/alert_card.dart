@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/l10n/generated/l10n.dart';
-import '../../../data/models/mosque/announcement_model.dart';
+import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../data/models/mosque/announcement_model.dart';
 
 /// A card that displays a saved alert with its live/ready status and actions.
 class AlertCard extends StatelessWidget {
