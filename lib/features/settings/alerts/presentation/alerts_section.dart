@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/di/service_locator.dart';
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/widgets/feedback/unified_snackbar.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
-import '../../bloc/settings/settings_bloc.dart';
+import '../../../../data/repositories/interfaces/mosque_repository_interface.dart';
+import '../bloc/alerts_bloc.dart';
 import '../widgets/alert_card.dart';
 import '../widgets/alert_edit_dialog.dart';
 
@@ -12,11 +15,23 @@ import '../widgets/alert_edit_dialog.dart';
 /// Alerts are stored in [mosque.savedAlerts]. Each can be individually
 /// published to the display for a configurable duration, then unpublished.
 class AlertsSection extends StatelessWidget {
-  final MosqueModel mosque;
+  const AlertsSection({super.key});
 
-  const AlertsSection({super.key, required this.mosque});
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<AlertsBloc>(
+      create: (_) =>
+          AlertsBloc(mosqueRepository: sl<IMosqueRepository>())
+            ..add(const LoadAlerts()),
+      child: const _AlertsSectionBody(),
+    );
+  }
+}
 
-  // ── Helpers ─────────────────────────────────────────────────────────────
+class _AlertsSectionBody extends StatelessWidget {
+  const _AlertsSectionBody();
+
+  // -- Helpers ----------------------------------------------------------------
 
   static bool _isLive(AnnouncementModel alert) {
     if (!alert.isPublished || alert.publishedAt == null) return false;
@@ -26,10 +41,10 @@ class AlertsSection extends StatelessWidget {
     return DateTime.now().isBefore(expiry);
   }
 
-  // ── Actions ─────────────────────────────────────────────────────────────
+  // -- Actions ----------------------------------------------------------------
 
   void _openCreateDialog(BuildContext context) {
-    final bloc = context.read<SettingsBloc>();
+    final bloc = context.read<AlertsBloc>();
     showDialog(
       context: context,
       builder: (_) => AlertEditDialog(
@@ -42,7 +57,7 @@ class AlertsSection extends StatelessWidget {
   }
 
   void _openEditDialog(BuildContext context, AnnouncementModel alert) {
-    final bloc = context.read<SettingsBloc>();
+    final bloc = context.read<AlertsBloc>();
     showDialog(
       context: context,
       builder: (_) => AlertEditDialog(
@@ -56,7 +71,7 @@ class AlertsSection extends StatelessWidget {
   }
 
   void _confirmDelete(BuildContext context, AnnouncementModel alert) {
-    final bloc = context.read<SettingsBloc>();
+    final bloc = context.read<AlertsBloc>();
     final s = S.of(context);
     showDialog(
       context: context,
@@ -83,7 +98,7 @@ class AlertsSection extends StatelessWidget {
   }
 
   void _confirmDeleteAll(BuildContext context) {
-    final bloc = context.read<SettingsBloc>();
+    final bloc = context.read<AlertsBloc>();
     final s = S.of(context);
     showDialog(
       context: context,
@@ -109,7 +124,7 @@ class AlertsSection extends StatelessWidget {
   }
 
   void _showPublishSheet(BuildContext context, AnnouncementModel alert) {
-    final bloc = context.read<SettingsBloc>();
+    final bloc = context.read<AlertsBloc>();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -128,71 +143,96 @@ class AlertsSection extends StatelessWidget {
   }
 
   void _unpublish(BuildContext context, AnnouncementModel alert) {
-    final bloc = context.read<SettingsBloc>();
+    final bloc = context.read<AlertsBloc>();
     bloc.add(AlertUnpublished(alert.id));
     bloc.add(const SaveAlertsRequested());
   }
 
-  // ── Build ────────────────────────────────────────────────────────────────
+  // -- Build ------------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    final alerts = mosque.savedAlerts;
 
-    return Scaffold(
-      body: alerts.isEmpty
-          ? _EmptyState(s: s)
-          : ListView.builder(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
-              itemCount: alerts.length,
-              itemBuilder: (ctx, index) {
-                final alert = alerts[index];
-                final live = _isLive(alert);
-                return AlertCard(
-                  alert: alert,
-                  isLive: live,
-                  onPublish: () => _showPublishSheet(context, alert),
-                  onUnpublish: () => _unpublish(context, alert),
-                  onEdit: () => _openEditDialog(context, alert),
-                  onDelete: () => _confirmDelete(context, alert),
-                );
-              },
+    return BlocListener<AlertsBloc, AlertsState>(
+      listenWhen: (prev, curr) =>
+          prev.isSaving != curr.isSaving ||
+          (curr.error != null && prev.error == null),
+      listener: (context, state) {
+        if (state.isSaving) {
+          UnifiedSnackbar.info(context, message: s.saving);
+        } else if (state.error != null) {
+          UnifiedSnackbar.error(context, message: state.error!);
+        } else {
+          UnifiedSnackbar.hide(context);
+          UnifiedSnackbar.success(context, message: s.saved_successfully);
+        }
+      },
+      child: BlocBuilder<AlertsBloc, AlertsState>(
+        builder: (context, state) {
+          final mosque = state.mosque;
+          if (mosque == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final alerts = mosque.savedAlerts;
+
+          return Scaffold(
+            body: alerts.isEmpty
+                ? _EmptyState(s: s)
+                : ListView.builder(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
+                    itemCount: alerts.length,
+                    itemBuilder: (ctx, index) {
+                      final alert = alerts[index];
+                      final live = _isLive(alert);
+                      return AlertCard(
+                        alert: alert,
+                        isLive: live,
+                        onPublish: () => _showPublishSheet(context, alert),
+                        onUnpublish: () => _unpublish(context, alert),
+                        onEdit: () => _openEditDialog(context, alert),
+                        onDelete: () => _confirmDelete(context, alert),
+                      );
+                    },
+                  ),
+
+            floatingActionButton: FloatingActionButton.extended(
+              onPressed: () => _openCreateDialog(context),
+              icon: const Icon(Icons.add_alert_outlined),
+              label: Text(s.alert_create),
+              backgroundColor: const Color(0xFF1A3C34),
+              foregroundColor: Colors.white,
             ),
 
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _openCreateDialog(context),
-        icon: const Icon(Icons.add_alert_outlined),
-        label: Text(s.alert_create),
-        backgroundColor: const Color(0xFF1A3C34),
-        foregroundColor: Colors.white,
-      ),
-
-      bottomNavigationBar: alerts.isNotEmpty
-          ? SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                child: OutlinedButton.icon(
-                  onPressed: () => _confirmDeleteAll(context),
-                  icon: const Icon(Icons.delete_sweep_outlined),
-                  label: Text(s.alerts_delete_all),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.red,
-                    side: const BorderSide(color: Colors.red),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+            bottomNavigationBar: alerts.isNotEmpty
+                ? SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                      child: OutlinedButton.icon(
+                        onPressed: () => _confirmDeleteAll(context),
+                        icon: const Icon(Icons.delete_sweep_outlined),
+                        label: Text(s.alerts_delete_all),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.red,
+                          side: const BorderSide(color: Colors.red),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            )
-          : null,
+                  )
+                : null,
+          );
+        },
+      ),
     );
   }
 }
 
-// ── Empty state ──────────────────────────────────────────────────────────────
+// -- Empty state --------------------------------------------------------------
 
 class _EmptyState extends StatelessWidget {
   final S s;
@@ -234,7 +274,7 @@ class _EmptyState extends StatelessWidget {
   }
 }
 
-// ── Publish bottom sheet ─────────────────────────────────────────────────────
+// -- Publish bottom sheet -----------------------------------------------------
 
 class _PublishBottomSheet extends StatefulWidget {
   final AnnouncementModel alert;

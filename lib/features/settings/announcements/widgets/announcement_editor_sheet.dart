@@ -4,13 +4,13 @@ import 'package:uuid/uuid.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/widgets/feedback/unified_snackbar.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
-import '../../bloc/settings/settings_bloc.dart';
+import '../bloc/announcements_bloc.dart';
 
 class AnnouncementEditorSheet extends StatefulWidget {
   const AnnouncementEditorSheet({super.key, required this.existing, required this.bloc});
 
   final AnnouncementModel? existing;
-  final SettingsBloc bloc;
+  final AnnouncementsBloc bloc;
 
   @override
   State<AnnouncementEditorSheet> createState() =>

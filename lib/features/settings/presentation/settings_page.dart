@@ -147,8 +147,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         const ReligiousContentSection(),            // 2
                         const DesignSection(),                     // 3
                         const AlbumSection(),                      // 4
-                        AnnouncementSection(mosque: mosque),       // 5
-                        AlertsSection(mosque: mosque),             // 6
+                        const AnnouncementSection(),               // 5
+                        const AlertsSection(),                     // 6
                         const ProfileSection(),                    // 7
                         const AboutSection(),                     // 8
                         const UpdateSection(),                    // 9
