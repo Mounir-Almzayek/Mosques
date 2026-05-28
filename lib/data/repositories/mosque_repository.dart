@@ -16,9 +16,9 @@ class MosqueRepository implements IMosqueRepository {
     required FirebaseFirestore firestore,
     required String? Function() getActiveMosqueId,
     required Future<void> Function(String) syncActiveMosque,
-  })  : _firestore = firestore,
-        _getActiveMosqueId = getActiveMosqueId,
-        _syncActiveMosque = syncActiveMosque;
+  }) : _firestore = firestore,
+       _getActiveMosqueId = getActiveMosqueId,
+       _syncActiveMosque = syncActiveMosque;
 
   /// Reference to the active mosque document
   DocumentReference? get _mosqueRef {
@@ -44,8 +44,10 @@ class MosqueRepository implements IMosqueRepository {
         return MosqueLocalRepository.getCachedForActiveMosque();
       }
 
-      final mosque =
-          MosqueModel.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+      final mosque = MosqueModel.fromMap(
+        doc.data() as Map<String, dynamic>,
+        doc.id,
+      );
       await MosqueLocalRepository.saveMosque(mosque);
       return mosque;
     } catch (_) {
@@ -66,8 +68,10 @@ class MosqueRepository implements IMosqueRepository {
     try {
       final doc = await ref.get(const GetOptions(source: Source.server));
       if (!doc.exists || doc.data() == null) return null;
-      final mosque =
-          MosqueModel.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+      final mosque = MosqueModel.fromMap(
+        doc.data() as Map<String, dynamic>,
+        doc.id,
+      );
       await MosqueLocalRepository.saveMosque(mosque);
       return mosque;
     } catch (_) {
@@ -85,6 +89,9 @@ class MosqueRepository implements IMosqueRepository {
     data[FirestoreSchema.lastSeen] = FieldValue.serverTimestamp();
     // Drop legacy logo URL (no longer using Firebase Storage for logos)
     data[FirestoreSchema.logoUrl] = FieldValue.delete();
+    // Drop legacy album fields (migration safety)
+    data['photo_studio_urls'] = FieldValue.delete();
+    data['background_album_urls'] = FieldValue.delete();
     await ref.set(data, SetOptions(merge: true));
   }
 
@@ -125,7 +132,10 @@ class MosqueRepository implements IMosqueRepository {
   }
 
   @override
-  Future<void> updateMosqueTextList(MosqueModel mosque, MosqueTextListKind kind) async {
+  Future<void> updateMosqueTextList(
+    MosqueModel mosque,
+    MosqueTextListKind kind,
+  ) async {
     final ref = _mosqueRef;
     if (ref == null) throw Exception('No active mosque');
 
@@ -150,7 +160,9 @@ class MosqueRepository implements IMosqueRepository {
     if (ref == null) throw Exception('No active mosque');
 
     await ref.update({
-      FirestoreSchema.mosqueAds: mosque.announcements.map((a) => a.toMap()).toList(),
+      FirestoreSchema.mosqueAds: mosque.announcements
+          .map((a) => a.toMap())
+          .toList(),
       FirestoreSchema.updatedAt: FieldValue.serverTimestamp(),
       FirestoreSchema.lastSeen: FieldValue.serverTimestamp(),
     });
@@ -162,7 +174,9 @@ class MosqueRepository implements IMosqueRepository {
     if (ref == null) throw Exception('No active mosque');
 
     await ref.update({
-      FirestoreSchema.activeAlerts: mosque.savedAlerts.map((a) => a.toMap()).toList(),
+      FirestoreSchema.activeAlerts: mosque.savedAlerts
+          .map((a) => a.toMap())
+          .toList(),
       FirestoreSchema.updatedAt: FieldValue.serverTimestamp(),
       FirestoreSchema.lastSeen: FieldValue.serverTimestamp(),
     });
@@ -173,9 +187,7 @@ class MosqueRepository implements IMosqueRepository {
     final ref = _mosqueRef;
     if (ref == null) return;
 
-    await ref.update({
-      FirestoreSchema.lastSeen: FieldValue.serverTimestamp(),
-    });
+    await ref.update({FirestoreSchema.lastSeen: FieldValue.serverTimestamp()});
   }
 
   @override
@@ -190,8 +202,10 @@ class MosqueRepository implements IMosqueRepository {
             controller.add(null);
             return;
           }
-          final mosque =
-              MosqueModel.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+          final mosque = MosqueModel.fromMap(
+            doc.data() as Map<String, dynamic>,
+            doc.id,
+          );
           await MosqueLocalRepository.saveMosque(mosque);
           controller.add(mosque);
         },

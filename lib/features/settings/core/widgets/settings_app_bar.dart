@@ -6,7 +6,6 @@ class SettingsAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int sectionIndex;
   final String mosqueName;
   final VoidCallback onMenuPressed;
-  final VoidCallback onRefreshPressed;
   final List<PopupMenuEntry<String>> Function(BuildContext) popupMenuBuilder;
   final void Function(String) onPopupMenuSelected;
 
@@ -15,7 +14,6 @@ class SettingsAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.sectionIndex,
     required this.mosqueName,
     required this.onMenuPressed,
-    required this.onRefreshPressed,
     required this.popupMenuBuilder,
     required this.onPopupMenuSelected,
   });
@@ -93,14 +91,6 @@ class SettingsAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ],
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.refresh_rounded,
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                  onPressed: onRefreshPressed,
-                ),
                 PopupMenuButton<String>(
                   icon: const Icon(
                     Icons.more_vert_rounded,
@@ -129,9 +119,9 @@ class SettingsAppBar extends StatelessWidget implements PreferredSizeWidget {
       case 3:
         return s.tab_design;
       case 4:
-        return s.tab_album;
-      case 5:
         return s.tab_announcements;
+      case 5:
+        return s.tab_album;
       case 6:
         return s.tab_alerts;
       case 7:
@@ -156,9 +146,9 @@ class SettingsAppBar extends StatelessWidget implements PreferredSizeWidget {
       case 3:
         return Icons.palette_outlined;
       case 4:
-        return Icons.photo_library_outlined;
-      case 5:
         return Icons.campaign_outlined;
+      case 5:
+        return Icons.photo_library_outlined;
       case 6:
         return Icons.notification_important_outlined;
       case 7:

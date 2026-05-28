@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../data/models/platform_announcements/settings_announcement_model.dart';
@@ -146,13 +147,34 @@ class _SettingsAnnouncementSlide extends StatelessWidget {
 
   final SettingsAnnouncementModel announcement;
 
+  Future<void> _openLink(BuildContext context) async {
+    final raw = announcement.linkUrl?.trim();
+    if (raw == null || raw.isEmpty) return;
+    final uri = Uri.tryParse(raw);
+    if (uri == null) return;
+    if (uri.scheme != 'http' && uri.scheme != 'https') return;
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (_) {
+      // Ignore: opening links is best-effort.
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
     final scheme = Theme.of(context).colorScheme;
     final hasImage = announcement.hasImage;
+    final hasLink = announcement.hasLink;
+    final textScale = MediaQuery.textScalerOf(context).scale(1.0);
+    final denseLayout = textScale > 1.1;
+    final titleMaxLines = denseLayout && (hasImage || announcement.hasBody)
+        ? 1
+        : 2;
+    final bodyMaxLines = denseLayout ? 1 : 2;
+    final topPadding = denseLayout ? 40.0 : 46.0;
 
-    return Stack(
+    final content = Stack(
       fit: StackFit.expand,
       children: [
         DecoratedBox(
@@ -193,7 +215,7 @@ class _SettingsAnnouncementSlide extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(18, 46, 18, 20),
+          padding: EdgeInsets.fromLTRB(18, topPadding, 18, 20),
           child: Align(
             alignment: AlignmentDirectional.centerStart,
             child: ConstrainedBox(
@@ -212,7 +234,7 @@ class _SettingsAnnouncementSlide extends StatelessWidget {
                     announcement.title.isNotEmpty
                         ? announcement.title
                         : s.settings_app_announcements_subtitle,
-                    maxLines: 2,
+                    maxLines: titleMaxLines,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       color: Colors.white,
@@ -224,7 +246,7 @@ class _SettingsAnnouncementSlide extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(
                       announcement.body!,
-                      maxLines: 2,
+                      maxLines: bodyMaxLines,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Colors.white.withValues(alpha: 0.9),
@@ -238,6 +260,17 @@ class _SettingsAnnouncementSlide extends StatelessWidget {
           ),
         ),
       ],
+    );
+
+    if (!hasLink) return content;
+
+    return Semantics(
+      button: true,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => _openLink(context),
+        child: content,
+      ),
     );
   }
 }

@@ -1,8 +1,8 @@
-# Tabyan Deep Architecture Refactor Plan
+# Tebyan Deep Architecture Refactor Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Transform Tabyan from a working but tightly-coupled codebase into a professional, extensible Flutter architecture with proper separation of concerns, dependency injection, structured error handling, and testable repository interfaces.
+**Goal:** Transform Tebyan from a working but tightly-coupled codebase into a professional, extensible Flutter architecture with proper separation of concerns, dependency injection, structured error handling, and testable repository interfaces.
 
 **Architecture:** Replace static repository singletons with abstract interfaces registered via GetIt service locator. Consolidate 50+ boilerplate settings events into parameterized generic events. Optimize the per-second display tick to avoid full-widget rebuilds. Add auth-aware router guards, structured Firestore schema constants, and a Result<T> error pattern.
 

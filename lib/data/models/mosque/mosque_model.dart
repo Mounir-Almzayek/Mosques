@@ -107,16 +107,23 @@ class MosqueModel extends Equatable {
   }
 
   static List<String> _mergeAlbumUrls(Map<String, dynamic> map) {
+    final hasNewAlbumField = map.containsKey('album_image_urls');
     final album = (map['album_image_urls'] as List<dynamic>?)
         ?.map((e) => e.toString())
         .toList();
-    if (album != null && album.isNotEmpty) return album;
+
+    // If the new field exists (even if empty), it is authoritative.
+    // This prevents legacy fields from "resurrecting" deleted images.
+    if (hasNewAlbumField) return album ?? const [];
+
     // Migration: merge old photo_studio_urls + background_album_urls
-    final photo = (map['photo_studio_urls'] as List<dynamic>?)
+    final photo =
+        (map['photo_studio_urls'] as List<dynamic>?)
             ?.map((e) => e.toString())
             .toList() ??
         [];
-    final bg = (map['background_album_urls'] as List<dynamic>?)
+    final bg =
+        (map['background_album_urls'] as List<dynamic>?)
             ?.map((e) => e.toString())
             .toList() ??
         [];
@@ -133,22 +140,33 @@ class MosqueModel extends Equatable {
       longitude: (map['longitude'] ?? 0.0).toDouble(),
       prayerCalculationMethod: map['calculation_method'] ?? 'MuslimWorldLeague',
       prayerOffsets: PrayerOffsetsModel.fromMap(map['prayer_offsets'] ?? {}),
-      appLanguageCode:
-          (rawLang is String && rawLang.isNotEmpty) ? rawLang : null,
+      appLanguageCode: (rawLang is String && rawLang.isNotEmpty)
+          ? rawLang
+          : null,
       designSettings: DesignSettingsModel.fromMap(map['design_settings'] ?? {}),
       iqamaSettings: IqamaSettingsModel.fromMap(map['iqama_offsets'] ?? {}),
       hadiths: _parseTextEntries(map['hadiths'], 'hadith'),
       verses: _parseTextEntries(map['verses'], 'verse'),
       duas: _parseTextEntries(map['duas'], 'dua'),
       adhkar: _parseTextEntries(map['adhkar'], 'adhkar'),
-      announcements: (map['mosque_ads'] as List<dynamic>?)
-              ?.map((e) => AnnouncementModel.fromMap(
-                  e as Map<String, dynamic>, e['id'] ?? ''))
+      announcements:
+          (map['mosque_ads'] as List<dynamic>?)
+              ?.map(
+                (e) => AnnouncementModel.fromMap(
+                  e as Map<String, dynamic>,
+                  e['id'] ?? '',
+                ),
+              )
               .toList() ??
           [],
-      savedAlerts: (map['active_alerts'] as List<dynamic>?)
-              ?.map((e) => AnnouncementModel.fromMap(
-                  e as Map<String, dynamic>, e['id'] ?? ''))
+      savedAlerts:
+          (map['active_alerts'] as List<dynamic>?)
+              ?.map(
+                (e) => AnnouncementModel.fromMap(
+                  e as Map<String, dynamic>,
+                  e['id'] ?? '',
+                ),
+              )
               .toList() ??
           [],
       albumImageUrls: _mergeAlbumUrls(map),
@@ -260,27 +278,27 @@ class MosqueModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        city,
-        latitude,
-        longitude,
-        prayerCalculationMethod,
-        prayerOffsets,
-        appLanguageCode,
-        designSettings,
-        iqamaSettings,
-        hadiths,
-        verses,
-        duas,
-        adhkar,
-        announcements,
-        savedAlerts,
-        albumImageUrls,
-        publishedAlbumImageUrl,
-        publishedAlbumImageAt,
-        publishedAlbumImageDuration,
-        lastSeen,
-        updatedAt,
-      ];
+    id,
+    name,
+    city,
+    latitude,
+    longitude,
+    prayerCalculationMethod,
+    prayerOffsets,
+    appLanguageCode,
+    designSettings,
+    iqamaSettings,
+    hadiths,
+    verses,
+    duas,
+    adhkar,
+    announcements,
+    savedAlerts,
+    albumImageUrls,
+    publishedAlbumImageUrl,
+    publishedAlbumImageAt,
+    publishedAlbumImageDuration,
+    lastSeen,
+    updatedAt,
+  ];
 }

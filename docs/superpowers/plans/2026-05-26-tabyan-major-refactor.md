@@ -1,4 +1,4 @@
-# Tabyan (تبيان) Major Refactor Implementation Plan
+# Tebyan (تبيان) Major Refactor Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -2029,7 +2029,7 @@ flutter_launcher_icons:
 
 - [ ] **Step 2: Update any hardcoded app name references to "تبيان"**
 
-Search for "mounir" or old app name references and replace with "تبيان" / "Tabyan".
+Search for "mounir" or old app name references and replace with "تبيان" / "Tebyan".
 
 - [ ] **Step 3: Update color scheme from gold to green**
 
@@ -2117,7 +2117,7 @@ Verify:
 - [ ] **Step 3: Commit final**
 
 ```
-feat: complete tabyan major refactor with priority layer system
+feat: complete Tebyan major refactor with priority layer system
 ```
 
 ---

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:tabyan/core/utils/color_extensions.dart';
+import 'package:Tebyan/core/utils/color_extensions.dart';
 
 void main() {
   testWidgets('ColorOpacityCompat applies alpha factor', (WidgetTester tester) async {

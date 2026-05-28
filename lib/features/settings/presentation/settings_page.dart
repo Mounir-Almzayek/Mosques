@@ -80,7 +80,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   sectionIndex: _sectionIndex,
                   mosqueName: mosqueName,
                   onMenuPressed: _drawerController.toggle,
-                  onRefreshPressed: () {},
                   popupMenuBuilder: (BuildContext context) => [
                     PopupMenuItem<String>(
                       value: 'smart_screen',
@@ -105,8 +104,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     PrayerIqamaSection(),
                     ReligiousContentSection(),
                     DesignSection(),
-                    AlbumSection(),
                     AnnouncementSection(),
+                    AlbumSection(),
                     AlertsSection(),
                     ProfileSection(),
                     AboutSection(),

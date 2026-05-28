@@ -66,7 +66,21 @@ class AboutItemView extends StatelessWidget {
       case AboutSectionType.text:
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Text(section.content, style: style),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(section.content, style: style),
+              if (section.content.contains('\n')) ...[
+                const SizedBox(height: 4),
+                Text(
+                  section.content,
+                  style: style.copyWith(
+                    color: primary.withValues(alpha: 0.7),
+                  ),
+                ),
+              ],
+            ],
+          ),
         );
 
       case AboutSectionType.link:
