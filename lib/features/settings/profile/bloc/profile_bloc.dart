@@ -11,8 +11,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final IAuthRepository _authRepo;
 
   ProfileBloc({required IAuthRepository authRepository})
-      : _authRepo = authRepository,
-        super(const ProfileState()) {
+    : _authRepo = authRepository,
+      super(const ProfileState()) {
     on<LoadProfileRequested>(_onLoadProfile);
     on<UpdatePasswordRequested>(_onUpdatePassword);
     on<UpdatePhoneRequested>(_onUpdatePhone);
@@ -57,7 +57,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         throw 'Phone number cannot be empty.';
       }
       await _authRepo.updatePhone(event.newPhone);
-      emit(state.copyWith(status: ProfileStatus.success, phone: event.newPhone));
+      emit(
+        state.copyWith(status: ProfileStatus.success, phone: event.newPhone),
+      );
     } catch (e) {
       emit(state.copyWith(status: ProfileStatus.failure, error: e.toString()));
     }

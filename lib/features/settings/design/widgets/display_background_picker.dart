@@ -79,7 +79,7 @@ class DisplayBackgroundPicker extends StatelessWidget {
                           color: color.withValues(alpha: 0.2),
                           blurRadius: 8,
                           offset: const Offset(0, 4),
-                        )
+                        ),
                       ]
                     : [],
               ),
@@ -88,10 +88,7 @@ class DisplayBackgroundPicker extends StatelessWidget {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    CachedImage(
-                      url: url,
-                      fit: BoxFit.cover,
-                    ),
+                    CachedImage(url: url, fit: BoxFit.cover),
                     if (isSelected)
                       Positioned(
                         top: 4,

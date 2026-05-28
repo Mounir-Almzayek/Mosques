@@ -52,7 +52,11 @@ class SettingsAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.menu_rounded, color: Colors.white, size: 26),
+                  icon: const Icon(
+                    Icons.menu_rounded,
+                    color: Colors.white,
+                    size: 26,
+                  ),
                   onPressed: onMenuPressed,
                 ),
                 const SizedBox(width: 4),
@@ -90,11 +94,19 @@ class SettingsAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.refresh_rounded, color: Colors.white, size: 24),
+                  icon: const Icon(
+                    Icons.refresh_rounded,
+                    color: Colors.white,
+                    size: 24,
+                  ),
                   onPressed: onRefreshPressed,
                 ),
                 PopupMenuButton<String>(
-                  icon: const Icon(Icons.more_vert_rounded, color: Colors.white, size: 24),
+                  icon: const Icon(
+                    Icons.more_vert_rounded,
+                    color: Colors.white,
+                    size: 24,
+                  ),
                   onSelected: onPopupMenuSelected,
                   itemBuilder: popupMenuBuilder,
                 ),
@@ -108,33 +120,55 @@ class SettingsAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   String _titleForIndex(S s, int i) {
     switch (i) {
-      case 0: return s.tab_general;
-      case 1: return s.tab_prayer_iqama;
-      case 2: return s.tab_religious_content;
-      case 3: return s.tab_design;
-      case 4: return s.tab_album;
-      case 5: return s.tab_announcements;
-      case 6: return s.tab_alerts;
-      case 7: return s.tab_profile;
-      case 8: return s.tab_about;
-      case 9: return s.tab_update;
-      default: return s.settings_title;
+      case 0:
+        return s.tab_general;
+      case 1:
+        return s.tab_prayer_iqama;
+      case 2:
+        return s.tab_religious_content;
+      case 3:
+        return s.tab_design;
+      case 4:
+        return s.tab_album;
+      case 5:
+        return s.tab_announcements;
+      case 6:
+        return s.tab_alerts;
+      case 7:
+        return s.tab_profile;
+      case 8:
+        return s.tab_about;
+      case 9:
+        return s.tab_update;
+      default:
+        return s.settings_title;
     }
   }
 
   IconData _iconForIndex(int i) {
     switch (i) {
-      case 0: return Icons.mosque_outlined;
-      case 1: return Icons.access_time_outlined;
-      case 2: return Icons.auto_stories_outlined;
-      case 3: return Icons.palette_outlined;
-      case 4: return Icons.photo_library_outlined;
-      case 5: return Icons.campaign_outlined;
-      case 6: return Icons.notification_important_outlined;
-      case 7: return Icons.person_outlined;
-      case 8: return Icons.info_outlined;
-      case 9: return Icons.system_update_outlined;
-      default: return Icons.settings_outlined;
+      case 0:
+        return Icons.mosque_outlined;
+      case 1:
+        return Icons.access_time_outlined;
+      case 2:
+        return Icons.auto_stories_outlined;
+      case 3:
+        return Icons.palette_outlined;
+      case 4:
+        return Icons.photo_library_outlined;
+      case 5:
+        return Icons.campaign_outlined;
+      case 6:
+        return Icons.notification_important_outlined;
+      case 7:
+        return Icons.person_outlined;
+      case 8:
+        return Icons.info_outlined;
+      case 9:
+        return Icons.system_update_outlined;
+      default:
+        return Icons.settings_outlined;
     }
   }
 }

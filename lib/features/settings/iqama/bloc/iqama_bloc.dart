@@ -13,8 +13,8 @@ class IqamaBloc extends Bloc<IqamaEvent, IqamaState> {
   final IMosqueRepository _repo;
 
   IqamaBloc({required IMosqueRepository mosqueRepository})
-      : _repo = mosqueRepository,
-        super(const IqamaState()) {
+    : _repo = mosqueRepository,
+      super(const IqamaState()) {
     on<LoadIqama>(_onLoad);
     on<IqamaMosqueUpdated>(_onMosqueUpdated);
     on<IqamaOffsetChanged>(_onIqamaOffsetChanged);
@@ -35,11 +35,13 @@ class IqamaBloc extends Bloc<IqamaEvent, IqamaState> {
 
   void _onMosqueUpdated(IqamaMosqueUpdated event, Emitter<IqamaState> emit) {
     if (!state.hasUnsavedChanges) {
-      emit(state.copyWith(
-        isLoading: false,
-        mosque: event.mosque,
-        hasUnsavedChanges: false,
-      ));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          mosque: event.mosque,
+          hasUnsavedChanges: false,
+        ),
+      );
     } else {
       emit(state.copyWith(isLoading: false));
     }
@@ -55,16 +57,18 @@ class IqamaBloc extends Bloc<IqamaEvent, IqamaState> {
       IqamaField.fajr => m.iqamaSettings.copyWith(fajrOffset: event.offset),
       IqamaField.dhuhr => m.iqamaSettings.copyWith(dhuhrOffset: event.offset),
       IqamaField.asr => m.iqamaSettings.copyWith(asrOffset: event.offset),
-      IqamaField.maghrib =>
-        m.iqamaSettings.copyWith(maghribOffset: event.offset),
+      IqamaField.maghrib => m.iqamaSettings.copyWith(
+        maghribOffset: event.offset,
+      ),
       IqamaField.isha => m.iqamaSettings.copyWith(ishaOffset: event.offset),
-      IqamaField.jummah =>
-        m.iqamaSettings.copyWith(jummahOffset: event.offset),
+      IqamaField.jummah => m.iqamaSettings.copyWith(jummahOffset: event.offset),
     };
-    emit(state.copyWith(
-      mosque: m.copyWith(iqamaSettings: i),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(iqamaSettings: i),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   Future<void> _onSave(
@@ -76,11 +80,9 @@ class IqamaBloc extends Bloc<IqamaEvent, IqamaState> {
     emit(state.copyWith(isSaving: true));
     try {
       await _repo.updateIqamaSettings(m);
-      emit(state.copyWith(
-        isSaving: false,
-        hasUnsavedChanges: false,
-        error: null,
-      ));
+      emit(
+        state.copyWith(isSaving: false, hasUnsavedChanges: false, error: null),
+      );
     } catch (e) {
       emit(state.copyWith(isSaving: false, error: e.toString()));
     }

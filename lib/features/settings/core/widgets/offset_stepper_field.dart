@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'offset_stepper_button.dart';
+
 class OffsetStepperField extends StatefulWidget {
   final String label;
   final int value;
@@ -56,7 +58,7 @@ class _OffsetStepperFieldState extends State<OffsetStepperField> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Column(
@@ -71,10 +73,7 @@ class _OffsetStepperFieldState extends State<OffsetStepperField> {
           const SizedBox(height: 4),
           Row(
             children: [
-              _StepperButton(
-                icon: Icons.remove,
-                onPressed: _decrement,
-              ),
+              OffsetStepperButton(icon: Icons.remove, onPressed: _decrement),
               const SizedBox(width: 8),
               Expanded(
                 child: SizedBox(
@@ -114,44 +113,10 @@ class _OffsetStepperFieldState extends State<OffsetStepperField> {
                 ),
               ),
               const SizedBox(width: 8),
-              _StepperButton(
-                icon: Icons.add,
-                onPressed: _increment,
-              ),
+              OffsetStepperButton(icon: Icons.add, onPressed: _increment),
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _StepperButton extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onPressed;
-
-  const _StepperButton({
-    required this.icon,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Material(
-      color: theme.colorScheme.surfaceContainerHighest,
-      borderRadius: BorderRadius.circular(8),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onPressed,
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Icon(
-            icon,
-            size: 20,
-            color: theme.colorScheme.primary,
-          ),
-        ),
       ),
     );
   }

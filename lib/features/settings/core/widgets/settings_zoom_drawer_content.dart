@@ -129,9 +129,9 @@ class _SettingsZoomDrawerContentState extends State<SettingsZoomDrawerContent>
                         fit: BoxFit.contain,
                         errorBuilder: (context, error, stackTrace) =>
                             const Icon(
-                          Icons.mosque_rounded,
-                          color: Color(0xFF384C4B),
-                        ),
+                              Icons.mosque_rounded,
+                              color: Color(0xFF384C4B),
+                            ),
                       ),
                     ),
                   ),
@@ -200,10 +200,7 @@ class _SettingsZoomDrawerContentState extends State<SettingsZoomDrawerContent>
               ),
             ),
             // Footer
-            Divider(
-              color: Colors.white.withValues(alpha: 0.12),
-              height: 1,
-            ),
+            Divider(color: Colors.white.withValues(alpha: 0.12), height: 1),
             ListTile(
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 24,
@@ -224,8 +221,8 @@ class _SettingsZoomDrawerContentState extends State<SettingsZoomDrawerContent>
                 ),
               ),
               onTap: () async {
-                final appSettings =
-                    await sl<IAppSettingsRepository>().getAppSettings();
+                final appSettings = await sl<IAppSettingsRepository>()
+                    .getAppSettings();
                 final phone = appSettings?.supportPhone ?? '';
                 if (phone.isNotEmpty) {
                   final Uri whatsappUrl = Uri.parse('https://wa.me/$phone');

@@ -55,7 +55,8 @@ class BehaviorSettingsSection extends StatelessWidget {
                   min: 0.2,
                   max: 3.0,
                   divisions: 28,
-                  onChanged: (v) => onTickerSpeedChanged(double.parse(v.toStringAsFixed(1))),
+                  onChanged: (v) =>
+                      onTickerSpeedChanged(double.parse(v.toStringAsFixed(1))),
                 ),
                 const SizedBox(height: 4),
                 Row(
@@ -81,7 +82,8 @@ class BehaviorSettingsSection extends StatelessWidget {
                   min: 0.2,
                   max: 3.0,
                   divisions: 28,
-                  onChanged: (v) => onStripSpeedChanged(double.parse(v.toStringAsFixed(1))),
+                  onChanged: (v) =>
+                      onStripSpeedChanged(double.parse(v.toStringAsFixed(1))),
                 ),
               ],
             ),

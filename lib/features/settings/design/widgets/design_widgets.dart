@@ -1,4 +1,7 @@
 export 'background_settings_section.dart';
+export 'album_url_add_card.dart';
+export 'album_url_empty_state.dart';
+export 'album_url_image_card.dart';
 export 'behavior_settings_section.dart';
 export 'color_settings_section.dart';
 export 'design_card.dart';
@@ -7,4 +10,5 @@ export 'design_font_size_item.dart';
 export 'display_background_picker.dart';
 export 'font_browser_dialog.dart';
 export 'font_size_settings_section.dart';
+export 'prayer_card_scale_section.dart';
 export 'typography_settings_section.dart';

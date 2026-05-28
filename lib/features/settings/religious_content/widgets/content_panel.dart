@@ -41,9 +41,9 @@ class ContentPanel extends StatelessWidget {
             Expanded(
               child: Text(
                 fullTitle,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
               ),
             ),
             if (onAddPressed != null)

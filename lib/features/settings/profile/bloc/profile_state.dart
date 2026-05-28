@@ -14,11 +14,7 @@ class ProfileState extends Equatable {
     this.phone = '',
   });
 
-  ProfileState copyWith({
-    ProfileStatus? status,
-    String? error,
-    String? phone,
-  }) {
+  ProfileState copyWith({ProfileStatus? status, String? error, String? phone}) {
     return ProfileState(
       status: status ?? this.status,
       error: error,

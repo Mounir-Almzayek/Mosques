@@ -54,7 +54,7 @@ class DesignColorItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentColor = ColorConverter.fromHex(hexValue, Colors.grey);
-    
+
     return ListTile(
       contentPadding: EdgeInsets.zero,
       title: Text(
@@ -64,7 +64,9 @@ class DesignColorItem extends StatelessWidget {
       subtitle: Text(
         hexValue.toUpperCase(),
         style: TextStyle(
-          color: Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.6),
+          color: Theme.of(
+            context,
+          ).textTheme.bodySmall?.color?.withValues(alpha: 0.6),
           fontSize: 13,
           fontFamily: 'monospace',
         ),
@@ -83,7 +85,7 @@ class DesignColorItem extends StatelessWidget {
                 color: Colors.black.withValues(alpha: 0.08),
                 blurRadius: 6,
                 offset: const Offset(0, 2),
-              )
+              ),
             ],
           ),
         ),

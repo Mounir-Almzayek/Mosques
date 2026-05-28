@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../data/models/app/app_settings_model.dart';
 import '../../../../data/repositories/interfaces/app_settings_repository_interface.dart';
@@ -33,4 +33,3 @@ class AboutSection extends StatelessWidget {
     );
   }
 }
-

@@ -1,13 +1,14 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/enums/update/update_status.dart';
 import '../../../../core/l10n/generated/l10n.dart';
-import '../../../../core/widgets/feedback/unified_snackbar.dart';
 import '../../../../data/models/app/app_settings_model.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../data/repositories/interfaces/app_settings_repository_interface.dart';
 import '../../../../core/utils/version_helper.dart';
 import '../bloc/update_bloc.dart';
+import '../widgets/update_action_area.dart';
+import '../widgets/update_up_to_date.dart';
+import '../widgets/update_version_row.dart';
 
 class UpdateSection extends StatefulWidget {
   const UpdateSection({super.key});
@@ -47,7 +48,7 @@ class _UpdateSectionState extends State<UpdateSection> {
 
           final updateModel = snapshot.data?.update;
           if (updateModel == null) {
-            return _buildUpToDate(theme, s);
+            return UpdateUpToDate(theme: theme, s: s);
           }
 
           final latestVersion = updateModel.latestVersion;
@@ -64,7 +65,7 @@ class _UpdateSectionState extends State<UpdateSection> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                if (!isUpdateAvailable) _buildUpToDate(theme, s),
+                if (!isUpdateAvailable) UpdateUpToDate(theme: theme, s: s),
                 if (!isUpdateAvailable) const SizedBox(height: 24),
                 Card(
                   child: Padding(
@@ -96,16 +97,16 @@ class _UpdateSectionState extends State<UpdateSection> {
                           ),
                         const SizedBox(height: 16),
                         // النسخة الحالية
-                        _buildVersionRow(
-                          theme,
+                        UpdateVersionRow(
+                          theme: theme,
                           icon: Icons.smartphone_rounded,
                           label: s.update_current_version(_currentVersion),
                           color: theme.colorScheme.onSurface,
                         ),
                         const SizedBox(height: 8),
                         // أحدث نسخة
-                        _buildVersionRow(
-                          theme,
+                        UpdateVersionRow(
+                          theme: theme,
                           icon: Icons.cloud_download_rounded,
                           label: s.update_latest_version(latestVersion),
                           color: isUpdateAvailable
@@ -136,94 +137,11 @@ class _UpdateSectionState extends State<UpdateSection> {
                         ],
                         const SizedBox(height: 28),
                         if (isUpdateAvailable)
-                          BlocConsumer<UpdateBloc, UpdateState>(
-                            listener: (context, state) {
-                              if (state.status == UpdateStatus.failure) {
-                                UnifiedSnackbar.error(
-                                  context,
-                                  message: state.error ?? s.update_failure,
-                                );
-                              }
-                            },
-                            builder: (context, state) {
-                              if (downloadLink.isEmpty) {
-                                return Text(
-                                  s.update_no_link,
-                                  style: TextStyle(
-                                    color: theme.colorScheme.error,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                );
-                              }
-
-                              if (state.status == UpdateStatus.downloading) {
-                                return Column(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child: LinearProgressIndicator(
-                                        value: state.progress,
-                                        color: primary,
-                                        backgroundColor: primary.withValues(
-                                          alpha: 0.15,
-                                        ),
-                                        minHeight: 10,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Text(
-                                      s.update_downloading(
-                                        (state.progress * 100).toStringAsFixed(
-                                          1,
-                                        ),
-                                      ),
-                                      style: theme.textTheme.bodySmall,
-                                    ),
-                                  ],
-                                );
-                              }
-
-                              if (state.status == UpdateStatus.success) {
-                                return Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.check_circle_rounded,
-                                      color: primary,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      s.update_success,
-                                      style: TextStyle(
-                                        color: primary,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              }
-
-                              return SizedBox(
-                                width: double.infinity,
-                                height: 52,
-                                child: ElevatedButton.icon(
-                                  onPressed: () {
-                                    context.read<UpdateBloc>().add(
-                                      DownloadUpdateRequested(downloadLink),
-                                    );
-                                  },
-                                  icon: const Icon(Icons.download_rounded),
-                                  label: Text(
-                                    s.update_download,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
+                          UpdateActionArea(
+                            downloadLink: downloadLink,
+                            theme: theme,
+                            s: s,
+                            primary: primary,
                           ),
                       ],
                     ),
@@ -236,58 +154,4 @@ class _UpdateSectionState extends State<UpdateSection> {
       ),
     );
   }
-
-  Widget _buildVersionRow(
-    ThemeData theme, {
-    required IconData icon,
-    required String label,
-    required Color color,
-    bool bold = false,
-  }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, size: 18, color: color),
-        const SizedBox(width: 8),
-        Text(
-          label,
-          style: theme.textTheme.bodyLarge?.copyWith(
-            color: color,
-            fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildUpToDate(ThemeData theme, S s) {
-    final primary = theme.colorScheme.primary;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 24),
-        child: Column(
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: primary.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(Icons.verified_rounded, size: 44, color: primary),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              s.update_up_to_date,
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: primary,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
-

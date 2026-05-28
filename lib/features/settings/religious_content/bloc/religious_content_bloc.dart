@@ -15,8 +15,8 @@ class ReligiousContentBloc
   final IMosqueRepository _repo;
 
   ReligiousContentBloc({required IMosqueRepository mosqueRepository})
-      : _repo = mosqueRepository,
-        super(const ReligiousContentState()) {
+    : _repo = mosqueRepository,
+      super(const ReligiousContentState()) {
     on<LoadReligiousContent>(_onLoad);
     on<ReligiousContentMosqueUpdated>(_onMosqueUpdated);
     on<MosqueTextAdded>(_onMosqueTextAdded);
@@ -46,11 +46,13 @@ class ReligiousContentBloc
     Emitter<ReligiousContentState> emit,
   ) {
     if (!state.hasUnsavedChanges) {
-      emit(state.copyWith(
-        isLoading: false,
-        mosque: event.mosque,
-        hasUnsavedChanges: false,
-      ));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          mosque: event.mosque,
+          hasUnsavedChanges: false,
+        ),
+      );
     } else {
       emit(state.copyWith(isLoading: false));
     }
@@ -83,10 +85,12 @@ class ReligiousContentBloc
     if (m == null) return;
     final list = List<MosqueTextEntryModel>.from(m.listByKind(event.kind))
       ..add(event.item);
-    emit(state.copyWith(
-      mosque: _mosqueWithTextList(m, event.kind, list),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: _mosqueWithTextList(m, event.kind, list),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   void _onMosqueTextUpdated(
@@ -99,10 +103,12 @@ class ReligiousContentBloc
         .listByKind(event.kind)
         .map((h) => h.id == event.item.id ? event.item : h)
         .toList();
-    emit(state.copyWith(
-      mosque: _mosqueWithTextList(m, event.kind, list),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: _mosqueWithTextList(m, event.kind, list),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   void _onMosqueTextRemoved(
@@ -115,10 +121,12 @@ class ReligiousContentBloc
         .listByKind(event.kind)
         .where((h) => h.id != event.itemId)
         .toList();
-    emit(state.copyWith(
-      mosque: _mosqueWithTextList(m, event.kind, list),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: _mosqueWithTextList(m, event.kind, list),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   // ── Timing ──────────────────────────────────────────────────────────
@@ -130,15 +138,19 @@ class ReligiousContentBloc
     final m = state.mosque;
     if (m == null) return;
     final d = switch (event.field) {
-      ReligiousContentTimingField.wait =>
-        m.designSettings.copyWith(religiousContentWaitSeconds: event.value),
-      ReligiousContentTimingField.display =>
-        m.designSettings.copyWith(religiousContentDisplaySeconds: event.value),
+      ReligiousContentTimingField.wait => m.designSettings.copyWith(
+        religiousContentWaitSeconds: event.value,
+      ),
+      ReligiousContentTimingField.display => m.designSettings.copyWith(
+        religiousContentDisplaySeconds: event.value,
+      ),
     };
-    emit(state.copyWith(
-      mosque: m.copyWith(designSettings: d),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(designSettings: d),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   // ── Save All ────────────────────────────────────────────────────────
@@ -155,11 +167,9 @@ class ReligiousContentBloc
         await _repo.updateMosqueTextList(m, kind);
       }
       await _repo.updateDesignSettings(m);
-      emit(state.copyWith(
-        isSaving: false,
-        hasUnsavedChanges: false,
-        error: null,
-      ));
+      emit(
+        state.copyWith(isSaving: false, hasUnsavedChanges: false, error: null),
+      );
     } catch (e) {
       emit(state.copyWith(isSaving: false, error: e.toString()));
     }

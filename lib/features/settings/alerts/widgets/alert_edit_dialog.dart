@@ -15,11 +15,7 @@ class AlertEditDialog extends StatefulWidget {
   /// When provided, the dialog pre-fills fields for editing.
   final AnnouncementModel? initialAlert;
 
-  const AlertEditDialog({
-    super.key,
-    required this.onAdd,
-    this.initialAlert,
-  });
+  const AlertEditDialog({super.key, required this.onAdd, this.initialAlert});
 
   @override
   State<AlertEditDialog> createState() => _AlertEditDialogState();

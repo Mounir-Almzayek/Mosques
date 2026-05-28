@@ -65,7 +65,7 @@ class _ProfileActionCardState extends State<ProfileActionCard> {
               ),
               value: widget.terminateOther,
               onChanged: isLoading ? null : widget.onTerminateChanged,
-              activeColor: primary,
+              activeThumbColor: primary,
             ),
             const SizedBox(height: 24),
             AppButton.elevated(
@@ -74,10 +74,10 @@ class _ProfileActionCardState extends State<ProfileActionCard> {
               disabled: isLoading,
               onPressed: () {
                 context.read<ProfileBloc>().add(
-                      UpdatePasswordRequested(
-                        newPassword: widget.passwordController.text,
-                      ),
-                    );
+                  UpdatePasswordRequested(
+                    newPassword: widget.passwordController.text,
+                  ),
+                );
               },
             ),
           ],

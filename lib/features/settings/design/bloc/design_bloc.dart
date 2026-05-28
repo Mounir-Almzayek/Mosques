@@ -14,8 +14,8 @@ class DesignBloc extends Bloc<DesignEvent, DesignState> {
   final IMosqueRepository _repo;
 
   DesignBloc({required IMosqueRepository mosqueRepository})
-      : _repo = mosqueRepository,
-        super(const DesignState()) {
+    : _repo = mosqueRepository,
+      super(const DesignState()) {
     on<LoadDesign>(_onLoad);
     on<DesignMosqueUpdated>(_onMosqueUpdated);
     on<DesignBackgroundValueChanged>(_onBackgroundValueChanged);
@@ -49,11 +49,13 @@ class DesignBloc extends Bloc<DesignEvent, DesignState> {
 
   void _onMosqueUpdated(DesignMosqueUpdated event, Emitter<DesignState> emit) {
     if (!state.hasUnsavedChanges) {
-      emit(state.copyWith(
-        isLoading: false,
-        mosque: event.mosque,
-        hasUnsavedChanges: false,
-      ));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          mosque: event.mosque,
+          hasUnsavedChanges: false,
+        ),
+      );
     } else {
       emit(state.copyWith(isLoading: false));
     }
@@ -72,10 +74,12 @@ class DesignBloc extends Bloc<DesignEvent, DesignState> {
         value: event.backgroundValue,
       ),
     );
-    emit(state.copyWith(
-      mosque: m.copyWith(designSettings: d),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(designSettings: d),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   void _onBackgroundTypeChanged(
@@ -87,39 +91,46 @@ class DesignBloc extends Bloc<DesignEvent, DesignState> {
     final d = m.designSettings.copyWith(
       background: m.designSettings.background.copyWith(type: event.type),
     );
-    emit(state.copyWith(
-      mosque: m.copyWith(designSettings: d),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(designSettings: d),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   // ── Colors ──
 
-  void _onColorChanged(
-    DesignColorChanged event,
-    Emitter<DesignState> emit,
-  ) {
+  void _onColorChanged(DesignColorChanged event, Emitter<DesignState> emit) {
     final m = state.mosque;
     if (m == null) return;
     final colors = switch (event.field) {
-      DesignColorField.primary =>
-        m.designSettings.colors.copyWith(primary: event.color),
-      DesignColorField.secondary =>
-        m.designSettings.colors.copyWith(secondary: event.color),
-      DesignColorField.prayerOverlay =>
-        m.designSettings.colors.copyWith(prayerOverlay: event.color),
-      DesignColorField.activeCard =>
-        m.designSettings.colors.copyWith(activeCard: event.color),
-      DesignColorField.activeCardText =>
-        m.designSettings.colors.copyWith(activeCardText: event.color),
-      DesignColorField.inactiveCardText =>
-        m.designSettings.colors.copyWith(inactiveCardText: event.color),
+      DesignColorField.primary => m.designSettings.colors.copyWith(
+        primary: event.color,
+      ),
+      DesignColorField.secondary => m.designSettings.colors.copyWith(
+        secondary: event.color,
+      ),
+      DesignColorField.prayerOverlay => m.designSettings.colors.copyWith(
+        prayerOverlay: event.color,
+      ),
+      DesignColorField.activeCard => m.designSettings.colors.copyWith(
+        activeCard: event.color,
+      ),
+      DesignColorField.activeCardText => m.designSettings.colors.copyWith(
+        activeCardText: event.color,
+      ),
+      DesignColorField.inactiveCardText => m.designSettings.colors.copyWith(
+        inactiveCardText: event.color,
+      ),
     };
     final d = m.designSettings.copyWith(colors: colors);
-    emit(state.copyWith(
-      mosque: m.copyWith(designSettings: d),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(designSettings: d),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   // ── Font sizes ──
@@ -131,26 +142,34 @@ class DesignBloc extends Bloc<DesignEvent, DesignState> {
     final m = state.mosque;
     if (m == null) return;
     final fontSizes = switch (event.field) {
-      DesignFontSizeField.clock =>
-        m.designSettings.fontSizes.copyWith(clock: event.fontSize),
-      DesignFontSizeField.mosqueInfo =>
-        m.designSettings.fontSizes.copyWith(mosqueInfo: event.fontSize),
-      DesignFontSizeField.prayers =>
-        m.designSettings.fontSizes.copyWith(prayers: event.fontSize),
-      DesignFontSizeField.announcements =>
-        m.designSettings.fontSizes.copyWith(announcements: event.fontSize),
+      DesignFontSizeField.clock => m.designSettings.fontSizes.copyWith(
+        clock: event.fontSize,
+      ),
+      DesignFontSizeField.mosqueInfo => m.designSettings.fontSizes.copyWith(
+        mosqueInfo: event.fontSize,
+      ),
+      DesignFontSizeField.prayers => m.designSettings.fontSizes.copyWith(
+        prayers: event.fontSize,
+      ),
+      DesignFontSizeField.announcements => m.designSettings.fontSizes.copyWith(
+        announcements: event.fontSize,
+      ),
       DesignFontSizeField.religiousContent =>
         m.designSettings.fontSizes.copyWith(religiousContent: event.fontSize),
-      DesignFontSizeField.alerts =>
-        m.designSettings.fontSizes.copyWith(alerts: event.fontSize),
-      DesignFontSizeField.countdown =>
-        m.designSettings.fontSizes.copyWith(countdown: event.fontSize),
+      DesignFontSizeField.alerts => m.designSettings.fontSizes.copyWith(
+        alerts: event.fontSize,
+      ),
+      DesignFontSizeField.countdown => m.designSettings.fontSizes.copyWith(
+        countdown: event.fontSize,
+      ),
     };
     final d = m.designSettings.copyWith(fontSizes: fontSizes);
-    emit(state.copyWith(
-      mosque: m.copyWith(designSettings: d),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(designSettings: d),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   // ── Speed / typography / timing ──
@@ -162,10 +181,12 @@ class DesignBloc extends Bloc<DesignEvent, DesignState> {
     final m = state.mosque;
     if (m == null) return;
     final d = m.designSettings.copyWith(tickerSpeed: event.speed);
-    emit(state.copyWith(
-      mosque: m.copyWith(designSettings: d),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(designSettings: d),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   void _onStripSpeedChanged(
@@ -175,10 +196,12 @@ class DesignBloc extends Bloc<DesignEvent, DesignState> {
     final m = state.mosque;
     if (m == null) return;
     final d = m.designSettings.copyWith(stripSpeed: event.speed);
-    emit(state.copyWith(
-      mosque: m.copyWith(designSettings: d),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(designSettings: d),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   void _onNumeralFormatChanged(
@@ -188,10 +211,12 @@ class DesignBloc extends Bloc<DesignEvent, DesignState> {
     final m = state.mosque;
     if (m == null) return;
     final d = m.designSettings.copyWith(numeralFormat: event.format);
-    emit(state.copyWith(
-      mosque: m.copyWith(designSettings: d),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(designSettings: d),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   void _onFontFamilyChanged(
@@ -201,10 +226,12 @@ class DesignBloc extends Bloc<DesignEvent, DesignState> {
     final m = state.mosque;
     if (m == null) return;
     final d = m.designSettings.copyWith(fontFamily: event.fontFamily);
-    emit(state.copyWith(
-      mosque: m.copyWith(designSettings: d),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(designSettings: d),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   void _onDisplayTimingChanged(
@@ -214,15 +241,19 @@ class DesignBloc extends Bloc<DesignEvent, DesignState> {
     final m = state.mosque;
     if (m == null) return;
     final d = switch (event.field) {
-      DisplayTimingField.preAdhanMinutes =>
-        m.designSettings.copyWith(preAdhanMinutes: event.value),
-      DisplayTimingField.adhanMomentDuration =>
-        m.designSettings.copyWith(adhanMomentDurationSeconds: event.value),
+      DisplayTimingField.preAdhanMinutes => m.designSettings.copyWith(
+        preAdhanMinutes: event.value,
+      ),
+      DisplayTimingField.adhanMomentDuration => m.designSettings.copyWith(
+        adhanMomentDurationSeconds: event.value,
+      ),
     };
-    emit(state.copyWith(
-      mosque: m.copyWith(designSettings: d),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(designSettings: d),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   // ── Prayer card scale ──
@@ -234,10 +265,12 @@ class DesignBloc extends Bloc<DesignEvent, DesignState> {
     final m = state.mosque;
     if (m == null) return;
     final d = m.designSettings.copyWith(prayerCardScale: event.scale);
-    emit(state.copyWith(
-      mosque: m.copyWith(designSettings: d),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(designSettings: d),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   // ── Background album URLs ──
@@ -249,10 +282,12 @@ class DesignBloc extends Bloc<DesignEvent, DesignState> {
     final m = state.mosque;
     if (m == null) return;
     final urls = [...m.albumImageUrls, event.url];
-    emit(state.copyWith(
-      mosque: m.copyWith(albumImageUrls: urls),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(albumImageUrls: urls),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   void _onBackgroundAlbumUrlRemoved(
@@ -262,10 +297,12 @@ class DesignBloc extends Bloc<DesignEvent, DesignState> {
     final m = state.mosque;
     if (m == null) return;
     final urls = List<String>.from(m.albumImageUrls)..removeAt(event.index);
-    emit(state.copyWith(
-      mosque: m.copyWith(albumImageUrls: urls),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(albumImageUrls: urls),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   void _onBackgroundAlbumUrlsReordered(
@@ -274,10 +311,12 @@ class DesignBloc extends Bloc<DesignEvent, DesignState> {
   ) {
     final m = state.mosque;
     if (m == null) return;
-    emit(state.copyWith(
-      mosque: m.copyWith(albumImageUrls: event.urls),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(albumImageUrls: event.urls),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   void _onBackgroundCustomUrlChanged(
@@ -292,10 +331,12 @@ class DesignBloc extends Bloc<DesignEvent, DesignState> {
         value: event.url,
       ),
     );
-    emit(state.copyWith(
-      mosque: m.copyWith(designSettings: d),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(designSettings: d),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   // ── Save ──
@@ -309,11 +350,9 @@ class DesignBloc extends Bloc<DesignEvent, DesignState> {
     emit(state.copyWith(isSaving: true));
     try {
       await _repo.updateDesignSettings(m);
-      emit(state.copyWith(
-        isSaving: false,
-        hasUnsavedChanges: false,
-        error: null,
-      ));
+      emit(
+        state.copyWith(isSaving: false, hasUnsavedChanges: false, error: null),
+      );
     } catch (e) {
       emit(state.copyWith(isSaving: false, error: e.toString()));
     }

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../data/models/design/design_color_settings.dart';
 import 'design_card.dart';
@@ -75,4 +75,3 @@ class ColorSettingsSection extends StatelessWidget {
     );
   }
 }
-

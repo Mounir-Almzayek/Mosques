@@ -55,7 +55,8 @@ class AboutItemView extends StatelessWidget {
         ? FontWeight.bold
         : FontWeight.normal;
 
-    final style = theme.textTheme.bodyMedium?.copyWith(
+    final style =
+        theme.textTheme.bodyMedium?.copyWith(
           fontSize: section.fontSize,
           fontWeight: fontWeight,
         ) ??
@@ -65,14 +66,7 @@ class AboutItemView extends StatelessWidget {
       case AboutSectionType.text:
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(Icons.description_outlined, size: 20, color: primary),
-              const SizedBox(width: 12),
-              Expanded(child: Text(section.content, style: style)),
-            ],
-          ),
+          child: Text(section.content, style: style),
         );
 
       case AboutSectionType.link:

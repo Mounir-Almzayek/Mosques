@@ -45,10 +45,7 @@ class CoordinatesChanged extends GeneralEvent {
   final double latitude;
   final double longitude;
 
-  const CoordinatesChanged({
-    required this.latitude,
-    required this.longitude,
-  });
+  const CoordinatesChanged({required this.latitude, required this.longitude});
 
   @override
   List<Object?> get props => [latitude, longitude];

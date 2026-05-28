@@ -64,7 +64,9 @@ class _ProfilePhoneCardState extends State<ProfilePhoneCard> {
                   Expanded(
                     child: Text(
                       s.profile_phone_hint,
-                      style: theme.textTheme.bodySmall?.copyWith(color: primary),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: primary,
+                      ),
                     ),
                   ),
                 ],
@@ -88,8 +90,8 @@ class _ProfilePhoneCardState extends State<ProfilePhoneCard> {
               disabled: isLoading,
               onPressed: () {
                 context.read<ProfileBloc>().add(
-                      UpdatePhoneRequested(widget.phoneController.text),
-                    );
+                  UpdatePhoneRequested(widget.phoneController.text),
+                );
               },
             ),
           ],

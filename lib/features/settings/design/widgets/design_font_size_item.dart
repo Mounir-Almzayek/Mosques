@@ -23,11 +23,18 @@ class DesignFontSizeItem extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, size: 20, color: Theme.of(context).primaryColor.withValues(alpha: 0.7)),
+              Icon(
+                icon,
+                size: 20,
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.7),
+              ),
               const SizedBox(width: 8),
               Text(
                 label,
-                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
               ),
               const Spacer(),
               Container(

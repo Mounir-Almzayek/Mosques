@@ -24,7 +24,9 @@ class DrawerNavTile extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: selected ? Colors.white.withValues(alpha: 0.10) : Colors.transparent,
+          color: selected
+              ? Colors.white.withValues(alpha: 0.10)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(14),
         ),
         child: Material(
@@ -37,22 +39,36 @@ class DrawerNavTile extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               child: Row(
                 children: [
-                  Icon(icon, color: selected ? Colors.white : Colors.white.withValues(alpha: 0.6), size: 24),
+                  Icon(
+                    icon,
+                    color: selected
+                        ? Colors.white
+                        : Colors.white.withValues(alpha: 0.6),
+                    size: 24,
+                  ),
                   const SizedBox(width: 14),
                   Expanded(
                     child: Text(
                       label,
                       style: TextStyle(
                         fontSize: 16,
-                        fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                        color: selected ? Colors.white : Colors.white.withValues(alpha: 0.75),
+                        fontWeight: selected
+                            ? FontWeight.w700
+                            : FontWeight.w500,
+                        color: selected
+                            ? Colors.white
+                            : Colors.white.withValues(alpha: 0.75),
                       ),
                     ),
                   ),
                   if (selected)
                     Container(
-                      width: 6, height: 6,
-                      decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                      width: 6,
+                      height: 6,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
                     ),
                 ],
               ),

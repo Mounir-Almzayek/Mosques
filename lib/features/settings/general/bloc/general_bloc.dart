@@ -13,8 +13,8 @@ class GeneralBloc extends Bloc<GeneralEvent, GeneralState> {
   final IMosqueRepository _repo;
 
   GeneralBloc({required IMosqueRepository mosqueRepository})
-      : _repo = mosqueRepository,
-        super(const GeneralState()) {
+    : _repo = mosqueRepository,
+      super(const GeneralState()) {
     on<LoadGeneral>(_onLoad);
     on<GeneralMosqueUpdated>(_onMosqueUpdated);
     on<GeneralSettingChanged>(_onGeneralSettingChanged);
@@ -36,14 +36,19 @@ class GeneralBloc extends Bloc<GeneralEvent, GeneralState> {
     );
   }
 
-  void _onMosqueUpdated(GeneralMosqueUpdated event, Emitter<GeneralState> emit) {
+  void _onMosqueUpdated(
+    GeneralMosqueUpdated event,
+    Emitter<GeneralState> emit,
+  ) {
     // Only accept stream updates when there are no unsaved local changes.
     if (!state.hasUnsavedChanges) {
-      emit(state.copyWith(
-        isLoading: false,
-        mosque: event.mosque,
-        hasUnsavedChanges: false,
-      ));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          mosque: event.mosque,
+          hasUnsavedChanges: false,
+        ),
+      );
     } else {
       emit(state.copyWith(isLoading: false));
     }
@@ -58,22 +63,22 @@ class GeneralBloc extends Bloc<GeneralEvent, GeneralState> {
     final updated = switch (event.field) {
       GeneralField.name => m.copyWith(name: event.value as String),
       GeneralField.city => m.copyWith(city: event.value as String),
-      GeneralField.calculationMethod =>
-        m.copyWith(prayerCalculationMethod: event.value as String),
+      GeneralField.calculationMethod => m.copyWith(
+        prayerCalculationMethod: event.value as String,
+      ),
     };
     emit(state.copyWith(mosque: updated, hasUnsavedChanges: true));
   }
 
-  void _onLanguageChanged(
-    LanguageChanged event,
-    Emitter<GeneralState> emit,
-  ) {
+  void _onLanguageChanged(LanguageChanged event, Emitter<GeneralState> emit) {
     final m = state.mosque;
     if (m == null) return;
-    emit(state.copyWith(
-      mosque: m.copyWith(appLanguageCode: event.language.code),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(appLanguageCode: event.language.code),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   void _onCoordinatesChanged(
@@ -82,13 +87,15 @@ class GeneralBloc extends Bloc<GeneralEvent, GeneralState> {
   ) {
     final m = state.mosque;
     if (m == null) return;
-    emit(state.copyWith(
-      mosque: m.copyWith(
-        latitude: event.latitude,
-        longitude: event.longitude,
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(
+          latitude: event.latitude,
+          longitude: event.longitude,
+        ),
+        hasUnsavedChanges: true,
       ),
-      hasUnsavedChanges: true,
-    ));
+    );
   }
 
   void _onPrayerOffsetChanged(
@@ -99,18 +106,22 @@ class GeneralBloc extends Bloc<GeneralEvent, GeneralState> {
     if (m == null) return;
     final o = switch (event.prayer) {
       PrayerOffsetField.fajr => m.prayerOffsets.copyWith(fajr: event.offset),
-      PrayerOffsetField.sunrise =>
-        m.prayerOffsets.copyWith(sunrise: event.offset),
+      PrayerOffsetField.sunrise => m.prayerOffsets.copyWith(
+        sunrise: event.offset,
+      ),
       PrayerOffsetField.dhuhr => m.prayerOffsets.copyWith(dhuhr: event.offset),
       PrayerOffsetField.asr => m.prayerOffsets.copyWith(asr: event.offset),
-      PrayerOffsetField.maghrib =>
-        m.prayerOffsets.copyWith(maghrib: event.offset),
+      PrayerOffsetField.maghrib => m.prayerOffsets.copyWith(
+        maghrib: event.offset,
+      ),
       PrayerOffsetField.isha => m.prayerOffsets.copyWith(isha: event.offset),
     };
-    emit(state.copyWith(
-      mosque: m.copyWith(prayerOffsets: o),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(prayerOffsets: o),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   Future<void> _onSave(
@@ -122,11 +133,9 @@ class GeneralBloc extends Bloc<GeneralEvent, GeneralState> {
     emit(state.copyWith(isSaving: true));
     try {
       await _repo.updateMosque(m);
-      emit(state.copyWith(
-        isSaving: false,
-        hasUnsavedChanges: false,
-        error: null,
-      ));
+      emit(
+        state.copyWith(isSaving: false, hasUnsavedChanges: false, error: null),
+      );
     } catch (e) {
       emit(state.copyWith(isSaving: false, error: e.toString()));
     }

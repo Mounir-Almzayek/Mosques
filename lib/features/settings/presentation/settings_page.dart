@@ -89,8 +89,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ],
                   onPopupMenuSelected: (value) async {
                     if (value == 'smart_screen') {
-                      await sl<IAuthRepository>()
-                          .setAppModeOverride(AppMode.deviceDisplay);
+                      await sl<IAuthRepository>().setAppModeOverride(
+                        AppMode.deviceDisplay,
+                      );
                       if (!context.mounted) return;
                       context.go(Routes.displayPath);
                     }

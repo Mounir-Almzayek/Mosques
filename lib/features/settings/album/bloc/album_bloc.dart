@@ -13,8 +13,8 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
   final IMosqueRepository _repo;
 
   AlbumBloc({required IMosqueRepository mosqueRepository})
-      : _repo = mosqueRepository,
-        super(const AlbumState()) {
+    : _repo = mosqueRepository,
+      super(const AlbumState()) {
     on<LoadAlbum>(_onLoad);
     on<AlbumMosqueUpdated>(_onMosqueUpdated);
     on<AlbumImageAdded>(_onImageAdded);
@@ -38,11 +38,13 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
 
   void _onMosqueUpdated(AlbumMosqueUpdated event, Emitter<AlbumState> emit) {
     if (!state.hasUnsavedChanges) {
-      emit(state.copyWith(
-        isLoading: false,
-        mosque: event.mosque,
-        hasUnsavedChanges: false,
-      ));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          mosque: event.mosque,
+          hasUnsavedChanges: false,
+        ),
+      );
     } else {
       emit(state.copyWith(isLoading: false));
     }
@@ -52,36 +54,39 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
     final m = state.mosque;
     if (m == null) return;
     final urls = [...m.albumImageUrls, event.url];
-    emit(state.copyWith(
-      mosque: m.copyWith(albumImageUrls: urls),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(albumImageUrls: urls),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   void _onImageRemoved(AlbumImageRemoved event, Emitter<AlbumState> emit) {
     final m = state.mosque;
     if (m == null) return;
     final urls = m.albumImageUrls.where((u) => u != event.url).toList();
-    emit(state.copyWith(
-      mosque: m.copyWith(albumImageUrls: urls),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(albumImageUrls: urls),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
-  void _onImagePublished(
-    AlbumImagePublished event,
-    Emitter<AlbumState> emit,
-  ) {
+  void _onImagePublished(AlbumImagePublished event, Emitter<AlbumState> emit) {
     final m = state.mosque;
     if (m == null) return;
-    emit(state.copyWith(
-      mosque: m.copyWith(
-        publishedAlbumImageUrl: event.url,
-        publishedAlbumImageAt: DateTime.now(),
-        publishedAlbumImageDuration: event.durationSeconds,
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(
+          publishedAlbumImageUrl: event.url,
+          publishedAlbumImageAt: DateTime.now(),
+          publishedAlbumImageDuration: event.durationSeconds,
+        ),
+        hasUnsavedChanges: true,
       ),
-      hasUnsavedChanges: true,
-    ));
+    );
   }
 
   void _onImageUnpublished(
@@ -90,10 +95,12 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
   ) {
     final m = state.mosque;
     if (m == null) return;
-    emit(state.copyWith(
-      mosque: m.copyWith(publishedAlbumImageUrl: ''),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(publishedAlbumImageUrl: ''),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   Future<void> _onSave(
@@ -105,11 +112,9 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
     emit(state.copyWith(isSaving: true));
     try {
       await _repo.updateMosque(m);
-      emit(state.copyWith(
-        isSaving: false,
-        hasUnsavedChanges: false,
-        error: null,
-      ));
+      emit(
+        state.copyWith(isSaving: false, hasUnsavedChanges: false, error: null),
+      );
     } catch (e) {
       emit(state.copyWith(isSaving: false, error: e.toString()));
     }

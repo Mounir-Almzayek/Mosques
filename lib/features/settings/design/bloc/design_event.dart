@@ -25,10 +25,7 @@ enum DesignFontSizeField {
   countdown,
 }
 
-enum DisplayTimingField {
-  preAdhanMinutes,
-  adhanMomentDuration,
-}
+enum DisplayTimingField { preAdhanMinutes, adhanMomentDuration }
 
 // ——— Events ———
 

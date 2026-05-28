@@ -43,20 +43,25 @@ class _FontBrowserDialogState extends State<FontBrowserDialog> {
           child: ListView.separated(
             controller: _scrollController,
             itemCount: FontPreset.values.length,
-            separatorBuilder: (_, __) => const Divider(height: 1),
+            separatorBuilder: (context, index) => const Divider(height: 1),
             itemBuilder: (context, i) {
               final font = FontPreset.values[i];
               final isSelected = font.name == widget.selectedFont;
-              
+
               return InkWell(
                 onTap: () {
                   widget.onFontSelected(font.name);
                   Navigator.pop(context);
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 16,
+                    horizontal: 12,
+                  ),
                   decoration: BoxDecoration(
-                    color: isSelected ? theme.primaryColor.withOpacity(0.1) : null,
+                    color: isSelected
+                        ? theme.primaryColor.withValues(alpha: 0.1)
+                        : null,
                   ),
                   child: Row(
                     children: [
@@ -120,7 +125,7 @@ class FontSelectorButton extends StatelessWidget {
       (f) => f.name == currentFont,
       orElse: () => FontPreset.values.first,
     );
-    
+
     return ListTile(
       contentPadding: EdgeInsets.zero,
       title: Text(s.design_font_family),

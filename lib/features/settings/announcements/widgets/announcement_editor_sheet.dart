@@ -7,7 +7,11 @@ import '../../../../data/models/mosque/mosque_model.dart';
 import '../bloc/announcements_bloc.dart';
 
 class AnnouncementEditorSheet extends StatefulWidget {
-  const AnnouncementEditorSheet({super.key, required this.existing, required this.bloc});
+  const AnnouncementEditorSheet({
+    super.key,
+    required this.existing,
+    required this.bloc,
+  });
 
   final AnnouncementModel? existing;
   final AnnouncementsBloc bloc;

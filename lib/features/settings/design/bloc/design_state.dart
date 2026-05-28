@@ -35,10 +35,10 @@ class DesignState extends Equatable {
 
   @override
   List<Object?> get props => [
-        mosque,
-        isLoading,
-        isSaving,
-        hasUnsavedChanges,
-        error,
-      ];
+    mosque,
+    isLoading,
+    isSaving,
+    hasUnsavedChanges,
+    error,
+  ];
 }

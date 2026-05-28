@@ -30,15 +30,14 @@ class _ProfileSectionState extends State<ProfileSection> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ProfileBloc(authRepository: sl<IAuthRepository>())..add(LoadProfileRequested()),
+      create: (_) =>
+          ProfileBloc(authRepository: sl<IAuthRepository>())
+            ..add(LoadProfileRequested()),
       child: BlocConsumer<ProfileBloc, ProfileState>(
         listener: (context, state) {
           final s = S.of(context);
           if (state.status == ProfileStatus.success) {
-            UnifiedSnackbar.success(
-              context,
-              message: s.saved_successfully,
-            );
+            UnifiedSnackbar.success(context, message: s.saved_successfully);
             _passwordController.clear();
           } else if (state.status == ProfileStatus.failure) {
             UnifiedSnackbar.error(
@@ -61,7 +60,8 @@ class _ProfileSectionState extends State<ProfileSection> {
                   state: state,
                   passwordController: _passwordController,
                   terminateOther: _terminateOther,
-                  onTerminateChanged: (v) => setState(() => _terminateOther = v),
+                  onTerminateChanged: (v) =>
+                      setState(() => _terminateOther = v),
                 ),
                 const SizedBox(height: 24),
                 ProfilePhoneCard(

@@ -14,8 +14,8 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
   final IMosqueRepository _repo;
 
   AnnouncementsBloc({required IMosqueRepository mosqueRepository})
-      : _repo = mosqueRepository,
-        super(const AnnouncementsState()) {
+    : _repo = mosqueRepository,
+      super(const AnnouncementsState()) {
     on<LoadAnnouncements>(_onLoad);
     on<AnnouncementsMosqueUpdated>(_onMosqueUpdated);
     on<AnnouncementAdded>(_onAnnouncementAdded);
@@ -44,11 +44,13 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
     Emitter<AnnouncementsState> emit,
   ) {
     if (!state.hasUnsavedChanges) {
-      emit(state.copyWith(
-        isLoading: false,
-        mosque: event.mosque,
-        hasUnsavedChanges: false,
-      ));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          mosque: event.mosque,
+          hasUnsavedChanges: false,
+        ),
+      );
     } else {
       emit(state.copyWith(isLoading: false));
     }
@@ -62,10 +64,12 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
     if (m == null) return;
     final list = List<AnnouncementModel>.from(m.announcements)
       ..add(event.announcement);
-    emit(state.copyWith(
-      mosque: m.copyWith(announcements: list),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(announcements: list),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   void _onAnnouncementUpdated(
@@ -77,10 +81,12 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
     final list = m.announcements
         .map((a) => a.id == event.announcement.id ? event.announcement : a)
         .toList();
-    emit(state.copyWith(
-      mosque: m.copyWith(announcements: list),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(announcements: list),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   void _onAnnouncementRemoved(
@@ -92,10 +98,12 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
     final list = m.announcements
         .where((a) => a.id != event.announcementId)
         .toList();
-    emit(state.copyWith(
-      mosque: m.copyWith(announcements: list),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(announcements: list),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   Future<void> _onSave(
@@ -107,11 +115,9 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
     emit(state.copyWith(isSaving: true));
     try {
       await _repo.updateAnnouncements(m);
-      emit(state.copyWith(
-        isSaving: false,
-        hasUnsavedChanges: false,
-        error: null,
-      ));
+      emit(
+        state.copyWith(isSaving: false, hasUnsavedChanges: false, error: null),
+      );
     } catch (e) {
       emit(state.copyWith(isSaving: false, error: e.toString()));
     }

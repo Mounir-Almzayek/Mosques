@@ -14,8 +14,8 @@ class AlertsBloc extends Bloc<AlertsEvent, AlertsState> {
   final IMosqueRepository _repo;
 
   AlertsBloc({required IMosqueRepository mosqueRepository})
-      : _repo = mosqueRepository,
-        super(const AlertsState()) {
+    : _repo = mosqueRepository,
+      super(const AlertsState()) {
     on<LoadAlerts>(_onLoad);
     on<AlertsMosqueUpdated>(_onMosqueUpdated);
     on<AlertAdded>(_onAlertAdded);
@@ -29,10 +29,7 @@ class AlertsBloc extends Bloc<AlertsEvent, AlertsState> {
 
   StreamSubscription<dynamic>? _sub;
 
-  Future<void> _onLoad(
-    LoadAlerts event,
-    Emitter<AlertsState> emit,
-  ) async {
+  Future<void> _onLoad(LoadAlerts event, Emitter<AlertsState> emit) async {
     _sub?.cancel();
     emit(state.copyWith(isLoading: true));
     _sub = _repo.streamActiveMosque.listen(
@@ -42,16 +39,15 @@ class AlertsBloc extends Bloc<AlertsEvent, AlertsState> {
     );
   }
 
-  void _onMosqueUpdated(
-    AlertsMosqueUpdated event,
-    Emitter<AlertsState> emit,
-  ) {
+  void _onMosqueUpdated(AlertsMosqueUpdated event, Emitter<AlertsState> emit) {
     if (!state.hasUnsavedChanges) {
-      emit(state.copyWith(
-        isLoading: false,
-        mosque: event.mosque,
-        hasUnsavedChanges: false,
-      ));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          mosque: event.mosque,
+          hasUnsavedChanges: false,
+        ),
+      );
     } else {
       emit(state.copyWith(isLoading: false));
     }
@@ -61,20 +57,24 @@ class AlertsBloc extends Bloc<AlertsEvent, AlertsState> {
     final m = state.mosque;
     if (m == null) return;
     final list = List<AnnouncementModel>.from(m.savedAlerts)..add(event.alert);
-    emit(state.copyWith(
-      mosque: m.copyWith(savedAlerts: list),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(savedAlerts: list),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   void _onAlertRemoved(AlertRemoved event, Emitter<AlertsState> emit) {
     final m = state.mosque;
     if (m == null) return;
     final list = m.savedAlerts.where((a) => a.id != event.alertId).toList();
-    emit(state.copyWith(
-      mosque: m.copyWith(savedAlerts: list),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(savedAlerts: list),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   void _onAlertPublished(AlertPublished event, Emitter<AlertsState> emit) {
@@ -90,10 +90,12 @@ class AlertsBloc extends Bloc<AlertsEvent, AlertsState> {
       }
       return a;
     }).toList();
-    emit(state.copyWith(
-      mosque: m.copyWith(savedAlerts: list),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(savedAlerts: list),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   void _onAlertUnpublished(AlertUnpublished event, Emitter<AlertsState> emit) {
@@ -105,10 +107,12 @@ class AlertsBloc extends Bloc<AlertsEvent, AlertsState> {
       }
       return a;
     }).toList();
-    emit(state.copyWith(
-      mosque: m.copyWith(savedAlerts: list),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(savedAlerts: list),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   void _onAlertUpdated(AlertUpdated event, Emitter<AlertsState> emit) {
@@ -117,22 +121,23 @@ class AlertsBloc extends Bloc<AlertsEvent, AlertsState> {
     final list = m.savedAlerts
         .map((a) => a.id == event.alert.id ? event.alert : a)
         .toList();
-    emit(state.copyWith(
-      mosque: m.copyWith(savedAlerts: list),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(savedAlerts: list),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
-  void _onAllAlertsDeleted(
-    AllAlertsDeleted event,
-    Emitter<AlertsState> emit,
-  ) {
+  void _onAllAlertsDeleted(AllAlertsDeleted event, Emitter<AlertsState> emit) {
     final m = state.mosque;
     if (m == null) return;
-    emit(state.copyWith(
-      mosque: m.copyWith(savedAlerts: []),
-      hasUnsavedChanges: true,
-    ));
+    emit(
+      state.copyWith(
+        mosque: m.copyWith(savedAlerts: []),
+        hasUnsavedChanges: true,
+      ),
+    );
   }
 
   Future<void> _onSave(
@@ -144,11 +149,9 @@ class AlertsBloc extends Bloc<AlertsEvent, AlertsState> {
     emit(state.copyWith(isSaving: true));
     try {
       await _repo.updateActiveAlerts(m);
-      emit(state.copyWith(
-        isSaving: false,
-        hasUnsavedChanges: false,
-        error: null,
-      ));
+      emit(
+        state.copyWith(isSaving: false, hasUnsavedChanges: false, error: null),
+      );
     } catch (e) {
       emit(state.copyWith(isSaving: false, error: e.toString()));
     }

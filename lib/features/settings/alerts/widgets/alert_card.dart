@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../data/models/mosque/announcement_model.dart';
+import 'alert_status_badge.dart';
 
 /// A card that displays a saved alert with its live/ready status and actions.
 class AlertCard extends StatelessWidget {
@@ -55,7 +56,7 @@ class AlertCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                _StatusBadge(isLive: isLive, s: s),
+                AlertStatusBadge(isLive: isLive, s: s),
               ],
             ),
 
@@ -83,7 +84,10 @@ class AlertCard extends StatelessWidget {
                   child: isLive
                       ? OutlinedButton.icon(
                           onPressed: onUnpublish,
-                          icon: const Icon(Icons.stop_circle_outlined, size: 18),
+                          icon: const Icon(
+                            Icons.stop_circle_outlined,
+                            size: 18,
+                          ),
                           label: Text(
                             s.alert_unpublish,
                             overflow: TextOverflow.ellipsis,
@@ -141,48 +145,6 @@ class AlertCard extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _StatusBadge extends StatelessWidget {
-  final bool isLive;
-  final S s;
-
-  const _StatusBadge({required this.isLive, required this.s});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: isLive ? Colors.green : Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (isLive)
-            Container(
-              width: 7,
-              height: 7,
-              margin: const EdgeInsets.only(right: 5),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-              ),
-            ),
-          Text(
-            isLive ? s.alert_status_live : s.alert_status_ready,
-            style: TextStyle(
-              color: isLive ? Colors.white : Colors.grey.shade700,
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0.5,
-            ),
-          ),
-        ],
       ),
     );
   }

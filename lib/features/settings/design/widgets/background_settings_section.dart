@@ -37,7 +37,9 @@ class BackgroundSettingsSection extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(S.of(context).design_color_primary), // Reuse for translation
+          title: Text(
+            S.of(context).design_color_primary,
+          ), // Reuse for translation
           content: SingleChildScrollView(
             child: ColorPicker(
               pickerColor: selectedColor,
@@ -116,7 +118,7 @@ class BackgroundSettingsSection extends StatelessWidget {
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.1),
                         blurRadius: 4,
-                      )
+                      ),
                     ],
                   ),
                 ),
