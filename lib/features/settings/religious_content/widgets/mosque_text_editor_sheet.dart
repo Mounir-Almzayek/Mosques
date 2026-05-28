@@ -3,7 +3,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
-import '../../bloc/settings/settings_bloc.dart';
+import '../bloc/religious_content_bloc.dart';
 import 'mosque_text_list_section.dart';
 
 class MosqueTextEditorSheet extends StatefulWidget {
@@ -16,7 +16,7 @@ class MosqueTextEditorSheet extends StatefulWidget {
   });
 
   final MosqueTextEntryModel? existing;
-  final SettingsBloc bloc;
+  final ReligiousContentBloc bloc;
   final MosqueTextListKind kind;
   final MosqueTextL10n labels;
 

@@ -1,10 +1,10 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
-import '../../bloc/settings/settings_bloc.dart';
+import '../bloc/religious_content_bloc.dart';
 import 'mosque_text_editor_sheet.dart';
 
 class MosqueTextL10n {
@@ -102,7 +102,8 @@ class MosqueTextL10n {
   }
 }
 
-/// إدارة قوائم النصوص (حديث، آية، دعاء، ذكر) بنفس أسلوب القائمة والحفظ.
+/// Manages mosque text lists (hadith, verse, dua, adhkar) with the same list
+/// and save pattern.
 class MosqueTextListSection extends StatefulWidget {
   final MosqueModel mosque;
   final MosqueTextListKind kind;
@@ -119,7 +120,7 @@ class MosqueTextListSection extends StatefulWidget {
 
 class _MosqueTextListSectionState extends State<MosqueTextListSection> {
   Future<void> _openEditor([MosqueTextEntryModel? existing]) async {
-    final bloc = context.read<SettingsBloc>();
+    final bloc = context.read<ReligiousContentBloc>();
     final s = S.of(context);
     final labels = MosqueTextL10n.of(s, widget.kind);
     await showModalBottomSheet<void>(
@@ -160,9 +161,9 @@ class _MosqueTextListSectionState extends State<MosqueTextListSection> {
       ),
     );
     if (ok == true && mounted) {
-      context.read<SettingsBloc>().add(
-        MosqueTextRemoved(widget.kind, item.id),
-      );
+      context.read<ReligiousContentBloc>().add(
+            MosqueTextRemoved(widget.kind, item.id),
+          );
     }
   }
 
@@ -193,14 +194,18 @@ class _MosqueTextListSectionState extends State<MosqueTextListSection> {
                     Text(
                       labels.emptyTitle,
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleMedium
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
                           ?.copyWith(fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       labels.emptySubtitle,
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyMedium
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
                           ?.copyWith(color: scheme.onSurfaceVariant),
                     ),
                   ],
@@ -254,12 +259,14 @@ class _MosqueTextListSectionState extends State<MosqueTextListSection> {
                                 child: Switch(
                                   value: h.isActive,
                                   onChanged: (val) {
-                                    context.read<SettingsBloc>().add(
-                                      MosqueTextUpdated(
-                                        widget.kind,
-                                        h.copyWith(isActive: val),
-                                      ),
-                                    );
+                                    context
+                                        .read<ReligiousContentBloc>()
+                                        .add(
+                                          MosqueTextUpdated(
+                                            widget.kind,
+                                            h.copyWith(isActive: val),
+                                          ),
+                                        );
                                   },
                                 ),
                               ),
@@ -293,7 +300,9 @@ class _MosqueTextListSectionState extends State<MosqueTextListSection> {
                               h.text,
                               maxLines: 4,
                               overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.bodyMedium
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
                                   ?.copyWith(
                                     fontStyle: h.isActive
                                         ? FontStyle.normal
@@ -307,7 +316,9 @@ class _MosqueTextListSectionState extends State<MosqueTextListSection> {
                               opacity: h.isActive ? 1.0 : 0.6,
                               child: Text(
                                 h.source,
-                                style: Theme.of(context).textTheme.bodySmall
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
                                     ?.copyWith(
                                       color: scheme.onSurfaceVariant,
                                       fontStyle: FontStyle.italic,
@@ -327,5 +338,3 @@ class _MosqueTextListSectionState extends State<MosqueTextListSection> {
     );
   }
 }
-
-

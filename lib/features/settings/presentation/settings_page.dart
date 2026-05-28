@@ -142,9 +142,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       index: _sectionIndex,
                       sizing: StackFit.expand,
                       children: [
-                        GeneralSection(mosque: mosque),           // 0
-                        PrayerIqamaSection(mosque: mosque),       // 1
-                        ReligiousContentSection(mosque: mosque),   // 2
+                        const GeneralSection(),                    // 0
+                        const PrayerIqamaSection(),                // 1
+                        const ReligiousContentSection(),            // 2
                         const DesignSection(),                     // 3
                         AlbumSection(mosque: mosque),              // 4
                         AnnouncementSection(mosque: mosque),       // 5
