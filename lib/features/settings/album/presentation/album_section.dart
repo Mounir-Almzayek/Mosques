@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/di/service_locator.dart';
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/widgets/feedback/unified_snackbar.dart';
 import '../../../../core/widgets/media/media_widgets.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
-import '../../bloc/settings/settings_bloc.dart';
+import '../../../../data/repositories/interfaces/mosque_repository_interface.dart';
+import '../bloc/album_bloc.dart';
 
 /// Album section — grid of image thumbnails with publish-to-display flow.
 ///
@@ -13,9 +16,21 @@ import '../../bloc/settings/settings_bloc.dart';
 /// new images by URL; long-pressing (or the delete icon on the sheet)
 /// removes them.
 class AlbumSection extends StatelessWidget {
-  final MosqueModel mosque;
+  const AlbumSection({super.key});
 
-  const AlbumSection({super.key, required this.mosque});
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<AlbumBloc>(
+      create: (_) =>
+          AlbumBloc(mosqueRepository: sl<IMosqueRepository>())
+            ..add(const LoadAlbum()),
+      child: const _AlbumSectionBody(),
+    );
+  }
+}
+
+class _AlbumSectionBody extends StatelessWidget {
+  const _AlbumSectionBody();
 
   // ── Published detection ─────────────────────────────────────────────────
 
@@ -31,7 +46,7 @@ class AlbumSection extends StatelessWidget {
   // ── Actions ─────────────────────────────────────────────────────────────
 
   Future<void> _showAddUrlDialog(BuildContext context) async {
-    final bloc = context.read<SettingsBloc>();
+    final bloc = context.read<AlbumBloc>();
     final s = S.of(context);
     final controller = TextEditingController();
 
@@ -75,7 +90,7 @@ class AlbumSection extends StatelessWidget {
   }
 
   void _showPublishSheet(BuildContext context, String url, bool isLive) {
-    final bloc = context.read<SettingsBloc>();
+    final bloc = context.read<AlbumBloc>();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -109,37 +124,62 @@ class AlbumSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    final urls = mosque.albumImageUrls;
 
-    return Scaffold(
-      body: urls.isEmpty
-          ? _EmptyState(s: s)
-          : GridView.builder(
-              padding: const EdgeInsets.all(16),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-              ),
-              itemCount: urls.length,
-              itemBuilder: (context, index) {
-                final url = urls[index];
-                final live = _isImageLive(mosque, url);
-                return _GridCell(
-                  url: url,
-                  isLive: live,
-                  liveBadgeLabel: s.album_live_badge,
-                  onTap: () => _showPublishSheet(context, url, live),
-                );
-              },
+    return BlocListener<AlbumBloc, AlbumState>(
+      listenWhen: (prev, curr) =>
+          prev.isSaving != curr.isSaving ||
+          (curr.error != null && prev.error == null),
+      listener: (context, state) {
+        if (state.isSaving) {
+          UnifiedSnackbar.info(context, message: S.of(context).saving);
+        } else if (state.error != null) {
+          UnifiedSnackbar.error(context, message: state.error!);
+        } else {
+          UnifiedSnackbar.hide(context);
+          UnifiedSnackbar.success(
+            context,
+            message: S.of(context).saved_successfully,
+          );
+        }
+      },
+      child: BlocBuilder<AlbumBloc, AlbumState>(
+        builder: (context, state) {
+          final mosque = state.mosque;
+          if (mosque == null) return const SizedBox.shrink();
+          final urls = mosque.albumImageUrls;
+
+          return Scaffold(
+            body: urls.isEmpty
+                ? _EmptyState(s: s)
+                : GridView.builder(
+                    padding: const EdgeInsets.all(16),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                    ),
+                    itemCount: urls.length,
+                    itemBuilder: (context, index) {
+                      final url = urls[index];
+                      final live = _isImageLive(mosque, url);
+                      return _GridCell(
+                        url: url,
+                        isLive: live,
+                        liveBadgeLabel: s.album_live_badge,
+                        onTap: () => _showPublishSheet(context, url, live),
+                      );
+                    },
+                  ),
+            floatingActionButton: FloatingActionButton.extended(
+              onPressed: () => _showAddUrlDialog(context),
+              icon: const Icon(Icons.add_photo_alternate_outlined),
+              label: Text(s.album_add_url),
+              backgroundColor: const Color(0xFF1A3C34),
+              foregroundColor: Colors.white,
             ),
-
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showAddUrlDialog(context),
-        icon: const Icon(Icons.add_photo_alternate_outlined),
-        label: Text(s.album_add_url),
-        backgroundColor: const Color(0xFF1A3C34),
-        foregroundColor: Colors.white,
+          );
+        },
       ),
     );
   }
