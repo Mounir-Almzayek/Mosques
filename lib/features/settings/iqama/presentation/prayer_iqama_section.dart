@@ -8,7 +8,7 @@ import '../../../../core/styles/app_colors.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
 import '../../../language/bloc/language/language_bloc.dart';
 import '../../bloc/settings/settings_bloc.dart';
-import '../widgets/common/common_widgets.dart';
+import '../../widgets/common/common_widgets.dart';
 
 class PrayerIqamaSection extends StatefulWidget {
   final MosqueModel mosque;

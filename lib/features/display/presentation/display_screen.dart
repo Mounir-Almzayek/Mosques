@@ -14,14 +14,14 @@ import '../../../core/di/service_locator.dart';
 import '../../../data/repositories/interfaces/auth_repository_interface.dart';
 import '../bloc/display_bloc.dart';
 import '../controller/display_layer_controller.dart';
-import 'widgets/background/background_widgets.dart';
-import 'widgets/content/content_widgets.dart';
-import 'widgets/header/header_widgets.dart';
-import 'widgets/layers/alert_layer.dart';
-import 'widgets/layers/iqama_adhan_layer.dart';
-import 'widgets/layers/layer_transition_wrapper.dart';
-import 'widgets/layers/photo_studio_layer.dart';
-import 'widgets/ticker/ticker_widgets.dart';
+import '../widgets/background/background_widgets.dart';
+import '../widgets/content/content_widgets.dart';
+import '../widgets/header/header_widgets.dart';
+import '../widgets/layers/alert_layer.dart';
+import '../widgets/layers/iqama_adhan_layer.dart';
+import '../widgets/layers/layer_transition_wrapper.dart';
+import '../widgets/layers/photo_studio_layer.dart';
+import '../widgets/ticker/ticker_widgets.dart';
 
 class DisplayScreen extends StatefulWidget {
   const DisplayScreen({super.key});

@@ -6,7 +6,7 @@ import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
 import '../../bloc/settings/settings_bloc.dart';
-import 'widgets/announcement_editor_sheet.dart';
+import '../../widgets/announcement_editor_sheet.dart';
 
 AnnouncementSchedule _scheduleFor(AnnouncementModel a) {
   final now = DateTime.now();

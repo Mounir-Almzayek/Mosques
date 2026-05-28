@@ -10,8 +10,8 @@ import '../../../core/routes/app_routes.dart';
 import '../../../core/widgets/feedback/unified_snackbar.dart';
 import '../../../core/widgets/navigation/zoom_drawer.dart';
 import '../bloc/settings/settings_bloc.dart';
-import 'widgets/common/settings_zoom_drawer_content.dart';
-import 'widgets/common/settings_app_bar.dart';
+import '../widgets/common/settings_zoom_drawer_content.dart';
+import '../widgets/common/settings_app_bar.dart';
 
 import 'sections/general_section.dart';
 import 'sections/prayer_iqama_section.dart';

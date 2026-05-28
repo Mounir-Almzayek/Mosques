@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
 import '../../bloc/settings/settings_bloc.dart';
-import 'widgets/alert_card.dart';
-import 'widgets/alert_edit_dialog.dart';
+import '../../widgets/alert_card.dart';
+import '../../widgets/alert_edit_dialog.dart';
 
 /// Manages high-priority instant alerts with a saved-list + publish-on-demand flow.
 ///
