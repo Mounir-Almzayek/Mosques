@@ -58,12 +58,7 @@ class UpdateBloc extends Bloc<UpdateEvent, UpdateState> {
       emit(state.copyWith(status: UpdateStatus.success, localPath: savePath));
       add(InstallUpdateRequested());
     } catch (e) {
-      emit(
-        state.copyWith(
-          status: UpdateStatus.failure,
-          error: 'Download failed: $e',
-        ),
-      );
+      emit(state.copyWith(status: UpdateStatus.failure, error: null));
     }
   }
 
@@ -75,12 +70,7 @@ class UpdateBloc extends Bloc<UpdateEvent, UpdateState> {
     try {
       final result = await OpenFilex.open(state.localPath!);
       if (result.type != ResultType.done) {
-        emit(
-          state.copyWith(
-            status: UpdateStatus.failure,
-            error: 'Install failed: ${result.message}',
-          ),
-        );
+        emit(state.copyWith(status: UpdateStatus.failure, error: null));
       }
     } catch (e) {
       emit(

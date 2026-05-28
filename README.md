@@ -52,18 +52,10 @@ This project follows **Clean Architecture** principles to ensure maintainability
 1.  **Prerequisites:**
     *   Flutter SDK (^3.10.7)
     *   A Firebase project configured for Android/iOS/Web.
-2.  **Environment Variables:**
-    *   Ensure any required keys are set up in a `.env` file if applicable (check `assets/.env`).
-3.  **Run the project:**
+2.  **Run the project:**
     ```bash
     flutter pub get
     flutter run
-    ```
-4.  **Shorebird Setup:**
-    ```bash
-    shorebird login
-    shorebird init
-    shorebird release android
     ```
 
 ---

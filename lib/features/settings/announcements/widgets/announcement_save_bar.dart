@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/widgets/buttons/app_button.dart';
 
 class AnnouncementSaveBar extends StatelessWidget {
   final S s;
@@ -38,19 +39,12 @@ class AnnouncementSaveBar extends StatelessWidget {
               ).textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
             ),
             const SizedBox(height: 10),
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton.icon(
-                onPressed: onSave,
-                icon: const Icon(Icons.cloud_upload_rounded),
-                label: Text(s.save),
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
-              ),
+            AppButton.elevated(
+              label: s.save,
+              onPressed: onSave,
+              leadingIcon: Icons.cloud_upload_rounded,
+              height: 48,
+              borderRadius: 14,
             ),
           ],
         ),

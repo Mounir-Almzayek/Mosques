@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/feedback/unified_snackbar.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
 import '../bloc/announcements_bloc.dart';
@@ -155,7 +156,8 @@ class _AnnouncementEditorSheetState extends State<AnnouncementEditorSheet> {
               ],
             ),
             const SizedBox(height: 24),
-            FilledButton.icon(
+            AppButton.elevated(
+              label: s.save,
               onPressed: () {
                 if (_titleCtrl.text.trim().isEmpty) return;
                 if (_endDate.isBefore(_startDate)) {
@@ -189,14 +191,9 @@ class _AnnouncementEditorSheetState extends State<AnnouncementEditorSheet> {
                 }
                 Navigator.pop(context);
               },
-              icon: const Icon(Icons.check_rounded),
-              label: Text(s.save),
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
+              leadingIcon: Icons.check_rounded,
+              height: 48,
+              borderRadius: 14,
             ),
           ],
         ),

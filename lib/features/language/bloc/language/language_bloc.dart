@@ -12,7 +12,6 @@ part 'language_state.dart';
 
 class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
   final IMosqueRepository _mosqueRepo;
-  late final AppLanguage _deviceLanguage;
   StreamSubscription<User?>? _authSubscription;
   StreamSubscription<MosqueModel?>? _mosqueSubscription;
 
@@ -21,11 +20,10 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
       super(
         LanguageInitial(
           language: AppLanguage.fromCode(
-              SettingsLocalRepository.loadDeviceLanguage().languageCode,
+            SettingsLocalRepository.loadLanguage().languageCode,
           ),
         ),
-        ) {
-    _deviceLanguage = state.language;
+      ) {
     on<LoadLanguage>(_onLoadLanguage);
     on<ChangeLanguage>(_onChangeLanguage);
     on<RemoteLanguageChanged>(_onRemoteLanguageChanged);
@@ -35,27 +33,26 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
     LoadLanguage event,
     Emitter<LanguageState> emit,
   ) async {
-    // Always prefer device language at startup.
-    final deviceLang = AppLanguage.fromCode(
-      SettingsLocalRepository.loadDeviceLanguage().languageCode,
+    // Prefer the saved local language. On first run, persist the fallback
+    // language so startup is stable before Firebase returns a mosque document.
+    final storedLang = AppLanguage.fromCode(
+      SettingsLocalRepository.loadLanguage().languageCode,
     );
-    if (deviceLang.code != state.language.code) {
-      emit(LanguageInitial(language: deviceLang));
+    SettingsLocalRepository.storeLanguage(storedLang.locale);
+    if (storedLang.code != state.language.code) {
+      emit(LanguageInitial(language: storedLang));
     }
 
     // Start remote sync once.
-    _authSubscription ??= FirebaseAuth.instance
-        .authStateChanges()
-        .listen((user) async {
+    _authSubscription ??= FirebaseAuth.instance.authStateChanges().listen((
+      user,
+    ) async {
       if (isClosed) return;
 
       // Stop listening to mosque when logged out.
       if (user == null) {
         await _mosqueSubscription?.cancel();
         _mosqueSubscription = null;
-        if (state.language.code != _deviceLanguage.code) {
-          add(RemoteLanguageChanged(_deviceLanguage));
-        }
         return;
       }
 
@@ -76,18 +73,15 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
 
       // Restart mosque subscription (depends on `active_mosque_id`).
       await _mosqueSubscription?.cancel();
-      _mosqueSubscription = _mosqueRepo.streamActiveMosque.listen(
-        (mosque) {
-          if (mosque == null) return;
-          final remoteCode = mosque.appLanguageCode;
-          if (remoteCode == null || remoteCode.isEmpty) return;
+      _mosqueSubscription = _mosqueRepo.streamActiveMosque.listen((mosque) {
+        if (mosque == null) return;
+        final remoteCode = mosque.appLanguageCode;
+        if (remoteCode == null || remoteCode.isEmpty) return;
 
-          final newLang = AppLanguage.fromCode(remoteCode);
-          if (newLang.code == state.language.code) return;
-          add(RemoteLanguageChanged(newLang));
-        },
-        onError: (_) {},
-      );
+        final newLang = AppLanguage.fromCode(remoteCode);
+        if (newLang.code == state.language.code) return;
+        add(RemoteLanguageChanged(newLang));
+      }, onError: (_) {});
     });
   }
 
@@ -113,8 +107,8 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
     RemoteLanguageChanged event,
     Emitter<LanguageState> emit,
   ) {
-    if (event.language.code == state.language.code) return;
     SettingsLocalRepository.storeLanguage(event.language.locale);
+    if (event.language.code == state.language.code) return;
     emit(LanguageInitial(language: event.language));
   }
 
@@ -125,4 +119,3 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
     return super.close();
   }
 }
-

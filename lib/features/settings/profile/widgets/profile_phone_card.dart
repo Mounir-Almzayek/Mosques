@@ -80,7 +80,7 @@ class _ProfilePhoneCardState extends State<ProfilePhoneCard> {
               textDirection: TextDirection.ltr,
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.phone, color: primary),
-                hintText: s.registration_phone,
+                hintText: s.profile_phone_label,
               ),
             ),
             const SizedBox(height: 24),

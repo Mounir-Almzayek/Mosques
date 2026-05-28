@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../../../../core/di/service_locator.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/feedback/unified_snackbar.dart';
+import '../../../../data/models/platform_announcements/settings_announcement_model.dart';
+import '../../../../data/repositories/interfaces/platform_announcements_repository_interface.dart';
 import '../bloc/general_bloc.dart';
 import 'general_coordinates_section.dart';
+import 'settings_announcements_slider.dart';
 
 class GeneralSectionBody extends StatefulWidget {
   const GeneralSectionBody({super.key});
@@ -19,6 +23,8 @@ class _GeneralSectionBodyState extends State<GeneralSectionBody> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _cityController;
+  late final Stream<List<SettingsAnnouncementModel>>
+  _settingsAnnouncementsStream;
   bool _locating = false;
   bool _controllersInitialized = false;
 
@@ -27,6 +33,8 @@ class _GeneralSectionBodyState extends State<GeneralSectionBody> {
     super.initState();
     _nameController = TextEditingController();
     _cityController = TextEditingController();
+    _settingsAnnouncementsStream = sl<IPlatformAnnouncementsRepository>()
+        .watchSettingsAnnouncements();
   }
 
   @override
@@ -120,6 +128,26 @@ class _GeneralSectionBodyState extends State<GeneralSectionBody> {
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
+                StreamBuilder<List<SettingsAnnouncementModel>>(
+                  stream: _settingsAnnouncementsStream,
+                  builder: (context, snapshot) {
+                    final announcements =
+                        snapshot.data ?? const <SettingsAnnouncementModel>[];
+                    if (announcements.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SettingsAnnouncementsSlider(
+                          announcements: announcements,
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                    );
+                  },
+                ),
                 TextFormField(
                   controller: _nameController,
                   decoration: InputDecoration(labelText: s.mosque_name_label),

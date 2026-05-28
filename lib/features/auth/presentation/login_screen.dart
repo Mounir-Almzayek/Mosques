@@ -11,8 +11,6 @@ import '../../../core/widgets/buttons/app_button.dart';
 import '../../../core/widgets/feedback/unified_snackbar.dart';
 import '../../../core/widgets/forms/custom_text_field.dart';
 import '../../../core/l10n/generated/l10n.dart';
-import '../../../core/di/service_locator.dart';
-import '../../../data/repositories/interfaces/app_settings_repository_interface.dart';
 import '../bloc/login/login_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -107,8 +105,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     return SingleChildScrollView(
                       physics: const BouncingScrollPhysics(),
                       padding: EdgeInsets.symmetric(
-                        horizontal: context.responsive(20.w, tablet: 48, desktop: 48),
-                        vertical: context.responsive(12.h, tablet: 12, desktop: 12),
+                        horizontal: context.responsive(
+                          20.w,
+                          tablet: 48,
+                          desktop: 48,
+                        ),
+                        vertical: context.responsive(
+                          12.h,
+                          tablet: 12,
+                          desktop: 12,
+                        ),
                       ),
                       child: Center(
                         child: ConstrainedBox(
@@ -124,215 +130,230 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            SizedBox(
-                              height: context.responsive(30.h, tablet: 30, desktop: 24),
-                            ),
-                            Text(
-                              s.bismillah,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: context.adaptiveFont(13.sp),
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.primaryDark.withValues(
-                                  alpha: 0.85,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              SizedBox(
+                                height: context.responsive(
+                                  30.h,
+                                  tablet: 30,
+                                  desktop: 24,
                                 ),
-                                height: 1.6,
                               ),
-                            ),
-                            SizedBox(
-                              height: context.responsive(20.h, tablet: 20, desktop: 16),
-                            ),
-                            Center(
-                              child: Container(
-                                width: context.responsive(120.w, tablet: 130, desktop: 120),
+                              
+                              Center(
+                                child: Container(
+                                  width: context.responsive(
+                                    120.w,
+                                    tablet: 130,
+                                    desktop: 120,
+                                  ),
+                                  padding: EdgeInsets.all(
+                                    context.responsive(
+                                      14.w,
+                                      tablet: 14,
+                                      desktop: 14,
+                                    ),
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(
+                                      context.responsive(
+                                        20.r,
+                                        tablet: 20,
+                                        desktop: 20,
+                                      ),
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColors.primary.withValues(
+                                          alpha: 0.10,
+                                        ),
+                                        blurRadius: 24,
+                                        offset: const Offset(0, 8),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Image.asset(
+                                    'assets/logo.png',
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: context.responsive(
+                                  24.h,
+                                  tablet: 24,
+                                  desktop: 20,
+                                ),
+                              ),
+                              Text(
+                                s.login_title,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: context.adaptiveFont(24.sp),
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primaryText,
+                                  letterSpacing: 0.3,
+                                ),
+                              ),
+                              SizedBox(
+                                height: context.responsive(
+                                  8.h,
+                                  tablet: 8,
+                                  desktop: 8,
+                                ),
+                              ),
+                              Text(
+                                s.login_subtitle,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: context.adaptiveFont(14.sp),
+                                  color: AppColors.secondaryText,
+                                ),
+                              ),
+                              SizedBox(
+                                height: context.responsive(
+                                  28.h,
+                                  tablet: 28,
+                                  desktop: 24,
+                                ),
+                              ),
+                              Container(
                                 padding: EdgeInsets.all(
-                                  context.responsive(14.w, tablet: 14, desktop: 14),
+                                  context.responsive(
+                                    20.w,
+                                    tablet: 24,
+                                    desktop: 24,
+                                  ),
                                 ),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(
-                                    context.responsive(20.r, tablet: 20, desktop: 20),
+                                    context.responsive(
+                                      22.r,
+                                      tablet: 22,
+                                      desktop: 22,
+                                    ),
+                                  ),
+                                  border: Border.all(
+                                    color: AppColors.primaryWhisper.withValues(
+                                      alpha: 0.9,
+                                    ),
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: AppColors.primary.withValues(
-                                        alpha: 0.10,
+                                      color: AppColors.primaryDark.withValues(
+                                        alpha: 0.07,
                                       ),
-                                      blurRadius: 24,
-                                      offset: const Offset(0, 8),
+                                      blurRadius: 28,
+                                      offset: const Offset(0, 12),
                                     ),
                                   ],
                                 ),
-                                child: Image.asset(
-                                  'assets/logo.png',
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: context.responsive(24.h, tablet: 24, desktop: 20),
-                            ),
-                            Text(
-                              s.login_title,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: context.adaptiveFont(24.sp),
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.primaryText,
-                                letterSpacing: 0.3,
-                              ),
-                            ),
-                            SizedBox(
-                              height: context.responsive(8.h, tablet: 8, desktop: 8),
-                            ),
-                            Text(
-                              s.login_subtitle,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: context.adaptiveFont(14.sp),
-                                color: AppColors.secondaryText,
-                              ),
-                            ),
-                            SizedBox(
-                              height: context.responsive(28.h, tablet: 28, desktop: 24),
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(
-                                context.responsive(20.w, tablet: 24, desktop: 24),
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(
-                                  context.responsive(22.r, tablet: 22, desktop: 22),
-                                ),
-                                border: Border.all(
-                                  color: AppColors.primaryWhisper.withValues(
-                                    alpha: 0.9,
+                                child: Form(
+                                  key: _formKey,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      CustomTextField(
+                                        controller: _emailController,
+                                        focusNode: _emailFocusNode,
+                                        nextFocusNode: _passwordFocusNode,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        textInputAction: TextInputAction.next,
+                                        label: s.email_label,
+                                        hintText: s.email_hint,
+                                        labelColor: AppColors.primaryText,
+                                        textColor: AppColors.primaryText,
+                                        focusBorderColor: AppColors.primary,
+                                        fillColor: AppColors.creamWhite,
+                                        enabled: !loading,
+                                        onChanged: (v) => context
+                                            .read<LoginBloc>()
+                                            .add(UpdateEmail(v)),
+                                        validator: (v) => _validateEmail(v, s),
+                                        prefixIcon: Icon(
+                                          Icons.alternate_email_rounded,
+                                          color: AppColors.primaryDark
+                                              .withValues(alpha: 0.85),
+                                          size: context.adaptiveIcon(22.sp),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: context.responsive(
+                                          18.h,
+                                          tablet: 18,
+                                          desktop: 16,
+                                        ),
+                                      ),
+                                      CustomTextField(
+                                        controller: _passwordController,
+                                        focusNode: _passwordFocusNode,
+                                        isPassword: true,
+                                        obscureText: true,
+                                        textInputAction: TextInputAction.done,
+                                        label: s.password_label,
+                                        hintText: s.password_hint,
+                                        labelColor: AppColors.primaryText,
+                                        textColor: AppColors.primaryText,
+                                        focusBorderColor: AppColors.primary,
+                                        fillColor: AppColors.creamWhite,
+                                        enabled: !loading,
+                                        onChanged: (v) => context
+                                            .read<LoginBloc>()
+                                            .add(UpdatePassword(v)),
+                                        validator: (v) =>
+                                            _validatePassword(v, s),
+                                        onFieldSubmitted: (_) => _submit(),
+                                        prefixIcon: Icon(
+                                          Icons.lock_outline_rounded,
+                                          color: AppColors.primaryDark
+                                              .withValues(alpha: 0.85),
+                                          size: context.adaptiveIcon(22.sp),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: context.responsive(
+                                          28.h,
+                                          tablet: 28,
+                                          desktop: 24,
+                                        ),
+                                      ),
+                                      AppButton.elevated(
+                                        label: s.login_button,
+                                        isLoading: loading,
+                                        disabled: loading,
+                                        onPressed: _submit,
+                                        icon: Icons.login_rounded,
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: AppColors.primaryDark.withValues(
-                                      alpha: 0.07,
-                                    ),
-                                    blurRadius: 28,
-                                    offset: const Offset(0, 12),
+                              ),
+                              SizedBox(
+                                height: context.responsive(
+                                  24.h,
+                                  tablet: 24,
+                                  desktop: 20,
+                                ),
+                              ),
+                              Text(
+                                s.tawakkul_quote,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: context.adaptiveFont(12.sp),
+                                  height: 1.7,
+                                  color: AppColors.secondaryText.withValues(
+                                    alpha: 0.85,
                                   ),
-                                ],
-                              ),
-                              child: Form(
-                                key: _formKey,
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    CustomTextField(
-                                      controller: _emailController,
-                                      focusNode: _emailFocusNode,
-                                      nextFocusNode: _passwordFocusNode,
-                                      keyboardType: TextInputType.emailAddress,
-                                      textInputAction: TextInputAction.next,
-                                      label: s.email_label,
-                                      hintText: s.email_hint,
-                                      labelColor: AppColors.primaryText,
-                                      textColor: AppColors.primaryText,
-                                      focusBorderColor: AppColors.primary,
-                                      fillColor: AppColors.creamWhite,
-                                      enabled: !loading,
-                                      onChanged: (v) => context
-                                          .read<LoginBloc>()
-                                          .add(UpdateEmail(v)),
-                                      validator: (v) => _validateEmail(v, s),
-                                      prefixIcon: Icon(
-                                        Icons.alternate_email_rounded,
-                                        color: AppColors.primaryDark.withValues(
-                                          alpha: 0.85,
-                                        ),
-                                        size: context.adaptiveIcon(22.sp),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: context.responsive(18.h, tablet: 18, desktop: 16),
-                                    ),
-                                    CustomTextField(
-                                      controller: _passwordController,
-                                      focusNode: _passwordFocusNode,
-                                      isPassword: true,
-                                      obscureText: true,
-                                      textInputAction: TextInputAction.done,
-                                      label: s.password_label,
-                                      hintText: s.password_hint,
-                                      labelColor: AppColors.primaryText,
-                                      textColor: AppColors.primaryText,
-                                      focusBorderColor: AppColors.primary,
-                                      fillColor: AppColors.creamWhite,
-                                      enabled: !loading,
-                                      onChanged: (v) => context
-                                          .read<LoginBloc>()
-                                          .add(UpdatePassword(v)),
-                                      validator: (v) => _validatePassword(v, s),
-                                      onFieldSubmitted: (_) => _submit(),
-                                      prefixIcon: Icon(
-                                        Icons.lock_outline_rounded,
-                                        color: AppColors.primaryDark.withValues(
-                                          alpha: 0.85,
-                                        ),
-                                        size: context.adaptiveIcon(22.sp),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: context.responsive(28.h, tablet: 28, desktop: 24),
-                                    ),
-                                    AppButton.elevated(
-                                      label: s.login_button,
-                                      isLoading: loading,
-                                      disabled: loading,
-                                      onPressed: _submit,
-                                      icon: Icons.login_rounded,
-                                    ),
-                                  ],
+                                  fontStyle: FontStyle.italic,
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: context.responsive(24.h, tablet: 24, desktop: 20),
-                            ),
-                            Text(
-                              s.tawakkul_quote,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: context.adaptiveFont(12.sp),
-                                height: 1.7,
-                                color: AppColors.secondaryText.withValues(
-                                  alpha: 0.85,
-                                ),
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                            SizedBox(
-                              height: context.responsive(24.h, tablet: 24, desktop: 20),
-                            ),
-                            FutureBuilder(
-                              future: sl<IAppSettingsRepository>().getAppSettings(),
-                              builder: (context, snapshot) {
-                                final canOpenRegistration =
-                                    snapshot.data?.allowRegistration ?? true;
-                                if (!canOpenRegistration) {
-                                  return const SizedBox.shrink();
-                                }
-                                return AppButton.text(
-                                  label: s.register_link,
-                                  onPressed: () => context.push(Routes.registrationPath),
-                                  foregroundColor: AppColors.primaryDark,
-                                  fontSize: context.adaptiveFont(14.sp),
-                                );
-                              },
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
                       ),
                     );
                   },

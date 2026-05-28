@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/widgets/buttons/app_button.dart';
+
 class DesignSaveBar extends StatelessWidget {
   final bool isSaving;
   final String savingLabel;
@@ -30,29 +32,16 @@ class DesignSaveBar extends StatelessWidget {
             ),
           ],
         ),
-        child: FilledButton.icon(
-          onPressed: isSaving ? null : onSave,
-          style: FilledButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 18),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            backgroundColor: Theme.of(context).primaryColor,
-          ),
-          icon: isSaving
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.white,
-                  ),
-                )
-              : const Icon(Icons.cloud_upload_rounded),
-          label: Text(
-            isSaving ? savingLabel : saveLabel,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
+        child: AppButton.elevated(
+          label: isSaving ? savingLabel : saveLabel,
+          onPressed: onSave,
+          isLoading: isSaving,
+          disabled: isSaving,
+          leadingIcon: Icons.cloud_upload_rounded,
+          height: 56,
+          fontSize: 16,
+          borderRadius: 16,
+          backgroundColor: Theme.of(context).primaryColor,
         ),
       ),
     );

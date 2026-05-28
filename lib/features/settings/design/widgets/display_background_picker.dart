@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/widgets/media/media_widgets.dart';
 
 /// Grid picker for selecting a background image from a list of remote URLs.
@@ -33,7 +35,7 @@ class DisplayBackgroundPicker extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'لا توجد صور خلفية متاحة',
+                S.of(context).display_background_empty,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.outline,
                   fontSize: 13,

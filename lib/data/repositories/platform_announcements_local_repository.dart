@@ -3,11 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/constants/firestore_schema.dart';
 import '../../core/services/hive_service.dart';
 import '../models/mosque/announcement_model.dart';
+import '../models/platform_announcements/settings_announcement_model.dart';
 
 class PlatformAnnouncementsLocalRepository {
   PlatformAnnouncementsLocalRepository._();
 
   static const String _cacheKey = FirestoreSchema.platformAnnouncementsCacheKey;
+  static const String _settingsCacheKey =
+      FirestoreSchema.settingsAnnouncementsCacheKey;
 
   static dynamic _sanitizeForHive(dynamic value) {
     if (value is Timestamp) {
@@ -32,12 +35,20 @@ class PlatformAnnouncementsLocalRepository {
   static Future<void> saveAnnouncements(List<AnnouncementModel> list) async {
     final rawList = list.map((a) {
       final map = a.toMap();
-      map['id'] = a.id; 
+      map['id'] = a.id;
       return map;
     }).toList();
-    
+
     final storable = _sanitizeForHive(rawList) as List<dynamic>;
     await HiveService.saveData(_cacheKey, storable);
+  }
+
+  static Future<void> saveSettingsAnnouncements(
+    List<SettingsAnnouncementModel> list,
+  ) async {
+    final rawList = list.map((a) => a.toMap()).toList();
+    final storable = _sanitizeForHive(rawList) as List<dynamic>;
+    await HiveService.saveData(_settingsCacheKey, storable);
   }
 
   static Future<List<AnnouncementModel>?> getCached() async {
@@ -47,7 +58,7 @@ class PlatformAnnouncementsLocalRepository {
     final list = raw.whereType<Map>().map((m) {
       final map = Map<String, dynamic>.from(m);
       final id = map['id']?.toString() ?? '';
-      
+
       // Need to convert millisecondsSinceEpoch back to Timestamp for fromMap
       final convertedMap = <String, dynamic>{};
       map.forEach((k, v) {
@@ -55,20 +66,45 @@ class PlatformAnnouncementsLocalRepository {
           if (v is int) {
             convertedMap[k] = Timestamp.fromMillisecondsSinceEpoch(v);
           } else {
-             convertedMap[k] = v;
+            convertedMap[k] = v;
           }
         } else {
           convertedMap[k] = v;
         }
       });
-      
+
       return AnnouncementModel.fromMap(convertedMap, id);
     }).toList();
-    
+
     return list;
+  }
+
+  static Future<List<SettingsAnnouncementModel>?>
+  getCachedSettingsAnnouncements() async {
+    final raw = await HiveService.getData(_settingsCacheKey);
+    if (raw is! List) return null;
+
+    return raw.whereType<Map>().map((m) {
+      final map = Map<String, dynamic>.from(m);
+      final convertedMap = <String, dynamic>{};
+      map.forEach((k, v) {
+        if (k == 'start_date' || k == 'end_date') {
+          convertedMap[k] = v is int
+              ? Timestamp.fromMillisecondsSinceEpoch(v)
+              : v;
+        } else {
+          convertedMap[k] = v;
+        }
+      });
+      return SettingsAnnouncementModel.fromMap(
+        convertedMap,
+        convertedMap['id']?.toString() ?? '',
+      );
+    }).toList();
   }
 
   static Future<void> clearCache() async {
     await HiveService.deleteData(_cacheKey);
+    await HiveService.deleteData(_settingsCacheKey);
   }
 }

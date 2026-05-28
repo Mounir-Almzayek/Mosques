@@ -16,9 +16,9 @@ class Pages {
 String? _authGuard(BuildContext context, GoRouterState state) {
   final authRepo = sl<IAuthRepository>();
   final loggedIn = authRepo.currentUser != null;
-  final isPublicRoute = state.matchedLocation == Routes.splashPath ||
-      state.matchedLocation == Routes.loginPath ||
-      state.matchedLocation == Routes.registrationPath;
+  final isPublicRoute =
+      state.matchedLocation == Routes.splashPath ||
+      state.matchedLocation == Routes.loginPath;
 
   if (!loggedIn && !isPublicRoute) return Routes.loginPath;
   return null;
@@ -36,10 +36,6 @@ final appPages = GoRouter(
     GoRoute(
       path: Routes.loginPath,
       builder: (context, state) => const LoginPage(),
-    ),
-    GoRoute(
-      path: Routes.registrationPath,
-      builder: (context, state) => const RegistrationPage(),
     ),
     GoRoute(
       path: Routes.settingsPath,

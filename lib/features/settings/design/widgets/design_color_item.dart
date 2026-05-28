@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/utils/color_converter.dart';
 
 class DesignColorItem extends StatelessWidget {
@@ -38,12 +39,16 @@ class DesignColorItem extends StatelessWidget {
               onPressed: () => Navigator.pop(context),
               child: Text(S.of(context).cancel),
             ),
-            ElevatedButton(
+            AppButton.elevated(
+              label: S.of(context).save,
               onPressed: () {
                 onChanged(ColorConverter.toHex(selectedColor));
                 Navigator.pop(context);
               },
-              child: Text(S.of(context).save),
+              height: 40,
+              borderRadius: 12,
+              expand: false,
+              useShadow: false,
             ),
           ],
         );

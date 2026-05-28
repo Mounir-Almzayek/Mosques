@@ -40,7 +40,6 @@ dependencies:
 
   # UI Utils
   flutter_screenutil: ^5.9.0
-  flutter_dotenv: ^5.1.0
   cached_network_image: ^3.4.1
 
   # Firebase — keep these in sync (same FlutterFire generation) to avoid web/js mismatches
@@ -104,7 +103,7 @@ flutter_intl:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: assets/logo.png
+  image_path: assets/logo_launcher.png
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -119,7 +118,6 @@ flutter:
 
   assets:
     - assets/
-    - shorebird.yaml
 
   # أسماء الملفات من حزمة Google Fonts Beiruti (انظر assets/Beiruti/README.txt)
   fonts:

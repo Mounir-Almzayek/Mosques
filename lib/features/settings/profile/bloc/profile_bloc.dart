@@ -8,6 +8,9 @@ export 'profile_event.dart';
 export 'profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
+  static const passwordTooShortError = 'profile_error_password_short';
+  static const phoneEmptyError = 'profile_error_phone_empty';
+
   final IAuthRepository _authRepo;
 
   ProfileBloc({required IAuthRepository authRepository})
@@ -37,7 +40,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     emit(state.copyWith(status: ProfileStatus.loading, error: null));
     try {
       if (event.newPassword.length < 6) {
-        throw 'Password is too short. Minimum 6 characters.';
+        emit(
+          state.copyWith(
+            status: ProfileStatus.failure,
+            error: passwordTooShortError,
+          ),
+        );
+        return;
       }
 
       await _authRepo.updatePassword(event.newPassword);
@@ -54,7 +63,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     emit(state.copyWith(status: ProfileStatus.loading, error: null));
     try {
       if (event.newPhone.isEmpty) {
-        throw 'Phone number cannot be empty.';
+        emit(
+          state.copyWith(status: ProfileStatus.failure, error: phoneEmptyError),
+        );
+        return;
       }
       await _authRepo.updatePhone(event.newPhone);
       emit(

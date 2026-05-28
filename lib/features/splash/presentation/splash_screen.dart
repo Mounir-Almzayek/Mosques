@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/enums/splash/splash_destination.dart';
-import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/utils/color_extensions.dart';
@@ -27,14 +26,6 @@ class _SplashScreenState extends State<SplashScreen>
   late final Animation<double> _logoOpacity;
   late final Animation<double> _logoScale;
 
-  // Tagline: fade (delay 500ms)
-  late final AnimationController _taglineController;
-  late final Animation<double> _taglineOpacity;
-
-  // Spinner: fade (delay 800ms)
-  late final AnimationController _spinnerController;
-  late final Animation<double> _spinnerOpacity;
-
   @override
   void initState() {
     super.initState();
@@ -54,48 +45,19 @@ class _SplashScreenState extends State<SplashScreen>
       CurvedAnimation(parent: _logoController, curve: Curves.elasticOut),
     );
 
-    // ── Tagline controller ────────────────────────────────────────
-    _taglineController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 800),
-    );
-    _taglineOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _taglineController, curve: Curves.easeIn),
-    );
-
-    // ── Spinner controller ────────────────────────────────────────
-    _spinnerController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 600),
-    );
-    _spinnerOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _spinnerController, curve: Curves.easeIn),
-    );
-
-    // ── Staggered start ───────────────────────────────────────────
     Future.delayed(const Duration(milliseconds: 300), () {
       if (mounted) _logoController.forward();
-    });
-    Future.delayed(const Duration(milliseconds: 500), () {
-      if (mounted) _taglineController.forward();
-    });
-    Future.delayed(const Duration(milliseconds: 800), () {
-      if (mounted) _spinnerController.forward();
     });
   }
 
   @override
   void dispose() {
     _logoController.dispose();
-    _taglineController.dispose();
-    _spinnerController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final s = S.of(context);
-
     return BlocListener<SplashRoutingBloc, SplashRoutingState>(
       listener: (context, state) async {
         Future<void> delayedGo(String route) async {
@@ -165,92 +127,50 @@ class _SplashScreenState extends State<SplashScreen>
               // ── Main content ───────────────────────────────────
               Center(
                 child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Logo with staggered fade + scale
-                      AnimatedBuilder(
-                        animation: _logoController,
-                        builder: (context, child) {
-                          return Opacity(
-                            opacity: _logoOpacity.value,
-                            child: Transform.scale(
-                              scale: _logoScale.value,
-                              child: child,
+                  child: AnimatedBuilder(
+                    animation: _logoController,
+                    builder: (context, child) {
+                      return Opacity(
+                        opacity: _logoOpacity.value,
+                        child: Transform.scale(
+                          scale: _logoScale.value,
+                          child: child,
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: context.responsive(
+                        160.w,
+                        tablet: 180,
+                        desktop: 180,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(
+                          context.responsive(24.r, tablet: 24, desktop: 24),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primary.withOpacityCompat(0.15),
+                            blurRadius: 24,
+                            offset: const Offset(0, 8),
+                            spreadRadius: 0,
+                          ),
+                          BoxShadow(
+                            color: AppColors.primaryLight.withOpacityCompat(
+                              0.08,
                             ),
-                          );
-                        },
-                        child: Container(
-                          width: context.responsive(
-                            160.w,
-                            tablet: 180,
-                            desktop: 180,
+                            blurRadius: 48,
+                            offset: const Offset(0, 16),
+                            spreadRadius: 4,
                           ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(
-                              context.responsive(24.r, tablet: 24, desktop: 24),
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.primary.withOpacityCompat(0.15),
-                                blurRadius: 24,
-                                offset: const Offset(0, 8),
-                                spreadRadius: 0,
-                              ),
-                              BoxShadow(
-                                color: AppColors.primaryLight.withOpacityCompat(
-                                  0.08,
-                                ),
-                                blurRadius: 48,
-                                offset: const Offset(0, 16),
-                                spreadRadius: 4,
-                              ),
-                            ],
-                          ),
-                          child: Image.asset(
-                            'assets/logo.png',
-                            fit: BoxFit.contain,
-                          ),
-                        ),
+                        ],
                       ),
-
-                      SizedBox(
-                        height: context.responsive(28.h, tablet: 28, desktop: 28),
+                      child: Image.asset(
+                        'assets/logo.png',
+                        fit: BoxFit.contain,
                       ),
-
-                      // Tagline with staggered fade
-                      FadeTransition(
-                        opacity: _taglineOpacity,
-                        child: Text(
-                          s.splash_app_tagline,
-                          style: TextStyle(
-                            fontSize: context.adaptiveFont(20.sp),
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.primary,
-                            letterSpacing: 0.8,
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(
-                        height: context.responsive(48.h, tablet: 48, desktop: 48),
-                      ),
-
-                      // Loading spinner with staggered fade
-                      FadeTransition(
-                        opacity: _spinnerOpacity,
-                        child: SizedBox(
-                          width: context.responsive(28.r, tablet: 28, desktop: 28),
-                          height: context.responsive(28.r, tablet: 28, desktop: 28),
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.5,
-                            color: AppColors.primary.withValues(alpha: 0.5),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),

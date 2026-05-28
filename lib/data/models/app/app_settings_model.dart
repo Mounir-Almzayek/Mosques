@@ -6,7 +6,6 @@ class AppSettingsModel extends Equatable {
   final List<AboutCategoryModel> aboutCategories;
   final AppUpdateModel update;
   final String supportPhone;
-  final bool allowRegistration;
 
   /// Global background folder URL (set in Firebase app_settings/global).
   final String? backgroundFolderUrl;
@@ -24,7 +23,6 @@ class AppSettingsModel extends Equatable {
     this.aboutCategories = const [],
     this.update = const AppUpdateModel(),
     this.supportPhone = '',
-    this.allowRegistration = true,
     this.backgroundFolderUrl,
     this.backgroundLibraryUrls = const [],
   });
@@ -32,7 +30,6 @@ class AppSettingsModel extends Equatable {
   factory AppSettingsModel.fromMap(Map<String, dynamic> map) {
     return AppSettingsModel(
       supportPhone: map['support_phone'] ?? '',
-      allowRegistration: map['allow_registration'] ?? true,
       aboutCategories:
           (map['about_categories'] as List<dynamic>?)
               ?.map(
@@ -41,7 +38,8 @@ class AppSettingsModel extends Equatable {
               .toList() ??
           [],
       backgroundFolderUrl: map['background_folder_url'] as String?,
-      backgroundLibraryUrls: (map['background_library_urls'] as List<dynamic>?)
+      backgroundLibraryUrls:
+          (map['background_library_urls'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           [],
@@ -58,14 +56,21 @@ class AppSettingsModel extends Equatable {
   Map<String, dynamic> toMap() {
     return {
       'support_phone': supportPhone,
-      'allow_registration': allowRegistration,
       'about_categories': aboutCategories.map((e) => e.toMap()).toList(),
       'update': update.toMap(),
-      if (backgroundFolderUrl != null) 'background_folder_url': backgroundFolderUrl,
-      if (backgroundLibraryUrls.isNotEmpty) 'background_library_urls': backgroundLibraryUrls,
+      if (backgroundFolderUrl != null)
+        'background_folder_url': backgroundFolderUrl,
+      if (backgroundLibraryUrls.isNotEmpty)
+        'background_library_urls': backgroundLibraryUrls,
     };
   }
 
   @override
-  List<Object?> get props => [aboutCategories, update, supportPhone, allowRegistration, backgroundFolderUrl, backgroundLibraryUrls];
+  List<Object?> get props => [
+    aboutCategories,
+    update,
+    supportPhone,
+    backgroundFolderUrl,
+    backgroundLibraryUrls,
+  ];
 }

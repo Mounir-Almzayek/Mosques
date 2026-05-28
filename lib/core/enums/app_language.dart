@@ -12,10 +12,13 @@ enum AppLanguage {
   Locale get locale => Locale(code);
 
   static AppLanguage fromCode(String code) {
-    return AppLanguage.values.firstWhere(
-      (e) => e.code == code,
-      orElse: () => AppLanguage.english,
-    );
+    final normalized = code.trim().toLowerCase();
+    if (normalized == 'ar' || normalized == 'arabic') {
+      return AppLanguage.arabic;
+    }
+    if (normalized == 'en' || normalized == 'english') {
+      return AppLanguage.english;
+    }
+    return AppLanguage.english;
   }
 }
-

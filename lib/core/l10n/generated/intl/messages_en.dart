@@ -20,30 +20,25 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(phone) =>
-      "To join an existing mosque, please create your account first, then contact support at ${phone} to link your account.";
+  static String m0(prayer) => "It\'s now time for ${prayer} adhan";
 
-  static String m1(prayer) => "It\'s now time for ${prayer} adhan";
+  static String m1(prayer) => "Remaining to adhan — ${prayer}";
 
-  static String m2(prayer) => "Remaining to adhan — ${prayer}";
+  static String m2(prayer) => "Remaining to iqama — ${prayer}";
 
-  static String m3(prayer) => "Remaining to iqama — ${prayer}";
+  static String m3(prayer) => "Time until adhan for ${prayer}";
 
-  static String m4(prayer) => "Time until adhan for ${prayer}";
+  static String m4(prayer) => "Time until iqama for ${prayer}";
 
-  static String m5(prayer) => "Time until iqama for ${prayer}";
+  static String m5(value) => "Latitude: ${value}";
 
-  static String m6(value) => "Latitude: ${value}";
+  static String m6(value) => "Longitude: ${value}";
 
-  static String m7(value) => "Longitude: ${value}";
+  static String m7(version) => "Current Version: ${version}";
 
-  static String m8(id) => "Suggested ID: ${id}";
+  static String m8(progress) => "Downloading... ${progress}%";
 
-  static String m9(version) => "Current Version: ${version}";
-
-  static String m10(progress) => "Downloading... ${progress}%";
-
-  static String m11(version) => "Latest Version: ${version}";
+  static String m9(version) => "Latest Version: ${version}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -175,7 +170,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "camera": MessageLookupByLibrary.simpleMessage("Camera"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "city_label": MessageLookupByLibrary.simpleMessage("City"),
-    "contact_dev_message": m0,
     "contact_developers": MessageLookupByLibrary.simpleMessage(
       "Contact Tech Support",
     ),
@@ -332,7 +326,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "disable_smart_screen": MessageLookupByLibrary.simpleMessage(
       "Disable smart screen",
     ),
-    "display_adhan_now": m1,
+    "display_adhan_now": m0,
+    "display_background_empty": MessageLookupByLibrary.simpleMessage(
+      "No background images available",
+    ),
     "display_countdown_label": MessageLookupByLibrary.simpleMessage(
       "Remaining",
     ),
@@ -348,8 +345,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "display_next_prayer_title": MessageLookupByLibrary.simpleMessage(
       "Next prayer",
     ),
-    "display_remaining_to_adhan_line": m2,
-    "display_remaining_to_iqama_line": m3,
+    "display_remaining_to_adhan_line": m1,
+    "display_remaining_to_iqama_line": m2,
     "display_remaining_to_sunrise_line": MessageLookupByLibrary.simpleMessage(
       "Remaining to Sunrise",
     ),
@@ -364,8 +361,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "System ad",
     ),
     "display_ticker_verse": MessageLookupByLibrary.simpleMessage("Verse"),
-    "display_time_until_adhan_for": m4,
-    "display_time_until_iqama_for": m5,
+    "display_time_until_adhan_for": m3,
+    "display_time_until_iqama_for": m4,
     "display_timing_title": MessageLookupByLibrary.simpleMessage(
       "Display Timing",
     ),
@@ -439,7 +436,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "iqama_minutes_after_adhan": MessageLookupByLibrary.simpleMessage(
       "Minutes after adhan",
     ),
-    "latitude_coordinate": m6,
+    "latitude_coordinate": m5,
     "location_permission_denied": MessageLookupByLibrary.simpleMessage(
       "Location permission is required to set coordinates",
     ),
@@ -450,30 +447,17 @@ class MessageLookup extends MessageLookupByLibrary {
       "Coordinates updated from device location",
     ),
     "login_button": MessageLookupByLibrary.simpleMessage("Sign in"),
-    "login_link": MessageLookupByLibrary.simpleMessage(
-      "Already have an account? Sign in",
-    ),
     "login_subtitle": MessageLookupByLibrary.simpleMessage(
       "Mosque management — control panel",
     ),
     "login_title": MessageLookupByLibrary.simpleMessage("Sign in"),
-    "longitude_coordinate": m7,
+    "longitude_coordinate": m6,
     "minutes_short": MessageLookupByLibrary.simpleMessage("m"),
     "minutes_suffix": MessageLookupByLibrary.simpleMessage("mins"),
     "miqat_ar": MessageLookupByLibrary.simpleMessage("Prayer times"),
     "miqat_en": MessageLookupByLibrary.simpleMessage("MIQAT PRAYER TIMES"),
     "mosque_blessing": MessageLookupByLibrary.simpleMessage(
       "May Allah bless this Mosque",
-    ),
-    "mosque_id_hint": MessageLookupByLibrary.simpleMessage(
-      "example: al_rowda_mosque",
-    ),
-    "mosque_id_label": MessageLookupByLibrary.simpleMessage(
-      "Unique Mosque ID (English)",
-    ),
-    "mosque_id_suggestion": m8,
-    "mosque_id_taken": MessageLookupByLibrary.simpleMessage(
-      "This ID is already taken",
     ),
     "mosque_name_label": MessageLookupByLibrary.simpleMessage("Mosque name"),
     "no_data": MessageLookupByLibrary.simpleMessage("No data"),
@@ -483,6 +467,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "numeral_format_english": MessageLookupByLibrary.simpleMessage(
       "English (123)",
     ),
+    "ok": MessageLookupByLibrary.simpleMessage("OK"),
     "password_hint": MessageLookupByLibrary.simpleMessage("••••••••"),
     "password_label": MessageLookupByLibrary.simpleMessage("Password"),
     "photo_studio_add_url": MessageLookupByLibrary.simpleMessage(
@@ -527,6 +512,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Minutes before Adhan",
     ),
     "profile_email": MessageLookupByLibrary.simpleMessage("Email"),
+    "profile_error_password_short": MessageLookupByLibrary.simpleMessage(
+      "Password is too short. Minimum 6 characters.",
+    ),
+    "profile_error_phone_empty": MessageLookupByLibrary.simpleMessage(
+      "Phone number cannot be empty.",
+    ),
     "profile_new_password": MessageLookupByLibrary.simpleMessage(
       "New Password",
     ),
@@ -549,29 +540,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Terminate other sessions",
     ),
     "refresh": MessageLookupByLibrary.simpleMessage("Refresh"),
-    "register_button": MessageLookupByLibrary.simpleMessage("Create Account"),
-    "register_link": MessageLookupByLibrary.simpleMessage(
-      "Don\'t have an account? Register now",
-    ),
-    "register_subtitle": MessageLookupByLibrary.simpleMessage(
-      "Join Miqat system as a mosque administrator",
-    ),
-    "register_title": MessageLookupByLibrary.simpleMessage("Create Account"),
-    "register_type_existing": MessageLookupByLibrary.simpleMessage(
-      "Join Existing Mosque",
-    ),
-    "register_type_new": MessageLookupByLibrary.simpleMessage(
-      "Register New Mosque",
-    ),
-    "registration_phone": MessageLookupByLibrary.simpleMessage(
-      "Phone Number (For fast contact)",
-    ),
-    "registration_success_existing": MessageLookupByLibrary.simpleMessage(
-      "Account created. Please contact support to link it to your mosque.",
-    ),
-    "registration_success_new": MessageLookupByLibrary.simpleMessage(
-      "Account and mosque created successfully!",
-    ),
     "religious_content_display": MessageLookupByLibrary.simpleMessage(
       "Display duration (seconds)",
     ),
@@ -602,6 +570,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "scan_qr_hint": MessageLookupByLibrary.simpleMessage("Scan for details"),
     "search": MessageLookupByLibrary.simpleMessage("Search"),
     "select_date": MessageLookupByLibrary.simpleMessage("Select date"),
+    "settings_app_announcements_image_badge":
+        MessageLookupByLibrary.simpleMessage("Visual update"),
+    "settings_app_announcements_subtitle": MessageLookupByLibrary.simpleMessage(
+      "Tips and notices for the control panel",
+    ),
+    "settings_app_announcements_title": MessageLookupByLibrary.simpleMessage(
+      "Settings updates",
+    ),
     "settings_drawer_tagline": MessageLookupByLibrary.simpleMessage(
       "Prayer times · display control",
     ),
@@ -643,15 +619,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "«And whoever relies upon Allah — then He is sufficient for him»",
     ),
     "unit_seconds": MessageLookupByLibrary.simpleMessage("s"),
-    "update_current_version": m9,
+    "update_current_version": m7,
     "update_download": MessageLookupByLibrary.simpleMessage(
       "Download & Install Update",
     ),
-    "update_downloading": m10,
+    "update_downloading": m8,
     "update_failure": MessageLookupByLibrary.simpleMessage(
       "Download failed. Please try again later.",
     ),
-    "update_latest_version": m11,
+    "update_latest_version": m9,
     "update_no_link": MessageLookupByLibrary.simpleMessage(
       "No download link available for this platform.",
     ),
@@ -677,9 +653,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "validation_font_size_range": MessageLookupByLibrary.simpleMessage(
       "Enter a value between 8 and 96",
-    ),
-    "validation_mosque_id_required": MessageLookupByLibrary.simpleMessage(
-      "Mosque ID is required for a new mosque",
     ),
     "validation_password_required": MessageLookupByLibrary.simpleMessage(
       "Please enter your password",

@@ -148,6 +148,7 @@ class AlbumSectionBody extends StatelessWidget {
                     },
                   ),
             floatingActionButton: FloatingActionButton.extended(
+              heroTag: 'settings_album_fab',
               onPressed: () => _showAddUrlDialog(context),
               icon: const Icon(Icons.add_photo_alternate_outlined),
               label: Text(s.album_add_url),

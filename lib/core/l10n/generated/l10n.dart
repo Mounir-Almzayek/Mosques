@@ -69,6 +69,11 @@ class S {
     return Intl.message('Retry', name: 'retry', desc: '', args: []);
   }
 
+  /// `OK`
+  String get ok {
+    return Intl.message('OK', name: 'ok', desc: '', args: []);
+  }
+
   /// `Cancel`
   String get cancel {
     return Intl.message('Cancel', name: 'cancel', desc: '', args: []);
@@ -314,6 +319,36 @@ class S {
     return Intl.message(
       'Saved successfully',
       name: 'saved_successfully',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Settings updates`
+  String get settings_app_announcements_title {
+    return Intl.message(
+      'Settings updates',
+      name: 'settings_app_announcements_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tips and notices for the control panel`
+  String get settings_app_announcements_subtitle {
+    return Intl.message(
+      'Tips and notices for the control panel',
+      name: 'settings_app_announcements_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Visual update`
+  String get settings_app_announcements_image_badge {
+    return Intl.message(
+      'Visual update',
+      name: 'settings_app_announcements_image_badge',
       desc: '',
       args: [],
     );
@@ -2314,156 +2349,6 @@ class S {
     );
   }
 
-  /// `Create Account`
-  String get register_title {
-    return Intl.message(
-      'Create Account',
-      name: 'register_title',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Join Miqat system as a mosque administrator`
-  String get register_subtitle {
-    return Intl.message(
-      'Join Miqat system as a mosque administrator',
-      name: 'register_subtitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Create Account`
-  String get register_button {
-    return Intl.message(
-      'Create Account',
-      name: 'register_button',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Register New Mosque`
-  String get register_type_new {
-    return Intl.message(
-      'Register New Mosque',
-      name: 'register_type_new',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Join Existing Mosque`
-  String get register_type_existing {
-    return Intl.message(
-      'Join Existing Mosque',
-      name: 'register_type_existing',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Unique Mosque ID (English)`
-  String get mosque_id_label {
-    return Intl.message(
-      'Unique Mosque ID (English)',
-      name: 'mosque_id_label',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `example: al_rowda_mosque`
-  String get mosque_id_hint {
-    return Intl.message(
-      'example: al_rowda_mosque',
-      name: 'mosque_id_hint',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `This ID is already taken`
-  String get mosque_id_taken {
-    return Intl.message(
-      'This ID is already taken',
-      name: 'mosque_id_taken',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Suggested ID: {id}`
-  String mosque_id_suggestion(Object id) {
-    return Intl.message(
-      'Suggested ID: $id',
-      name: 'mosque_id_suggestion',
-      desc: '',
-      args: [id],
-    );
-  }
-
-  /// `Account and mosque created successfully!`
-  String get registration_success_new {
-    return Intl.message(
-      'Account and mosque created successfully!',
-      name: 'registration_success_new',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Account created. Please contact support to link it to your mosque.`
-  String get registration_success_existing {
-    return Intl.message(
-      'Account created. Please contact support to link it to your mosque.',
-      name: 'registration_success_existing',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Already have an account? Sign in`
-  String get login_link {
-    return Intl.message(
-      'Already have an account? Sign in',
-      name: 'login_link',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Don't have an account? Register now`
-  String get register_link {
-    return Intl.message(
-      'Don\'t have an account? Register now',
-      name: 'register_link',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Mosque ID is required for a new mosque`
-  String get validation_mosque_id_required {
-    return Intl.message(
-      'Mosque ID is required for a new mosque',
-      name: 'validation_mosque_id_required',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `To join an existing mosque, please create your account first, then contact support at {phone} to link your account.`
-  String contact_dev_message(Object phone) {
-    return Intl.message(
-      'To join an existing mosque, please create your account first, then contact support at $phone to link your account.',
-      name: 'contact_dev_message',
-      desc: '',
-      args: [phone],
-    );
-  }
-
   /// `Profile`
   String get tab_profile {
     return Intl.message('Profile', name: 'tab_profile', desc: '', args: []);
@@ -2629,16 +2514,6 @@ class S {
     return Intl.message(
       'Contact Tech Support',
       name: 'contact_developers',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Phone Number (For fast contact)`
-  String get registration_phone {
-    return Intl.message(
-      'Phone Number (For fast contact)',
-      name: 'registration_phone',
       desc: '',
       args: [],
     );
@@ -2864,11 +2739,41 @@ class S {
     );
   }
 
+  /// `No background images available`
+  String get display_background_empty {
+    return Intl.message(
+      'No background images available',
+      name: 'display_background_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Prayer Card Size`
   String get prayer_card_scale {
     return Intl.message(
       'Prayer Card Size',
       name: 'prayer_card_scale',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password is too short. Minimum 6 characters.`
+  String get profile_error_password_short {
+    return Intl.message(
+      'Password is too short. Minimum 6 characters.',
+      name: 'profile_error_password_short',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Phone number cannot be empty.`
+  String get profile_error_phone_empty {
+    return Intl.message(
+      'Phone number cannot be empty.',
+      name: 'profile_error_phone_empty',
       desc: '',
       args: [],
     );

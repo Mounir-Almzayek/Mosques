@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
@@ -20,13 +19,6 @@ void main() async {
 
   // منع إطفاء الشاشة / السكون أثناء تشغيل التطبيق (يُكمّل android:keepScreenOn و iOS idle timer).
   await _enableKeepScreenOn();
-
-  // Optional env overrides (file is stored at assets/.env)
-  try {
-    await dotenv.load(fileName: 'assets/.env');
-  } catch (e) {
-    debugPrint("DotEnv load failed: $e");
-  }
 
   // Initialize services
   await StorageService.init();
@@ -95,7 +87,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => LanguageBloc(mosqueRepository: sl<IMosqueRepository>())..add(const LoadLanguage())),
+        BlocProvider(
+          create: (_) =>
+              LanguageBloc(mosqueRepository: sl<IMosqueRepository>())
+                ..add(const LoadLanguage()),
+        ),
       ],
       child: _KeepScreenOnLifecycle(
         child: BlocBuilder<LanguageBloc, LanguageState>(

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/enums/settings/mosque_text_list_kind.dart';
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/feedback/unified_snackbar.dart';
 import '../bloc/religious_content_bloc.dart';
 import 'content_panel.dart';
@@ -128,18 +129,16 @@ class ReligiousContentSectionBody extends StatelessWidget {
                       _openEditorForKind(context, MosqueTextListKind.adhkar),
                 ),
                 const SizedBox(height: 24),
-                ElevatedButton.icon(
+                AppButton.elevated(
+                  label: state.isSaving ? s.saving : s.save,
+                  isLoading: state.isSaving,
+                  disabled: state.isSaving,
                   onPressed: () {
                     bloc.add(const SaveAllReligiousContentRequested());
                   },
-                  icon: const Icon(Icons.cloud_upload_rounded),
-                  label: Text(s.save),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                  ),
+                  leadingIcon: Icons.cloud_upload_rounded,
+                  height: 48,
+                  borderRadius: 14,
                 ),
                 const SizedBox(height: 32),
               ],

@@ -17,6 +17,7 @@ abstract final class FirestoreSchema {
   // Document IDs
   // ---------------------------------------------------------------------------
   static const String globalDocId = 'global';
+  static const String settingsAnnouncementsDocId = 'settings_announcements';
 
   // ---------------------------------------------------------------------------
   // Mosque fields — basic info
@@ -90,6 +91,7 @@ abstract final class FirestoreSchema {
   static const String isActive = 'is_active';
   static const String startDate = 'start_date';
   static const String endDate = 'end_date';
+  static const String items = 'items';
 
   // ---------------------------------------------------------------------------
   // Hive cache keys
@@ -98,4 +100,6 @@ abstract final class FirestoreSchema {
   static const String appSettingsCacheKey = 'app_settings_cache_v1';
   static const String platformAnnouncementsCacheKey =
       'platform_announcements_cache_v1';
+  static const String settingsAnnouncementsCacheKey =
+      'settings_announcements_cache_v1';
 }

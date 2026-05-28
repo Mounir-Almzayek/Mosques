@@ -18,8 +18,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final AsyncRunner<UserCredential> loginRunner = AsyncRunner();
 
   LoginBloc({required IAuthRepository authRepository})
-      : _authRepo = authRepository,
-        super(LoginInitial(request: LoginRequest())) {
+    : _authRepo = authRepository,
+      super(LoginInitial(request: LoginRequest())) {
     on<UpdateEmail>(_onUpdateEmail);
     on<UpdatePassword>(_onUpdatePassword);
     on<UpdateDeviceToken>(_onUpdateDeviceToken);
@@ -38,7 +38,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   void _onUpdateDeviceToken(UpdateDeviceToken event, Emitter<LoginState> emit) {
-    final updatedRequest = state.request.copyWith(deviceToken: event.deviceToken);
+    final updatedRequest = state.request.copyWith(
+      deviceToken: event.deviceToken,
+    );
     emit(LoginInitial(request: updatedRequest));
   }
 
@@ -57,10 +59,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
     await loginRunner.run(
       onlineTask: (_) async {
-        return _authRepo.login(
-          updatedRequest.email,
-          updatedRequest.password,
-        );
+        return _authRepo.login(updatedRequest.email, updatedRequest.password);
       },
       onStart: () {
         emit(LoginLoading(request: state.request));
@@ -72,7 +71,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             request: state.request,
             response: LoginSuccessResponse(
               uid: credential.user?.uid ?? '',
-              message: 'Logged in successfully',
+              message: '',
             ),
           ),
         );

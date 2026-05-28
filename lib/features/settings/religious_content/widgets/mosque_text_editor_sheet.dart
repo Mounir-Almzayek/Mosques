@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
 import '../bloc/religious_content_bloc.dart';
 import 'mosque_text_list_section.dart';
@@ -107,7 +108,8 @@ class _MosqueTextEditorSheetState extends State<MosqueTextEditorSheet> {
               ),
             ),
             const SizedBox(height: 24),
-            FilledButton.icon(
+            AppButton.elevated(
+              label: s.save,
               onPressed: () {
                 if (_textCtrl.text.trim().isEmpty) return;
                 final item = MosqueTextEntryModel(
@@ -125,14 +127,9 @@ class _MosqueTextEditorSheetState extends State<MosqueTextEditorSheet> {
                 }
                 Navigator.pop(context);
               },
-              icon: const Icon(Icons.check_rounded),
-              label: Text(s.save),
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
+              leadingIcon: Icons.check_rounded,
+              height: 48,
+              borderRadius: 14,
             ),
           ],
         ),

@@ -28,8 +28,7 @@ subprojects {
     project.evaluationDependsOn(":app")
 }
 
-// Shorebird's Flutter toolchain can fail to resolve androidx.annotation for plugin modules;
-// pulling it explicitly fixes "Could not find androidx.annotation:annotation:1.8.1" on shorebird release.
+// Some plugin modules need androidx.annotation explicitly during release builds.
 subprojects {
     plugins.withId("com.android.library") {
         dependencies.add("implementation", "androidx.annotation:annotation:1.8.2")

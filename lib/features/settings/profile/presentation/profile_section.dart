@@ -42,7 +42,7 @@ class _ProfileSectionState extends State<ProfileSection> {
           } else if (state.status == ProfileStatus.failure) {
             UnifiedSnackbar.error(
               context,
-              message: state.error ?? s.error_occurred,
+              message: _localizedProfileError(s, state.error),
             );
           }
         },
@@ -74,5 +74,13 @@ class _ProfileSectionState extends State<ProfileSection> {
         },
       ),
     );
+  }
+
+  String _localizedProfileError(S s, String? error) {
+    return switch (error) {
+      ProfileBloc.passwordTooShortError => s.profile_error_password_short,
+      ProfileBloc.phoneEmptyError => s.profile_error_phone_empty,
+      _ => error ?? s.error_occurred,
+    };
   }
 }

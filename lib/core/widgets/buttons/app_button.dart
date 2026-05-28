@@ -114,8 +114,7 @@ class AppButton extends StatelessWidget {
   // ── Text variant ─────────────────────────────────────────────────────────────
 
   Widget _buildTextButton(BuildContext context) {
-    final Color effectiveForeground =
-        foregroundColor ?? AppColors.primary;
+    final Color effectiveForeground = foregroundColor ?? AppColors.primary;
 
     return TextButton(
       onPressed: _isDisabled ? null : onPressed,
@@ -142,24 +141,24 @@ class AppButton extends StatelessWidget {
     final Color effectiveForeground = _isDisabled
         ? AppColors.mutedForeground
         : (foregroundColor ??
-            (_variant == _AppButtonVariant.outlined
-                ? AppColors.primary
-                : Colors.white));
+              (_variant == _AppButtonVariant.outlined
+                  ? AppColors.primary
+                  : Colors.white));
 
     final Color? bgColor = _variant == _AppButtonVariant.outlined
         ? (backgroundColor ?? Colors.transparent)
         : (_isDisabled
-            ? (backgroundColor ?? AppColors.muted)
-            : (backgroundColor));
+              ? (backgroundColor ?? AppColors.muted)
+              : (backgroundColor));
 
     final LinearGradient? effectiveGradient =
         (_variant == _AppButtonVariant.elevated && !_isDisabled)
-            ? (gradient ?? AppColors.primaryGradient)
-            : null;
+        ? (gradient ?? AppColors.primaryGradient)
+        : null;
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: context.isDesktop ? 120.0 : 0,
+        horizontal: expand && context.isDesktop ? 120.0 : 0,
       ),
       child: Container(
         width: expand ? (width ?? double.infinity) : width,
@@ -180,8 +179,7 @@ class AppButton extends StatelessWidget {
               ? null
               : [
                   BoxShadow(
-                    color:
-                        AppColors.primaryStart.withValues(alpha: 0.35),
+                    color: AppColors.primaryStart.withValues(alpha: 0.35),
                     blurRadius: 14,
                     offset: const Offset(0, 6),
                   ),
@@ -206,20 +204,17 @@ class AppButton extends StatelessWidget {
   // ── Shared content ────────────────────────────────────────────────────────────
 
   Widget _buildContent(BuildContext context, {required Color foreground}) {
-    final double effectiveFontSize =
-        fontSize ?? context.adaptiveFont(14.sp);
+    final double effectiveFontSize = fontSize ?? context.adaptiveFont(14.sp);
     final double iconSize = context.adaptiveIcon(16.sp);
-
-    if (leadingIcon == null && icon == null) {
-      return Text(
-        label,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
+    final textStyle =
+        (Theme.of(context).textTheme.labelLarge ?? const TextStyle()).copyWith(
           fontSize: effectiveFontSize,
           fontWeight: FontWeight.bold,
           color: foreground,
-        ),
-      );
+        );
+
+    if (leadingIcon == null && icon == null) {
+      return Text(label, overflow: TextOverflow.ellipsis, style: textStyle);
     }
 
     return Row(
@@ -231,15 +226,7 @@ class AppButton extends StatelessWidget {
           const SizedBox(width: 8),
         ],
         Flexible(
-          child: Text(
-            label,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: effectiveFontSize,
-              fontWeight: FontWeight.bold,
-              color: foreground,
-            ),
-          ),
+          child: Text(label, overflow: TextOverflow.ellipsis, style: textStyle),
         ),
         if (icon != null) ...[
           const SizedBox(width: 8),
@@ -258,10 +245,7 @@ class AppButton extends StatelessWidget {
     return SizedBox(
       width: indicatorSize,
       height: indicatorSize,
-      child: CircularProgressIndicator(
-        color: indicatorColor,
-        strokeWidth: 3,
-      ),
+      child: CircularProgressIndicator(color: indicatorColor, strokeWidth: 3),
     );
   }
 }

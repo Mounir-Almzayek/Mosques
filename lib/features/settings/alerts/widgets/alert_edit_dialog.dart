@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../data/models/mosque/announcement_model.dart';
 
 /// Dialog for creating a new alert or editing an existing one.
@@ -111,13 +112,14 @@ class _AlertEditDialogState extends State<AlertEditDialog> {
           onPressed: () => Navigator.pop(context),
           child: Text(s.cancel),
         ),
-        FilledButton(
+        AppButton.elevated(
+          label: isEditing ? s.save : s.alert_create,
           onPressed: _submit,
-          style: FilledButton.styleFrom(
-            backgroundColor: const Color(0xFF1A3C34),
-            foregroundColor: Colors.white,
-          ),
-          child: Text(isEditing ? s.save : s.alert_create),
+          height: 40,
+          borderRadius: 12,
+          backgroundColor: const Color(0xFF1A3C34),
+          expand: false,
+          useShadow: false,
         ),
       ],
     );

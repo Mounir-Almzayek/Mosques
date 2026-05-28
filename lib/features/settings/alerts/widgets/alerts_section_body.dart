@@ -175,6 +175,7 @@ class AlertsSectionBody extends StatelessWidget {
                     },
                   ),
             floatingActionButton: FloatingActionButton.extended(
+              heroTag: 'settings_alerts_fab',
               onPressed: () => _openCreateDialog(context),
               icon: const Icon(Icons.add_alert_outlined),
               label: Text(s.alert_create),
