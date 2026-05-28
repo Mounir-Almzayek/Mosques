@@ -1,0 +1,53 @@
+import 'package:flutter/material.dart';
+
+import '../../../core/styles/app_colors.dart';
+import '../../../data/models/mosque/mosque_model.dart';
+import '../presentation/sections/mosque_text_list_section.dart';
+
+class ContentPanel extends StatelessWidget {
+  final MosqueModel mosque;
+  final MosqueTextListKind kind;
+  final IconData icon;
+  final String title;
+  final ColorScheme scheme;
+
+  const ContentPanel({
+    super.key,
+    required this.mosque,
+    required this.kind,
+    required this.icon,
+    required this.title,
+    required this.scheme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final items = mosque.listByKind(kind);
+    final fullTitle = '$title (${items.length})';
+
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+        side: BorderSide(color: scheme.outlineVariant),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: ExpansionTile(
+        leading: Icon(icon, color: AppColors.primary),
+        title: Text(
+          fullTitle,
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        childrenPadding: EdgeInsets.zero,
+        children: [
+          SizedBox(
+            height: 400,
+            child: MosqueTextListSection(mosque: mosque, kind: kind),
+          ),
+        ],
+      ),
+    );
+  }
+}
