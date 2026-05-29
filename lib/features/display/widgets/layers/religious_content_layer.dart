@@ -32,6 +32,7 @@ class ReligiousContentLayer extends StatefulWidget {
 class _ReligiousContentLayerState extends State<ReligiousContentLayer>
     with SingleTickerProviderStateMixin {
   late MosqueTextEntryModel _current;
+  late bool _isQuran;
   late AnimationController _controller;
 
   static const Duration _charDuration = Duration(milliseconds: 35);
@@ -39,7 +40,9 @@ class _ReligiousContentLayerState extends State<ReligiousContentLayer>
   @override
   void initState() {
     super.initState();
-    _current = _pickSlide();
+    final slide = _pickSlide();
+    _current = slide.entry;
+    _isQuran = slide.isQuran;
     _controller = AnimationController(
       vsync: this,
       duration: _charDuration * _current.text.length,
@@ -51,7 +54,10 @@ class _ReligiousContentLayerState extends State<ReligiousContentLayer>
     super.didUpdateWidget(oldWidget);
     if (oldWidget.slideIndex != widget.slideIndex) {
       final newSlide = _pickSlide();
-      setState(() => _current = newSlide);
+      setState(() {
+        _current = newSlide.entry;
+        _isQuran = newSlide.isQuran;
+      });
       _controller
         ..duration = _charDuration * _current.text.length
         ..forward(from: 0);
@@ -64,21 +70,25 @@ class _ReligiousContentLayerState extends State<ReligiousContentLayer>
     super.dispose();
   }
 
-  /// Picks a random active entry from all content lists.
-  MosqueTextEntryModel _pickSlide() {
-    final pool = <MosqueTextEntryModel>[
-      ...widget.mosque.hadiths,
-      ...widget.mosque.verses,
-      ...widget.mosque.duas,
-      ...widget.mosque.adhkar,
-    ].where((e) => e.isActive && e.text.isNotEmpty).toList();
+  /// Picks a random active entry from all content lists, tagging whether it
+  /// came from the Qur'an verses list (so verse text uses the Uthmanic font).
+  ({MosqueTextEntryModel entry, bool isQuran}) _pickSlide() {
+    final pool = <({MosqueTextEntryModel entry, bool isQuran})>[
+      ...widget.mosque.hadiths.map((e) => (entry: e, isQuran: false)),
+      ...widget.mosque.verses.map((e) => (entry: e, isQuran: true)),
+      ...widget.mosque.duas.map((e) => (entry: e, isQuran: false)),
+      ...widget.mosque.adhkar.map((e) => (entry: e, isQuran: false)),
+    ].where((p) => p.entry.isActive && p.entry.text.isNotEmpty).toList();
 
     if (pool.isEmpty) {
-      return const MosqueTextEntryModel(
-        id: '_empty',
-        narrator: '',
-        text: '',
-        source: '',
+      return (
+        entry: const MosqueTextEntryModel(
+          id: '_empty',
+          narrator: '',
+          text: '',
+          source: '',
+        ),
+        isQuran: false,
       );
     }
 
@@ -92,10 +102,14 @@ class _ReligiousContentLayerState extends State<ReligiousContentLayer>
     final bgColor = colors.primaryValue;
     final textColor = colors.secondaryValue;
 
-    final baseStyle = AppFontLoader.getStyle(
-      widget.designSettings.fontFamily,
-      baseStyle: TextStyle(color: textColor),
-    );
+    // Verses render with a Qur'an-capable font so Uthmanic marks survive;
+    // everything else keeps the mosque's chosen display font.
+    final baseStyle = _isQuran
+        ? AppFontLoader.getQuranStyle(baseStyle: TextStyle(color: textColor))
+        : AppFontLoader.getStyle(
+            widget.designSettings.fontFamily,
+            baseStyle: TextStyle(color: textColor),
+          );
 
     return Container(
       color: bgColor,
@@ -120,7 +134,7 @@ class _ReligiousContentLayerState extends State<ReligiousContentLayer>
                     style: baseStyle.copyWith(
                       fontSize: (widget.religiousContentFontSize * 2.1)
                           .clamp(14.0, 80.0),
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w700,
                       height: 1.8,
                     ),
                     textAlign: TextAlign.center,
@@ -140,7 +154,7 @@ class _ReligiousContentLayerState extends State<ReligiousContentLayer>
                 style: baseStyle.copyWith(
                   fontSize: (widget.religiousContentFontSize * 1.1)
                       .clamp(10.0, 42.0),
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w600,
                   fontStyle: FontStyle.italic,
                 ),
                 textDirection: TextDirection.rtl,

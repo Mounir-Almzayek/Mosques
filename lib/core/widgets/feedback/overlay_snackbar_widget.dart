@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../enums/feedback/snackbar_type.dart';
 import '../../utils/responsive_layout.dart';
 import 'snackbar_config.dart';
 import 'snackbar_content.dart';
 
+/// Hosts a single toast in the root overlay.
+///
+/// The toast is anchored to the top of the screen and animates in with a
+/// smooth slide-down + fade + subtle scale (ease-out). It can be flung
+/// upward to dismiss. Top placement keeps it clear of the keyboard and
+/// bottom navigation that the settings forms rely on.
 class OverlaySnackbarWidget extends StatefulWidget {
   final String message;
   final SnackbarType type;
@@ -26,27 +31,34 @@ class OverlaySnackbarWidget extends StatefulWidget {
 
 class _OverlaySnackbarWidgetState extends State<OverlaySnackbarWidget>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<Offset> _slideAnimation;
-  late Animation<double> _fadeAnimation;
+  late final AnimationController _controller;
+  late final Animation<Offset> _slide;
+  late final Animation<double> _fade;
+  late final Animation<double> _scale;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 420),
       vsync: this,
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 1.5),
+    _slide = Tween<Offset>(
+      begin: const Offset(0, -1.15),
       end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
+    ).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
+    );
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+    _scale = Tween<double>(begin: 0.96, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
+    );
+
+    _fade = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.0, 0.5, curve: Curves.easeIn),
+        curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
       ),
     );
 
@@ -62,32 +74,43 @@ class _OverlaySnackbarWidgetState extends State<OverlaySnackbarWidget>
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      bottom: MediaQuery.of(context).padding.bottom + 24.h,
+      top: MediaQuery.of(context).padding.top + 12,
       left: widget.config.margin.left,
       right: widget.config.margin.right,
       child: SlideTransition(
-        position: _slideAnimation,
+        position: _slide,
         child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: Material(
-            color: Colors.transparent,
-            child: SafeArea(
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: context.responsive(
-                      double.infinity,
-                      tablet: 500.w,
-                      desktop: 600.w,
+          opacity: _fade,
+          child: ScaleTransition(
+            scale: _scale,
+            alignment: Alignment.topCenter,
+            child: Material(
+              color: Colors.transparent,
+              child: SafeArea(
+                bottom: false,
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: context.responsive(
+                        double.infinity,
+                        tablet: 480,
+                        desktop: 560,
+                      ),
                     ),
-                  ),
-                  child: SnackbarContent(
-                    message: widget.message,
-                    type: widget.type,
-                    showCloseButton: widget.config.showCloseButton,
-                    actionLabel: widget.config.actionLabel,
-                    onActionTap: widget.config.onActionTap,
-                    onClose: widget.onDismiss,
+                    child: Dismissible(
+                      key: const ValueKey('unified_snackbar'),
+                      direction: DismissDirection.up,
+                      onDismissed: (_) => widget.onDismiss(),
+                      child: SnackbarContent(
+                        message: widget.message,
+                        type: widget.type,
+                        duration: widget.config.duration,
+                        showCloseButton: widget.config.showCloseButton,
+                        actionLabel: widget.config.actionLabel,
+                        onActionTap: widget.config.onActionTap,
+                        onClose: widget.onDismiss,
+                      ),
+                    ),
                   ),
                 ),
               ),

@@ -84,9 +84,13 @@ class _DisplayPrayerCardState extends State<DisplayPrayerCard>
 
       final gap = (12.0 * compactFactor).clamp(0.0, maxH * 0.07);
       final iconSize = (42.0 * compactFactor * focusFactor).clamp(0.0, maxH * 0.30 * focusFactor);
-      final arSize = (widget.prayersFontSize * 1.88 * compactFactor * focusFactor).clamp(9.0, 36.0 * focusFactor);
-      final enSize = (widget.prayersFontSize * 1.22 * compactFactor * focusFactor).clamp(8.0, 26.0 * focusFactor);
-      final timeSize = (widget.prayersFontSize * 2.1 * compactFactor * focusFactor).clamp(10.0, 48.0 * focusFactor);
+      // Upper bounds track the settings slider's full range (max 56). The
+      // surrounding FittedBox(scaleDown) guards against overflow, so the
+      // ceilings only need to be high enough that the chosen font size is
+      // honoured and the focus card can grow into its extra space.
+      final arSize = (widget.prayersFontSize * 1.88 * compactFactor * focusFactor).clamp(9.0, 110.0 * focusFactor);
+      final enSize = (widget.prayersFontSize * 1.22 * compactFactor * focusFactor).clamp(8.0, 72.0 * focusFactor);
+      final timeSize = (widget.prayersFontSize * 2.1 * compactFactor * focusFactor).clamp(10.0, 124.0 * focusFactor);
 
       final cardColor = widget.isFocusCard ? colors.activeCardValue : colors.prayerOverlayValue;
       final textColor = widget.isFocusCard ? colors.activeCardTextValue : colors.inactiveCardTextValue;

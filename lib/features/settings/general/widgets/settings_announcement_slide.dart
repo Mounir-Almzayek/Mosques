@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/widgets/media/app_image.dart';
 import '../../../../data/models/platform_announcements/settings_announcement_model.dart';
 import 'settings_announcement_image_badge.dart';
 
@@ -55,11 +56,11 @@ class SettingsAnnouncementSlide extends StatelessWidget {
         ),
         if (hasImage)
           Positioned.fill(
-            child: Image.network(
+            child: AppImage.networkBackground(
               announcement.imageUrl!,
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) =>
-                  const SizedBox.shrink(),
+              placeholder: const SizedBox.shrink(),
+              errorWidget: const SizedBox.shrink(),
             ),
           ),
         Positioned.fill(

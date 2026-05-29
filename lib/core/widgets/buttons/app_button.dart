@@ -136,7 +136,7 @@ class AppButton extends StatelessWidget {
     final double effectiveRadius = borderRadius ?? 14.r;
     final borderRadiusObj = BorderRadius.circular(effectiveRadius);
     final double effectiveHeight =
-        height ?? context.responsive(48.h, tablet: 52.h, desktop: 40.h);
+        height ?? context.responsive(48.h, tablet: 52, desktop: 50);
 
     final Color effectiveForeground = _isDisabled
         ? AppColors.mutedForeground
@@ -204,8 +204,8 @@ class AppButton extends StatelessWidget {
   // ── Shared content ────────────────────────────────────────────────────────────
 
   Widget _buildContent(BuildContext context, {required Color foreground}) {
-    final double effectiveFontSize = fontSize ?? context.adaptiveFont(14.sp);
-    final double iconSize = context.adaptiveIcon(16.sp);
+    final double effectiveFontSize = fontSize ?? context.adaptiveFont(14);
+    final double iconSize = context.adaptiveIcon(16);
     final textStyle =
         (Theme.of(context).textTheme.labelLarge ?? const TextStyle()).copyWith(
           fontSize: effectiveFontSize,

@@ -98,21 +98,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     }
                   },
                 ),
-                body: IndexedStack(
-                  index: _sectionIndex,
-                  sizing: StackFit.expand,
-                  children: const [
-                    GeneralSection(),
-                    PrayerIqamaSection(),
-                    ReligiousContentSection(),
-                    DesignSection(),
-                    AnnouncementSection(),
-                    AlbumSection(),
-                    AlertsSection(),
-                    ProfileSection(),
-                    AboutSection(),
-                    UpdateSection(),
-                  ],
+                // Keep content readable on wide desktop screens by capping
+                // its width and centering it. On phones/tablets the cap is
+                // wider than the viewport, so it has no effect.
+                body: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 1000),
+                    child: IndexedStack(
+                      index: _sectionIndex,
+                      sizing: StackFit.expand,
+                      children: const [
+                        GeneralSection(),
+                        PrayerIqamaSection(),
+                        ReligiousContentSection(),
+                        DesignSection(),
+                        AnnouncementSection(),
+                        AlbumSection(),
+                        AlertsSection(),
+                        ProfileSection(),
+                        AboutSection(),
+                        UpdateSection(),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),

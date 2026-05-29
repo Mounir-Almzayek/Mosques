@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/enums/app_language.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/feedback/unified_snackbar.dart';
-import '../../../language/bloc/language/language_bloc.dart';
 import '../../core/widgets/common_widgets.dart';
 import '../../design/bloc/design_bloc.dart';
 import '../../general/bloc/general_bloc.dart';
@@ -140,34 +138,6 @@ class _PrayerIqamaSectionBodyState extends State<PrayerIqamaSectionBody> {
                         GeneralSettingChanged(
                           GeneralField.calculationMethod,
                           value,
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 12),
-                  BlocBuilder<LanguageBloc, LanguageState>(
-                    builder: (context, langState) {
-                      return ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: Text(s.settings_language),
-                        trailing: DropdownButton<AppLanguage>(
-                          value: langState.language,
-                          items: AppLanguage.values
-                              .map(
-                                (language) => DropdownMenuItem(
-                                  value: language,
-                                  child: Text(language.name),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (value) {
-                            if (value == null) return;
-
-                            generalBloc.add(LanguageChanged(value));
-                            context.read<LanguageBloc>().add(
-                              ChangeLanguage(value),
-                            );
-                          },
                         ),
                       );
                     },

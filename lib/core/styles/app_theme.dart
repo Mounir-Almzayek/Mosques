@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'app_colors.dart';
@@ -18,11 +17,15 @@ abstract final class AppTheme {
   }) {
     const double globalRadius = 14.0;
 
+    // NOTE: do not multiply by ScreenUtil's `.sp` here — `adaptiveFontSize`
+    // already returns a sensible per-breakpoint size (mobile = base,
+    // tablet ×0.8, desktop ×0.75). Applying `.sp` on top double-scales and
+    // blows the text up on desktop (where `.sp` ≈ 5×), overflowing layouts.
     double size(double base) =>
-        ResponsiveLayout.adaptiveFontSize(context, base.sp);
+        ResponsiveLayout.adaptiveFontSize(context, base);
 
     double iSize(double base) =>
-        ResponsiveLayout.adaptiveIconSize(context, base.sp);
+        ResponsiveLayout.adaptiveIconSize(context, base);
 
     final baseTextTheme = TextTheme(
       displayLarge: TextStyle(color: AppColors.primaryText, fontSize: size(57)),

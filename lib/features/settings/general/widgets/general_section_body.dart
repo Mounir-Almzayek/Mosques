@@ -3,11 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../../../core/di/service_locator.dart';
+import '../../../../core/enums/app_language.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/feedback/unified_snackbar.dart';
 import '../../../../data/models/platform_announcements/settings_announcement_model.dart';
 import '../../../../data/repositories/interfaces/platform_announcements_repository_interface.dart';
+import '../../../language/bloc/language/language_bloc.dart';
 import '../bloc/general_bloc.dart';
 import 'general_coordinates_section.dart';
 import 'settings_announcements_slider.dart';
@@ -164,6 +166,34 @@ class _GeneralSectionBodyState extends State<GeneralSectionBody> {
                       value!.isEmpty ? s.required_field : null,
                   onChanged: (value) =>
                       bloc.add(GeneralSettingChanged(GeneralField.city, value)),
+                ),
+                const SizedBox(height: 8),
+                BlocBuilder<LanguageBloc, LanguageState>(
+                  builder: (context, langState) {
+                    return ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(s.settings_language),
+                      trailing: DropdownButton<AppLanguage>(
+                        value: langState.language,
+                        items: AppLanguage.values
+                            .map(
+                              (language) => DropdownMenuItem(
+                                value: language,
+                                child: Text(language.name),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) {
+                          if (value == null) return;
+
+                          bloc.add(LanguageChanged(value));
+                          context.read<LanguageBloc>().add(
+                            ChangeLanguage(value),
+                          );
+                        },
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 16),
                 GeneralCoordinatesSection(

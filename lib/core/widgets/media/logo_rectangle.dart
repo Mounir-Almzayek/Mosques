@@ -55,8 +55,8 @@ class LogoRectangle extends StatelessWidget {
           isFlat
               ? 0
               : (big
-                    ? context.responsive(12.w, tablet: 16.w)
-                    : context.responsive(6.w, tablet: 8.w)),
+                    ? context.responsive(12.w, tablet: 16, desktop: 16)
+                    : context.responsive(6.w, tablet: 8, desktop: 10)),
         ),
         child: Center(
           child: Image.asset(

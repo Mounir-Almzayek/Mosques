@@ -155,7 +155,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               ? Icons.visibility_outlined
               : Icons.visibility_off_outlined,
           color: AppColors.mutedForeground,
-          size: context.adaptiveIcon(18.sp),
+          size: context.adaptiveIcon(18),
         ),
         onPressed: () {
           setState(() {
@@ -171,7 +171,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         color: (widget.focusBorderColor ?? AppColors.primary).withValues(
           alpha: 0.85,
         ),
-        size: context.adaptiveIcon(18.sp),
+        size: context.adaptiveIcon(18),
       );
     }
     return const SizedBox.shrink();
@@ -190,7 +190,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             child: Text(
               widget.label!,
               style: TextStyle(
-                fontSize: context.adaptiveFont(13.sp),
+                fontSize: context.adaptiveFont(13),
                 fontWeight: FontWeight.w600,
                 color: widget.labelColor ?? AppColors.primaryText,
               ),
@@ -232,7 +232,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               onFieldSubmitted: _handleFieldSubmitted,
               onEditingComplete: widget.onEditingComplete,
               style: TextStyle(
-                fontSize: context.adaptiveFont(14.sp),
+                fontSize: context.adaptiveFont(14),
                 color: widget.textColor ?? AppColors.primaryText,
                 fontWeight: FontWeight.w500,
               ),
@@ -240,18 +240,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 filled: true,
                 hintText: widget.hintText,
                 hintStyle: TextStyle(
-                  fontSize: context.adaptiveFont(14.sp),
+                  fontSize: context.adaptiveFont(14),
                   color: AppColors.mutedForeground,
                 ),
                 prefixIcon: widget.prefixIcon,
                 suffixIcon: _buildEffectiveSuffixIcon(context),
                 contentPadding: EdgeInsets.symmetric(
-                  horizontal: 16.w,
-                  vertical: context.responsive(
-                    14.h,
-                    tablet: 16.h,
-                    desktop: 18.h,
-                  ),
+                  horizontal: context.responsive(16.w, tablet: 16, desktop: 16),
+                  vertical: context.responsive(14.h, tablet: 16, desktop: 16),
                 ),
                 fillColor: widget.fillColor ??
                     (widget.enabled ? Colors.white : AppColors.muted),
