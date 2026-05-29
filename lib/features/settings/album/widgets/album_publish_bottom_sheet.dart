@@ -57,7 +57,7 @@ class _AlbumPublishBottomSheetState extends State<AlbumPublishBottomSheet> {
             borderRadius: BorderRadius.circular(12),
             child: SizedBox(
               height: 160,
-              child: CachedImage(url: widget.url, fit: BoxFit.cover),
+              child: AppImage.network(widget.url, fit: BoxFit.cover),
             ),
           ),
           const SizedBox(height: 20),
