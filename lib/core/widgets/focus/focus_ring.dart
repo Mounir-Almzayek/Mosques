@@ -2,11 +2,47 @@ import 'package:flutter/material.dart';
 
 import '../../styles/app_colors.dart';
 
-/// The single source of truth for "what a focused control looks like" on
-/// TV / keyboard navigation. Presentational only — does not handle taps.
-///
-/// Uses [FocusableActionDetector.onShowFocusHighlight] so the ring appears
-/// for directional/keyboard focus but NOT for casual pointer taps.
+/// Presentational focus highlight — the single source of truth for what a
+/// focused control looks like (ring + subtle scale). Pure visual; owns no
+/// focus node. [active] is driven by the focusable parent.
+class FocusHighlightBox extends StatelessWidget {
+  final bool active;
+  final BorderRadius borderRadius;
+  final Widget child;
+
+  const FocusHighlightBox({
+    super.key,
+    required this.active,
+    required this.borderRadius,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedScale(
+      duration: const Duration(milliseconds: 140),
+      curve: Curves.easeOutCubic,
+      scale: active ? 1.04 : 1.0,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 140),
+        curve: Curves.easeOutCubic,
+        key: active ? const ValueKey('focus_ring_highlight') : null,
+        decoration: BoxDecoration(
+          borderRadius: borderRadius,
+          border: Border.all(
+            color: active ? AppColors.focusRing : Colors.transparent,
+            width: 3,
+          ),
+        ),
+        child: child,
+      ),
+    );
+  }
+}
+
+/// Wraps a child so it shows the standard focus highlight when it gains
+/// directional/keyboard (traditional) focus. Highlight-only — does not handle
+/// activation; use [AppFocusable] for tappable controls.
 class FocusRing extends StatefulWidget {
   final Widget child;
   final BorderRadius borderRadius;
@@ -39,28 +75,14 @@ class _FocusRingState extends State<FocusRing> {
       autofocus: widget.autofocus,
       enabled: widget.enabled,
       onShowFocusHighlight: (v) {
-        // Fired for traditional (keyboard/directional) focus highlighting.
         if (v == _showHighlight) return;
         setState(() => _showHighlight = v);
         widget.onFocusChange?.call(v);
       },
-      child: AnimatedScale(
-        duration: const Duration(milliseconds: 140),
-        curve: Curves.easeOutCubic,
-        scale: _showHighlight ? 1.04 : 1.0,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 140),
-          curve: Curves.easeOutCubic,
-          key: _showHighlight ? const ValueKey('focus_ring_highlight') : null,
-          decoration: BoxDecoration(
-            borderRadius: widget.borderRadius,
-            border: Border.all(
-              color: _showHighlight ? AppColors.focusRing : Colors.transparent,
-              width: 3,
-            ),
-          ),
-          child: widget.child,
-        ),
+      child: FocusHighlightBox(
+        active: _showHighlight,
+        borderRadius: widget.borderRadius,
+        child: widget.child,
       ),
     );
   }
