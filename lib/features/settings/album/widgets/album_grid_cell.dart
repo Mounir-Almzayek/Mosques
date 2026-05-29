@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/widgets/focus/focus_widgets.dart';
 import '../../../../core/widgets/media/media_widgets.dart';
 
 class AlbumGridCell extends StatelessWidget {
@@ -18,8 +19,9 @@ class AlbumGridCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
+    return AppFocusable(
+      onPressed: onTap,
+      borderRadius: BorderRadius.circular(12),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: Stack(
