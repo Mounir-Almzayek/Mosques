@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../core/constants/firestore_schema.dart';
 import '../../../core/enums/app_mode.dart';
+import '../../../core/services/hive_service.dart';
 import '../../../core/services/storage_service.dart';
 import '../../../data/repositories/interfaces/auth_repository_interface.dart';
-import '../../../data/repositories/mosque_local_repository.dart';
 import 'user_active_mosque_repository.dart';
 
 class AuthRepository implements IAuthRepository {
@@ -52,7 +52,7 @@ class AuthRepository implements IAuthRepository {
   Future<void> logout() async {
     await _auth.signOut();
     await UserActiveMosqueRepository.clearLocalCache();
-    await MosqueLocalRepository.clearCache();
+    await HiveService.deleteData(FirestoreSchema.activeMosqueCacheKey);
   }
 
   @override

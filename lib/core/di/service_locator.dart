@@ -10,6 +10,7 @@ import '../../data/repositories/interfaces/app_settings_repository_interface.dar
 import '../../data/repositories/interfaces/auth_repository_interface.dart';
 import '../../data/repositories/interfaces/mosque_repository_interface.dart';
 import '../../data/repositories/interfaces/platform_announcements_repository_interface.dart';
+import '../../data/models/mosque/mosque_model.dart';
 import '../../data/repositories/mosque_repository.dart';
 import '../../data/repositories/platform_announcements_repository.dart';
 import '../../features/auth/auth.dart' show AuthRepository, UserActiveMosqueRepository;
@@ -42,6 +43,13 @@ void setupServiceLocator() {
       firestore: sl<FirebaseFirestore>(),
       getActiveMosqueId: () => sl<IAuthRepository>().getActiveMosqueId(),
       syncActiveMosque: (uid) => UserActiveMosqueRepository.syncBestEffort(uid),
+      cache: JsonCache<MosqueModel>(
+        store: sl<ICacheStore>(),
+        cacheKey: FirestoreSchema.activeMosqueCacheKey,
+        toJson: (m) => {'id': m.id, ...m.toMap()},
+        fromJson: (m) => MosqueModel.fromMap(m, m['id']?.toString() ?? ''),
+      ),
+      imageSync: sl<ImageSyncService>(),
     ),
   );
 
