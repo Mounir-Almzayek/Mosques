@@ -4,6 +4,7 @@ import '../../../core/di/service_locator.dart';
 import '../../../core/enums/app_mode.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/widgets/focus/focus_widgets.dart';
 import '../../../core/widgets/navigation/zoom_drawer.dart';
 import '../../../data/models/mosque/mosque_model.dart';
 import '../../../data/repositories/interfaces/auth_repository_interface.dart';
@@ -64,7 +65,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
         return ListenableBuilder(
           listenable: _drawerController,
           builder: (context, _) {
-            return ZoomDrawer(
+            return TvNavigationScope(
+              onDismiss: () {
+                if (_drawerController.isOpen) {
+                  _drawerController.close();
+                } else if (Navigator.of(context).canPop()) {
+                  Navigator.of(context).pop();
+                }
+              },
+              child: ZoomDrawer(
               controller: _drawerController,
               menuScreen: SettingsZoomDrawerContent(
                 selectedIndex: _sectionIndex,
@@ -113,6 +122,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ],
                 ),
               ),
+            ),
             );
           },
         );
