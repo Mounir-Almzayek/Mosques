@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/widgets/media/media_widgets.dart';
 import '../../../../core/enums/display_background_type.dart';
 import '../../../../core/utils/color_parser.dart';
 import '../../../../data/models/design/design_background_settings.dart';
@@ -101,14 +101,10 @@ class _DisplayBackgroundImageState extends State<DisplayBackgroundImage> {
           decoration: BoxDecoration(color: widget.fallbackColor),
           child: const SizedBox.expand(),
         ),
-        CachedNetworkImage(
-          imageUrl: url,
-          fit: BoxFit.cover,
-          width: double.infinity,
-          height: double.infinity,
-          fadeInDuration: const Duration(milliseconds: 500),
-          placeholder: (context, url) => const SizedBox.shrink(),
-          errorWidget: (context, url, error) => DecoratedBox(
+        AppImage.networkBackground(
+          url,
+          placeholder: const SizedBox.shrink(),
+          errorWidget: DecoratedBox(
             decoration: BoxDecoration(color: widget.fallbackColor),
             child: const SizedBox.expand(),
           ),
@@ -142,15 +138,11 @@ class _DisplayBackgroundImageState extends State<DisplayBackgroundImage> {
         ),
         AnimatedSwitcher(
           duration: _kAlbumCrossfadeDuration,
-          child: CachedNetworkImage(
+          child: AppImage.networkBackground(
+            currentUrl,
             key: ValueKey(currentUrl),
-            imageUrl: currentUrl,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-            fadeInDuration: const Duration(milliseconds: 300),
-            placeholder: (context, url) => const SizedBox.shrink(),
-            errorWidget: (context, url, error) => DecoratedBox(
+            placeholder: const SizedBox.shrink(),
+            errorWidget: DecoratedBox(
               decoration: BoxDecoration(color: widget.fallbackColor),
               child: const SizedBox.expand(),
             ),

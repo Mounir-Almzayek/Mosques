@@ -1,5 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/widgets/media/media_widgets.dart';
 
 /// Fullscreen album image display overlay (priority 2).
 ///
@@ -24,29 +24,19 @@ class AlbumImageLayer extends StatelessWidget {
       body: SizedBox(
         width: double.infinity,
         height: double.infinity,
-        child: CachedNetworkImage(
-          imageUrl: imageUrl,
+        child: AppImage.networkBackground(
+          imageUrl,
           fit: fit,
-          width: double.infinity,
-          height: double.infinity,
-          fadeInDuration: const Duration(milliseconds: 300),
-          progressIndicatorBuilder: (context, url, progress) {
-            return Center(
-              child: CircularProgressIndicator(
-                value: progress.progress,
-                color: Colors.white70,
-              ),
-            );
-          },
-          errorWidget: (context, url, error) {
-            return const Center(
-              child: Icon(
-                Icons.broken_image_rounded,
-                size: 80,
-                color: Colors.white38,
-              ),
-            );
-          },
+          placeholder: const Center(
+            child: CircularProgressIndicator(color: Colors.white70),
+          ),
+          errorWidget: const Center(
+            child: Icon(
+              Icons.broken_image_rounded,
+              size: 80,
+              color: Colors.white38,
+            ),
+          ),
         ),
       ),
     );
