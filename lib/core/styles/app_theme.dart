@@ -94,6 +94,7 @@ abstract final class AppTheme {
       useMaterial3: true,
       fontFamily: 'Beiruti',
       primaryColor: AppColors.primary,
+      focusColor: AppColors.focusRing.withValues(alpha: 0.24),
       scaffoldBackgroundColor: AppColors.background,
       colorScheme: scheme,
       textTheme: textTheme,
@@ -181,6 +182,7 @@ abstract final class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           foregroundColor: AppColors.brightWhite,
+          overlayColor: AppColors.focusRing.withValues(alpha: 0.22),
           elevation: 0,
           minimumSize: const Size(double.infinity, 52),
           shape: RoundedRectangleBorder(
