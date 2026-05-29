@@ -32,12 +32,6 @@ class FocusRing extends StatefulWidget {
 class _FocusRingState extends State<FocusRing> {
   bool _showHighlight = false;
 
-  void _onFocusChange(bool focused) {
-    if (focused == _showHighlight) return;
-    setState(() => _showHighlight = focused);
-    widget.onFocusChange?.call(focused);
-  }
-
   @override
   Widget build(BuildContext context) {
     return FocusableActionDetector(
@@ -49,11 +43,6 @@ class _FocusRingState extends State<FocusRing> {
         if (v == _showHighlight) return;
         setState(() => _showHighlight = v);
         widget.onFocusChange?.call(v);
-      },
-      onFocusChange: (focused) {
-        // Also respond to direct focus changes (e.g. programmatic requestFocus),
-        // so the ring is visible whenever the node is focused.
-        _onFocusChange(focused);
       },
       child: AnimatedScale(
         duration: const Duration(milliseconds: 140),

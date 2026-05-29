@@ -17,6 +17,7 @@ void main() {
 
     expect(find.byKey(const ValueKey('focus_ring_highlight')), findsNothing);
 
+    FocusManager.instance.highlightStrategy = FocusHighlightStrategy.alwaysTraditional;
     node.requestFocus();
     await tester.pumpAndSettle();
 
