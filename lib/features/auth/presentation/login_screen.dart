@@ -9,6 +9,7 @@ import '../../../core/styles/app_colors.dart';
 import '../../../core/utils/responsive_layout.dart';
 import '../../../core/widgets/buttons/app_button.dart';
 import '../../../core/widgets/feedback/unified_snackbar.dart';
+import '../../../core/widgets/focus/focus_widgets.dart';
 import '../../../core/widgets/forms/custom_text_field.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../bloc/login/login_bloc.dart';
@@ -68,7 +69,8 @@ class _LoginScreenState extends State<LoginScreen> {
         statusBarIconBrightness: Brightness.dark,
       ),
       child: Scaffold(
-        body: Container(
+        body: TvNavigationScope(
+          child: Container(
           width: double.infinity,
           height: double.infinity,
           decoration: const BoxDecoration(
@@ -260,6 +262,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         controller: _emailController,
                                         focusNode: _emailFocusNode,
                                         nextFocusNode: _passwordFocusNode,
+                                        autofocus: true,
                                         keyboardType:
                                             TextInputType.emailAddress,
                                         textInputAction: TextInputAction.next,
@@ -361,6 +364,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ],
           ),
+        ),
         ),
       ),
     );
