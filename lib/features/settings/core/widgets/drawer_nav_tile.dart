@@ -6,6 +6,7 @@ class DrawerNavTile extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
+  final bool autofocus;
 
   const DrawerNavTile({
     super.key,
@@ -14,6 +15,7 @@ class DrawerNavTile extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.onTap,
+    this.autofocus = false,
   });
 
   @override
@@ -32,6 +34,7 @@ class DrawerNavTile extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
+            autofocus: autofocus,
             borderRadius: BorderRadius.circular(14),
             onTap: onTap,
             splashColor: Colors.white.withValues(alpha: 0.08),

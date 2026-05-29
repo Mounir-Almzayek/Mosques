@@ -36,6 +36,11 @@ abstract final class AppColors {
 
   static const Color textOnPrimary = Color(0xFFFFFFFF);
 
+  // —— Focus ——
+  /// High-contrast ring used to mark the focused control for TV remote /
+  /// keyboard navigation. Brightened brand teal so it reads at a distance.
+  static const Color focusRing = Color(0xFF2DD4BF);
+
   // —— States ——
   static const Color error = Color(0xFFC53030);
   static const Color success = Color(0xFF2D6A4F);

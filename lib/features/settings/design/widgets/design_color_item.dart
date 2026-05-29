@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
+import '../../../../core/widgets/focus/focus_widgets.dart';
 import '../../../../core/utils/color_converter.dart';
 
 class DesignColorItem extends StatelessWidget {
@@ -76,8 +77,10 @@ class DesignColorItem extends StatelessWidget {
           fontFamily: 'monospace',
         ),
       ),
-      trailing: GestureDetector(
-        onTap: () => _showColorPicker(context),
+      trailing: AppFocusable(
+        onPressed: () => _showColorPicker(context),
+        borderRadius: BorderRadius.circular(10),
+        semanticLabel: label,
         child: Container(
           width: 44,
           height: 44,

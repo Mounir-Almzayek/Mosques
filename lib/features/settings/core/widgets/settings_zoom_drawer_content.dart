@@ -180,6 +180,7 @@ class _SettingsZoomDrawerContentState extends State<SettingsZoomDrawerContent>
             // Nav items
             Expanded(
               child: ListView.builder(
+                key: ValueKey(widget.isOpen),
                 padding: const EdgeInsets.only(bottom: 8),
                 itemCount: _itemCount,
                 itemBuilder: (context, i) {
@@ -192,6 +193,7 @@ class _SettingsZoomDrawerContentState extends State<SettingsZoomDrawerContent>
                         selectedIndex: widget.selectedIndex,
                         icon: navItems[i].$1,
                         label: navItems[i].$2,
+                        autofocus: widget.isOpen && i == widget.selectedIndex,
                         onTap: () => widget.onSelectSection(i),
                       ),
                     ),

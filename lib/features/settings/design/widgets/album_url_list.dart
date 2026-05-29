@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/widgets/forms/custom_text_field.dart';
 import 'album_url_add_card.dart';
 import 'album_url_empty_state.dart';
 import 'album_url_image_card.dart';
@@ -26,13 +27,12 @@ class AlbumUrlList extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(S.of(context).photo_studio_add_url),
-        content: TextField(
+        content: CustomTextField(
           controller: controller,
-          decoration: InputDecoration(
-            hintText: 'https://example.com/image.jpg',
-            labelText: S.of(context).url_label,
-          ),
+          hintText: 'https://example.com/image.jpg',
+          label: S.of(context).url_label,
           keyboardType: TextInputType.url,
+          textInputAction: TextInputAction.done,
           autofocus: true,
         ),
         actions: [
