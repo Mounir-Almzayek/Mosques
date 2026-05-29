@@ -78,6 +78,8 @@ dependencies:
   flutter_colorpicker: ^1.1.0
   wakelock_plus: ^1.5.1
   path_provider: ^2.1.5
+  crypto: ^3.0.5
+  http: ^1.2.0
 
 dev_dependencies:
   flutter_test:
