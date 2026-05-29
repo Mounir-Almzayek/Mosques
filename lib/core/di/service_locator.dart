@@ -10,7 +10,9 @@ import '../../data/repositories/interfaces/app_settings_repository_interface.dar
 import '../../data/repositories/interfaces/auth_repository_interface.dart';
 import '../../data/repositories/interfaces/mosque_repository_interface.dart';
 import '../../data/repositories/interfaces/platform_announcements_repository_interface.dart';
+import '../../data/models/mosque/announcement_model.dart';
 import '../../data/models/mosque/mosque_model.dart';
+import '../../data/models/platform_announcements/settings_announcement_model.dart';
 import '../../data/repositories/mosque_repository.dart';
 import '../../data/repositories/platform_announcements_repository.dart';
 import '../../features/auth/auth.dart' show AuthRepository, UserActiveMosqueRepository;
@@ -69,6 +71,52 @@ void setupServiceLocator() {
 
   // Platform Announcements
   sl.registerLazySingleton<IPlatformAnnouncementsRepository>(
-    () => PlatformAnnouncementsRepository(firestore: sl<FirebaseFirestore>()),
+    () => PlatformAnnouncementsRepository(
+      firestore: sl<FirebaseFirestore>(),
+      displayCache: JsonCache<List<AnnouncementModel>>(
+        store: sl<ICacheStore>(),
+        cacheKey: FirestoreSchema.platformAnnouncementsCacheKey,
+        toJson: (list) =>
+            {'items': list.map((a) => {...a.toMap(), 'id': a.id}).toList()},
+        fromJson: (m) => (m['items'] as List? ?? const [])
+            .whereType<Map>()
+            .map((e) {
+              final map = Map<String, dynamic>.from(e);
+              final conv = <String, dynamic>{};
+              map.forEach((k, v) {
+                conv[k] =
+                    (k == 'start_date' ||
+                                k == 'end_date' ||
+                                k == 'created_at') &&
+                            v is int
+                        ? Timestamp.fromMillisecondsSinceEpoch(v)
+                        : v;
+              });
+              return AnnouncementModel.fromMap(
+                  conv, conv['id']?.toString() ?? '');
+            })
+            .toList(),
+      ),
+      settingsCache: JsonCache<List<SettingsAnnouncementModel>>(
+        store: sl<ICacheStore>(),
+        cacheKey: FirestoreSchema.settingsAnnouncementsCacheKey,
+        toJson: (list) => {'items': list.map((a) => a.toMap()).toList()},
+        fromJson: (m) => (m['items'] as List? ?? const [])
+            .whereType<Map>()
+            .map((e) {
+              final map = Map<String, dynamic>.from(e);
+              final conv = <String, dynamic>{};
+              map.forEach((k, v) {
+                conv[k] =
+                    (k == 'start_date' || k == 'end_date') && v is int
+                        ? Timestamp.fromMillisecondsSinceEpoch(v)
+                        : v;
+              });
+              return SettingsAnnouncementModel.fromMap(
+                  conv, conv['id']?.toString() ?? '');
+            })
+            .toList(),
+      ),
+    ),
   );
 }
