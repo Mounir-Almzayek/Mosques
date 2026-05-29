@@ -10,7 +10,6 @@ import '../../data/repositories/interfaces/app_settings_repository_interface.dar
 import '../../data/repositories/interfaces/auth_repository_interface.dart';
 import '../../data/repositories/interfaces/mosque_repository_interface.dart';
 import '../../data/repositories/interfaces/platform_announcements_repository_interface.dart';
-import '../../data/models/mosque/announcement_model.dart';
 import '../../data/models/mosque/mosque_model.dart';
 import '../../data/models/platform_announcements/settings_announcement_model.dart';
 import '../../data/repositories/mosque_repository.dart';
