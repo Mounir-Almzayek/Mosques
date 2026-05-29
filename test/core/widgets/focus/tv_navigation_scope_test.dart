@@ -28,6 +28,12 @@ void main() {
         body: TvNavigationScope(child: const SizedBox(width: 40, height: 40)),
       ),
     ));
-    expect(find.byType(FocusTraversalGroup), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(TvNavigationScope),
+        matching: find.byType(FocusTraversalGroup),
+      ),
+      findsOneWidget,
+    );
   });
 }
