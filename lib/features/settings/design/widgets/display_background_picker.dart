@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/widgets/focus/focus_widgets.dart';
 import '../../../../core/widgets/media/media_widgets.dart';
 
 /// Grid picker for selecting a background image from a list of remote URLs.
@@ -64,8 +65,9 @@ class DisplayBackgroundPicker extends StatelessWidget {
           final isSelected = selectedValue == url;
           final color = Theme.of(context).primaryColor;
 
-          return GestureDetector(
-            onTap: () => onSelected(url),
+          return AppFocusable(
+            onPressed: () => onSelected(url),
+            borderRadius: BorderRadius.circular(14),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 250),
               padding: const EdgeInsets.all(4),
