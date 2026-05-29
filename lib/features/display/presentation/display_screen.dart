@@ -32,6 +32,7 @@ class DisplayScreen extends StatefulWidget {
 
 class _DisplayScreenState extends State<DisplayScreen> {
   Timer? _tickTimer;
+  bool _religiousCycleStarted = false;
   final DisplayLayerController _layerController = DisplayLayerController();
   late PrayerTimesHelper _helper;
   final ValueNotifier<DateTime> _now = ValueNotifier(DateTime.now());
@@ -109,7 +110,13 @@ class _DisplayScreenState extends State<DisplayScreen> {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
               _updateLayerInputs();
-              _layerController.startReligiousCycle();
+              // Start the rotating religious-content cycle exactly once. Calling
+              // it on every rebuild would reset the wait timer before it can
+              // fire, so religious content would never appear.
+              if (!_religiousCycleStarted) {
+                _religiousCycleStarted = true;
+                _layerController.startReligiousCycle();
+              }
             }
           });
 
