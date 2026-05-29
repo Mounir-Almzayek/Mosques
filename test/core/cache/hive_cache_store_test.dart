@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 import 'package:Tebyan/core/cache/hive_cache_store.dart';
@@ -24,16 +23,16 @@ void main() {
     final out = await store.read('k');
     expect(out, {'a': 1, 'b': 'text'});
   });
-  test('sanitizes Firestore Timestamp to millisecondsSinceEpoch on write', () async {
-    final ts = Timestamp.fromMillisecondsSinceEpoch(1730000000000);
-    await store.write('k', {'created': ts, 'nested': {'when': ts}});
+  test('sanitizes DateTime to millisecondsSinceEpoch on write', () async {
+    final dt = DateTime.fromMillisecondsSinceEpoch(1730000000000);
+    await store.write('k', {'created': dt, 'nested': {'when': dt}});
     final out = await store.read('k');
     expect(out!['created'], 1730000000000);
     expect((out['nested'] as Map)['when'], 1730000000000);
   });
-  test('sanitizes Timestamp inside lists', () async {
-    final ts = Timestamp.fromMillisecondsSinceEpoch(42);
-    await store.write('k', {'list': [{'t': ts}]});
+  test('sanitizes DateTime inside lists', () async {
+    final dt = DateTime.fromMillisecondsSinceEpoch(42);
+    await store.write('k', {'list': [{'t': dt}]});
     final out = await store.read('k');
     expect(((out!['list'] as List).first as Map)['t'], 42);
   });

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
 import '../services/hive_service.dart';
 import 'i_cache_store.dart';
@@ -6,13 +5,12 @@ import 'i_cache_store.dart';
 /// Hive-backed [ICacheStore].
 ///
 /// This is the SINGLE place that converts non-Hive-storable values
-/// (Firestore [Timestamp], [DateTime]) into primitives. Repositories no
-/// longer duplicate `_sanitizeForHive`.
+/// ([DateTime]) into primitives. Repositories no longer duplicate
+/// `_sanitizeForHive`.
 class HiveCacheStore implements ICacheStore {
   final Box? _injectedBox;
   HiveCacheStore({Box? box}) : _injectedBox = box;
   static dynamic _sanitize(dynamic value) {
-    if (value is Timestamp) return value.millisecondsSinceEpoch;
     if (value is DateTime) return value.millisecondsSinceEpoch;
     if (value is Map) {
       final m = <String, dynamic>{};

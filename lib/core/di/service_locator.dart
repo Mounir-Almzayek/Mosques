@@ -4,6 +4,8 @@ import 'package:get_it/get_it.dart';
 
 import '../cache/cache.dart';
 import '../constants/firestore_schema.dart';
+import '../realtime/realtime_transport.dart';
+import '../realtime/firestore_transport.dart';
 import '../../data/models/app/app_settings_model.dart';
 import '../../data/repositories/app_settings_repository.dart';
 import '../../data/repositories/interfaces/app_settings_repository_interface.dart';
@@ -23,6 +25,11 @@ void setupServiceLocator() {
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   sl.registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance);
 
+  // Real-time data transport (the only Firestore-aware data-layer component)
+  sl.registerLazySingleton<RealtimeTransport>(
+    () => FirestoreTransport(sl<FirebaseFirestore>()),
+  );
+
   // Cache infrastructure
   sl.registerLazySingleton<ICacheStore>(() => HiveCacheStore());
   sl.registerLazySingleton<OfflineImageStore>(() => OfflineImageStore());
@@ -41,7 +48,7 @@ void setupServiceLocator() {
   // Mosque
   sl.registerLazySingleton<IMosqueRepository>(
     () => MosqueRepository(
-      firestore: sl<FirebaseFirestore>(),
+      transport: sl<RealtimeTransport>(),
       getActiveMosqueId: () => sl<IAuthRepository>().getActiveMosqueId(),
       syncActiveMosque: (uid) => UserActiveMosqueRepository.syncBestEffort(uid),
       cache: JsonCache<MosqueModel>(
@@ -57,7 +64,7 @@ void setupServiceLocator() {
   // App Settings
   sl.registerLazySingleton<IAppSettingsRepository>(
     () => AppSettingsRepository(
-      firestore: sl<FirebaseFirestore>(),
+      transport: sl<RealtimeTransport>(),
       cache: JsonCache<AppSettingsModel>(
         store: sl<ICacheStore>(),
         cacheKey: FirestoreSchema.appSettingsCacheKey,
@@ -71,7 +78,7 @@ void setupServiceLocator() {
   // Platform Announcements
   sl.registerLazySingleton<IPlatformAnnouncementsRepository>(
     () => PlatformAnnouncementsRepository(
-      firestore: sl<FirebaseFirestore>(),
+      transport: sl<RealtimeTransport>(),
       displayCache: JsonCache<List<AnnouncementModel>>(
         store: sl<ICacheStore>(),
         cacheKey: FirestoreSchema.platformAnnouncementsCacheKey,
@@ -81,18 +88,8 @@ void setupServiceLocator() {
             .whereType<Map>()
             .map((e) {
               final map = Map<String, dynamic>.from(e);
-              final conv = <String, dynamic>{};
-              map.forEach((k, v) {
-                conv[k] =
-                    (k == 'start_date' ||
-                                k == 'end_date' ||
-                                k == 'created_at') &&
-                            v is int
-                        ? Timestamp.fromMillisecondsSinceEpoch(v)
-                        : v;
-              });
               return AnnouncementModel.fromMap(
-                  conv, conv['id']?.toString() ?? '');
+                  map, map['id']?.toString() ?? '');
             })
             .toList(),
       ),
@@ -104,15 +101,8 @@ void setupServiceLocator() {
             .whereType<Map>()
             .map((e) {
               final map = Map<String, dynamic>.from(e);
-              final conv = <String, dynamic>{};
-              map.forEach((k, v) {
-                conv[k] =
-                    (k == 'start_date' || k == 'end_date') && v is int
-                        ? Timestamp.fromMillisecondsSinceEpoch(v)
-                        : v;
-              });
               return SettingsAnnouncementModel.fromMap(
-                  conv, conv['id']?.toString() ?? '');
+                  map, map['id']?.toString() ?? '');
             })
             .toList(),
       ),
