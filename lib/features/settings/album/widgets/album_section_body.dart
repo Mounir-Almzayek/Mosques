@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/widgets/feedback/unified_snackbar.dart';
+import '../../../../core/widgets/forms/custom_text_field.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
 import '../bloc/album_bloc.dart';
 import 'album_empty_state.dart';
@@ -31,13 +32,12 @@ class AlbumSectionBody extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(s.album_add_url),
-        content: TextField(
+        content: CustomTextField(
           controller: controller,
           autofocus: true,
           keyboardType: TextInputType.url,
-          decoration: const InputDecoration(
-            hintText: 'https://example.com/image.jpg',
-          ),
+          textInputAction: TextInputAction.done,
+          hintText: 'https://example.com/image.jpg',
         ),
         actions: [
           TextButton(

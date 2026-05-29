@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
+import '../../../../core/widgets/forms/custom_text_field.dart';
 import '../bloc/profile_bloc.dart';
 
 class ProfileActionCard extends StatefulWidget {
@@ -43,14 +44,13 @@ class _ProfileActionCardState extends State<ProfileActionCard> {
               ),
             ),
             const SizedBox(height: 16),
-            TextField(
+            CustomTextField(
               controller: widget.passwordController,
-              obscureText: true,
+              isPassword: true,
               enabled: !isLoading,
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.lock_outline, color: primary),
-                hintText: s.password_hint,
-              ),
+              hintText: s.password_hint,
+              textInputAction: TextInputAction.done,
+              prefixIcon: Icon(Icons.lock_outline, color: primary),
             ),
             const SizedBox(height: 20),
             SwitchListTile(
