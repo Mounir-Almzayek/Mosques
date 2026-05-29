@@ -1,46 +1,41 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../core/cache/cache.dart';
 import '../../core/constants/firestore_schema.dart';
 import '../models/mosque/announcement_model.dart';
 import '../models/platform_announcements/settings_announcement_model.dart';
 import 'interfaces/platform_announcements_repository_interface.dart';
-import 'platform_announcements_local_repository.dart';
 
 /// Platform-wide announcements (all mosques) managed externally.
 class PlatformAnnouncementsRepository
     implements IPlatformAnnouncementsRepository {
-  final FirebaseFirestore _firestore;
+  final FirebaseFirestore? _firestore;
+  final JsonCache<List<AnnouncementModel>> _displayCache;
+  final CacheFirstLoader<List<AnnouncementModel>> _displayLoader;
+  final CacheFirstLoader<List<SettingsAnnouncementModel>>? _settingsLoader;
+  final Stream<List<AnnouncementModel>?> Function()? _displayRemoteOverride;
 
-  PlatformAnnouncementsRepository({required FirebaseFirestore firestore})
-    : _firestore = firestore;
+  PlatformAnnouncementsRepository({
+    required FirebaseFirestore firestore,
+    required JsonCache<List<AnnouncementModel>> displayCache,
+    required JsonCache<List<SettingsAnnouncementModel>> settingsCache,
+  })  : _firestore = firestore,
+        _displayCache = displayCache,
+        _displayLoader = CacheFirstLoader(displayCache),
+        _settingsLoader = CacheFirstLoader(settingsCache),
+        _displayRemoteOverride = null;
+
+  PlatformAnnouncementsRepository.forTest({
+    required JsonCache<List<AnnouncementModel>> displayCache,
+    Stream<List<AnnouncementModel>?> Function()? displayRemote,
+  })  : _firestore = null,
+        _displayCache = displayCache,
+        _displayLoader = CacheFirstLoader(displayCache),
+        _settingsLoader = null,
+        _displayRemoteOverride = displayRemote;
 
   bool _isInWindow(AnnouncementModel a, DateTime now) {
     return a.isActive && !a.startDate.isAfter(now) && a.endDate.isAfter(now);
-  }
-
-  @override
-  Stream<List<AnnouncementModel>> watchActiveForDisplay() {
-    return _firestore
-        .collection(FirestoreSchema.platformAnnouncementsCollection)
-        .snapshots()
-        .asyncMap((snap) async {
-          final now = DateTime.now();
-          final list =
-              snap.docs
-                  .where(
-                    (d) => d.id != FirestoreSchema.settingsAnnouncementsDocId,
-                  )
-                  .map((d) => AnnouncementModel.fromMap(d.data(), d.id))
-                  .where((a) => _isInWindow(a, now))
-                  .toList()
-                ..sort((a, b) => a.order.compareTo(b.order));
-
-          await PlatformAnnouncementsLocalRepository.saveAnnouncements(list);
-          return list;
-        })
-        .handleError((_) async {
-          return await PlatformAnnouncementsLocalRepository.getCached() ?? [];
-        });
   }
 
   List<SettingsAnnouncementModel> _settingsListFromData(
@@ -67,63 +62,74 @@ class PlatformAnnouncementsRepository
       ..sort((a, b) => a.order.compareTo(b.order));
   }
 
-  @override
-  Stream<List<SettingsAnnouncementModel>> watchSettingsAnnouncements() {
-    final docRef = _firestore
+  Stream<List<AnnouncementModel>?> _displayFirestoreStream() {
+    return _firestore!
         .collection(FirestoreSchema.platformAnnouncementsCollection)
-        .doc(FirestoreSchema.settingsAnnouncementsDocId);
-
-    return Stream<List<SettingsAnnouncementModel>>.multi((controller) {
-      final sub = docRef.snapshots().listen(
-        (doc) async {
-          final list = _settingsListFromData(doc.data());
-          if (list.isNotEmpty) {
-            await PlatformAnnouncementsLocalRepository.saveSettingsAnnouncements(
-              list,
-            );
-          }
-          if (!controller.isClosed) {
-            controller.add(
-              list.isNotEmpty
-                  ? list
-                  : await PlatformAnnouncementsLocalRepository.getCachedSettingsAnnouncements() ??
-                        [],
-            );
-          }
-        },
-        onError: (Object error, StackTrace stackTrace) async {
-          if (!controller.isClosed) {
-            controller.add(
-              await PlatformAnnouncementsLocalRepository.getCachedSettingsAnnouncements() ??
-                  [],
-            );
-          }
-        },
-      );
-
-      controller.onCancel = () => sub.cancel();
-    });
-  }
-
-  @override
-  Future<List<AnnouncementModel>> fetchActiveForDisplayFromServer() async {
-    try {
-      final snap = await _firestore
-          .collection(FirestoreSchema.platformAnnouncementsCollection)
-          .get(const GetOptions(source: Source.server));
-      final now = DateTime.now();
-      final list =
-          snap.docs
-              .where((d) => d.id != FirestoreSchema.settingsAnnouncementsDocId)
+        .snapshots()
+        .map((snap) {
+          final now = DateTime.now();
+          final list = snap.docs
+              .where(
+                (d) => d.id != FirestoreSchema.settingsAnnouncementsDocId,
+              )
               .map((d) => AnnouncementModel.fromMap(d.data(), d.id))
               .where((a) => _isInWindow(a, now))
               .toList()
             ..sort((a, b) => a.order.compareTo(b.order));
+          return list;
+        });
+  }
 
-      await PlatformAnnouncementsLocalRepository.saveAnnouncements(list);
+  Stream<List<SettingsAnnouncementModel>?> _settingsFirestoreStream() {
+    final docRef = _firestore!
+        .collection(FirestoreSchema.platformAnnouncementsCollection)
+        .doc(FirestoreSchema.settingsAnnouncementsDocId);
+
+    return docRef.snapshots().map((doc) => _settingsListFromData(doc.data()));
+  }
+
+  @override
+  Stream<List<AnnouncementModel>> watchActiveForDisplay() =>
+      _displayLoader
+          .stream(
+            remote: _displayRemoteOverride ?? _displayFirestoreStream,
+          )
+          .map((v) {
+            // Re-apply the time window on every emission so cached lists
+            // (filtered at save time) never surface expired announcements.
+            final now = DateTime.now();
+            return (v ?? const <AnnouncementModel>[])
+                .where((a) => _isInWindow(a, now))
+                .toList();
+          });
+
+  @override
+  Stream<List<SettingsAnnouncementModel>> watchSettingsAnnouncements() =>
+      _settingsLoader!.stream(remote: _settingsFirestoreStream).map((v) {
+        final now = DateTime.now();
+        return (v ?? const <SettingsAnnouncementModel>[])
+            .where((a) => a.isVisibleAt(now))
+            .toList();
+      });
+
+  @override
+  Future<List<AnnouncementModel>> fetchActiveForDisplayFromServer() async {
+    try {
+      final snap = await _firestore!
+          .collection(FirestoreSchema.platformAnnouncementsCollection)
+          .get(const GetOptions(source: Source.server));
+      final now = DateTime.now();
+      final list = snap.docs
+          .where((d) => d.id != FirestoreSchema.settingsAnnouncementsDocId)
+          .map((d) => AnnouncementModel.fromMap(d.data(), d.id))
+          .where((a) => _isInWindow(a, now))
+          .toList()
+        ..sort((a, b) => a.order.compareTo(b.order));
+
+      await _displayCache.save(list);
       return list;
     } catch (_) {
-      return await PlatformAnnouncementsLocalRepository.getCached() ?? [];
+      return (await _displayCache.read())?.value ?? const [];
     }
   }
 }

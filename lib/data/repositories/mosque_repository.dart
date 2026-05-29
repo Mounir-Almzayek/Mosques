@@ -1,65 +1,86 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 
+import '../../core/cache/cache.dart';
 import '../../core/constants/firestore_schema.dart';
 import '../../core/enums/app_language.dart';
 import '../models/mosque/mosque_model.dart';
 import 'interfaces/mosque_repository_interface.dart';
-import 'mosque_local_repository.dart';
 
 class MosqueRepository implements IMosqueRepository {
-  final FirebaseFirestore _firestore;
-  final String? Function() _getActiveMosqueId;
-  final Future<void> Function(String) _syncActiveMosque;
+  final FirebaseFirestore? _firestore;
+  final String? Function()? _getActiveMosqueId;
+  final Future<void> Function(String)? _syncActiveMosque;
+  final JsonCache<MosqueModel> _cache;
+  final CacheFirstLoader<MosqueModel> _loader;
+  final Stream<MosqueModel?> Function()? _remoteStreamOverride;
 
   MosqueRepository({
     required FirebaseFirestore firestore,
     required String? Function() getActiveMosqueId,
     required Future<void> Function(String) syncActiveMosque,
-  }) : _firestore = firestore,
-       _getActiveMosqueId = getActiveMosqueId,
-       _syncActiveMosque = syncActiveMosque;
+    required JsonCache<MosqueModel> cache,
+    ImageSyncService? imageSync,
+  })  : _firestore = firestore,
+        _getActiveMosqueId = getActiveMosqueId,
+        _syncActiveMosque = syncActiveMosque,
+        _cache = cache,
+        _remoteStreamOverride = null,
+        _loader = CacheFirstLoader<MosqueModel>(
+          cache,
+          onValue: imageSync?.syncMosque,
+        );
+
+  MosqueRepository.forTest({
+    required JsonCache<MosqueModel> cache,
+    Stream<MosqueModel?> Function()? remoteStream,
+  })  : _firestore = null,
+        _getActiveMosqueId = null,
+        _syncActiveMosque = null,
+        _cache = cache,
+        _remoteStreamOverride = remoteStream,
+        _loader = CacheFirstLoader<MosqueModel>(cache);
 
   /// Reference to the active mosque document
   DocumentReference? get _mosqueRef {
-    final id = _getActiveMosqueId();
+    if (_firestore == null) return null;
+    final id = _getActiveMosqueId!();
     if (id == null || id.isEmpty) return null;
     return _firestore.collection(FirestoreSchema.mosquesCollection).doc(id);
+  }
+
+  @override
+  Stream<MosqueModel?> get streamActiveMosque =>
+      _loader.stream(remote: _remoteStreamOverride ?? _firestoreSnapshots);
+
+  Stream<MosqueModel?> _firestoreSnapshots() {
+    final ref = _mosqueRef;
+    if (ref == null) return Stream.value(null);
+    return ref.snapshots().map((doc) =>
+        (!doc.exists || doc.data() == null)
+            ? null
+            : MosqueModel.fromMap(doc.data()! as Map<String, dynamic>, doc.id));
   }
 
   /// Get the active mosque data
   @override
   Future<MosqueModel?> getActiveMosque() async {
-    final uid = _getActiveMosqueId();
-    if (uid != null) {
-      await _syncActiveMosque(uid);
-    }
-
-    final ref = _mosqueRef;
-    if (ref == null) return null;
-
-    try {
+    final uid = _getActiveMosqueId?.call();
+    if (uid != null) await _syncActiveMosque!(uid);
+    return _loader.once(remote: () async {
+      final ref = _mosqueRef;
+      if (ref == null) return null;
       final doc = await ref.get();
-      if (!doc.exists || doc.data() == null) {
-        return MosqueLocalRepository.getCachedForActiveMosque();
-      }
-
-      final mosque = MosqueModel.fromMap(
-        doc.data() as Map<String, dynamic>,
-        doc.id,
-      );
-      await MosqueLocalRepository.saveMosque(mosque);
-      return mosque;
-    } catch (_) {
-      return MosqueLocalRepository.getCachedForActiveMosque();
-    }
+      if (!doc.exists || doc.data() == null) return null;
+      return MosqueModel.fromMap(doc.data()! as Map<String, dynamic>, doc.id);
+    }).last;
   }
 
   @override
   Future<MosqueModel?> fetchActiveMosqueFromServer() async {
-    final uid = _getActiveMosqueId();
+    final uid = _getActiveMosqueId?.call();
     if (uid != null) {
-      await _syncActiveMosque(uid);
+      await _syncActiveMosque!(uid);
     }
 
     final ref = _mosqueRef;
@@ -72,7 +93,7 @@ class MosqueRepository implements IMosqueRepository {
         doc.data() as Map<String, dynamic>,
         doc.id,
       );
-      await MosqueLocalRepository.saveMosque(mosque);
+      await _cache.save(mosque);
       return mosque;
     } catch (_) {
       return null;
@@ -188,38 +209,5 @@ class MosqueRepository implements IMosqueRepository {
     if (ref == null) return;
 
     await ref.update({FirestoreSchema.lastSeen: FieldValue.serverTimestamp()});
-  }
-
-  @override
-  Stream<MosqueModel?> get streamActiveMosque {
-    final ref = _mosqueRef;
-    if (ref == null) return Stream.value(null);
-
-    return Stream<MosqueModel?>.multi((controller) {
-      final sub = ref.snapshots().listen(
-        (doc) async {
-          if (!doc.exists || doc.data() == null) {
-            controller.add(null);
-            return;
-          }
-          final mosque = MosqueModel.fromMap(
-            doc.data() as Map<String, dynamic>,
-            doc.id,
-          );
-          await MosqueLocalRepository.saveMosque(mosque);
-          controller.add(mosque);
-        },
-        onError: (error, stackTrace) async {
-          final cached = await MosqueLocalRepository.getCachedForActiveMosque();
-          if (cached != null) {
-            controller.add(cached);
-            return;
-          }
-          controller.addError(error, stackTrace);
-        },
-      );
-
-      controller.onCancel = () => sub.cancel();
-    });
   }
 }

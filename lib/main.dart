@@ -7,6 +7,7 @@ import 'core/l10n/generated/l10n.dart';
 import 'core/routes/app_pages.dart';
 import 'core/services/hive_service.dart';
 import 'core/services/storage_service.dart';
+import 'core/cache/cache.dart';
 import 'core/di/service_locator.dart';
 import 'core/services/firebase_service.dart';
 import 'core/styles/app_theme.dart' show AppTheme;
@@ -27,6 +28,7 @@ void main() async {
 
   // Set up DI after Firebase is initialized
   setupServiceLocator();
+  await sl<OfflineImageStore>().init();
 
   // Wire the FCM token callback now that DI is ready
   FirebaseService.setFcmTokenCallback(

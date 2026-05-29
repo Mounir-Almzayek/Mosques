@@ -1,47 +1,56 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../core/cache/cache.dart';
 import '../../core/constants/firestore_schema.dart';
 import '../models/app/app_settings_model.dart';
-import 'app_settings_local_repository.dart';
 import 'interfaces/app_settings_repository_interface.dart';
 
 class AppSettingsRepository implements IAppSettingsRepository {
-  final FirebaseFirestore _firestore;
+  final FirebaseFirestore? _firestore;
+  final CacheFirstLoader<AppSettingsModel> _loader;
+  final Stream<AppSettingsModel?> Function()? _remoteStreamOverride;
 
-  AppSettingsRepository({required FirebaseFirestore firestore})
-      : _firestore = firestore;
+  AppSettingsRepository({
+    required FirebaseFirestore firestore,
+    required JsonCache<AppSettingsModel> cache,
+    ImageSyncService? imageSync,
+  })  : _firestore = firestore,
+        _remoteStreamOverride = null,
+        _loader = CacheFirstLoader<AppSettingsModel>(
+          cache,
+          onValue: imageSync?.syncAppSettings,
+        );
 
-  @override
-  Future<AppSettingsModel?> getAppSettings() async {
-    try {
-      final doc = await _firestore
-          .collection(FirestoreSchema.appSettingsCollection)
-          .doc(FirestoreSchema.globalDocId)
-          .get();
-      if (!doc.exists || doc.data() == null) {
-        return AppSettingsLocalRepository.getCached();
-      }
-      final settings = AppSettingsModel.fromMap(doc.data()!);
-      await AppSettingsLocalRepository.saveSettings(settings);
-      return settings;
-    } catch (_) {
-      return AppSettingsLocalRepository.getCached();
-    }
-  }
+  AppSettingsRepository.forTest({
+    required JsonCache<AppSettingsModel> cache,
+    Stream<AppSettingsModel?> Function()? remoteStream,
+  })  : _firestore = null,
+        _remoteStreamOverride = remoteStream,
+        _loader = CacheFirstLoader<AppSettingsModel>(cache);
 
-  @override
-  Stream<AppSettingsModel?> get streamAppSettings {
-    return _firestore
+  Stream<AppSettingsModel?> _firestoreStream() {
+    return _firestore!
         .collection(FirestoreSchema.appSettingsCollection)
         .doc(FirestoreSchema.globalDocId)
         .snapshots()
-        .asyncMap((doc) async {
+        .map((doc) => (!doc.exists || doc.data() == null)
+            ? null
+            : AppSettingsModel.fromMap(doc.data()!));
+  }
+
+  @override
+  Stream<AppSettingsModel?> get streamAppSettings =>
+      _loader.stream(remote: _remoteStreamOverride ?? _firestoreStream);
+
+  @override
+  Future<AppSettingsModel?> getAppSettings() {
+    return _loader.once(remote: () async {
+      final doc = await _firestore!
+          .collection(FirestoreSchema.appSettingsCollection)
+          .doc(FirestoreSchema.globalDocId)
+          .get();
       if (!doc.exists || doc.data() == null) return null;
-      final settings = AppSettingsModel.fromMap(doc.data()!);
-      await AppSettingsLocalRepository.saveSettings(settings);
-      return settings;
-    }).handleError((_) async {
-      return await AppSettingsLocalRepository.getCached();
-    });
+      return AppSettingsModel.fromMap(doc.data()!);
+    }).last;
   }
 }

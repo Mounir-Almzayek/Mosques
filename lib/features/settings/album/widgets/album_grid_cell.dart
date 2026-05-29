@@ -25,7 +25,7 @@ class AlbumGridCell extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            CachedImage(url: url, fit: BoxFit.cover),
+            AppImage.network(url, fit: BoxFit.cover),
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
