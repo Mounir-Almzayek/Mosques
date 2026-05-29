@@ -13,6 +13,10 @@ enum DesignColorField {
   activeCard,
   activeCardText,
   inactiveCardText,
+  countdownBackground,
+  countdownText,
+  alertBackground,
+  alertText,
 }
 
 enum DesignFontSizeField {

@@ -66,7 +66,12 @@ class AlbumSectionBody extends StatelessWidget {
     controller.dispose();
   }
 
-  void _showPublishSheet(BuildContext context, String url, bool isLive) {
+  void _showPublishSheet(
+    BuildContext context,
+    MosqueModel mosque,
+    String url,
+    bool isLive,
+  ) {
     final bloc = context.read<AlbumBloc>();
     showModalBottomSheet<void>(
       context: context,
@@ -77,8 +82,10 @@ class AlbumSectionBody extends StatelessWidget {
       builder: (sheetCtx) => AlbumPublishBottomSheet(
         url: url,
         isLive: isLive,
-        onPublish: (durationSeconds) {
-          bloc.add(AlbumImagePublished(url, durationSeconds));
+        initialDurationSeconds: mosque.publishedAlbumImageDuration,
+        initialFit: mosque.publishedAlbumImageFit,
+        onPublish: (durationSeconds, fit) {
+          bloc.add(AlbumImagePublished(url, durationSeconds, fit));
           bloc.add(const SaveAlbumRequested());
           Navigator.pop(sheetCtx);
         },
@@ -143,7 +150,8 @@ class AlbumSectionBody extends StatelessWidget {
                         url: url,
                         isLive: live,
                         liveBadgeLabel: s.album_live_badge,
-                        onTap: () => _showPublishSheet(context, url, live),
+                        onTap: () =>
+                            _showPublishSheet(context, mosque, url, live),
                       );
                     },
                   ),

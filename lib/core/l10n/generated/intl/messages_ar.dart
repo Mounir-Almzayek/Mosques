@@ -70,6 +70,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "adhkar_text": MessageLookupByLibrary.simpleMessage("النص"),
     "album_add_url": MessageLookupByLibrary.simpleMessage("إضافة رابط صورة"),
     "album_empty": MessageLookupByLibrary.simpleMessage("لم تتم إضافة صور بعد"),
+    "album_fit_contain": MessageLookupByLibrary.simpleMessage("احتواء"),
+    "album_fit_cover": MessageLookupByLibrary.simpleMessage("تغطية"),
+    "album_fit_fill": MessageLookupByLibrary.simpleMessage("ملء"),
+    "album_fit_fit_height": MessageLookupByLibrary.simpleMessage(
+      "ملاءمة الارتفاع",
+    ),
+    "album_fit_fit_width": MessageLookupByLibrary.simpleMessage("ملاءمة العرض"),
+    "album_fit_label": MessageLookupByLibrary.simpleMessage("ملاءمة الصورة"),
     "album_live_badge": MessageLookupByLibrary.simpleMessage("مباشر"),
     "album_publish": MessageLookupByLibrary.simpleMessage("نشر على الشاشة"),
     "album_publish_duration": MessageLookupByLibrary.simpleMessage("مدة العرض"),
@@ -90,10 +98,14 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "alert_publish": MessageLookupByLibrary.simpleMessage("نشر على الشاشة"),
     "alert_publish_duration": MessageLookupByLibrary.simpleMessage("مدة العرض"),
+    "alert_qr_link_label": MessageLookupByLibrary.simpleMessage(
+      "رابط QR (اختياري)",
+    ),
     "alert_send_action": MessageLookupByLibrary.simpleMessage("إرسال للشاشة"),
     "alert_status_live": MessageLookupByLibrary.simpleMessage("مباشر"),
     "alert_status_ready": MessageLookupByLibrary.simpleMessage("جاهز"),
     "alert_unpublish": MessageLookupByLibrary.simpleMessage("إزالة من الشاشة"),
+    "alert_urgent_badge": MessageLookupByLibrary.simpleMessage("تنبيه عاجل"),
     "alerts_clear_all": MessageLookupByLibrary.simpleMessage(
       "مسح جميع التنبيهات النشطة",
     ),
@@ -206,6 +218,18 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "design_color_active_card_text": MessageLookupByLibrary.simpleMessage(
       "لون خط صلاة القادمة",
+    ),
+    "design_color_alert_background": MessageLookupByLibrary.simpleMessage(
+      "لون خلفية صفحة التنبيهات",
+    ),
+    "design_color_alert_text": MessageLookupByLibrary.simpleMessage(
+      "لون خط صفحة التنبيهات",
+    ),
+    "design_color_countdown_background": MessageLookupByLibrary.simpleMessage(
+      "لون خلفية صفحة المتبقي للأذان",
+    ),
+    "design_color_countdown_text": MessageLookupByLibrary.simpleMessage(
+      "لون خط صفحة المتبقي للأذان",
     ),
     "design_color_inactive_card_text": MessageLookupByLibrary.simpleMessage(
       "لون خط الكروت غير المحددة",

@@ -7,6 +7,7 @@ import '../../../../core/utils/color_converter.dart';
 import '../../../../data/models/design/design_background_settings.dart';
 import 'album_url_list.dart';
 import 'design_card.dart';
+import 'design_section_title.dart';
 import 'display_background_picker.dart';
 
 class BackgroundSettingsSection extends StatelessWidget {

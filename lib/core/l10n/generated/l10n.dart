@@ -2249,6 +2249,46 @@ class S {
     );
   }
 
+  /// `Countdown Screen Background Color`
+  String get design_color_countdown_background {
+    return Intl.message(
+      'Countdown Screen Background Color',
+      name: 'design_color_countdown_background',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Countdown Screen Text Color`
+  String get design_color_countdown_text {
+    return Intl.message(
+      'Countdown Screen Text Color',
+      name: 'design_color_countdown_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Alerts Screen Background Color`
+  String get design_color_alert_background {
+    return Intl.message(
+      'Alerts Screen Background Color',
+      name: 'design_color_alert_background',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Alerts Screen Text Color`
+  String get design_color_alert_text {
+    return Intl.message(
+      'Alerts Screen Text Color',
+      name: 'design_color_alert_text',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Clock Font Size`
   String get design_clock_font_size {
     return Intl.message(
@@ -2644,6 +2684,76 @@ class S {
     return Intl.message(
       'seconds',
       name: 'album_seconds_suffix',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Image fit`
+  String get album_fit_label {
+    return Intl.message(
+      'Image fit',
+      name: 'album_fit_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contain`
+  String get album_fit_contain {
+    return Intl.message(
+      'Contain',
+      name: 'album_fit_contain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cover`
+  String get album_fit_cover {
+    return Intl.message('Cover', name: 'album_fit_cover', desc: '', args: []);
+  }
+
+  /// `Fill`
+  String get album_fit_fill {
+    return Intl.message('Fill', name: 'album_fit_fill', desc: '', args: []);
+  }
+
+  /// `Fit width`
+  String get album_fit_fit_width {
+    return Intl.message(
+      'Fit width',
+      name: 'album_fit_fit_width',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fit height`
+  String get album_fit_fit_height {
+    return Intl.message(
+      'Fit height',
+      name: 'album_fit_fit_height',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `URGENT`
+  String get alert_urgent_badge {
+    return Intl.message(
+      'URGENT',
+      name: 'alert_urgent_badge',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `QR link (optional)`
+  String get alert_qr_link_label {
+    return Intl.message(
+      'QR link (optional)',
+      name: 'alert_qr_link_label',
       desc: '',
       args: [],
     );

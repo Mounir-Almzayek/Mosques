@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'focus_ring.dart';
+import 'focus_highlight_box.dart';
 
 /// A focusable, tappable control for TV remote / keyboard navigation.
 ///

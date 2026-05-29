@@ -11,12 +11,14 @@ class DisplayBeigeArea extends StatefulWidget {
   final MosqueModel mosque;
   final DesignSettingsModel designSettings;
   final bool showReligiousContent;
+  final int slideIndex;
 
   const DisplayBeigeArea({
     super.key,
     required this.mosque,
     required this.designSettings,
     this.showReligiousContent = false,
+    this.slideIndex = 0,
   });
 
   @override
@@ -64,11 +66,14 @@ class _DisplayBeigeAreaState extends State<DisplayBeigeArea> {
         padding: EdgeInsets.symmetric(horizontal: hPad,vertical: vPad),
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 600),
+          switchInCurve: Curves.easeInCubic,
+          switchOutCurve: Curves.easeOutCubic,
           child: widget.showReligiousContent
               ? ReligiousContentInline(
                   key: const ValueKey('religious'),
                   mosque: widget.mosque,
                   designSettings: design,
+                  slideIndex: widget.slideIndex,
                   religiousContentFontSize: design.fontSizes.religiousContent,
                 )
               : PrayerCardsRow(

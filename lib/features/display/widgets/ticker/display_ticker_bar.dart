@@ -1,6 +1,5 @@
-﻿import 'dart:async';
-
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import '../../../../data/models/display/ticker_segment_builder.dart';
 import '../../../../data/models/mosque/announcement_model.dart';
@@ -34,15 +33,17 @@ class DisplayTickerBar extends StatefulWidget {
   State<DisplayTickerBar> createState() => _DisplayTickerBarState();
 }
 
-class _DisplayTickerBarState extends State<DisplayTickerBar> {
+class _DisplayTickerBarState extends State<DisplayTickerBar>
+    with SingleTickerProviderStateMixin {
   static const _cream = Color(0xFFFFF8F0);
 
-  // High-frequency tick for sub-pixel smoothness.
-  static const _scrollTick = Duration(milliseconds: 12);
+  // Base scroll speed in logical pixels per second (scaled by tickerSpeed).
+  static const _basePxPerSecond = 30.0;
 
   List<TickerSegment> _segments = [];
   final ScrollController _scrollController = ScrollController();
-  Timer? _scrollTimer;
+  late final Ticker _ticker;
+  Duration _lastElapsed = Duration.zero;
 
   // ---------------------------------------------------------------------------
   // Lifecycle
@@ -52,7 +53,9 @@ class _DisplayTickerBarState extends State<DisplayTickerBar> {
   void initState() {
     super.initState();
     _refreshContent();
-    _startAutoScroll();
+    // Drive scrolling from the vsync ticker (one callback per frame) so motion
+    // stays in lockstep with the display refresh — no Timer drift or jank.
+    _ticker = createTicker(_onTick)..start();
   }
 
   @override
@@ -63,13 +66,12 @@ class _DisplayTickerBarState extends State<DisplayTickerBar> {
         oldWidget.appSettings != widget.appSettings ||
         oldWidget.currentVersion != widget.currentVersion) {
       setState(_refreshContent);
-      _startAutoScroll();
     }
   }
 
   @override
   void dispose() {
-    _scrollTimer?.cancel();
+    _ticker.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -78,25 +80,36 @@ class _DisplayTickerBarState extends State<DisplayTickerBar> {
   // Auto-scroll
   // ---------------------------------------------------------------------------
 
-  void _startAutoScroll() {
-    _scrollTimer?.cancel();
-    _scrollTimer = Timer.periodic(_scrollTick, (_) {
-      if (!mounted || !_scrollController.hasClients) return;
-      final maxExtent = _scrollController.position.maxScrollExtent;
-      if (maxExtent <= 0) return;
+  void _onTick(Duration elapsed) {
+    if (!_scrollController.hasClients) {
+      _lastElapsed = elapsed;
+      return;
+    }
+    final position = _scrollController.position;
+    final maxExtent = position.maxScrollExtent;
+    if (maxExtent <= 0) {
+      _lastElapsed = elapsed;
+      return;
+    }
 
-      // Base speed * configurable multiplier * time delta.
-      final speedMultiplier = widget.mosque.designSettings.tickerSpeed;
-      final pxPerTick =
-          (30 * speedMultiplier) * (_scrollTick.inMilliseconds / 1000);
-      final next = _scrollController.offset + pxPerTick;
+    // Advance by real elapsed time → constant velocity even if a frame drops.
+    // Clamp the delta so a long pause (e.g. app resumed) can't cause a jump.
+    final dt = ((elapsed - _lastElapsed).inMicroseconds / 1e6).clamp(0.0, 0.05);
+    _lastElapsed = elapsed;
 
-      if (next >= maxExtent) {
-        _scrollController.jumpTo(0);
-      } else {
-        _scrollController.jumpTo(next);
-      }
-    });
+    final speedMultiplier = widget.mosque.designSettings.tickerSpeed;
+    var next = _scrollController.offset + _basePxPerSecond * speedMultiplier * dt;
+
+    // The content is rendered twice back-to-back, so one copy spans half the
+    // total scrollable width. Wrapping by exactly one copy lands on visually
+    // identical content — a seamless loop with no visible reset.
+    final oneCopy = (maxExtent + position.viewportDimension) / 2;
+    if (oneCopy >= position.viewportDimension && next >= oneCopy) {
+      next -= oneCopy;
+    } else if (next >= maxExtent) {
+      next = 0;
+    }
+    _scrollController.jumpTo(next.clamp(0.0, maxExtent));
   }
 
   void _refreshContent() {

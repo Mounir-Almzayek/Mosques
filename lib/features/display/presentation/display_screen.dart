@@ -7,6 +7,7 @@ import '../../../core/enums/display/display_layer_kind.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/styles/app_theme.dart';
+import '../../../core/utils/box_fit_codec.dart';
 import '../../../core/utils/prayer_times_helper.dart';
 import '../../../data/models/mosque/mosque_model.dart';
 import '../../../core/enums/app_mode.dart';
@@ -183,10 +184,16 @@ class _DisplayScreenState extends State<DisplayScreen> {
                         child: TopHeaderWidget(mosque: mosque, designSettings: design),
                       ),
                       Expanded(
-                        child: DisplayBeigeArea(
-                          mosque: mosque,
-                          designSettings: design,
-                          showReligiousContent: _layerController.state.activeLayer == DisplayLayerKind.religious,
+                        child: ListenableBuilder(
+                          listenable: _layerController,
+                          builder: (context, _) => DisplayBeigeArea(
+                            mosque: mosque,
+                            designSettings: design,
+                            showReligiousContent:
+                                _layerController.state.activeLayer ==
+                                    DisplayLayerKind.religious,
+                            slideIndex: _layerController.religiousSlideIndex,
+                          ),
                         ),
                       ),
                     ],
@@ -223,8 +230,8 @@ class _DisplayScreenState extends State<DisplayScreen> {
         return AlertLayer(
           alerts: mosque.savedAlerts,
           alertsFontSize: design.fontSizes.alerts,
-          primaryColor: colors.activeCardTextValue,
-          backgroundColor: colors.activeCardValue,
+          primaryColor: colors.alertTextValue,
+          backgroundColor: colors.alertBackgroundValue,
           numeralFormat: design.numeralFormat,
           fontFamily: design.fontFamily,
           onExpired: _updateLayerInputs,
@@ -233,6 +240,7 @@ class _DisplayScreenState extends State<DisplayScreen> {
         return AlbumImageLayer(
           imageUrl: _layerController.photoStudioUrl ?? '',
           backgroundColor: colors.primaryValue,
+          fit: boxFitFromName(mosque.publishedAlbumImageFit),
         );
       case DisplayLayerKind.iqamaAdhan:
         final helper = PrayerTimesHelper(mosque);

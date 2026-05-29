@@ -79,11 +79,14 @@ class _DisplayPrayerCardState extends State<DisplayPrayerCard>
       final maxH = constraints.maxHeight;
       final compactFactor = ((maxH / 275.0).clamp(0.02, 1.0) * 1.06).clamp(0.0, 1.0);
 
+      // Upcoming (focused) prayer gets a larger font than the others.
+      final focusFactor = widget.isFocusCard ? 1.28 : 1.0;
+
       final gap = (12.0 * compactFactor).clamp(0.0, maxH * 0.07);
-      final iconSize = (42.0 * compactFactor).clamp(0.0, maxH * 0.30);
-      final arSize = (widget.prayersFontSize * 1.88 * compactFactor).clamp(9.0, 36.0);
-      final enSize = (widget.prayersFontSize * 1.22 * compactFactor).clamp(8.0, 26.0);
-      final timeSize = (widget.prayersFontSize * 2.1 * compactFactor).clamp(10.0, 48.0);
+      final iconSize = (42.0 * compactFactor * focusFactor).clamp(0.0, maxH * 0.30 * focusFactor);
+      final arSize = (widget.prayersFontSize * 1.88 * compactFactor * focusFactor).clamp(9.0, 36.0 * focusFactor);
+      final enSize = (widget.prayersFontSize * 1.22 * compactFactor * focusFactor).clamp(8.0, 26.0 * focusFactor);
+      final timeSize = (widget.prayersFontSize * 2.1 * compactFactor * focusFactor).clamp(10.0, 48.0 * focusFactor);
 
       final cardColor = widget.isFocusCard ? colors.activeCardValue : colors.prayerOverlayValue;
       final textColor = widget.isFocusCard ? colors.activeCardTextValue : colors.inactiveCardTextValue;

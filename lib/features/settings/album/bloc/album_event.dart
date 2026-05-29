@@ -44,11 +44,12 @@ class AlbumImageRemoved extends AlbumEvent {
 class AlbumImagePublished extends AlbumEvent {
   final String url;
   final int durationSeconds;
+  final String fit;
 
-  const AlbumImagePublished(this.url, this.durationSeconds);
+  const AlbumImagePublished(this.url, this.durationSeconds, this.fit);
 
   @override
-  List<Object?> get props => [url, durationSeconds];
+  List<Object?> get props => [url, durationSeconds, fit];
 }
 
 class AlbumImageUnpublished extends AlbumEvent {

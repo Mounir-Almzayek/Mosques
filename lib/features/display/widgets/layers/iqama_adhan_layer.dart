@@ -35,8 +35,8 @@ class IqamaAdhanLayer extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = S.of(context);
     final colors = designSettings.colors;
-    final bgColor = colors.activeCardValue;
-    final textColor = colors.activeCardTextValue;
+    final bgColor = colors.countdownBackgroundValue;
+    final textColor = colors.countdownTextValue;
     final fmt = designSettings.numeralFormat;
 
     final slot = PrayerDisplaySlot.tryParsePhaseKey(phase.prayerNameKey);

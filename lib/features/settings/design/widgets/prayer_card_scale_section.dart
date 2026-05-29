@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
 import 'design_card.dart';
+import 'design_section_title.dart';
 
 class PrayerCardScaleSection extends StatelessWidget {
   final S s;

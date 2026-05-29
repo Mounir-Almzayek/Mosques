@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/enums/app_numeral_format.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import 'design_card.dart';
+import 'design_section_title.dart';
 import 'font_browser_dialog.dart';
 
 class TypographySettingsSection extends StatelessWidget {

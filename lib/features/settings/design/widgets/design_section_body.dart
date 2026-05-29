@@ -114,6 +114,30 @@ class DesignSectionBody extends StatelessWidget {
                                 value,
                               ),
                             ),
+                            onCountdownBackgroundChanged: (value) => bloc.add(
+                              DesignColorChanged(
+                                DesignColorField.countdownBackground,
+                                value,
+                              ),
+                            ),
+                            onCountdownTextChanged: (value) => bloc.add(
+                              DesignColorChanged(
+                                DesignColorField.countdownText,
+                                value,
+                              ),
+                            ),
+                            onAlertBackgroundChanged: (value) => bloc.add(
+                              DesignColorChanged(
+                                DesignColorField.alertBackground,
+                                value,
+                              ),
+                            ),
+                            onAlertTextChanged: (value) => bloc.add(
+                              DesignColorChanged(
+                                DesignColorField.alertText,
+                                value,
+                              ),
+                            ),
                           ),
                           const SizedBox(height: 20),
                           FontSizeSettingsSection(

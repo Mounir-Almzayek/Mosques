@@ -137,6 +137,11 @@ class PrayerTimesHelper {
     }
   }
 
+  /// True when the item is the Friday Dhuhr (Jummah) prayer.
+  bool _isJummah(PrayerTimeItem item) =>
+      item.prayer == Prayer.dhuhr &&
+      item.adhanTime.weekday == DateTime.friday;
+
   int getIqamaOffset(Prayer prayer, {bool isFriday = false}) {
     switch (prayer) {
       case Prayer.fajr:
@@ -209,6 +214,12 @@ class PrayerTimesHelper {
           prayerNameKey: item.prayerName,
           focusTime: item.adhanTime.add(const Duration(minutes: 1)),
         );
+      }
+
+      // On Fridays, skip the iqama countdown (and grace) for Jummah — there
+      // is a khutbah, so no "remaining to iqama" is shown for Dhuhr.
+      if (_isJummah(item)) {
+        continue;
       }
 
       // Check Iqama countdown

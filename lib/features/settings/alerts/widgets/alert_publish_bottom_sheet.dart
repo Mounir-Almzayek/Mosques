@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
+import '../../core/widgets/duration_counter_field.dart';
 
 class AlertPublishBottomSheet extends StatefulWidget {
   final AnnouncementModel alert;
@@ -19,7 +20,7 @@ class AlertPublishBottomSheet extends StatefulWidget {
 }
 
 class _AlertPublishBottomSheetState extends State<AlertPublishBottomSheet> {
-  int _durationSeconds = 60;
+  late int _durationSeconds = widget.alert.publishDurationSeconds;
 
   @override
   Widget build(BuildContext context) {
@@ -59,41 +60,13 @@ class _AlertPublishBottomSheetState extends State<AlertPublishBottomSheet> {
             style: TextStyle(color: Colors.grey.shade600),
           ),
           const SizedBox(height: 24),
-          Row(
-            children: [
-              Text(
-                s.alert_publish_duration,
-                style: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-              const Spacer(),
-              Text(
-                '$_durationSeconds ${s.album_seconds_suffix}',
-                style: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-            ],
-          ),
-          Slider(
-            value: _durationSeconds.toDouble(),
+          DurationCounterField(
+            label: s.alert_publish_duration,
+            value: _durationSeconds,
+            step: 10,
             min: 10,
-            max: 300,
-            divisions: 29,
-            activeColor: const Color(0xFF1A3C34),
-            onChanged: (value) {
-              setState(() => _durationSeconds = value.toInt());
-            },
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '10 ${s.album_seconds_suffix}',
-                style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
-              ),
-              Text(
-                '300 ${s.album_seconds_suffix}',
-                style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
-              ),
-            ],
+            suffix: s.album_seconds_suffix,
+            onChanged: (v) => setState(() => _durationSeconds = v),
           ),
           const SizedBox(height: 24),
           FilledButton.icon(

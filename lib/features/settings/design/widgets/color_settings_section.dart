@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../data/models/design/design_color_settings.dart';
 import 'design_card.dart';
+import 'design_section_title.dart';
 import 'design_color_item.dart';
 
 class ColorSettingsSection extends StatelessWidget {
@@ -12,6 +13,10 @@ class ColorSettingsSection extends StatelessWidget {
   final ValueChanged<String> onActiveCardTextChanged;
   final ValueChanged<String> onInactiveCardTextChanged;
   final ValueChanged<String> onPrayerOverlayChanged;
+  final ValueChanged<String> onCountdownBackgroundChanged;
+  final ValueChanged<String> onCountdownTextChanged;
+  final ValueChanged<String> onAlertBackgroundChanged;
+  final ValueChanged<String> onAlertTextChanged;
 
   const ColorSettingsSection({
     super.key,
@@ -22,6 +27,10 @@ class ColorSettingsSection extends StatelessWidget {
     required this.onActiveCardTextChanged,
     required this.onInactiveCardTextChanged,
     required this.onPrayerOverlayChanged,
+    required this.onCountdownBackgroundChanged,
+    required this.onCountdownTextChanged,
+    required this.onAlertBackgroundChanged,
+    required this.onAlertTextChanged,
   });
 
   @override
@@ -69,6 +78,30 @@ class ColorSettingsSection extends StatelessWidget {
             label: s.design_color_prayer_overlay,
             hexValue: colors.prayerOverlay,
             onChanged: onPrayerOverlayChanged,
+          ),
+          const Divider(),
+          DesignColorItem(
+            label: s.design_color_countdown_background,
+            hexValue: colors.countdownBackground,
+            onChanged: onCountdownBackgroundChanged,
+          ),
+          const Divider(),
+          DesignColorItem(
+            label: s.design_color_countdown_text,
+            hexValue: colors.countdownText,
+            onChanged: onCountdownTextChanged,
+          ),
+          const Divider(),
+          DesignColorItem(
+            label: s.design_color_alert_background,
+            hexValue: colors.alertBackground,
+            onChanged: onAlertBackgroundChanged,
+          ),
+          const Divider(),
+          DesignColorItem(
+            label: s.design_color_alert_text,
+            hexValue: colors.alertText,
+            onChanged: onAlertTextChanged,
           ),
         ],
       ),

@@ -123,6 +123,18 @@ class DesignBloc extends Bloc<DesignEvent, DesignState> {
       DesignColorField.inactiveCardText => m.designSettings.colors.copyWith(
         inactiveCardText: event.color,
       ),
+      DesignColorField.countdownBackground => m.designSettings.colors.copyWith(
+        countdownBackground: event.color,
+      ),
+      DesignColorField.countdownText => m.designSettings.colors.copyWith(
+        countdownText: event.color,
+      ),
+      DesignColorField.alertBackground => m.designSettings.colors.copyWith(
+        alertBackground: event.color,
+      ),
+      DesignColorField.alertText => m.designSettings.colors.copyWith(
+        alertText: event.color,
+      ),
     };
     final d = m.designSettings.copyWith(colors: colors);
     emit(

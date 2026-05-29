@@ -107,7 +107,6 @@ class _PrayerIqamaSectionBodyState extends State<PrayerIqamaSectionBody> {
               final offsets = mosque.prayerOffsets;
               final iqamaMosque = iqamaState.mosque;
               final iqama = iqamaMosque?.iqamaSettings ?? mosque.iqamaSettings;
-              final design = mosque.designSettings;
 
               return ListView(
                 padding: const EdgeInsets.all(16),
@@ -287,26 +286,38 @@ class _PrayerIqamaSectionBodyState extends State<PrayerIqamaSectionBody> {
                     title: s.display_timing_title,
                   ),
                   const SizedBox(height: 12),
-                  OffsetStepperField(
-                    label: s.pre_adhan_minutes,
-                    value: design.preAdhanMinutes,
-                    suffix: s.minutes_short,
-                    onChanged: (value) => context.read<DesignBloc>().add(
-                      DisplayTimingChanged(
-                        DisplayTimingField.preAdhanMinutes,
-                        value,
-                      ),
-                    ),
-                  ),
-                  OffsetStepperField(
-                    label: s.adhan_moment_duration,
-                    value: design.adhanMomentDurationSeconds,
-                    onChanged: (value) => context.read<DesignBloc>().add(
-                      DisplayTimingChanged(
-                        DisplayTimingField.adhanMomentDuration,
-                        value,
-                      ),
-                    ),
+                  BlocBuilder<DesignBloc, DesignState>(
+                    builder: (context, designState) {
+                      final design =
+                          designState.mosque?.designSettings ??
+                          mosque.designSettings;
+                      final designBloc = context.read<DesignBloc>();
+                      return Column(
+                        children: [
+                          OffsetStepperField(
+                            label: s.pre_adhan_minutes,
+                            value: design.preAdhanMinutes,
+                            suffix: s.minutes_short,
+                            onChanged: (value) => designBloc.add(
+                              DisplayTimingChanged(
+                                DisplayTimingField.preAdhanMinutes,
+                                value,
+                              ),
+                            ),
+                          ),
+                          OffsetStepperField(
+                            label: s.adhan_moment_duration,
+                            value: design.adhanMomentDurationSeconds,
+                            onChanged: (value) => designBloc.add(
+                              DisplayTimingChanged(
+                                DisplayTimingField.adhanMomentDuration,
+                                value,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                   const SizedBox(height: 24),
                   AppButton.elevated(

@@ -59,6 +59,10 @@ class MosqueModel extends Equatable {
   /// How long to show the published image (seconds).
   final int publishedAlbumImageDuration;
 
+  /// How the published image is fitted to the screen (BoxFit name,
+  /// e.g. 'contain', 'cover', 'fill', 'fitWidth', 'fitHeight').
+  final String publishedAlbumImageFit;
+
   final DateTime? lastSeen;
   final DateTime? updatedAt;
 
@@ -83,6 +87,7 @@ class MosqueModel extends Equatable {
     this.publishedAlbumImageUrl,
     this.publishedAlbumImageAt,
     this.publishedAlbumImageDuration = 30,
+    this.publishedAlbumImageFit = 'contain',
     this.lastSeen,
     this.updatedAt,
   });
@@ -173,6 +178,8 @@ class MosqueModel extends Equatable {
       publishedAlbumImageAt: parseDateOrMillis(map['published_album_at']),
       publishedAlbumImageDuration:
           (map['published_album_duration'] as num?)?.toInt() ?? 30,
+      publishedAlbumImageFit:
+          map['published_album_fit']?.toString() ?? 'contain',
       lastSeen: parseDateOrMillis(map['last_seen']),
       updatedAt: parseDateOrMillis(map['updated_at']),
     );
@@ -198,6 +205,7 @@ class MosqueModel extends Equatable {
       'published_album_url': publishedAlbumImageUrl,
       'published_album_at': publishedAlbumImageAt,
       'published_album_duration': publishedAlbumImageDuration,
+      'published_album_fit': publishedAlbumImageFit,
       'last_seen': lastSeen,
       'updated_at': updatedAt,
     };
@@ -240,6 +248,7 @@ class MosqueModel extends Equatable {
     String? publishedAlbumImageUrl,
     DateTime? publishedAlbumImageAt,
     int? publishedAlbumImageDuration,
+    String? publishedAlbumImageFit,
     DateTime? lastSeen,
     DateTime? updatedAt,
   }) {
@@ -268,6 +277,8 @@ class MosqueModel extends Equatable {
           publishedAlbumImageAt ?? this.publishedAlbumImageAt,
       publishedAlbumImageDuration:
           publishedAlbumImageDuration ?? this.publishedAlbumImageDuration,
+      publishedAlbumImageFit:
+          publishedAlbumImageFit ?? this.publishedAlbumImageFit,
       lastSeen: lastSeen ?? this.lastSeen,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -292,6 +303,7 @@ class MosqueModel extends Equatable {
     announcements,
     savedAlerts,
     albumImageUrls,
+    publishedAlbumImageFit,
     publishedAlbumImageUrl,
     publishedAlbumImageAt,
     publishedAlbumImageDuration,

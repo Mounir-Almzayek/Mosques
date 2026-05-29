@@ -74,6 +74,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "adhkar_text": MessageLookupByLibrary.simpleMessage("Text"),
     "album_add_url": MessageLookupByLibrary.simpleMessage("Add Image URL"),
     "album_empty": MessageLookupByLibrary.simpleMessage("No images added yet"),
+    "album_fit_contain": MessageLookupByLibrary.simpleMessage("Contain"),
+    "album_fit_cover": MessageLookupByLibrary.simpleMessage("Cover"),
+    "album_fit_fill": MessageLookupByLibrary.simpleMessage("Fill"),
+    "album_fit_fit_height": MessageLookupByLibrary.simpleMessage("Fit height"),
+    "album_fit_fit_width": MessageLookupByLibrary.simpleMessage("Fit width"),
+    "album_fit_label": MessageLookupByLibrary.simpleMessage("Image fit"),
     "album_live_badge": MessageLookupByLibrary.simpleMessage("LIVE"),
     "album_publish": MessageLookupByLibrary.simpleMessage("Publish to Display"),
     "album_publish_duration": MessageLookupByLibrary.simpleMessage(
@@ -100,12 +106,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "alert_publish_duration": MessageLookupByLibrary.simpleMessage(
       "Display duration",
     ),
+    "alert_qr_link_label": MessageLookupByLibrary.simpleMessage(
+      "QR link (optional)",
+    ),
     "alert_send_action": MessageLookupByLibrary.simpleMessage("Send to Screen"),
     "alert_status_live": MessageLookupByLibrary.simpleMessage("LIVE"),
     "alert_status_ready": MessageLookupByLibrary.simpleMessage("Ready"),
     "alert_unpublish": MessageLookupByLibrary.simpleMessage(
       "Remove from Display",
     ),
+    "alert_urgent_badge": MessageLookupByLibrary.simpleMessage("URGENT"),
     "alerts_clear_all": MessageLookupByLibrary.simpleMessage(
       "Clear All Active Alerts",
     ),
@@ -226,6 +236,18 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "design_color_active_card_text": MessageLookupByLibrary.simpleMessage(
       "Active Card Text Color",
+    ),
+    "design_color_alert_background": MessageLookupByLibrary.simpleMessage(
+      "Alerts Screen Background Color",
+    ),
+    "design_color_alert_text": MessageLookupByLibrary.simpleMessage(
+      "Alerts Screen Text Color",
+    ),
+    "design_color_countdown_background": MessageLookupByLibrary.simpleMessage(
+      "Countdown Screen Background Color",
+    ),
+    "design_color_countdown_text": MessageLookupByLibrary.simpleMessage(
+      "Countdown Screen Text Color",
     ),
     "design_color_inactive_card_text": MessageLookupByLibrary.simpleMessage(
       "Inactive Card & Hadith Text",

@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../../core/enums/app_numeral_format.dart';
-import '../../../../core/utils/app_font_loader.dart';
+import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/utils/app_number_format.dart';
 import '../../../../data/models/mosque/announcement_model.dart';
+import 'alert_qr_card.dart';
+import 'alert_text_block.dart';
 
 /// Fullscreen alert overlay -- the highest-priority display layer.
 ///
@@ -106,63 +108,71 @@ class _AlertLayerState extends State<AlertLayer> {
 
     final title = alert.title.formatNumerals(widget.numeralFormat);
     final subtitle = alert.subtitle?.formatNumerals(widget.numeralFormat);
+    final qrUrl = alert.qrCodeUrl;
+    final hasQr = qrUrl != null && qrUrl.trim().isNotEmpty;
+
+    final bg = widget.backgroundColor;
+    final accent = widget.primaryColor;
 
     return Scaffold(
-      backgroundColor: widget.backgroundColor,
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 64),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildIcon(widget.primaryColor),
-              const SizedBox(height: 40),
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: AppFontLoader.getStyle(
-                  widget.fontFamily,
-                  baseStyle: TextStyle(
-                    fontSize: (widget.alertsFontSize * 3.2).clamp(24.0, 120.0),
-                    fontWeight: FontWeight.w900,
-                    color: widget.primaryColor,
-                    height: 1.2,
-                  ),
-                ),
-              ),
-              if (subtitle != null && subtitle.isNotEmpty) ...[
-                const SizedBox(height: 24),
-                Text(
-                  subtitle,
-                  textAlign: TextAlign.center,
-                  style: AppFontLoader.getStyle(
-                    widget.fontFamily,
-                    baseStyle: TextStyle(
-                      fontSize: (widget.alertsFontSize * 1.9).clamp(14.0, 72.0),
-                      fontWeight: FontWeight.w500,
-                      color: widget.primaryColor.withValues(alpha: 0.85),
-                      height: 1.4,
-                    ),
-                  ),
-                ),
-              ],
+      backgroundColor: bg,
+      body: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color.alphaBlend(Colors.white.withValues(alpha: 0.04), bg),
+              bg,
+              Color.alphaBlend(Colors.black.withValues(alpha: 0.10), bg),
             ],
           ),
         ),
-      ),
-    );
-  }
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 56, vertical: 48),
+            child: Builder(
+              builder: (context) {
+                final textBlock = AlertTextBlock(
+                  title: title,
+                  subtitle: subtitle,
+                  accent: accent,
+                  fontFamily: widget.fontFamily,
+                  alertsFontSize: widget.alertsFontSize,
+                  badgeLabel: S.of(context).alert_urgent_badge,
+                  center: !hasQr,
+                );
 
-  Widget _buildIcon(Color color) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        shape: BoxShape.circle,
+                if (!hasQr) {
+                  return Center(child: textBlock);
+                }
+
+                // QR anchored to the trailing edge of the screen, text fills
+                // the remaining space and is vertically centered next to it.
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: textBlock,
+                      ),
+                    ),
+                    const SizedBox(width: 48),
+                    AlertQrCard(
+                      data: qrUrl,
+                      accent: accent,
+                      fontFamily: widget.fontFamily,
+                      caption: S.of(context).scan_qr_hint,
+                      alertsFontSize: widget.alertsFontSize,
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
       ),
-      child: Icon(Icons.campaign_rounded, size: (widget.alertsFontSize * 3.2).clamp(24.0, 120.0), color: color),
     );
   }
 }

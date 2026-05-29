@@ -25,6 +25,7 @@ class AlertEditDialog extends StatefulWidget {
 class _AlertEditDialogState extends State<AlertEditDialog> {
   late final TextEditingController _titleCtrl;
   late final TextEditingController _subtitleCtrl;
+  late final TextEditingController _qrCtrl;
 
   @override
   void initState() {
@@ -32,12 +33,14 @@ class _AlertEditDialogState extends State<AlertEditDialog> {
     final existing = widget.initialAlert;
     _titleCtrl = TextEditingController(text: existing?.title ?? '');
     _subtitleCtrl = TextEditingController(text: existing?.subtitle ?? '');
+    _qrCtrl = TextEditingController(text: existing?.qrCodeUrl ?? '');
   }
 
   @override
   void dispose() {
     _titleCtrl.dispose();
     _subtitleCtrl.dispose();
+    _qrCtrl.dispose();
     super.dispose();
   }
 
@@ -62,6 +65,7 @@ class _AlertEditDialogState extends State<AlertEditDialog> {
       isPublished: existing?.isPublished ?? false,
       publishedAt: existing?.publishedAt,
       publishDurationSeconds: existing?.publishDurationSeconds ?? 30,
+      qrCodeUrl: _qrCtrl.text.trim().isEmpty ? null : _qrCtrl.text.trim(),
     );
 
     widget.onAdd(alert);
@@ -93,11 +97,25 @@ class _AlertEditDialogState extends State<AlertEditDialog> {
             const SizedBox(height: 14),
             TextField(
               controller: _subtitleCtrl,
-              textInputAction: TextInputAction.done,
+              textInputAction: TextInputAction.next,
               maxLines: 3,
-              onSubmitted: (_) => _submit(),
               decoration: InputDecoration(
                 labelText: s.alert_field_message,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+            TextField(
+              controller: _qrCtrl,
+              textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.url,
+              onSubmitted: (_) => _submit(),
+              decoration: InputDecoration(
+                labelText: s.alert_qr_link_label,
+                prefixIcon: const Icon(Icons.qr_code_2),
                 filled: true,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),

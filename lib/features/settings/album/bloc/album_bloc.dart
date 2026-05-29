@@ -83,6 +83,7 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
           publishedAlbumImageUrl: event.url,
           publishedAlbumImageAt: DateTime.now(),
           publishedAlbumImageDuration: event.durationSeconds,
+          publishedAlbumImageFit: event.fit,
         ),
         hasUnsavedChanges: true,
       ),

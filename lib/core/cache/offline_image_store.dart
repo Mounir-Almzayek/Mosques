@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
@@ -33,6 +34,9 @@ class OfflineImageStore {
       : _downloader = downloader ?? HttpImageDownloader(),
         _baseDirOverride = baseDirOverride;
   Future<void> init() async {
+    // Web has no persistent filesystem; CachedNetworkImage handles caching
+    // there. Skip path_provider entirely to avoid MissingPluginException.
+    if (kIsWeb) return;
     final base = _baseDirOverride ?? await getApplicationDocumentsDirectory();
     final dir = Directory('${base.path}/offline_images');
     if (!await dir.exists()) await dir.create(recursive: true);
@@ -57,10 +61,12 @@ class OfflineImageStore {
   }
   File _fileObject(String url) => File('${_directory.path}/${_fileName(url)}');
   Future<File?> fileFor(String url) async {
+    if (kIsWeb) return null;
     final f = _fileObject(url);
     return await f.exists() ? f : null;
   }
   Future<File> fetchAndStore(String url) async {
+    if (kIsWeb) throw UnsupportedError('Offline image store is unavailable on web');
     final existing = await fileFor(url);
     if (existing != null) return existing;
     final bytes = await _downloader.download(url);
@@ -69,6 +75,7 @@ class OfflineImageStore {
     return f;
   }
   Future<void> prune(Set<String> keepUrls) async {
+    if (kIsWeb) return;
     final keepNames = keepUrls.map(_fileName).toSet();
     if (!await _directory.exists()) return;
     await for (final entity in _directory.list()) {
@@ -81,6 +88,7 @@ class OfflineImageStore {
     }
   }
   Future<void> clear() async {
+    if (kIsWeb) return;
     if (!await _directory.exists()) return;
     await for (final entity in _directory.list()) {
       if (entity is File) {

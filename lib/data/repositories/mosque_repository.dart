@@ -96,6 +96,11 @@ class MosqueRepository implements IMosqueRepository {
     final data = mosque.toMap();
     data[FirestoreSchema.updatedAt] = RemoteFieldValue.serverTimestamp;
     data[FirestoreSchema.lastSeen] = RemoteFieldValue.serverTimestamp;
+    // These sub-maps are owned by dedicated writers (DesignBloc /
+    // IqamaBloc). Omitting them here (with merge:true) prevents a full-doc
+    // save from clobbering edits made concurrently through those blocs.
+    data.remove(FirestoreSchema.designSettings);
+    data.remove(FirestoreSchema.iqamaOffsets);
     // Drop legacy logo URL (no longer using Firebase Storage for logos)
     data[FirestoreSchema.logoUrl] = RemoteFieldValue.delete;
     // Drop legacy album fields (migration safety)
