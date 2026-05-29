@@ -94,13 +94,23 @@ class PlatformAnnouncementsRepository
           .stream(
             remote: _displayRemoteOverride ?? _displayFirestoreStream,
           )
-          .map((v) => v ?? const <AnnouncementModel>[]);
+          .map((v) {
+            // Re-apply the time window on every emission so cached lists
+            // (filtered at save time) never surface expired announcements.
+            final now = DateTime.now();
+            return (v ?? const <AnnouncementModel>[])
+                .where((a) => _isInWindow(a, now))
+                .toList();
+          });
 
   @override
   Stream<List<SettingsAnnouncementModel>> watchSettingsAnnouncements() =>
-      _settingsLoader!
-          .stream(remote: _settingsFirestoreStream)
-          .map((v) => v ?? const <SettingsAnnouncementModel>[]);
+      _settingsLoader!.stream(remote: _settingsFirestoreStream).map((v) {
+        final now = DateTime.now();
+        return (v ?? const <SettingsAnnouncementModel>[])
+            .where((a) => a.isVisibleAt(now))
+            .toList();
+      });
 
   @override
   Future<List<AnnouncementModel>> fetchActiveForDisplayFromServer() async {
