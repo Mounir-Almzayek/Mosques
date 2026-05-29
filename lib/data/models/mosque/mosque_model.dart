@@ -1,7 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../core/utils/firestore_date_parse.dart';
+import '../../../core/utils/date_parse.dart';
 import 'adhkar_model.dart';
 import 'announcement_model.dart';
 import '../design/design_settings_model.dart';
@@ -171,11 +170,11 @@ class MosqueModel extends Equatable {
           [],
       albumImageUrls: _mergeAlbumUrls(map),
       publishedAlbumImageUrl: map['published_album_url']?.toString(),
-      publishedAlbumImageAt: parseFirestoreOrMillis(map['published_album_at']),
+      publishedAlbumImageAt: parseDateOrMillis(map['published_album_at']),
       publishedAlbumImageDuration:
           (map['published_album_duration'] as num?)?.toInt() ?? 30,
-      lastSeen: parseFirestoreOrMillis(map['last_seen']),
-      updatedAt: parseFirestoreOrMillis(map['updated_at']),
+      lastSeen: parseDateOrMillis(map['last_seen']),
+      updatedAt: parseDateOrMillis(map['updated_at']),
     );
   }
 
@@ -197,12 +196,10 @@ class MosqueModel extends Equatable {
       'active_alerts': savedAlerts.map((a) => a.toMap()).toList(),
       'album_image_urls': albumImageUrls,
       'published_album_url': publishedAlbumImageUrl,
-      'published_album_at': publishedAlbumImageAt != null
-          ? Timestamp.fromDate(publishedAlbumImageAt!)
-          : null,
+      'published_album_at': publishedAlbumImageAt,
       'published_album_duration': publishedAlbumImageDuration,
-      'last_seen': lastSeen != null ? Timestamp.fromDate(lastSeen!) : null,
-      'updated_at': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+      'last_seen': lastSeen,
+      'updated_at': updatedAt,
     };
     if (appLanguageCode != null) {
       data['language_code'] = appLanguageCode;

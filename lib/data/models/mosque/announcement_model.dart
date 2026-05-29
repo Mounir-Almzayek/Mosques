@@ -1,7 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../core/utils/firestore_date_parse.dart';
+import '../../../core/utils/date_parse.dart';
 
 /// Represents a mosque announcement (Ad) or a high-priority instant alert.
 class AnnouncementModel extends Equatable {
@@ -49,9 +48,9 @@ class AnnouncementModel extends Equatable {
     final title = (map['title'] ?? '').toString();
     final subtitle = map['subtitle']?.toString();
     final startDate =
-        parseFirestoreOrMillis(map['start_date']) ?? DateTime.now();
+        parseDateOrMillis(map['start_date']) ?? DateTime.now();
     final endDate =
-        parseFirestoreOrMillis(map['end_date']) ??
+        parseDateOrMillis(map['end_date']) ??
         DateTime.now().add(const Duration(hours: 1));
     final qrCodeUrl = map['qr_code_url']?.toString();
     final isActive = map['is_active'] ?? true;
@@ -59,7 +58,7 @@ class AnnouncementModel extends Equatable {
     final isPriority = map['is_priority'] ?? false;
     final duration = map['display_duration_seconds'] ?? 30;
     final isPublished = map['is_published'] ?? false;
-    final publishedAt = parseFirestoreOrMillis(map['published_at']);
+    final publishedAt = parseDateOrMillis(map['published_at']);
     final publishDurationSeconds = map['publish_duration_seconds'] ?? 30;
 
     return AnnouncementModel(
@@ -84,15 +83,15 @@ class AnnouncementModel extends Equatable {
       'id': id,
       'title': title,
       'subtitle': subtitle,
-      'start_date': Timestamp.fromDate(startDate),
-      'end_date': Timestamp.fromDate(endDate),
+      'start_date': startDate,
+      'end_date': endDate,
       'qr_code_url': qrCodeUrl,
       'is_active': isActive,
       'order': order,
       'is_priority': isPriority,
       'display_duration_seconds': displayDurationSeconds,
       'is_published': isPublished,
-      'published_at': publishedAt != null ? Timestamp.fromDate(publishedAt!) : null,
+      'published_at': publishedAt,
       'publish_duration_seconds': publishDurationSeconds,
     };
   }

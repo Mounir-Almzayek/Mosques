@@ -1,7 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../core/utils/firestore_date_parse.dart';
+import '../../../core/utils/date_parse.dart';
 
 class SettingsAnnouncementModel extends Equatable {
   const SettingsAnnouncementModel({
@@ -85,8 +84,8 @@ class SettingsAnnouncementModel extends Equatable {
       linkUrl: linkUrl == null || linkUrl.isEmpty ? null : linkUrl,
       isActive: map['is_active'] as bool? ?? map['active'] as bool? ?? true,
       order: (map['order'] as num?)?.toInt() ?? 0,
-      startDate: parseFirestoreOrMillis(map['start_date'] ?? map['startDate']),
-      endDate: parseFirestoreOrMillis(map['end_date'] ?? map['endDate']),
+      startDate: parseDateOrMillis(map['start_date'] ?? map['startDate']),
+      endDate: parseDateOrMillis(map['end_date'] ?? map['endDate']),
     );
   }
 
@@ -99,8 +98,8 @@ class SettingsAnnouncementModel extends Equatable {
       'link_url': linkUrl,
       'is_active': isActive,
       'order': order,
-      'start_date': startDate == null ? null : Timestamp.fromDate(startDate!),
-      'end_date': endDate == null ? null : Timestamp.fromDate(endDate!),
+      'start_date': startDate,
+      'end_date': endDate,
     };
   }
 
