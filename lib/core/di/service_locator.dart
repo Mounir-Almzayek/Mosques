@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 
 import '../cache/cache.dart';
+import '../constants/firestore_schema.dart';
+import '../../data/models/app/app_settings_model.dart';
 import '../../data/repositories/app_settings_repository.dart';
 import '../../data/repositories/interfaces/app_settings_repository_interface.dart';
 import '../../data/repositories/interfaces/auth_repository_interface.dart';
@@ -45,7 +47,16 @@ void setupServiceLocator() {
 
   // App Settings
   sl.registerLazySingleton<IAppSettingsRepository>(
-    () => AppSettingsRepository(firestore: sl<FirebaseFirestore>()),
+    () => AppSettingsRepository(
+      firestore: sl<FirebaseFirestore>(),
+      cache: JsonCache<AppSettingsModel>(
+        store: sl<ICacheStore>(),
+        cacheKey: FirestoreSchema.appSettingsCacheKey,
+        toJson: (s) => s.toMap(),
+        fromJson: AppSettingsModel.fromMap,
+      ),
+      imageSync: sl<ImageSyncService>(),
+    ),
   );
 
   // Platform Announcements
