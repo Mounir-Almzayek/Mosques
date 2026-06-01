@@ -29,7 +29,11 @@ class PrayerCardsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final today = helper.buildAdjustedPrayerTimes(now);
     final preAdhanMin = designSettings.preAdhanMinutes;
-    final phase = helper.getPrayerDisplayPhase(now, preAdhanMinutes: preAdhanMin);
+    final phase = helper.getPrayerDisplayPhase(
+      now,
+      preAdhanMinutes: preAdhanMin,
+      adhanMomentDurationSeconds: designSettings.adhanMomentDurationSeconds,
+    );
     final slots = PrayerDisplaySlot.values;
     final isFriday = now.weekday == DateTime.friday;
     final slotCount = slots.length;
@@ -45,50 +49,49 @@ class PrayerCardsRow extends StatelessWidget {
     final activeFraction = effectiveScale / denominator;
     final inactiveFraction = 1.0 / denominator;
 
-    return LayoutBuilder(builder: (context, outer) {
-      final totalWidth = outer.maxWidth;
-      final hPad = (totalWidth * 0.006).clamp(3.0, 10.0);
-      // Total padding consumed by all cards
-      final totalPadding = hPad * 2 * slotCount;
-      final usableWidth = totalWidth - totalPadding;
+    return LayoutBuilder(
+      builder: (context, outer) {
+        final totalWidth = outer.maxWidth;
+        final hPad = (totalWidth * 0.006).clamp(3.0, 10.0);
+        // Total padding consumed by all cards
+        final totalPadding = hPad * 2 * slotCount;
+        final usableWidth = totalWidth - totalPadding;
 
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: slots.map((slot) {
-          final azanTime = _azanTimeForSlot(now, today, slot, helper);
-          final isFocusCard = _cardMatchesPhase(slot, phase);
-          final isBlinking = (now.hour == azanTime.hour &&
-                  now.minute == azanTime.minute &&
-                  now.day == azanTime.day) ||
-              (isFocusCard && phase.kind == PrayerDisplayPhaseKind.graceAfterIqama);
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: slots.map((slot) {
+            final azanTime = _azanTimeForSlot(now, today, slot, helper);
+            final isFocusCard = _cardMatchesPhase(slot, phase);
+            final targetWidth = isFocusCard
+                ? usableWidth * activeFraction
+                : usableWidth * inactiveFraction;
 
-          final targetWidth = isFocusCard
-              ? usableWidth * activeFraction
-              : usableWidth * inactiveFraction;
-
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: hPad),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 600),
-              curve: Curves.easeInOutCubic,
-              width: targetWidth,
-              child: DisplayPrayerCard(
-                slot: slot,
-                azanTime: azanTime,
-                isFocusCard: isFocusCard,
-                isBlinking: isBlinking,
-                designSettings: designSettings,
-                prayersFontSize: designSettings.fontSizes.prayers,
-                isFriday: isFriday,
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: hPad),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 600),
+                curve: Curves.easeInOutCubic,
+                width: targetWidth,
+                child: DisplayPrayerCard(
+                  slot: slot,
+                  azanTime: azanTime,
+                  isFocusCard: isFocusCard,
+                  designSettings: designSettings,
+                  prayersFontSize: designSettings.fontSizes.prayers,
+                  isFriday: isFriday,
+                ),
               ),
-            ),
-          );
-        }).toList(),
-      );
-    });
+            );
+          }).toList(),
+        );
+      },
+    );
   }
 
-  static bool _cardMatchesPhase(PrayerDisplaySlot slot, PrayerDisplayPhase phase) {
+  static bool _cardMatchesPhase(
+    PrayerDisplaySlot slot,
+    PrayerDisplayPhase phase,
+  ) {
     return PrayerDisplaySlot.tryParsePhaseKey(phase.prayerNameKey) == slot;
   }
 
@@ -102,8 +105,11 @@ class PrayerCardsRow extends StatelessWidget {
     if (todayItem == null) return now;
     final cutoff = todayItem.iqamaTime.add(const Duration(minutes: 1));
     if (now.isAfter(cutoff)) {
-      final tomorrow = helper.buildAdjustedPrayerTimes(now.add(const Duration(days: 1)));
-      return tomorrow.getByPrayerName(slot.name.toUpperCase())?.adhanTime ?? todayItem.adhanTime;
+      final tomorrow = helper.buildAdjustedPrayerTimes(
+        now.add(const Duration(days: 1)),
+      );
+      return tomorrow.getByPrayerName(slot.name.toUpperCase())?.adhanTime ??
+          todayItem.adhanTime;
     }
     return todayItem.adhanTime;
   }

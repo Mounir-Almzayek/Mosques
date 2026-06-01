@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 import '../../../core/enums/display/display_layer_kind.dart';
-import '../../../core/enums/display/prayer_display_phase_kind.dart';
 import '../../../core/utils/prayer_display_phase.dart';
 import '../../../data/models/display/display_layer_state.dart';
 import '../../../data/models/mosque/announcement_model.dart';
@@ -30,7 +29,8 @@ class DisplayLayerController extends ChangeNotifier {
     required int religiousWaitSeconds,
     required int religiousDisplaySeconds,
   }) {
-    final changed = _religiousWaitSeconds != religiousWaitSeconds ||
+    final changed =
+        _religiousWaitSeconds != religiousWaitSeconds ||
         _religiousDisplaySeconds != religiousDisplaySeconds;
     _religiousWaitSeconds = religiousWaitSeconds;
     _religiousDisplaySeconds = religiousDisplaySeconds;
@@ -117,7 +117,9 @@ class DisplayLayerController extends ChangeNotifier {
     final now = DateTime.now();
     for (final a in _alerts) {
       if (!a.isPublished || a.publishedAt == null) continue;
-      final expiry = a.publishedAt!.add(Duration(seconds: a.publishDurationSeconds));
+      final expiry = a.publishedAt!.add(
+        Duration(seconds: a.publishDurationSeconds),
+      );
       if (now.isBefore(expiry)) return a;
     }
     return null;
@@ -149,8 +151,8 @@ class DisplayLayerController extends ChangeNotifier {
     if (_prayerPhase == null) return false;
     switch (_prayerPhase!.kind) {
       case PrayerDisplayPhaseKind.preAdhan:
-      case PrayerDisplayPhaseKind.adhanMoment:
       case PrayerDisplayPhaseKind.iqama:
+      case PrayerDisplayPhaseKind.adhanMoment:
         return true;
       case PrayerDisplayPhaseKind.graceAfterIqama:
       case PrayerDisplayPhaseKind.nextAdhan:

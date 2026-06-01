@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/prayer_times_helper.dart';
+import '../../../../core/enums/display/prayer_display_phase_kind.dart';
+import 'preadhan_countdown_inline.dart';
 import '../../../../data/models/design/design_settings_model.dart';
 import '../../../../data/models/mosque/mosque_model.dart';
 import '../prayer/prayer_cards_row.dart';
@@ -59,33 +61,53 @@ class _DisplayBeigeAreaState extends State<DisplayBeigeArea> {
   @override
   Widget build(BuildContext context) {
     final design = widget.designSettings;
-    return LayoutBuilder(builder: (context, outer) {
-      final hPad = (outer.maxWidth * 0.012).clamp(6.0, 22.0);
-      final vPad = (outer.maxHeight * 0.02).clamp(6.0, 22.0);
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: hPad,vertical: vPad),
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 600),
-          switchInCurve: Curves.easeInCubic,
-          switchOutCurve: Curves.easeOutCubic,
-          child: widget.showReligiousContent
-              ? ReligiousContentInline(
-                  key: const ValueKey('religious'),
-                  mosque: widget.mosque,
-                  designSettings: design,
-                  slideIndex: widget.slideIndex,
-                  religiousContentFontSize: design.fontSizes.religiousContent,
-                )
-              : PrayerCardsRow(
-                  key: const ValueKey('prayers'),
-                  mosque: widget.mosque,
-                  designSettings: design,
-                  helper: _helper,
-                  now: _now,
-                  focusScale: design.prayerCardScale,
-                ),
-        ),
-      );
-    });
+    return LayoutBuilder(
+      builder: (context, outer) {
+        final hPad = (outer.maxWidth * 0.012).clamp(6.0, 22.0);
+        final vPad = (outer.maxHeight * 0.02).clamp(6.0, 22.0);
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: hPad, vertical: vPad),
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 600),
+            switchInCurve: Curves.easeInCubic,
+            switchOutCurve: Curves.easeOutCubic,
+            child: widget.showReligiousContent
+                ? (() {
+                    final phase = _helper.getPrayerDisplayPhase(
+                      _now,
+                      preAdhanMinutes: design.preAdhanMinutes,
+                      adhanMomentDurationSeconds:
+                          design.adhanMomentDurationSeconds,
+                    );
+                    if (phase.kind == PrayerDisplayPhaseKind.preAdhan ||
+                        phase.kind == PrayerDisplayPhaseKind.iqama) {
+                      return PreAdhanCountdownInline(
+                        key: const ValueKey('preAdhan'),
+                        helper: _helper,
+                        now: _now,
+                        designSettings: design,
+                      );
+                    }
+                    return ReligiousContentInline(
+                      key: const ValueKey('religious'),
+                      mosque: widget.mosque,
+                      designSettings: design,
+                      slideIndex: widget.slideIndex,
+                      religiousContentFontSize:
+                          design.fontSizes.religiousContent,
+                    );
+                  })()
+                : PrayerCardsRow(
+                    key: const ValueKey('prayers'),
+                    mosque: widget.mosque,
+                    designSettings: design,
+                    helper: _helper,
+                    now: _now,
+                    focusScale: design.prayerCardScale,
+                  ),
+          ),
+        );
+      },
+    );
   }
 }

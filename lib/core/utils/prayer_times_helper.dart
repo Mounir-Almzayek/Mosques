@@ -139,8 +139,7 @@ class PrayerTimesHelper {
 
   /// True when the item is the Friday Dhuhr (Jummah) prayer.
   bool _isJummah(PrayerTimeItem item) =>
-      item.prayer == Prayer.dhuhr &&
-      item.adhanTime.weekday == DateTime.friday;
+      item.prayer == Prayer.dhuhr && item.adhanTime.weekday == DateTime.friday;
 
   int getIqamaOffset(Prayer prayer, {bool isFriday = false}) {
     switch (prayer) {
@@ -176,44 +175,32 @@ class PrayerTimesHelper {
   }
 
   /// Determines the current UI display phase (PreAdhan, AdhanMoment, Iqama, Grace, or NextAdhan).
-  PrayerDisplayPhase getPrayerDisplayPhase(DateTime now, {int preAdhanMinutes = 5}) {
+  PrayerDisplayPhase getPrayerDisplayPhase(
+    DateTime now, {
+    int preAdhanMinutes = 5,
+    int adhanMomentDurationSeconds = 60,
+  }) {
     final timeline = _buildContinuousTimeline(now);
 
-    // 1. Check if we are currently in an Iqama window, Adhan moment, or Grace period.
+    // 1. Check if we are currently in an Adhan moment, Iqama window, or Grace period.
     for (final item in timeline) {
-      if (!item.isIqamaApplicable) {
-        final postAdhanGrace = item.adhanTime.add(const Duration(minutes: 10));
-        if ((now.isAfter(item.adhanTime) ||
-                now.isAtSameMomentAs(item.adhanTime)) &&
-            now.isBefore(postAdhanGrace)) {
-          // Check adhan moment (exact minute)
-          if (now.hour == item.adhanTime.hour &&
-              now.minute == item.adhanTime.minute &&
-              now.day == item.adhanTime.day) {
-            return PrayerDisplayPhase(
-              kind: PrayerDisplayPhaseKind.adhanMoment,
-              prayerNameKey: item.prayerName,
-              focusTime: item.adhanTime.add(const Duration(minutes: 1)),
-            );
-          }
-          return PrayerDisplayPhase(
-            kind: PrayerDisplayPhaseKind.iqama,
-            prayerNameKey: item.prayerName,
-            focusTime: postAdhanGrace,
-          );
-        }
-        continue;
-      }
+      final adhanStart = item.adhanTime;
+      final adhanEnd = item.adhanTime.add(
+        Duration(seconds: adhanMomentDurationSeconds),
+      );
 
-      // Check Adhan Moment (exact minute of adhan)
-      if (now.hour == item.adhanTime.hour &&
-          now.minute == item.adhanTime.minute &&
-          now.day == item.adhanTime.day) {
+      // Adhan moment lasts the configured duration after adhan time.
+      if ((now.isAfter(adhanStart) || now.isAtSameMomentAs(adhanStart)) &&
+          now.isBefore(adhanEnd)) {
         return PrayerDisplayPhase(
           kind: PrayerDisplayPhaseKind.adhanMoment,
           prayerNameKey: item.prayerName,
-          focusTime: item.adhanTime.add(const Duration(minutes: 1)),
+          focusTime: adhanEnd,
         );
+      }
+
+      if (!item.isIqamaApplicable) {
+        continue;
       }
 
       // On Fridays, skip the iqama countdown (and grace) for Jummah — there
@@ -222,9 +209,8 @@ class PrayerTimesHelper {
         continue;
       }
 
-      // Check Iqama countdown
-      if ((now.isAfter(item.adhanTime) ||
-              now.isAtSameMomentAs(item.adhanTime)) &&
+      // Check Iqama countdown after the adhan interval ends.
+      if ((now.isAfter(adhanEnd) || now.isAtSameMomentAs(adhanEnd)) &&
           now.isBefore(item.iqamaTime)) {
         return PrayerDisplayPhase(
           kind: PrayerDisplayPhaseKind.iqama,
@@ -250,8 +236,9 @@ class PrayerTimesHelper {
     if (preAdhanMinutes > 0) {
       for (final item in timeline) {
         if (now.isBefore(item.adhanTime)) {
-          final preAdhanStart =
-              item.adhanTime.subtract(Duration(minutes: preAdhanMinutes));
+          final preAdhanStart = item.adhanTime.subtract(
+            Duration(minutes: preAdhanMinutes),
+          );
           if (now.isAfter(preAdhanStart) ||
               now.isAtSameMomentAs(preAdhanStart)) {
             return PrayerDisplayPhase(

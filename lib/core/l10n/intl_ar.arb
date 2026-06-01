@@ -199,15 +199,15 @@
   "display_ticker_mosque": "إعلان مسجد",
   "display_next_prayer_title": "الصلاة القادمة",
   "display_next_prayer_badge": "التالية",
-  "display_remaining_to_iqama_line": "متبقٍ لإقامة {prayer}",
+  "display_remaining_to_iqama_line": "متبقٍ لإقامة صلاة ال{prayer}",
   "@display_remaining_to_iqama_line": {
     "placeholders": {
       "prayer": {}
     }
   },
-  "display_remaining_to_adhan_line": "متبقٍ لأذان {prayer}",
+  "display_remaining_to_adhan_line": "متبقٍ لأذان ال{prayer}",
   "display_remaining_to_sunrise_line": "متبقٍ للشروق",
-  "display_adhan_now": "حان الآن موعد أذان {prayer}",
+  "display_adhan_now": "حان الآن موعد أذان ال{prayer}",
   "@display_adhan_now": {
     "placeholders": {
       "prayer": {}
@@ -259,13 +259,13 @@
     }
   },
   "splash_app_tagline": "شاشة مسجد ذكية",
-  "display_time_until_iqama_for": "الوقت المتبقي لإقامة {prayer}",
+  "display_time_until_iqama_for": "الوقت المتبقي لإقامة صلاة ال{prayer}",
   "@display_time_until_iqama_for": {
     "placeholders": {
       "prayer": {}
     }
   },
-  "display_time_until_adhan_for": "الوقت المتبقي لأذان {prayer}",
+  "display_time_until_adhan_for": "الوقت المتبقي لأذان ال{prayer}",
   "@display_time_until_adhan_for": {
     "placeholders": {
       "prayer": {}

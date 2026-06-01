@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/utils/app_font_loader.dart';
 import '../../../../core/utils/app_number_format.dart';
 import '../../../../core/utils/prayer_times_helper.dart';
-import '../../../../data/models/design/design_settings_model.dart';
+import '../../../../data/models/mosque/mosque_model.dart';
 import '../../../../data/models/prayer_display_slot.dart';
+import '../header/top_header_widget.dart';
 
 /// Fullscreen overlay displayed during pre-adhan countdown, adhan moment,
 /// and iqama countdown phases.
@@ -19,6 +20,7 @@ class IqamaAdhanLayer extends StatelessWidget {
   final PrayerDisplayPhase phase;
   final Duration remaining;
   final DesignSettingsModel designSettings;
+  final MosqueModel mosque;
   final bool isFriday;
   final double countdownFontSize;
 
@@ -27,6 +29,7 @@ class IqamaAdhanLayer extends StatelessWidget {
     required this.phase,
     required this.remaining,
     required this.designSettings,
+    required this.mosque,
     required this.isFriday,
     required this.countdownFontSize,
   });
@@ -47,43 +50,74 @@ class IqamaAdhanLayer extends StatelessWidget {
       baseStyle: TextStyle(color: textColor),
     );
 
-    return Container(
-      color: bgColor,
-      width: double.infinity,
-      height: double.infinity,
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Prayer icon
-            if (slot != null)
-              Icon(slot.icon, size: (countdownFontSize * 4.0).clamp(28.0, 150.0), color: textColor),
-            if (slot != null) const SizedBox(height: 24),
-
-            // Title / announcement line
-            Text(
-              _buildTitle(slot, prayerLabel, s),
-              style: baseStyle.copyWith(fontSize: (countdownFontSize * 2.4).clamp(16.0, 90.0)),
-              textAlign: TextAlign.center,
-            ),
-
-            // Countdown timer (not shown during adhan moment)
-            if (phase.kind != PrayerDisplayPhaseKind.adhanMoment) ...[
-              const SizedBox(height: 32),
-              Text(
-                PrayerTimesHelper.formatDuration(remaining)
-                    .formatNumerals(fmt),
-                style: baseStyle.copyWith(
-                  fontSize: (countdownFontSize * 4.8).clamp(32.0, 180.0),
-                  fontFeatures: const [FontFeature.tabularFigures()],
+    return Padding(
+      padding: EdgeInsets.only(bottom: _tickerHeight(context)),
+      child: Container(
+        color: bgColor,
+        width: double.infinity,
+        child: SafeArea(
+          bottom: false,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: TopHeaderWidget(
+                  mosque: mosque,
+                  designSettings: designSettings,
                 ),
-                textAlign: TextAlign.center,
+              ),
+              Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (slot != null) ...[
+                        Icon(
+                          slot.icon,
+                          size: (countdownFontSize * 4.0).clamp(28.0, 150.0),
+                          color: textColor,
+                        ),
+                        const SizedBox(height: 24),
+                      ],
+                      Text(
+                        _buildTitle(slot, prayerLabel, s),
+                        style: baseStyle.copyWith(
+                          fontSize: (countdownFontSize * 2.4).clamp(16.0, 90.0),
+                          fontWeight: FontWeight.w800,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      if (phase.kind != PrayerDisplayPhaseKind.adhanMoment) ...[
+                        const SizedBox(height: 32),
+                        Text(
+                          PrayerTimesHelper.formatDuration(
+                            remaining,
+                          ).formatNumerals(fmt),
+                          style: baseStyle.copyWith(
+                            fontSize: (countdownFontSize * 4.8).clamp(
+                              32.0,
+                              180.0,
+                            ),
+                            fontWeight: FontWeight.w900,
+                            fontFeatures: const [FontFeature.tabularFigures()],
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
               ),
             ],
-          ],
+          ),
         ),
       ),
     );
+  }
+
+  double _tickerHeight(BuildContext context) {
+    final shortest = MediaQuery.sizeOf(context).shortestSide;
+    return (shortest * 0.105).clamp(56.0, 92.0);
   }
 
   /// Resolves the human-readable prayer name, substituting Jummah for

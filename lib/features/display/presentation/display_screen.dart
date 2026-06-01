@@ -40,8 +40,10 @@ class _DisplayScreenState extends State<DisplayScreen> {
 
   /// Merged listenable that fires when either the layer controller or clock
   /// ticks — used to rebuild only the overlay portion of the widget tree.
-  late final Listenable _overlayListenable =
-      Listenable.merge([_layerController, _now]);
+  late final Listenable _overlayListenable = Listenable.merge([
+    _layerController,
+    _now,
+  ]);
 
   @override
   void initState() {
@@ -68,7 +70,11 @@ class _DisplayScreenState extends State<DisplayScreen> {
     final design = mosque.designSettings;
 
     _helper = PrayerTimesHelper(mosque);
-    final phase = _helper.getPrayerDisplayPhase(_now.value, preAdhanMinutes: design.preAdhanMinutes);
+    final phase = _helper.getPrayerDisplayPhase(
+      _now.value,
+      preAdhanMinutes: design.preAdhanMinutes,
+      adhanMomentDurationSeconds: design.adhanMomentDurationSeconds,
+    );
 
     _layerController.configure(
       religiousWaitSeconds: design.religiousContentWaitSeconds,
@@ -99,8 +105,16 @@ class _DisplayScreenState extends State<DisplayScreen> {
           }
           if (state is DisplayError) {
             final s = S.of(context);
-            final msg = state.message == 'no_mosque' ? s.display_error_no_mosque : state.message;
-            return Center(child: Text(msg, style: const TextStyle(color: Colors.red), textAlign: TextAlign.center));
+            final msg = state.message == 'no_mosque'
+                ? s.display_error_no_mosque
+                : state.message;
+            return Center(
+              child: Text(
+                msg,
+                style: const TextStyle(color: Colors.red),
+                textAlign: TextAlign.center,
+              ),
+            );
           }
           if (state is! DisplayLoaded) return const SizedBox.shrink();
 
@@ -139,7 +153,12 @@ class _DisplayScreenState extends State<DisplayScreen> {
                     }
                     return LayerTransitionWrapper(
                       activeLayer: activeLayer,
-                      child: _buildOverlayLayer(activeLayer, mosque, design, colors),
+                      child: _buildOverlayLayer(
+                        activeLayer,
+                        mosque,
+                        design,
+                        colors,
+                      ),
                     );
                   },
                 ),
@@ -152,7 +171,11 @@ class _DisplayScreenState extends State<DisplayScreen> {
     );
   }
 
-  Widget _buildBaseLayer(BuildContext context, MosqueModel mosque, DisplayLoaded state) {
+  Widget _buildBaseLayer(
+    BuildContext context,
+    MosqueModel mosque,
+    DisplayLoaded state,
+  ) {
     final design = mosque.designSettings;
     final colors = design.colors;
     final media = MediaQuery.sizeOf(context);
@@ -180,8 +203,14 @@ class _DisplayScreenState extends State<DisplayScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: padH, vertical: padV),
-                        child: TopHeaderWidget(mosque: mosque, designSettings: design),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: padH,
+                          vertical: padV,
+                        ),
+                        child: TopHeaderWidget(
+                          mosque: mosque,
+                          designSettings: design,
+                        ),
                       ),
                       Expanded(
                         child: ListenableBuilder(
@@ -191,7 +220,7 @@ class _DisplayScreenState extends State<DisplayScreen> {
                             designSettings: design,
                             showReligiousContent:
                                 _layerController.state.activeLayer ==
-                                    DisplayLayerKind.religious,
+                                DisplayLayerKind.religious,
                             slideIndex: _layerController.religiousSlideIndex,
                           ),
                         ),
@@ -245,12 +274,17 @@ class _DisplayScreenState extends State<DisplayScreen> {
       case DisplayLayerKind.iqamaAdhan:
         final helper = PrayerTimesHelper(mosque);
         final now = _now.value;
-        final phase = helper.getPrayerDisplayPhase(now, preAdhanMinutes: design.preAdhanMinutes);
+        final phase = helper.getPrayerDisplayPhase(
+          now,
+          preAdhanMinutes: design.preAdhanMinutes,
+          adhanMomentDurationSeconds: design.adhanMomentDurationSeconds,
+        );
         final remaining = phase.focusTime.difference(now);
         return IqamaAdhanLayer(
           phase: phase,
           remaining: remaining,
           designSettings: design,
+          mosque: mosque,
           isFriday: now.weekday == DateTime.friday,
           countdownFontSize: design.fontSizes.countdown,
         );
