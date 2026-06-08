@@ -22,6 +22,7 @@ import '../alerts/presentation/alerts_section.dart';
 import '../profile/presentation/profile_section.dart';
 import '../about/presentation/about_section.dart';
 import '../update/presentation/update_section.dart';
+import '../../recitation/presentation/recitation_page.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -67,63 +68,64 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
               child: ZoomDrawer(
-              controller: _drawerController,
-              menuScreen: SettingsZoomDrawerContent(
-                selectedIndex: _sectionIndex,
-                isOpen: _drawerController.isOpen,
-                onSelectSection: (i) {
-                  _drawerController.close();
-                  setState(() => _sectionIndex = i);
-                },
-                onSignOut: _signOut,
-              ),
-              mainScreen: Scaffold(
-                appBar: SettingsAppBar(
-                  sectionIndex: _sectionIndex,
-                  mosqueName: mosqueName,
-                  onMenuPressed: _drawerController.toggle,
-                  popupMenuBuilder: (BuildContext context) => [
-                    PopupMenuItem<String>(
-                      value: 'smart_screen',
-                      child: Text(s.enable_smart_screen),
-                    ),
-                  ],
-                  onPopupMenuSelected: (value) async {
-                    if (value == 'smart_screen') {
-                      await sl<IAuthRepository>().setAppModeOverride(
-                        AppMode.deviceDisplay,
-                      );
-                      if (!context.mounted) return;
-                      context.go(Routes.displayPath);
-                    }
+                controller: _drawerController,
+                menuScreen: SettingsZoomDrawerContent(
+                  selectedIndex: _sectionIndex,
+                  isOpen: _drawerController.isOpen,
+                  onSelectSection: (i) {
+                    _drawerController.close();
+                    setState(() => _sectionIndex = i);
                   },
+                  onSignOut: _signOut,
                 ),
-                // Keep content readable on wide desktop screens by capping
-                // its width and centering it. On phones/tablets the cap is
-                // wider than the viewport, so it has no effect.
-                body: Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 1000),
-                    child: IndexedStack(
-                      index: _sectionIndex,
-                      sizing: StackFit.expand,
-                      children: const [
-                        GeneralSection(),
-                        PrayerIqamaSection(),
-                        ReligiousContentSection(),
-                        DesignSection(),
-                        AnnouncementSection(),
-                        AlbumSection(),
-                        AlertsSection(),
-                        ProfileSection(),
-                        AboutSection(),
-                        UpdateSection(),
-                      ],
+                mainScreen: Scaffold(
+                  appBar: SettingsAppBar(
+                    sectionIndex: _sectionIndex,
+                    mosqueName: mosqueName,
+                    onMenuPressed: _drawerController.toggle,
+                    popupMenuBuilder: (BuildContext context) => [
+                      PopupMenuItem<String>(
+                        value: 'smart_screen',
+                        child: Text(s.enable_smart_screen),
+                      ),
+                    ],
+                    onPopupMenuSelected: (value) async {
+                      if (value == 'smart_screen') {
+                        await sl<IAuthRepository>().setAppModeOverride(
+                          AppMode.deviceDisplay,
+                        );
+                        if (!context.mounted) return;
+                        context.go(Routes.displayPath);
+                      }
+                    },
+                  ),
+                  // Keep content readable on wide desktop screens by capping
+                  // its width and centering it. On phones/tablets the cap is
+                  // wider than the viewport, so it has no effect.
+                  body: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 1000),
+                      child: IndexedStack(
+                        index: _sectionIndex,
+                        sizing: StackFit.expand,
+                        children: const [
+                          GeneralSection(),
+                          PrayerIqamaSection(),
+                          ReligiousContentSection(),
+                          DesignSection(),
+                          AnnouncementSection(),
+                          AlbumSection(),
+                          AlertsSection(),
+                          ProfileSection(),
+                          AboutSection(),
+                          UpdateSection(),
+                          RecitationPage(),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
             );
           },
         );
