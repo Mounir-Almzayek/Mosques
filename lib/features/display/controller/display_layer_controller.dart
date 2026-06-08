@@ -5,12 +5,15 @@ import '../../../core/enums/display/display_layer_kind.dart';
 import '../../../core/utils/prayer_display_phase.dart';
 import '../../../data/models/display/display_layer_state.dart';
 import '../../../data/models/mosque/announcement_model.dart';
+import '../../../data/models/mosque/imam_tracking_session_model.dart';
 
 class DisplayLayerController extends ChangeNotifier {
   DisplayLayerState _state = const DisplayLayerState();
   DisplayLayerState get state => _state;
 
   List<AnnouncementModel> _alerts = [];
+  ImamTrackingSessionModel _imamTrackingSession =
+      const ImamTrackingSessionModel();
   PrayerDisplayPhase? _prayerPhase;
   bool _photoStudioActive = false;
   String? _photoStudioUrl;
@@ -24,6 +27,7 @@ class DisplayLayerController extends ChangeNotifier {
   bool get religiousVisible => _religiousVisible;
 
   String? get photoStudioUrl => _photoStudioUrl;
+  ImamTrackingSessionModel get imamTrackingSession => _imamTrackingSession;
 
   void configure({
     required int religiousWaitSeconds,
@@ -39,6 +43,11 @@ class DisplayLayerController extends ChangeNotifier {
 
   void updateAlerts(List<AnnouncementModel> alerts) {
     _alerts = alerts;
+    _resolve();
+  }
+
+  void updateImamTrackingSession(ImamTrackingSessionModel session) {
+    _imamTrackingSession = session;
     _resolve();
   }
 
@@ -129,7 +138,9 @@ class DisplayLayerController extends ChangeNotifier {
     final previous = _state.activeLayer;
     DisplayLayerKind next;
 
-    if (activeAlert != null) {
+    if (_imamTrackingSession.isActive) {
+      next = DisplayLayerKind.imamTracking;
+    } else if (activeAlert != null) {
       next = DisplayLayerKind.alert;
     } else if (_photoStudioActive) {
       next = DisplayLayerKind.photoStudio;

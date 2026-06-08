@@ -7,6 +7,7 @@ import '../design/design_settings_model.dart';
 import 'dua_model.dart';
 import 'hadith_model.dart';
 import 'iqama_settings_model.dart';
+import 'imam_tracking_session_model.dart';
 import 'mosque_text_entry_model.dart';
 import 'prayer_offsets_model.dart';
 import 'verse_model.dart';
@@ -18,6 +19,7 @@ export '../design/design_settings_model.dart';
 export 'dua_model.dart';
 export 'hadith_model.dart';
 export 'iqama_settings_model.dart';
+export 'imam_tracking_session_model.dart';
 export 'mosque_text_entry_model.dart';
 export 'prayer_offsets_model.dart';
 export 'verse_model.dart';
@@ -46,6 +48,7 @@ class MosqueModel extends Equatable {
 
   /// Saved high-priority alerts (published on demand).
   final List<AnnouncementModel> savedAlerts;
+  final ImamTrackingSessionModel imamTrackingSession;
 
   /// Unified album image URLs — used for both background cycling and fullscreen display.
   final List<String> albumImageUrls;
@@ -83,6 +86,7 @@ class MosqueModel extends Equatable {
     this.adhkar = const [],
     this.announcements = const [],
     this.savedAlerts = const [],
+    this.imamTrackingSession = const ImamTrackingSessionModel(),
     this.albumImageUrls = const [],
     this.publishedAlbumImageUrl,
     this.publishedAlbumImageAt,
@@ -173,6 +177,9 @@ class MosqueModel extends Equatable {
               )
               .toList() ??
           [],
+      imamTrackingSession: ImamTrackingSessionModel.fromMap(
+        Map<String, dynamic>.from(map['imam_tracking_session'] as Map? ?? {}),
+      ),
       albumImageUrls: _mergeAlbumUrls(map),
       publishedAlbumImageUrl: map['published_album_url']?.toString(),
       publishedAlbumImageAt: parseDateOrMillis(map['published_album_at']),
@@ -201,6 +208,7 @@ class MosqueModel extends Equatable {
       'adhkar': adhkar.map((a) => a.toMap()).toList(),
       'mosque_ads': announcements.map((a) => a.toMap()).toList(),
       'active_alerts': savedAlerts.map((a) => a.toMap()).toList(),
+      'imam_tracking_session': imamTrackingSession.toMap(),
       'album_image_urls': albumImageUrls,
       'published_album_url': publishedAlbumImageUrl,
       'published_album_at': publishedAlbumImageAt,
@@ -244,6 +252,7 @@ class MosqueModel extends Equatable {
     List<AdhkarModel>? adhkar,
     List<AnnouncementModel>? announcements,
     List<AnnouncementModel>? savedAlerts,
+    ImamTrackingSessionModel? imamTrackingSession,
     List<String>? albumImageUrls,
     String? publishedAlbumImageUrl,
     DateTime? publishedAlbumImageAt,
@@ -270,6 +279,7 @@ class MosqueModel extends Equatable {
       adhkar: adhkar ?? this.adhkar,
       announcements: announcements ?? this.announcements,
       savedAlerts: savedAlerts ?? this.savedAlerts,
+      imamTrackingSession: imamTrackingSession ?? this.imamTrackingSession,
       albumImageUrls: albumImageUrls ?? this.albumImageUrls,
       publishedAlbumImageUrl:
           publishedAlbumImageUrl ?? this.publishedAlbumImageUrl,
@@ -302,6 +312,7 @@ class MosqueModel extends Equatable {
     adhkar,
     announcements,
     savedAlerts,
+    imamTrackingSession,
     albumImageUrls,
     publishedAlbumImageFit,
     publishedAlbumImageUrl,

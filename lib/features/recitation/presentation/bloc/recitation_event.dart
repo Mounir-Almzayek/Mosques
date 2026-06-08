@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../../data/models/mosque/imam_tracking_session_model.dart';
+
 abstract class ImamTrackingEvent extends Equatable {
   const ImamTrackingEvent();
 
@@ -13,6 +15,23 @@ class LoadImamTracking extends ImamTrackingEvent {
 
 class ToggleRecording extends ImamTrackingEvent {
   const ToggleRecording();
+}
+
+class StartImamDisplay extends ImamTrackingEvent {
+  const StartImamDisplay();
+}
+
+class StopImamDisplay extends ImamTrackingEvent {
+  const StopImamDisplay();
+}
+
+class ImamTrackingSessionUpdated extends ImamTrackingEvent {
+  final ImamTrackingSessionModel session;
+
+  const ImamTrackingSessionUpdated(this.session);
+
+  @override
+  List<Object?> get props => [session];
 }
 
 class SelectPage extends ImamTrackingEvent {

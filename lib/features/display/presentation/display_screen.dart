@@ -10,6 +10,7 @@ import '../../../core/styles/app_theme.dart';
 import '../../../core/utils/box_fit_codec.dart';
 import '../../../core/utils/prayer_times_helper.dart';
 import '../../../data/models/mosque/mosque_model.dart';
+import '../../../data/repositories/interfaces/mosque_repository_interface.dart';
 import '../../../core/enums/app_mode.dart';
 import '../../../core/di/service_locator.dart';
 import '../../../data/repositories/interfaces/auth_repository_interface.dart';
@@ -20,6 +21,7 @@ import '../widgets/content/content_widgets.dart';
 import '../widgets/header/header_widgets.dart';
 import '../widgets/layers/alert_layer.dart';
 import '../widgets/layers/iqama_adhan_layer.dart';
+import '../widgets/layers/imam_tracking_layer.dart';
 import '../widgets/layers/layer_transition_wrapper.dart';
 import '../widgets/layers/photo_studio_layer.dart';
 import '../widgets/ticker/ticker_widgets.dart';
@@ -80,6 +82,7 @@ class _DisplayScreenState extends State<DisplayScreen> {
       religiousWaitSeconds: design.religiousContentWaitSeconds,
       religiousDisplaySeconds: design.religiousContentDisplaySeconds,
     );
+    _layerController.updateImamTrackingSession(mosque.imamTrackingSession);
     _layerController.updateAlerts(mosque.savedAlerts);
     _layerController.updateAlbumImage(
       publishedUrl: mosque.publishedAlbumImageUrl,
@@ -93,6 +96,12 @@ class _DisplayScreenState extends State<DisplayScreen> {
     await sl<IAuthRepository>().setAppModeOverride(AppMode.mobileSettings);
     if (!context.mounted) return;
     context.go(Routes.settingsPath);
+  }
+
+  Future<void> _updateImamTrackingPage(MosqueModel mosque, int pageNumber) {
+    return sl<IMosqueRepository>().updateImamTrackingSession(
+      mosque.imamTrackingSession.copyWith(currentPage: pageNumber),
+    );
   }
 
   @override
@@ -255,6 +264,15 @@ class _DisplayScreenState extends State<DisplayScreen> {
     dynamic colors,
   ) {
     switch (layer) {
+      case DisplayLayerKind.imamTracking:
+        return ImamTrackingLayer(
+          session: mosque.imamTrackingSession,
+          primaryColor: colors.alertTextValue,
+          backgroundColor: colors.alertBackgroundValue,
+          onPageSelected: (pageNumber) {
+            unawaited(_updateImamTrackingPage(mosque, pageNumber));
+          },
+        );
       case DisplayLayerKind.alert:
         return AlertLayer(
           alerts: mosque.savedAlerts,

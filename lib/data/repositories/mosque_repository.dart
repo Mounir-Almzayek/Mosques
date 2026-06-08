@@ -21,14 +21,14 @@ class MosqueRepository implements IMosqueRepository {
     required Future<void> Function(String) syncActiveMosque,
     required JsonCache<MosqueModel> cache,
     ImageSyncService? imageSync,
-  })  : _transport = transport,
-        _getActiveMosqueId = getActiveMosqueId,
-        _syncActiveMosque = syncActiveMosque,
-        _cache = cache,
-        _loader = CacheFirstLoader<MosqueModel>(
-          cache,
-          onValue: imageSync?.syncMosque,
-        );
+  }) : _transport = transport,
+       _getActiveMosqueId = getActiveMosqueId,
+       _syncActiveMosque = syncActiveMosque,
+       _cache = cache,
+       _loader = CacheFirstLoader<MosqueModel>(
+         cache,
+         onValue: imageSync?.syncMosque,
+       );
 
   String _collection() => FirestoreSchema.mosquesCollection;
 
@@ -51,9 +51,10 @@ class MosqueRepository implements IMosqueRepository {
   Stream<MosqueModel?> _remoteStream() {
     final id = _activeId;
     if (id == null) return Stream.value(null);
-    return _transport.watchDocument(_collection(), id).map(
-          (doc) =>
-              doc == null ? null : MosqueModel.fromMap(doc.data, doc.id),
+    return _transport
+        .watchDocument(_collection(), id)
+        .map(
+          (doc) => doc == null ? null : MosqueModel.fromMap(doc.data, doc.id),
         );
   }
 
@@ -61,12 +62,16 @@ class MosqueRepository implements IMosqueRepository {
   Future<MosqueModel?> getActiveMosque() async {
     final uid = _activeId;
     if (uid != null) await _syncActiveMosque(uid);
-    return _loader.once(remote: () async {
-      final id = _activeId;
-      if (id == null) return null;
-      final doc = await _transport.getDocument(_collection(), id);
-      return doc == null ? null : MosqueModel.fromMap(doc.data, doc.id);
-    }).last;
+    return _loader
+        .once(
+          remote: () async {
+            final id = _activeId;
+            if (id == null) return null;
+            final doc = await _transport.getDocument(_collection(), id);
+            return doc == null ? null : MosqueModel.fromMap(doc.data, doc.id);
+          },
+        )
+        .last;
   }
 
   @override
@@ -159,8 +164,9 @@ class MosqueRepository implements IMosqueRepository {
   @override
   Future<void> updateAnnouncements(MosqueModel mosque) async {
     await _transport.updateDocument(_collection(), _requireActiveId(), {
-      FirestoreSchema.mosqueAds:
-          mosque.announcements.map((a) => a.toMap()).toList(),
+      FirestoreSchema.mosqueAds: mosque.announcements
+          .map((a) => a.toMap())
+          .toList(),
       FirestoreSchema.updatedAt: RemoteFieldValue.serverTimestamp,
       FirestoreSchema.lastSeen: RemoteFieldValue.serverTimestamp,
     });
@@ -169,8 +175,20 @@ class MosqueRepository implements IMosqueRepository {
   @override
   Future<void> updateActiveAlerts(MosqueModel mosque) async {
     await _transport.updateDocument(_collection(), _requireActiveId(), {
-      FirestoreSchema.activeAlerts:
-          mosque.savedAlerts.map((a) => a.toMap()).toList(),
+      FirestoreSchema.activeAlerts: mosque.savedAlerts
+          .map((a) => a.toMap())
+          .toList(),
+      FirestoreSchema.updatedAt: RemoteFieldValue.serverTimestamp,
+      FirestoreSchema.lastSeen: RemoteFieldValue.serverTimestamp,
+    });
+  }
+
+  @override
+  Future<void> updateImamTrackingSession(
+    ImamTrackingSessionModel session,
+  ) async {
+    await _transport.updateDocument(_collection(), _requireActiveId(), {
+      FirestoreSchema.imamTrackingSession: session.toMap(),
       FirestoreSchema.updatedAt: RemoteFieldValue.serverTimestamp,
       FirestoreSchema.lastSeen: RemoteFieldValue.serverTimestamp,
     });

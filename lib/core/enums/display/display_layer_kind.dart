@@ -1,6 +1,7 @@
 /// Priority-based display layers. Lower index = higher priority.
 /// Only one layer is visible at a time; the highest-priority active layer wins.
 enum DisplayLayerKind {
+  imamTracking,
   alert,
   photoStudio,
   iqamaAdhan,

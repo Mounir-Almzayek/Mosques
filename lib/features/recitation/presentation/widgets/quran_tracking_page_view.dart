@@ -15,6 +15,7 @@ import '../../data/models/tracked_verse.dart';
 
 class QuranTrackingPageView extends StatefulWidget {
   final int currentPage;
+  final TrackedVerse? highlightedVerse;
   final List<TrackedVerse> trackedVerses;
   final ValueChanged<int> onPageSelected;
   final void Function(int surahNumber, int verseNumber) onVerseRead;
@@ -23,6 +24,7 @@ class QuranTrackingPageView extends StatefulWidget {
   const QuranTrackingPageView({
     super.key,
     required this.currentPage,
+    this.highlightedVerse,
     required this.trackedVerses,
     required this.onPageSelected,
     required this.onVerseRead,
@@ -54,6 +56,21 @@ class _QuranTrackingPageViewState extends State<QuranTrackingPageView> {
     _pages = (GetPage()..getQuran(totalPagesCount)).staticPages;
     _reportedPage = widget.currentPage;
     _positionsListener.itemPositions.addListener(_reportCurrentPage);
+  }
+
+  @override
+  void didUpdateWidget(covariant QuranTrackingPageView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.currentPage == oldWidget.currentPage ||
+        widget.currentPage == _reportedPage) {
+      return;
+    }
+
+    _reportedPage = widget.currentPage;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_scrollController.isAttached) return;
+      _scrollController.jumpTo(index: widget.currentPage - 1);
+    });
   }
 
   @override
@@ -89,17 +106,17 @@ class _QuranTrackingPageViewState extends State<QuranTrackingPageView> {
   }
 
   List<HighlightVerse> _buildHighlights() {
-    return widget.trackedVerses
-        .where((verse) => verse.status == TrackedVerseStatus.read)
-        .map(
-          (verse) => HighlightVerse(
-            surah: verse.surahNumber,
-            verseNumber: verse.verseNumber,
-            page: verse.pageNumber,
-            color: Colors.lightGreen,
-          ),
-        )
-        .toList(growable: false);
+    final verse = widget.highlightedVerse;
+    if (verse == null) return const [];
+
+    return [
+      HighlightVerse(
+        surah: verse.surahNumber,
+        verseNumber: verse.verseNumber,
+        page: verse.pageNumber,
+        color: Colors.lightGreen,
+      ),
+    ];
   }
 
   double _pageHeaderAllowance(QuranPage page) {

@@ -8,9 +8,13 @@ abstract class IMosqueRepository {
   Future<void> updateDesignSettings(MosqueModel mosque);
   Future<void> updateLanguageCode(AppLanguage language);
   Future<void> updateIqamaSettings(MosqueModel mosque);
-  Future<void> updateMosqueTextList(MosqueModel mosque, MosqueTextListKind kind);
+  Future<void> updateMosqueTextList(
+    MosqueModel mosque,
+    MosqueTextListKind kind,
+  );
   Future<void> updateAnnouncements(MosqueModel mosque);
   Future<void> updateActiveAlerts(MosqueModel mosque);
+  Future<void> updateImamTrackingSession(ImamTrackingSessionModel session);
   Future<void> updateLastSeen();
   Stream<MosqueModel?> get streamActiveMosque;
 }

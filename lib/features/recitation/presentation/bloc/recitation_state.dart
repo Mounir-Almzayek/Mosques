@@ -8,7 +8,11 @@ class ImamTrackingState extends Equatable {
   final int currentVerseIndex;
   final bool isRecording;
   final bool isLoading;
+  final bool isDisplayActive;
+  final bool isPublishing;
+  final String? publishError;
   final DateTime? lastRecordedAt;
+  final TrackedVerse? highlightedVerse;
   final List<TrackedVerse> trackedVerses;
 
   const ImamTrackingState({
@@ -16,7 +20,11 @@ class ImamTrackingState extends Equatable {
     this.currentVerseIndex = 0,
     this.isRecording = false,
     this.isLoading = true,
+    this.isDisplayActive = false,
+    this.isPublishing = false,
+    this.publishError,
     this.lastRecordedAt,
+    this.highlightedVerse,
     this.trackedVerses = const [],
   });
 
@@ -27,7 +35,12 @@ class ImamTrackingState extends Equatable {
     int? currentVerseIndex,
     bool? isRecording,
     bool? isLoading,
+    bool? isDisplayActive,
+    bool? isPublishing,
+    String? publishError,
     DateTime? lastRecordedAt,
+    TrackedVerse? highlightedVerse,
+    bool clearHighlightedVerse = false,
     List<TrackedVerse>? trackedVerses,
   }) {
     return ImamTrackingState(
@@ -35,7 +48,13 @@ class ImamTrackingState extends Equatable {
       currentVerseIndex: currentVerseIndex ?? this.currentVerseIndex,
       isRecording: isRecording ?? this.isRecording,
       isLoading: isLoading ?? this.isLoading,
+      isDisplayActive: isDisplayActive ?? this.isDisplayActive,
+      isPublishing: isPublishing ?? this.isPublishing,
+      publishError: publishError,
       lastRecordedAt: lastRecordedAt ?? this.lastRecordedAt,
+      highlightedVerse: clearHighlightedVerse
+          ? null
+          : highlightedVerse ?? this.highlightedVerse,
       trackedVerses: trackedVerses ?? this.trackedVerses,
     );
   }
@@ -46,7 +65,11 @@ class ImamTrackingState extends Equatable {
     currentVerseIndex,
     isRecording,
     isLoading,
+    isDisplayActive,
+    isPublishing,
+    publishError,
     lastRecordedAt,
+    highlightedVerse,
     trackedVerses,
   ];
 }

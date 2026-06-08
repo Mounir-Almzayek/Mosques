@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/di/service_locator.dart';
+import '../../../core/styles/app_colors.dart';
+import '../../../core/widgets/buttons/app_button.dart';
+import '../../../data/repositories/interfaces/mosque_repository_interface.dart';
 import '../data/repositories/imam_tracking_repository.dart';
+import '../data/services/imam_audio_recorder.dart';
 import 'bloc/recitation_bloc.dart';
 import 'bloc/recitation_event.dart';
 import 'bloc/recitation_state.dart';
-import 'widgets/iman_tracking_header.dart';
-import 'widgets/quran_tracking_page_view.dart';
-import 'widgets/recording_button.dart';
+import 'widgets/recitation_errors_panel.dart';
 
 class RecitationPage extends StatelessWidget {
   const RecitationPage({super.key});
@@ -15,9 +18,11 @@ class RecitationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ImamTrackingBloc>(
-      create: (_) =>
-          ImamTrackingBloc(repository: ImamTrackingRepository())
-            ..add(const LoadImamTracking()),
+      create: (_) => ImamTrackingBloc(
+        repository: ImamTrackingRepository(),
+        mosqueRepository: sl<IMosqueRepository>(),
+        audioRecorder: ImamAudioRecorder(),
+      )..add(const LoadImamTracking()),
       child: const RecitationPageBody(),
     );
   }
@@ -43,48 +48,49 @@ class RecitationPageBody extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  ImamTrackingHeader(
-                    isRecording: state.isRecording,
-                    currentPage: state.currentPage,
-                    totalPages: state.totalPages,
-                    lastRecordedAt: state.lastRecordedAt,
-                  ),
-                  const SizedBox(height: 14),
-                  Expanded(
-                    child: QuranTrackingPageView(
-                      currentPage: state.currentPage,
-                      trackedVerses: state.trackedVerses,
-                      onPageSelected: (pageNumber) {
-                        context.read<ImamTrackingBloc>().add(
-                          SelectPage(pageNumber),
-                        );
-                      },
-                      onVerseRead: (surahNumber, verseNumber) {
-                        context.read<ImamTrackingBloc>().add(
-                          MarkVerseRead(surahNumber, verseNumber),
-                        );
-                      },
-                      onVerseIncorrect: (surahNumber, verseNumber) {
-                        context.read<ImamTrackingBloc>().add(
-                          MarkVerseIncorrect(surahNumber, verseNumber),
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  RecordingButton(
-                    isRecording: state.isRecording,
+                  AppButton.elevated(
+                    label: state.isDisplayActive
+                        ? 'إنهاء تتبع قراءة الإمام'
+                        : 'بدء تتبع قراءة الإمام',
                     onPressed: () {
                       context.read<ImamTrackingBloc>().add(
-                        const ToggleRecording(),
+                        state.isDisplayActive
+                            ? const StopImamDisplay()
+                            : const StartImamDisplay(),
                       );
                     },
+                    isLoading: state.isPublishing,
+                    disabled: state.isPublishing,
+                    leadingIcon: state.isDisplayActive
+                        ? Icons.stop_circle_rounded
+                        : Icons.mic_rounded,
+                    height: 56,
+                    fontSize: 16,
+                    borderRadius: 16,
+                    gradient: state.isDisplayActive
+                        ? const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [Color(0xFFD14B4B), AppColors.error],
+                          )
+                        : AppColors.primaryGradient,
                   ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'اضغط على الآية لتحديدها كمقروءة، واضغط مطولًا لتحديد خطأ.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Color(0xFF66716C), fontSize: 13),
+                  if (state.publishError != null) ...[
+                    const SizedBox(height: 6),
+                    Text(
+                      state.publishError!,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  ],
+                  const SizedBox(height: 16),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: RecitationErrorsPanel(
+                        trackedVerses: state.trackedVerses,
+                      ),
+                    ),
                   ),
                 ],
               ),
