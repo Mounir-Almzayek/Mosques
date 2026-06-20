@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import '../../../../core/utils/app_number_format.dart';
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 import 'top_header_clock_block.dart';
 import 'top_header_date_block.dart';
 import 'top_header_mosque_block.dart';
 
 class TopHeaderWidget extends StatefulWidget {
-  final MosqueModel mosque;
-  final DesignSettingsModel designSettings;
+  final MosqueBootstrap mosque;
+  final DisplaySettings designSettings;
 
   const TopHeaderWidget({
     super.key,
@@ -70,15 +70,14 @@ class _TopHeaderWidgetState extends State<TopHeaderWidget> {
         '${h.hDay} ${h.getLongMonthName()} ${h.hYear} $hijriSuffix'
             .formatNumerals(numeralFormat);
 
-    final headerColor = widget.designSettings.colors.primaryValue;
+    final headerColor = widget.designSettings.primaryColorValue;
     
     return LayoutBuilder(
       builder: (context, constraints) {
         final widthScale = (constraints.maxWidth / 1100).clamp(0.48, 1.0);
         
-        final fontSizes = widget.designSettings.fontSizes;
-        final mosqueBase = fontSizes.mosqueInfo * 1.28 * widthScale;
-        final clockBase = fontSizes.clock * 1.28 * widthScale;
+        final mosqueBase = widget.designSettings.mosqueInfoFontSize * 1.28 * widthScale;
+        final clockBase = widget.designSettings.clockFontSize * 1.28 * widthScale;
 
         return Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -88,7 +87,7 @@ class _TopHeaderWidgetState extends State<TopHeaderWidget> {
                 alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
                 child: TopHeaderMosqueBlock(
                   mosqueName: widget.mosque.name,
-                  cityName: widget.mosque.city,
+                  cityName: widget.mosque.mosque.city,
                   textColor: headerColor,
                   isRtl: isRtl,
                   base: mosqueBase,

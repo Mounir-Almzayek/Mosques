@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../../../../core/enums/app_language.dart';
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 
 // ——— Enums ———
 
@@ -68,7 +68,7 @@ class SaveGeneralRequested extends GeneralEvent {
 /// Internal event emitted when the mosque stream pushes a new value.
 /// Not part of the public API; use [LoadGeneral] instead.
 class GeneralMosqueUpdated extends GeneralEvent {
-  final MosqueModel? mosque;
+  final MosqueBootstrap? mosque;
 
   const GeneralMosqueUpdated(this.mosque);
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/di/service_locator.dart';
-import '../../../data/repositories/interfaces/app_settings_repository_interface.dart';
+import '../../../data/repositories/interfaces/app_config_repository_interface.dart';
 import '../../../data/repositories/interfaces/mosque_repository_interface.dart';
 import '../../../data/repositories/interfaces/platform_announcements_repository_interface.dart';
 import '../bloc/display_bloc.dart';
@@ -17,7 +17,7 @@ class DisplayPage extends StatelessWidget {
       create: (_) => DisplayBloc(
         mosqueRepository: sl<IMosqueRepository>(),
         platformAnnouncementsRepository: sl<IPlatformAnnouncementsRepository>(),
-        appSettingsRepository: sl<IAppSettingsRepository>(),
+        appSettingsRepository: sl<IAppConfigRepository>(),
       )..add(StartDisplaySubscription()),
       child: const DisplayScreen(),
     );

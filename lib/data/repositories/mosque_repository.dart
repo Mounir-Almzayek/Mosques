@@ -1,38 +1,39 @@
 import 'dart:async';
 
 import '../../core/cache/cache.dart';
-import '../../core/constants/firestore_schema.dart';
 import '../../core/enums/app_language.dart';
-import '../../core/realtime/realtime_transport.dart';
-import '../../core/realtime/remote_field_value.dart';
-import '../models/mosque/mosque_model.dart';
+import '../datasources/mosque_remote_data_source.dart';
+import '../models/mosque/mosque_bootstrap.dart';
 import 'interfaces/mosque_repository_interface.dart';
 
+/// Backend-native mosque repository. Reads return [MosqueBootstrap] from
+/// [MosqueRemoteDataSource]; writes route each sub-object to its dedicated
+/// endpoint. The cache-first layer is unchanged — only the model type differs.
 class MosqueRepository implements IMosqueRepository {
-  final RealtimeTransport _transport;
+  final MosqueRemoteDataSource _dataSource;
   final String? Function() _getActiveMosqueId;
   final Future<void> Function(String) _syncActiveMosque;
-  final JsonCache<MosqueModel> _cache;
-  final CacheFirstLoader<MosqueModel> _loader;
+  final JsonCache<MosqueBootstrap> _cache;
+  final CacheFirstLoader<MosqueBootstrap> _loader;
+
+  /// Last bootstrap observed, used to diff announcement/alert lists on write.
+  MosqueBootstrap? _latest;
 
   MosqueRepository({
-    required RealtimeTransport transport,
+    required MosqueRemoteDataSource dataSource,
     required String? Function() getActiveMosqueId,
     required Future<void> Function(String) syncActiveMosque,
-    required JsonCache<MosqueModel> cache,
+    required JsonCache<MosqueBootstrap> cache,
     ImageSyncService? imageSync,
-  }) : _transport = transport,
-       _getActiveMosqueId = getActiveMosqueId,
-       _syncActiveMosque = syncActiveMosque,
-       _cache = cache,
-       _loader = CacheFirstLoader<MosqueModel>(
-         cache,
-         onValue: imageSync?.syncMosque,
-       );
+  })  : _dataSource = dataSource,
+        _getActiveMosqueId = getActiveMosqueId,
+        _syncActiveMosque = syncActiveMosque,
+        _cache = cache,
+        _loader = CacheFirstLoader<MosqueBootstrap>(
+          cache,
+          onValue: imageSync?.syncMosque,
+        );
 
-  String _collection() => FirestoreSchema.mosquesCollection;
-
-  /// Active mosque id, or null when none is selected.
   String? get _activeId {
     final id = _getActiveMosqueId();
     return (id == null || id.isEmpty) ? null : id;
@@ -45,161 +46,107 @@ class MosqueRepository implements IMosqueRepository {
   }
 
   @override
-  Stream<MosqueModel?> get streamActiveMosque =>
+  Stream<MosqueBootstrap?> get streamActiveMosque =>
       _loader.stream(remote: _remoteStream);
 
-  Stream<MosqueModel?> _remoteStream() {
+  Stream<MosqueBootstrap?> _remoteStream() {
     final id = _activeId;
     if (id == null) return Stream.value(null);
-    return _transport
-        .watchDocument(_collection(), id)
-        .map(
-          (doc) => doc == null ? null : MosqueModel.fromMap(doc.data, doc.id),
-        );
+    return _dataSource.watchBootstrap(id).map((b) {
+      if (b != null) _latest = b;
+      return b;
+    });
   }
 
   @override
-  Future<MosqueModel?> getActiveMosque() async {
+  Future<MosqueBootstrap?> getActiveMosque() async {
     final uid = _activeId;
     if (uid != null) await _syncActiveMosque(uid);
-    return _loader
-        .once(
-          remote: () async {
-            final id = _activeId;
-            if (id == null) return null;
-            final doc = await _transport.getDocument(_collection(), id);
-            return doc == null ? null : MosqueModel.fromMap(doc.data, doc.id);
-          },
-        )
-        .last;
+    return _loader.once(remote: () async {
+      final id = _activeId;
+      if (id == null) return null;
+      final b = await _dataSource.fetchBootstrap(id);
+      if (b != null) _latest = b;
+      return b;
+    }).last;
   }
 
   @override
-  Future<MosqueModel?> fetchActiveMosqueFromServer() async {
+  Future<MosqueBootstrap?> fetchActiveMosqueFromServer() async {
     final uid = _activeId;
     if (uid != null) await _syncActiveMosque(uid);
     if (uid == null) return null;
-
-    try {
-      final doc = await _transport.getDocument(
-        _collection(),
-        uid,
-        serverOnly: true,
-      );
-      if (doc == null) return null;
-      final mosque = MosqueModel.fromMap(doc.data, doc.id);
-      await _cache.save(mosque);
-      return mosque;
-    } catch (_) {
-      return null;
-    }
+    final b = await _dataSource.fetchBootstrap(uid);
+    if (b == null) return null;
+    _latest = b;
+    await _cache.save(b);
+    return b;
   }
 
   @override
-  Future<void> updateMosque(MosqueModel mosque) async {
+  Future<void> updateMosque(MosqueBootstrap mosque) async {
     final id = _requireActiveId();
-    final data = mosque.toMap();
-    data[FirestoreSchema.updatedAt] = RemoteFieldValue.serverTimestamp;
-    data[FirestoreSchema.lastSeen] = RemoteFieldValue.serverTimestamp;
-    // These sub-maps are owned by dedicated writers (DesignBloc /
-    // IqamaBloc). Omitting them here (with merge:true) prevents a full-doc
-    // save from clobbering edits made concurrently through those blocs.
-    data.remove(FirestoreSchema.designSettings);
-    data.remove(FirestoreSchema.iqamaOffsets);
-    // Drop legacy logo URL (no longer using Firebase Storage for logos)
-    data[FirestoreSchema.logoUrl] = RemoteFieldValue.delete;
-    // Drop legacy album fields (migration safety)
-    data['photo_studio_urls'] = RemoteFieldValue.delete;
-    data['background_album_urls'] = RemoteFieldValue.delete;
-    await _transport.setDocument(_collection(), id, data, merge: true);
+    final m = mosque.mosque;
+    await _dataSource.patchMosque(id, {
+      'name': m.name,
+      'city': m.city,
+      if (m.countryCode != null) 'countryCode': m.countryCode,
+      'latitude': double.tryParse(m.latitude) ?? 0,
+      'longitude': double.tryParse(m.longitude) ?? 0,
+      'timezone': m.timezone,
+      'languageCode': m.languageCode,
+      'defaultRiwayahCode': m.defaultRiwayahCode,
+    });
   }
 
   @override
-  Future<void> updateDesignSettings(MosqueModel mosque) async {
-    await _transport.updateDocument(_collection(), _requireActiveId(), {
-      FirestoreSchema.designSettings: mosque.designSettings.toMap(),
-      FirestoreSchema.updatedAt: RemoteFieldValue.serverTimestamp,
-      FirestoreSchema.lastSeen: RemoteFieldValue.serverTimestamp,
-    });
+  Future<void> updateDesignSettings(MosqueBootstrap mosque) async {
+    await _dataSource.putDisplaySettings(
+      _requireActiveId(),
+      mosque.displaySettings,
+    );
   }
 
   @override
   Future<void> updateLanguageCode(AppLanguage language) async {
-    await _transport.updateDocument(_collection(), _requireActiveId(), {
-      FirestoreSchema.languageCode: language.code,
-      FirestoreSchema.updatedAt: RemoteFieldValue.serverTimestamp,
-      FirestoreSchema.lastSeen: RemoteFieldValue.serverTimestamp,
+    await _dataSource.patchMosque(_requireActiveId(), {
+      'languageCode': language.code,
     });
   }
 
   @override
-  Future<void> updateIqamaSettings(MosqueModel mosque) async {
-    await _transport.updateDocument(_collection(), _requireActiveId(), {
-      FirestoreSchema.iqamaOffsets: mosque.iqamaSettings.toMap(),
-      FirestoreSchema.updatedAt: RemoteFieldValue.serverTimestamp,
-      FirestoreSchema.lastSeen: RemoteFieldValue.serverTimestamp,
-    });
+  Future<void> updateIqamaSettings(MosqueBootstrap mosque) async {
+    await _dataSource.putPrayerSettings(
+      _requireActiveId(),
+      mosque.prayerSettings,
+    );
   }
 
   @override
   Future<void> updateMosqueTextList(
-    MosqueModel mosque,
+    MosqueBootstrap mosque,
     MosqueTextListKind kind,
   ) async {
-    final field = switch (kind) {
-      MosqueTextListKind.hadith => FirestoreSchema.hadiths,
-      MosqueTextListKind.verse => FirestoreSchema.verses,
-      MosqueTextListKind.dua => FirestoreSchema.duas,
-      MosqueTextListKind.adhkar => FirestoreSchema.adhkar,
-    };
-    final list = mosque.listByKind(kind).map((e) => e.toMap()).toList();
-
-    await _transport.updateDocument(_collection(), _requireActiveId(), {
-      field: list,
-      FirestoreSchema.updatedAt: RemoteFieldValue.serverTimestamp,
-      FirestoreSchema.lastSeen: RemoteFieldValue.serverTimestamp,
-    });
+    await _dataSource.putReligiousContent(_requireActiveId(), mosque.content);
   }
 
   @override
-  Future<void> updateAnnouncements(MosqueModel mosque) async {
-    await _transport.updateDocument(_collection(), _requireActiveId(), {
-      FirestoreSchema.mosqueAds: mosque.announcements
-          .map((a) => a.toMap())
-          .toList(),
-      FirestoreSchema.updatedAt: RemoteFieldValue.serverTimestamp,
-      FirestoreSchema.lastSeen: RemoteFieldValue.serverTimestamp,
-    });
+  Future<void> updateAnnouncements(MosqueBootstrap mosque) async {
+    await _dataSource.reconcileAnnouncements(
+      _requireActiveId(),
+      announcementType: 'announcement',
+      previous: _latest?.ads ?? const [],
+      next: mosque.ads,
+    );
   }
 
   @override
-  Future<void> updateActiveAlerts(MosqueModel mosque) async {
-    await _transport.updateDocument(_collection(), _requireActiveId(), {
-      FirestoreSchema.activeAlerts: mosque.savedAlerts
-          .map((a) => a.toMap())
-          .toList(),
-      FirestoreSchema.updatedAt: RemoteFieldValue.serverTimestamp,
-      FirestoreSchema.lastSeen: RemoteFieldValue.serverTimestamp,
-    });
-  }
-
-  @override
-  Future<void> updateImamTrackingSession(
-    ImamTrackingSessionModel session,
-  ) async {
-    await _transport.updateDocument(_collection(), _requireActiveId(), {
-      FirestoreSchema.imamTrackingSession: session.toMap(),
-      FirestoreSchema.updatedAt: RemoteFieldValue.serverTimestamp,
-      FirestoreSchema.lastSeen: RemoteFieldValue.serverTimestamp,
-    });
-  }
-
-  @override
-  Future<void> updateLastSeen() async {
-    final id = _activeId;
-    if (id == null) return;
-    await _transport.updateDocument(_collection(), id, {
-      FirestoreSchema.lastSeen: RemoteFieldValue.serverTimestamp,
-    });
+  Future<void> updateActiveAlerts(MosqueBootstrap mosque) async {
+    await _dataSource.reconcileAnnouncements(
+      _requireActiveId(),
+      announcementType: 'alert',
+      previous: _latest?.savedAlerts ?? const [],
+      next: mosque.savedAlerts,
+    );
   }
 }

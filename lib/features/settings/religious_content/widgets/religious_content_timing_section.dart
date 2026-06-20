@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../../data/models/design/design_settings_model.dart';
+import '../../../../data/models/mosque/display_settings.dart';
 import '../../core/widgets/common_widgets.dart';
 
 class ReligiousContentTimingSection extends StatelessWidget {
-  final DesignSettingsModel design;
+  final DisplaySettings design;
   final String waitLabel;
   final String displayLabel;
   final String suffix;

@@ -48,6 +48,6 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>نستخدم موقعك لتحديث إحداثيات خط العرض والطول للمسجد.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>نستخدم الميكروفون لتتبع قراءة الإمام وتسجيل الصوت أثناء الجلسة.</string>
+	<string>نستخدم الميكروفون لتتبع قراءة الإمام وتحليلها أثناء الجلسة.</string>
 </dict>
 </plist>

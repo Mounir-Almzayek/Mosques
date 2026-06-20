@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/announcement.dart';
 import '../../core/widgets/duration_counter_field.dart';
 
 class AlertPublishBottomSheet extends StatefulWidget {
-  final AnnouncementModel alert;
+  final Announcement alert;
   final void Function(int durationSeconds) onPublish;
 
   const AlertPublishBottomSheet({
@@ -20,7 +20,7 @@ class AlertPublishBottomSheet extends StatefulWidget {
 }
 
 class _AlertPublishBottomSheetState extends State<AlertPublishBottomSheet> {
-  late int _durationSeconds = widget.alert.publishDurationSeconds;
+  late int _durationSeconds = widget.alert.displayDurationSeconds;
 
   @override
   Widget build(BuildContext context) {

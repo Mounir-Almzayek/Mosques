@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/enums/app_numeral_format.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/utils/app_number_format.dart';
-import '../../../../data/models/mosque/announcement_model.dart';
+import '../../../../data/models/mosque/announcement.dart';
 import 'alert_qr_card.dart';
 import 'alert_text_block.dart';
 
@@ -15,7 +15,7 @@ import 'alert_text_block.dart';
 /// (i.e. `now` is between `startDate` and `startDate + displayDurationSeconds`).
 /// Calls [onExpired] once no alert is active any longer.
 class AlertLayer extends StatefulWidget {
-  final List<AnnouncementModel> alerts;
+  final List<Announcement> alerts;
   final Color primaryColor;
   final Color backgroundColor;
   final AppNumeralFormat numeralFormat;
@@ -40,7 +40,7 @@ class AlertLayer extends StatefulWidget {
 
 class _AlertLayerState extends State<AlertLayer> {
   Timer? _timer;
-  AnnouncementModel? _activeAlert;
+  Announcement? _activeAlert;
 
   @override
   void initState() {
@@ -80,14 +80,10 @@ class _AlertLayerState extends State<AlertLayer> {
     }
 
     final now = DateTime.now();
-    AnnouncementModel? found;
+    Announcement? found;
 
     for (final alert in widget.alerts) {
-      if (!alert.isPublished || alert.publishedAt == null) continue;
-      final expiry = alert.publishedAt!.add(
-        Duration(seconds: alert.publishDurationSeconds),
-      );
-      if (now.isBefore(expiry)) {
+      if (alert.isActiveAt(now)) {
         found = alert;
         break;
       }

@@ -4,7 +4,7 @@ import 'package:uuid/uuid.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/feedback/unified_snackbar.dart';
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 import '../bloc/announcements_bloc.dart';
 
 class AnnouncementEditorSheet extends StatefulWidget {
@@ -14,7 +14,7 @@ class AnnouncementEditorSheet extends StatefulWidget {
     required this.bloc,
   });
 
-  final AnnouncementModel? existing;
+  final Announcement? existing;
   final AnnouncementsBloc bloc;
 
   @override
@@ -36,8 +36,8 @@ class _AnnouncementEditorSheetState extends State<AnnouncementEditorSheet> {
     _titleCtrl = TextEditingController(text: e?.title ?? '');
     _subtitleCtrl = TextEditingController(text: e?.subtitle ?? '');
     _qrCtrl = TextEditingController(text: e?.qrCodeUrl ?? '');
-    _startDate = e?.startDate ?? DateTime.now();
-    _endDate = e?.endDate ?? DateTime.now().add(const Duration(days: 7));
+    _startDate = e?.startAt ?? DateTime.now();
+    _endDate = e?.endAt ?? DateTime.now().add(const Duration(days: 7));
   }
 
   @override
@@ -167,7 +167,7 @@ class _AnnouncementEditorSheetState extends State<AnnouncementEditorSheet> {
                   );
                   return;
                 }
-                final newAd = AnnouncementModel(
+                final newAd = Announcement(
                   id: existing?.id ?? const Uuid().v4(),
                   title: _titleCtrl.text.trim(),
                   subtitle: _subtitleCtrl.text.trim().isEmpty
@@ -176,10 +176,10 @@ class _AnnouncementEditorSheetState extends State<AnnouncementEditorSheet> {
                   qrCodeUrl: _qrCtrl.text.trim().isEmpty
                       ? null
                       : _qrCtrl.text.trim(),
-                  startDate: _startDate,
-                  endDate: _endDate,
+                  startAt: _startDate,
+                  endAt: _endDate,
                   isActive: existing?.isActive ?? true,
-                  order: existing?.order ?? 0,
+                  displayOrder: existing?.displayOrder ?? 0,
                   isPriority: existing?.isPriority ?? false,
                   displayDurationSeconds:
                       existing?.displayDurationSeconds ?? 30,

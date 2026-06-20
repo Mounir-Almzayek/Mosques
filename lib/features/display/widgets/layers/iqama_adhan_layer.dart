@@ -4,7 +4,7 @@ import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/utils/app_font_loader.dart';
 import '../../../../core/utils/app_number_format.dart';
 import '../../../../core/utils/prayer_times_helper.dart';
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 import '../../../../data/models/prayer_display_slot.dart';
 import '../header/top_header_widget.dart';
 
@@ -19,8 +19,8 @@ import '../header/top_header_widget.dart';
 class IqamaAdhanLayer extends StatelessWidget {
   final PrayerDisplayPhase phase;
   final Duration remaining;
-  final DesignSettingsModel designSettings;
-  final MosqueModel mosque;
+  final DisplaySettings designSettings;
+  final MosqueBootstrap mosque;
   final bool isFriday;
   final double countdownFontSize;
 
@@ -37,9 +37,8 @@ class IqamaAdhanLayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    final colors = designSettings.colors;
-    final bgColor = colors.countdownBackgroundValue;
-    final textColor = colors.countdownTextValue;
+    final bgColor = designSettings.countdownBackgroundColorValue;
+    final textColor = designSettings.countdownTextColorValue;
     final fmt = designSettings.numeralFormat;
 
     final slot = PrayerDisplaySlot.tryParsePhaseKey(phase.prayerNameKey);

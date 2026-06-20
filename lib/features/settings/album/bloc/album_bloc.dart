@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/services/error_mapper.dart';
+import '../../../../core/utils/async_runner.dart';
 import '../../../../data/repositories/interfaces/mosque_repository_interface.dart';
 import 'album_event.dart';
 import 'album_state.dart';
@@ -11,6 +13,7 @@ export 'album_state.dart';
 
 class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
   final IMosqueRepository _repo;
+  final AsyncRunner<void> _saveRunner = AsyncRunner();
 
   AlbumBloc({required IMosqueRepository mosqueRepository})
     : _repo = mosqueRepository,
@@ -32,7 +35,7 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
     _sub = _repo.streamActiveMosque.listen(
       (mosque) => add(AlbumMosqueUpdated(mosque)),
       onError: (Object error) =>
-          emit(state.copyWith(isLoading: false, error: error.toString())),
+          emit(state.copyWith(isLoading: false, error: errorMessage(error))),
     );
   }
 
@@ -53,10 +56,12 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
   void _onImageAdded(AlbumImageAdded event, Emitter<AlbumState> emit) {
     final m = state.mosque;
     if (m == null) return;
-    final urls = [...m.albumImageUrls, event.url];
+    final urls = [...m.displaySettings.albumImageUrls, event.url];
     emit(
       state.copyWith(
-        mosque: m.copyWith(albumImageUrls: urls),
+        mosque: m.copyWith(
+          displaySettings: m.displaySettings.copyWith(albumImageUrls: urls),
+        ),
         hasUnsavedChanges: true,
       ),
     );
@@ -65,10 +70,14 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
   void _onImageRemoved(AlbumImageRemoved event, Emitter<AlbumState> emit) {
     final m = state.mosque;
     if (m == null) return;
-    final urls = m.albumImageUrls.where((u) => u != event.url).toList();
+    final urls = m.displaySettings.albumImageUrls
+        .where((u) => u != event.url)
+        .toList();
     emit(
       state.copyWith(
-        mosque: m.copyWith(albumImageUrls: urls),
+        mosque: m.copyWith(
+          displaySettings: m.displaySettings.copyWith(albumImageUrls: urls),
+        ),
         hasUnsavedChanges: true,
       ),
     );
@@ -80,10 +89,12 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
     emit(
       state.copyWith(
         mosque: m.copyWith(
-          publishedAlbumImageUrl: event.url,
-          publishedAlbumImageAt: DateTime.now(),
-          publishedAlbumImageDuration: event.durationSeconds,
-          publishedAlbumImageFit: event.fit,
+          displaySettings: m.displaySettings.copyWith(
+            publishedAlbumUrl: event.url,
+            publishedAlbumAt: DateTime.now(),
+            publishedAlbumDurationSeconds: event.durationSeconds,
+            publishedAlbumFit: event.fit,
+          ),
         ),
         hasUnsavedChanges: true,
       ),
@@ -98,7 +109,9 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
     if (m == null) return;
     emit(
       state.copyWith(
-        mosque: m.copyWith(publishedAlbumImageUrl: ''),
+        mosque: m.copyWith(
+          displaySettings: m.displaySettings.copyWith(publishedAlbumUrl: ''),
+        ),
         hasUnsavedChanges: true,
       ),
     );
@@ -110,20 +123,22 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
   ) async {
     final m = state.mosque;
     if (m == null) return;
-    emit(state.copyWith(isSaving: true));
-    try {
-      await _repo.updateMosque(m);
-      emit(
+    await _saveRunner.run(
+      checkConnectivity: false,
+      onlineTask: (_) => _repo.updateMosque(m),
+      onStart: () => emit(state.copyWith(isSaving: true)),
+      onSuccess: (_) => emit(
         state.copyWith(isSaving: false, hasUnsavedChanges: false, error: null),
-      );
-    } catch (e) {
-      emit(state.copyWith(isSaving: false, error: e.toString()));
-    }
+      ),
+      onError: (error) =>
+          emit(state.copyWith(isSaving: false, error: errorMessage(error))),
+    );
   }
 
   @override
   Future<void> close() {
     _sub?.cancel();
+    _saveRunner.cancel();
     return super.close();
   }
 }

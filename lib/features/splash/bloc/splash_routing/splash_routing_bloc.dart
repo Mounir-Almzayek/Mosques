@@ -32,7 +32,9 @@ class SplashRoutingBloc extends Bloc<SplashRoutingEvent, SplashRoutingState> {
       return;
     }
 
-    // تحديث المسجد النشط من السيرفر عند توفر الشبكة؛ وإلا الإبقاء على الكاش المحلي
+    // Refresh active mosque from the backend when online; otherwise keep
+    // the local cache. With the new backend this is a no-op — the active
+    // mosque already arrives via login / GET /mobile/me.
     await UserActiveMosqueRepository.syncBestEffort(currentUser.uid);
 
     // Check local override using the new AppMode enum

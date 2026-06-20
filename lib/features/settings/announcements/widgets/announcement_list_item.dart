@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import '../../../../core/enums/settings/announcement_schedule.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 import 'announcement_status_chip.dart';
 
 class AnnouncementListItem extends StatelessWidget {
-  final AnnouncementModel announcement;
+  final Announcement announcement;
   final AnnouncementSchedule status;
   final S s;
   final ValueChanged<bool> onActiveChanged;
@@ -88,7 +88,7 @@ class AnnouncementListItem extends StatelessWidget {
                     const SizedBox(width: 6),
                     Expanded(
                       child: Text(
-                        '${_dateLabel(announcement.startDate)} -> ${_dateLabel(announcement.endDate)}',
+                        '${_dateLabel(announcement.startAt)} -> ${_dateLabel(announcement.endAt)}',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: scheme.onSurfaceVariant,
                         ),

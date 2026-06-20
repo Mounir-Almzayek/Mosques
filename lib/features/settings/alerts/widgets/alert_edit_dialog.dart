@@ -3,18 +3,18 @@ import 'package:uuid/uuid.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
-import '../../../../data/models/mosque/announcement_model.dart';
+import '../../../../data/models/mosque/announcement.dart';
 
 /// Dialog for creating a new alert or editing an existing one.
 ///
 /// When [initialAlert] is provided, the dialog operates in edit mode,
 /// pre-filling all fields from the existing alert.
 class AlertEditDialog extends StatefulWidget {
-  /// Called with the created or updated [AnnouncementModel].
-  final void Function(AnnouncementModel) onAdd;
+  /// Called with the created or updated [Announcement].
+  final void Function(Announcement) onAdd;
 
   /// When provided, the dialog pre-fills fields for editing.
-  final AnnouncementModel? initialAlert;
+  final Announcement? initialAlert;
 
   const AlertEditDialog({super.key, required this.onAdd, this.initialAlert});
 
@@ -50,21 +50,19 @@ class _AlertEditDialogState extends State<AlertEditDialog> {
 
     final existing = widget.initialAlert;
     final now = DateTime.now();
-    final alert = AnnouncementModel(
+    final alert = Announcement(
       id: existing?.id ?? const Uuid().v4(),
+      announcementType: 'alert',
       title: title,
       subtitle: _subtitleCtrl.text.trim().isEmpty
           ? null
           : _subtitleCtrl.text.trim(),
-      startDate: existing?.startDate ?? now,
-      endDate: existing?.endDate ?? now.add(const Duration(days: 365)),
+      startAt: existing?.startAt ?? now,
+      endAt: existing?.endAt ?? now.add(const Duration(days: 365)),
       isPriority: true,
       isActive: existing?.isActive ?? true,
-      order: existing?.order ?? 0,
+      displayOrder: existing?.displayOrder ?? 0,
       displayDurationSeconds: existing?.displayDurationSeconds ?? 30,
-      isPublished: existing?.isPublished ?? false,
-      publishedAt: existing?.publishedAt,
-      publishDurationSeconds: existing?.publishDurationSeconds ?? 30,
       qrCodeUrl: _qrCtrl.text.trim().isEmpty ? null : _qrCtrl.text.trim(),
     );
 

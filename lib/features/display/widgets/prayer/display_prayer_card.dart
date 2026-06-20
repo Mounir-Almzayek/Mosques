@@ -4,7 +4,7 @@ import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/utils/app_number_format.dart';
 import '../../../../core/utils/app_time_format.dart';
 import '../../../../core/utils/app_font_loader.dart';
-import '../../../../data/models/design/design_settings_model.dart';
+import '../../../../data/models/mosque/display_settings.dart';
 import '../../../../data/models/prayer_display_slot.dart';
 import 'prayer_card_background.dart';
 
@@ -12,7 +12,7 @@ class DisplayPrayerCard extends StatelessWidget {
   final PrayerDisplaySlot slot;
   final DateTime azanTime;
   final bool isFocusCard;
-  final DesignSettingsModel designSettings;
+  final DisplaySettings designSettings;
   final double prayersFontSize;
   final bool isFriday;
 
@@ -29,7 +29,6 @@ class DisplayPrayerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    final colors = designSettings.colors;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -59,11 +58,11 @@ class DisplayPrayerCard extends StatelessWidget {
             .clamp(10.0, 124.0 * focusFactor);
 
         final cardColor = isFocusCard
-            ? colors.activeCardValue
-            : colors.prayerOverlayValue;
+            ? designSettings.activeCardColorValue
+            : designSettings.prayerOverlayColorValue;
         final textColor = isFocusCard
-            ? colors.activeCardTextValue
-            : colors.inactiveCardTextValue;
+            ? designSettings.activeCardTextColorValue
+            : designSettings.inactiveCardTextColorValue;
 
         final fmt = designSettings.numeralFormat;
         final formattedTime = AppTimeFormat.time12h(

@@ -2,16 +2,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/prayer_times_helper.dart';
-import '../../../../core/enums/display/prayer_display_phase_kind.dart';
 import 'preadhan_countdown_inline.dart';
-import '../../../../data/models/design/design_settings_model.dart';
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 import '../prayer/prayer_cards_row.dart';
 import 'religious_content_inline.dart';
 
 class DisplayBeigeArea extends StatefulWidget {
-  final MosqueModel mosque;
-  final DesignSettingsModel designSettings;
+  final MosqueBootstrap mosque;
+  final DisplaySettings designSettings;
   final bool showReligiousContent;
   final int slideIndex;
 
@@ -75,9 +73,9 @@ class _DisplayBeigeAreaState extends State<DisplayBeigeArea> {
                 ? (() {
                     final phase = _helper.getPrayerDisplayPhase(
                       _now,
-                      preAdhanMinutes: design.preAdhanMinutes,
+                      preAdhanMinutes: widget.mosque.prayerSettings.preAdhanMinutes,
                       adhanMomentDurationSeconds:
-                          design.adhanMomentDurationSeconds,
+                          widget.mosque.prayerSettings.adhanMomentDurationSeconds,
                     );
                     if (phase.kind == PrayerDisplayPhaseKind.preAdhan ||
                         phase.kind == PrayerDisplayPhaseKind.iqama) {
@@ -94,7 +92,7 @@ class _DisplayBeigeAreaState extends State<DisplayBeigeArea> {
                       designSettings: design,
                       slideIndex: widget.slideIndex,
                       religiousContentFontSize:
-                          design.fontSizes.religiousContent,
+                          design.contentFontSize,
                     );
                   })()
                 : PrayerCardsRow(

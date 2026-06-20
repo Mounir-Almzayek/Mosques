@@ -4,26 +4,27 @@ import '../../../../core/enums/display_background_type.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/utils/color_converter.dart';
-import '../../../../data/models/design/design_background_settings.dart';
 import 'album_url_list.dart';
 import 'design_card.dart';
 import 'design_section_title.dart';
 import 'display_background_picker.dart';
 
 class BackgroundSettingsSection extends StatelessWidget {
-  final DesignBackgroundSettings settings;
+  final DisplayBackgroundType backgroundType;
+  final String backgroundValue;
   final ValueChanged<DisplayBackgroundType> onTypeChanged;
   final ValueChanged<String> onValueChanged;
   final List<String> albumUrls;
   final ValueChanged<String> onAlbumUrlAdded;
   final void Function(int) onAlbumUrlRemoved;
 
-  /// Available background images from the global library (app_settings).
+  /// Available background images from the global library (app config).
   final List<String> libraryUrls;
 
   const BackgroundSettingsSection({
     super.key,
-    required this.settings,
+    required this.backgroundType,
+    required this.backgroundValue,
     required this.onTypeChanged,
     required this.onValueChanged,
     required this.albumUrls,
@@ -33,7 +34,7 @@ class BackgroundSettingsSection extends StatelessWidget {
   });
 
   void _showColorPicker(BuildContext context) {
-    Color selectedColor = ColorConverter.fromHex(settings.value, Colors.blue);
+    Color selectedColor = ColorConverter.fromHex(backgroundValue, Colors.blue);
 
     showDialog(
       context: context,
@@ -101,23 +102,23 @@ class BackgroundSettingsSection extends StatelessWidget {
                 icon: const Icon(Icons.photo_library_outlined),
               ),
             ],
-            selected: {settings.type},
+            selected: {backgroundType},
             onSelectionChanged: (vals) => onTypeChanged(vals.first),
             showSelectedIcon: false,
           ),
           const SizedBox(height: 20),
-          if (settings.type == DisplayBackgroundType.color)
+          if (backgroundType == DisplayBackgroundType.color)
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: Text(s.design_bg_type_color),
-              subtitle: Text(settings.value),
+              subtitle: Text(backgroundValue),
               trailing: GestureDetector(
                 onTap: () => _showColorPicker(context),
                 child: Container(
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: ColorConverter.fromHex(settings.value, Colors.grey),
+                    color: ColorConverter.fromHex(backgroundValue, Colors.grey),
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.white, width: 3),
                     boxShadow: [
@@ -130,7 +131,7 @@ class BackgroundSettingsSection extends StatelessWidget {
                 ),
               ),
             )
-          else if (settings.type == DisplayBackgroundType.album)
+          else if (backgroundType == DisplayBackgroundType.album)
             AlbumUrlList(
               urls: albumUrls,
               onUrlAdded: onAlbumUrlAdded,
@@ -138,7 +139,7 @@ class BackgroundSettingsSection extends StatelessWidget {
             )
           else
             DisplayBackgroundPicker(
-              selectedValue: settings.value,
+              selectedValue: backgroundValue,
               libraryUrls: libraryUrls,
               onSelected: onValueChanged,
             ),

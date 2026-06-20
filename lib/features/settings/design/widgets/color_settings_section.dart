@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../../../core/l10n/generated/l10n.dart';
-import '../../../../data/models/design/design_color_settings.dart';
+import '../../../../data/models/mosque/display_settings.dart';
 import 'design_card.dart';
 import 'design_section_title.dart';
 import 'design_color_item.dart';
 
 class ColorSettingsSection extends StatelessWidget {
-  final DesignColorSettings colors;
+  final DisplaySettings colors;
   final ValueChanged<String> onPrimaryChanged;
   final ValueChanged<String> onSecondaryChanged;
   final ValueChanged<String> onActiveCardChanged;
@@ -46,61 +46,61 @@ class ColorSettingsSection extends StatelessWidget {
           ),
           DesignColorItem(
             label: s.design_color_primary,
-            hexValue: colors.primary,
+            hexValue: colors.primaryColor,
             onChanged: onPrimaryChanged,
           ),
           const Divider(),
           DesignColorItem(
             label: s.design_color_secondary,
-            hexValue: colors.secondary,
+            hexValue: colors.secondaryColor,
             onChanged: onSecondaryChanged,
           ),
           const Divider(),
           DesignColorItem(
             label: s.design_color_active_card,
-            hexValue: colors.activeCard,
+            hexValue: colors.activeCardColor,
             onChanged: onActiveCardChanged,
           ),
           const Divider(),
           DesignColorItem(
             label: s.design_color_active_card_text,
-            hexValue: colors.activeCardText,
+            hexValue: colors.activeCardTextColor,
             onChanged: onActiveCardTextChanged,
           ),
           const Divider(),
           DesignColorItem(
             label: s.design_color_inactive_card_text,
-            hexValue: colors.inactiveCardText,
+            hexValue: colors.inactiveCardTextColor,
             onChanged: onInactiveCardTextChanged,
           ),
           const Divider(),
           DesignColorItem(
             label: s.design_color_prayer_overlay,
-            hexValue: colors.prayerOverlay,
+            hexValue: colors.prayerOverlayColor,
             onChanged: onPrayerOverlayChanged,
           ),
           const Divider(),
           DesignColorItem(
             label: s.design_color_countdown_background,
-            hexValue: colors.countdownBackground,
+            hexValue: colors.countdownBackgroundColor,
             onChanged: onCountdownBackgroundChanged,
           ),
           const Divider(),
           DesignColorItem(
             label: s.design_color_countdown_text,
-            hexValue: colors.countdownText,
+            hexValue: colors.countdownTextColor,
             onChanged: onCountdownTextChanged,
           ),
           const Divider(),
           DesignColorItem(
             label: s.design_color_alert_background,
-            hexValue: colors.alertBackground,
+            hexValue: colors.alertBackgroundColor,
             onChanged: onAlertBackgroundChanged,
           ),
           const Divider(),
           DesignColorItem(
             label: s.design_color_alert_text,
-            hexValue: colors.alertText,
+            hexValue: colors.alertTextColor,
             onChanged: onAlertTextChanged,
           ),
         ],

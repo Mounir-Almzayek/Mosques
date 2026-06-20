@@ -7,6 +7,7 @@ import 'core/routes/app_pages.dart';
 import 'core/di/service_locator.dart';
 import 'core/styles/app_theme.dart' show AppTheme;
 import 'core/widgets/keep_screen_on_lifecycle.dart';
+import 'data/repositories/interfaces/auth_repository_interface.dart';
 import 'data/repositories/interfaces/mosque_repository_interface.dart';
 import 'features/language/language.dart';
 
@@ -18,9 +19,10 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) =>
-              LanguageBloc(mosqueRepository: sl<IMosqueRepository>())
-                ..add(const LoadLanguage()),
+          create: (_) => LanguageBloc(
+            mosqueRepository: sl<IMosqueRepository>(),
+            authRepository: sl<IAuthRepository>(),
+          )..add(const LoadLanguage()),
         ),
       ],
       child: KeepScreenOnLifecycle(

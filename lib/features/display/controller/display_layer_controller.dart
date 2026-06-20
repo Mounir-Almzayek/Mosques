@@ -4,17 +4,15 @@ import 'package:flutter/foundation.dart';
 import '../../../core/enums/display/display_layer_kind.dart';
 import '../../../core/utils/prayer_display_phase.dart';
 import '../../../data/models/display/display_layer_state.dart';
-import '../../../data/models/mosque/announcement_model.dart';
-import '../../../data/models/mosque/imam_tracking_session_model.dart';
+import '../../../data/models/mosque/announcement.dart';
 
 class DisplayLayerController extends ChangeNotifier {
   DisplayLayerState _state = const DisplayLayerState();
   DisplayLayerState get state => _state;
 
-  List<AnnouncementModel> _alerts = [];
-  ImamTrackingSessionModel _imamTrackingSession =
-      const ImamTrackingSessionModel();
+  List<Announcement> _alerts = [];
   PrayerDisplayPhase? _prayerPhase;
+  bool _recitationActive = false;
   bool _photoStudioActive = false;
   String? _photoStudioUrl;
 
@@ -27,7 +25,6 @@ class DisplayLayerController extends ChangeNotifier {
   bool get religiousVisible => _religiousVisible;
 
   String? get photoStudioUrl => _photoStudioUrl;
-  ImamTrackingSessionModel get imamTrackingSession => _imamTrackingSession;
 
   void configure({
     required int religiousWaitSeconds,
@@ -41,18 +38,19 @@ class DisplayLayerController extends ChangeNotifier {
     if (changed) _restartReligiousTimer();
   }
 
-  void updateAlerts(List<AnnouncementModel> alerts) {
+  void updateAlerts(List<Announcement> alerts) {
     _alerts = alerts;
-    _resolve();
-  }
-
-  void updateImamTrackingSession(ImamTrackingSessionModel session) {
-    _imamTrackingSession = session;
     _resolve();
   }
 
   void updatePrayerPhase(PrayerDisplayPhase phase) {
     _prayerPhase = phase;
+    _resolve();
+  }
+
+  void updateRecitationActive(bool active) {
+    if (_recitationActive == active) return;
+    _recitationActive = active;
     _resolve();
   }
 
@@ -121,15 +119,11 @@ class DisplayLayerController extends ChangeNotifier {
     });
   }
 
-  AnnouncementModel? get activeAlert {
+  Announcement? get activeAlert {
     if (_alerts.isEmpty) return null;
     final now = DateTime.now();
     for (final a in _alerts) {
-      if (!a.isPublished || a.publishedAt == null) continue;
-      final expiry = a.publishedAt!.add(
-        Duration(seconds: a.publishDurationSeconds),
-      );
-      if (now.isBefore(expiry)) return a;
+      if (a.isActiveAt(now)) return a;
     }
     return null;
   }
@@ -138,10 +132,10 @@ class DisplayLayerController extends ChangeNotifier {
     final previous = _state.activeLayer;
     DisplayLayerKind next;
 
-    if (_imamTrackingSession.isActive) {
-      next = DisplayLayerKind.imamTracking;
-    } else if (activeAlert != null) {
+    if (activeAlert != null) {
       next = DisplayLayerKind.alert;
+    } else if (_recitationActive) {
+      next = DisplayLayerKind.recitation;
     } else if (_photoStudioActive) {
       next = DisplayLayerKind.photoStudio;
     } else if (_isIqamaAdhanActive()) {

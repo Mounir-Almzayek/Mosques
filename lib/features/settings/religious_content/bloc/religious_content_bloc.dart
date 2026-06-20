@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../core/services/error_mapper.dart';
+import '../../../../core/utils/async_runner.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 import '../../../../data/repositories/interfaces/mosque_repository_interface.dart';
 import 'religious_content_event.dart';
 import 'religious_content_state.dart';
@@ -13,6 +15,7 @@ export 'religious_content_state.dart';
 class ReligiousContentBloc
     extends Bloc<ReligiousContentEvent, ReligiousContentState> {
   final IMosqueRepository _repo;
+  final AsyncRunner<void> _saveRunner = AsyncRunner();
 
   ReligiousContentBloc({required IMosqueRepository mosqueRepository})
     : _repo = mosqueRepository,
@@ -37,7 +40,7 @@ class ReligiousContentBloc
     _sub = _repo.streamActiveMosque.listen(
       (mosque) => add(ReligiousContentMosqueUpdated(mosque)),
       onError: (Object error) =>
-          emit(state.copyWith(isLoading: false, error: error.toString())),
+          emit(state.copyWith(isLoading: false, error: errorMessage(error))),
     );
   }
 
@@ -60,21 +63,31 @@ class ReligiousContentBloc
 
   // ── Text List CRUD ──────────────────────────────────────────────────
 
-  MosqueModel _mosqueWithTextList(
-    MosqueModel m,
-    MosqueTextListKind kind,
-    List<MosqueTextEntryModel> list,
-  ) {
+  /// Backend `kind` strings that map to a given [MosqueTextListKind]. Mirrors
+  /// the kind-sets used by [MosqueBootstrap.listByKind].
+  static Set<String> _kindStrings(MosqueTextListKind kind) {
     switch (kind) {
       case MosqueTextListKind.hadith:
-        return m.copyWith(hadiths: list);
+        return const {'hadith'};
       case MosqueTextListKind.verse:
-        return m.copyWith(verses: list);
+        return const {'ayah', 'verse'};
       case MosqueTextListKind.dua:
-        return m.copyWith(duas: list);
+        return const {'dua'};
       case MosqueTextListKind.adhkar:
-        return m.copyWith(adhkar: list);
+        return const {'dhikr', 'adhkar'};
     }
+  }
+
+  /// Rebuilds the full `content` list as the items of every *other* kind plus
+  /// [list] (the edited items of [kind]).
+  MosqueBootstrap _mosqueWithTextList(
+    MosqueBootstrap m,
+    MosqueTextListKind kind,
+    List<ContentItem> list,
+  ) {
+    final kinds = _kindStrings(kind);
+    final others = m.content.where((c) => !kinds.contains(c.kind)).toList();
+    return m.copyWith(content: [...others, ...list]);
   }
 
   void _onMosqueTextAdded(
@@ -83,7 +96,7 @@ class ReligiousContentBloc
   ) {
     final m = state.mosque;
     if (m == null) return;
-    final list = List<MosqueTextEntryModel>.from(m.listByKind(event.kind))
+    final list = List<ContentItem>.from(m.listByKind(event.kind))
       ..add(event.item);
     emit(
       state.copyWith(
@@ -138,16 +151,16 @@ class ReligiousContentBloc
     final m = state.mosque;
     if (m == null) return;
     final d = switch (event.field) {
-      ReligiousContentTimingField.wait => m.designSettings.copyWith(
+      ReligiousContentTimingField.wait => m.displaySettings.copyWith(
         religiousContentWaitSeconds: event.value,
       ),
-      ReligiousContentTimingField.display => m.designSettings.copyWith(
+      ReligiousContentTimingField.display => m.displaySettings.copyWith(
         religiousContentDisplaySeconds: event.value,
       ),
     };
     emit(
       state.copyWith(
-        mosque: m.copyWith(designSettings: d),
+        mosque: m.copyWith(displaySettings: d),
         hasUnsavedChanges: true,
       ),
     );
@@ -161,23 +174,27 @@ class ReligiousContentBloc
   ) async {
     final m = state.mosque;
     if (m == null) return;
-    emit(state.copyWith(isSaving: true));
-    try {
-      for (final kind in MosqueTextListKind.values) {
-        await _repo.updateMosqueTextList(m, kind);
-      }
-      await _repo.updateDesignSettings(m);
-      emit(
+    await _saveRunner.run(
+      checkConnectivity: false,
+      onlineTask: (_) async {
+        for (final kind in MosqueTextListKind.values) {
+          await _repo.updateMosqueTextList(m, kind);
+        }
+        await _repo.updateDesignSettings(m);
+      },
+      onStart: () => emit(state.copyWith(isSaving: true)),
+      onSuccess: (_) => emit(
         state.copyWith(isSaving: false, hasUnsavedChanges: false, error: null),
-      );
-    } catch (e) {
-      emit(state.copyWith(isSaving: false, error: e.toString()));
-    }
+      ),
+      onError: (error) =>
+          emit(state.copyWith(isSaving: false, error: errorMessage(error))),
+    );
   }
 
   @override
   Future<void> close() {
     _sub?.cancel();
+    _saveRunner.cancel();
     return super.close();
   }
 }

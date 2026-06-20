@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/l10n/generated/l10n.dart';
-import '../../../../data/models/app/app_settings_model.dart';
+import '../../../../data/models/app/app_config.dart';
 import '../../../../core/di/service_locator.dart';
-import '../../../../data/repositories/interfaces/app_settings_repository_interface.dart';
+import '../../../../data/repositories/interfaces/app_config_repository_interface.dart';
 import '../../../../core/utils/version_helper.dart';
 import '../bloc/update_bloc.dart';
 import '../widgets/update_action_area.dart';
@@ -39,8 +39,8 @@ class _UpdateSectionState extends State<UpdateSection> {
 
     return BlocProvider(
       create: (context) => UpdateBloc(),
-      child: StreamBuilder<AppSettingsModel?>(
-        stream: sl<IAppSettingsRepository>().streamAppSettings,
+      child: StreamBuilder<AppConfig?>(
+        stream: sl<IAppConfigRepository>().streamAppConfig,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator(color: primary));

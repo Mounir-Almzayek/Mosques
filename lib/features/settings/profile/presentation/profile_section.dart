@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/widgets/feedback/unified_snackbar.dart';
@@ -47,7 +46,7 @@ class _ProfileSectionState extends State<ProfileSection> {
           }
         },
         builder: (context, state) {
-          final user = FirebaseAuth.instance.currentUser;
+          final user = sl<IAuthRepository>().currentUser;
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(24),

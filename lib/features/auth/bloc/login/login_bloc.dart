@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/services/firebase_service.dart';
+import '../../../../core/services/error_mapper.dart';
+import '../../../../core/services/push_service.dart';
 import '../../../../core/utils/async_runner.dart';
-import '../../../../core/utils/error_helper.dart';
 import '../../../../data/repositories/interfaces/auth_repository_interface.dart';
+import '../../models/auth_session.dart';
 import '../../models/login_request.dart';
 import '../../models/login_success_response.dart';
 import 'login_event.dart';
@@ -15,7 +15,7 @@ export 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final IAuthRepository _authRepo;
-  final AsyncRunner<UserCredential> loginRunner = AsyncRunner();
+  final AsyncRunner<AuthSession> _loginRunner = AsyncRunner();
 
   LoginBloc({required IAuthRepository authRepository})
     : _authRepo = authRepository,
@@ -53,37 +53,38 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     Emitter<LoginState> emit,
   ) async {
     final updatedRequest = state.request.copyWith(
-      deviceToken: FirebaseService.fcmToken ?? '',
+      deviceToken: PushService.fcmToken ?? '',
     );
     emit(LoginInitial(request: updatedRequest));
 
-    await loginRunner.run(
-      onlineTask: (_) async {
-        return _authRepo.login(updatedRequest.email, updatedRequest.password);
-      },
-      onStart: () {
-        emit(LoginLoading(request: state.request));
-      },
-      onSuccess: (credential) async {
-        await FirebaseService.syncTokenToCurrentUser();
-        emit(
-          LoginSuccess(
-            request: state.request,
-            response: LoginSuccessResponse(
-              uid: credential.user?.uid ?? '',
-              message: '',
-            ),
+    await _loginRunner.run(
+      checkConnectivity: false,
+      onlineTask: (_) =>
+          _authRepo.login(updatedRequest.email, updatedRequest.password),
+      onStart: () => emit(LoginLoading(request: state.request)),
+      // PushService re-registers the device automatically when the token
+      // rotates; the login response already carries the active device.
+      onSuccess: (session) => emit(
+        LoginSuccess(
+          request: state.request,
+          response: LoginSuccessResponse(
+            uid: session.user.id,
+            message: '',
           ),
-        );
-      },
-      onError: (error) {
-        emit(
-          LoginFailure(
-            request: state.request,
-            error: ErrorHelper.getErrorMessage(error),
-          ),
-        );
-      },
+        ),
+      ),
+      onError: (error) => emit(
+        LoginFailure(
+          request: state.request,
+          error: errorMessage(error),
+        ),
+      ),
     );
+  }
+
+  @override
+  Future<void> close() {
+    _loginRunner.cancel();
+    return super.close();
   }
 }

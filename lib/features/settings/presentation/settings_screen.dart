@@ -6,7 +6,7 @@ import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/widgets/focus/focus_widgets.dart';
 import '../../../core/widgets/navigation/zoom_drawer.dart';
-import '../../../data/models/mosque/mosque_model.dart';
+import '../../../data/models/mosque/mosque_bootstrap.dart';
 import '../../../data/repositories/interfaces/auth_repository_interface.dart';
 import '../../../data/repositories/interfaces/mosque_repository_interface.dart';
 import '../core/widgets/settings_app_bar.dart';
@@ -22,7 +22,7 @@ import '../alerts/presentation/alerts_section.dart';
 import '../profile/presentation/profile_section.dart';
 import '../about/presentation/about_section.dart';
 import '../update/presentation/update_section.dart';
-import '../../recitation/presentation/recitation_page.dart';
+import '../recitation/recitation.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -52,10 +52,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    return StreamBuilder<MosqueModel?>(
+    return StreamBuilder<MosqueBootstrap?>(
       stream: sl<IMosqueRepository>().streamActiveMosque,
       builder: (context, snapshot) {
         final mosqueName = snapshot.data?.name ?? '';
+        final showRecitation = (snapshot.data?.id.isNotEmpty ?? false);
+        final sectionCount = showRecitation ? 11 : 10;
+        if (_sectionIndex >= sectionCount) {
+          _sectionIndex = sectionCount - 1;
+        }
         return ListenableBuilder(
           listenable: _drawerController,
           builder: (context, _) {
@@ -68,64 +73,65 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
               child: ZoomDrawer(
-                controller: _drawerController,
-                menuScreen: SettingsZoomDrawerContent(
-                  selectedIndex: _sectionIndex,
-                  isOpen: _drawerController.isOpen,
-                  onSelectSection: (i) {
-                    _drawerController.close();
-                    setState(() => _sectionIndex = i);
+              controller: _drawerController,
+              menuScreen: SettingsZoomDrawerContent(
+                selectedIndex: _sectionIndex,
+                isOpen: _drawerController.isOpen,
+                showRecitation: showRecitation,
+                onSelectSection: (i) {
+                  _drawerController.close();
+                  setState(() => _sectionIndex = i);
+                },
+                onSignOut: _signOut,
+              ),
+              mainScreen: Scaffold(
+                appBar: SettingsAppBar(
+                  sectionIndex: _sectionIndex,
+                  mosqueName: mosqueName,
+                  onMenuPressed: _drawerController.toggle,
+                  popupMenuBuilder: (BuildContext context) => [
+                    PopupMenuItem<String>(
+                      value: 'smart_screen',
+                      child: Text(s.enable_smart_screen),
+                    ),
+                  ],
+                  onPopupMenuSelected: (value) async {
+                    if (value == 'smart_screen') {
+                      await sl<IAuthRepository>().setAppModeOverride(
+                        AppMode.deviceDisplay,
+                      );
+                      if (!context.mounted) return;
+                      context.go(Routes.displayPath);
+                    }
                   },
-                  onSignOut: _signOut,
                 ),
-                mainScreen: Scaffold(
-                  appBar: SettingsAppBar(
-                    sectionIndex: _sectionIndex,
-                    mosqueName: mosqueName,
-                    onMenuPressed: _drawerController.toggle,
-                    popupMenuBuilder: (BuildContext context) => [
-                      PopupMenuItem<String>(
-                        value: 'smart_screen',
-                        child: Text(s.enable_smart_screen),
-                      ),
-                    ],
-                    onPopupMenuSelected: (value) async {
-                      if (value == 'smart_screen') {
-                        await sl<IAuthRepository>().setAppModeOverride(
-                          AppMode.deviceDisplay,
-                        );
-                        if (!context.mounted) return;
-                        context.go(Routes.displayPath);
-                      }
-                    },
-                  ),
-                  // Keep content readable on wide desktop screens by capping
-                  // its width and centering it. On phones/tablets the cap is
-                  // wider than the viewport, so it has no effect.
-                  body: Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 1000),
-                      child: IndexedStack(
-                        index: _sectionIndex,
-                        sizing: StackFit.expand,
-                        children: const [
-                          GeneralSection(),
-                          PrayerIqamaSection(),
-                          ReligiousContentSection(),
-                          DesignSection(),
-                          AnnouncementSection(),
-                          AlbumSection(),
-                          AlertsSection(),
-                          ProfileSection(),
-                          AboutSection(),
-                          UpdateSection(),
-                          RecitationPage(),
-                        ],
-                      ),
+                // Keep content readable on wide desktop screens by capping
+                // its width and centering it. On phones/tablets the cap is
+                // wider than the viewport, so it has no effect.
+                body: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 1000),
+                    child: IndexedStack(
+                      index: _sectionIndex,
+                      sizing: StackFit.expand,
+                      children: [
+                        const GeneralSection(),
+                        const PrayerIqamaSection(),
+                        const ReligiousContentSection(),
+                        const DesignSection(),
+                        const AnnouncementSection(),
+                        const AlbumSection(),
+                        const AlertsSection(),
+                        if (showRecitation) const RecitationSection(),
+                        const ProfileSection(),
+                        const AboutSection(),
+                        const UpdateSection(),
+                      ],
                     ),
                   ),
                 ),
               ),
+            ),
             );
           },
         );

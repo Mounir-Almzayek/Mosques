@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/enums/settings/announcement_schedule.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/widgets/feedback/unified_snackbar.dart';
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 import '../bloc/announcements_bloc.dart';
 import 'announcement_editor_sheet.dart';
 import 'announcement_empty_state.dart';
@@ -20,12 +20,12 @@ class AnnouncementSectionBody extends StatefulWidget {
 }
 
 class _AnnouncementSectionBodyState extends State<AnnouncementSectionBody> {
-  AnnouncementSchedule _scheduleFor(AnnouncementModel announcement) {
+  AnnouncementSchedule _scheduleFor(Announcement announcement) {
     final now = DateTime.now();
-    if (now.isBefore(announcement.startDate)) {
+    if (now.isBefore(announcement.startAt)) {
       return AnnouncementSchedule.upcoming;
     }
-    if (!now.isBefore(announcement.endDate)) {
+    if (!now.isBefore(announcement.endAt)) {
       return AnnouncementSchedule.ended;
     }
     return AnnouncementSchedule.active;
@@ -35,7 +35,7 @@ class _AnnouncementSectionBodyState extends State<AnnouncementSectionBody> {
     context.read<AnnouncementsBloc>().add(const SaveAnnouncementsRequested());
   }
 
-  Future<void> _confirmDelete(AnnouncementModel announcement) async {
+  Future<void> _confirmDelete(Announcement announcement) async {
     final s = S.of(context);
     final ok = await showDialog<bool>(
       context: context,
@@ -61,7 +61,7 @@ class _AnnouncementSectionBodyState extends State<AnnouncementSectionBody> {
     }
   }
 
-  Future<void> _openEditor([AnnouncementModel? existing]) async {
+  Future<void> _openEditor([Announcement? existing]) async {
     final bloc = context.read<AnnouncementsBloc>();
     await showModalBottomSheet<void>(
       context: context,
@@ -100,7 +100,7 @@ class _AnnouncementSectionBodyState extends State<AnnouncementSectionBody> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final announcements = mosque.announcements;
+          final announcements = mosque.ads;
 
           return Stack(
             fit: StackFit.expand,

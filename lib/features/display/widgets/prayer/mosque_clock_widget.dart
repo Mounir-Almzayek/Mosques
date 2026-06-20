@@ -7,13 +7,12 @@ import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/utils/app_number_format.dart';
 import '../../../../core/utils/app_time_format.dart';
 import '../../../../core/utils/color_extensions.dart';
-import '../../../../core/utils/next_prayer_event.dart';
 import '../../../../core/utils/prayer_times_helper.dart';
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 
 /// Full-screen clock with a countdown to the next adhan or iqama.
 class MosqueClockWidget extends StatefulWidget {
-  final MosqueModel mosque;
+  final MosqueBootstrap mosque;
   final Color primaryColor;
 
   const MosqueClockWidget({
@@ -106,8 +105,8 @@ class _MosqueClockWidgetState extends State<MosqueClockWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final numeralFormat = widget.mosque.designSettings.numeralFormat;
-    final fontFamily = widget.mosque.designSettings.fontFamily;
+    final numeralFormat = widget.mosque.displaySettings.numeralFormat;
+    final fontFamily = widget.mosque.displaySettings.fontFamily;
     final clock = AppTimeFormat.clockParts12h(context, _now);
 
     // Apply numerical formatting to time strings.

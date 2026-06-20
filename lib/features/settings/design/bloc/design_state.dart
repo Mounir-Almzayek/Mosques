@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 
 class DesignState extends Equatable {
-  final MosqueModel? mosque;
+  final MosqueBootstrap? mosque;
   final bool isLoading;
   final bool isSaving;
   final bool hasUnsavedChanges;
@@ -18,7 +18,7 @@ class DesignState extends Equatable {
   });
 
   DesignState copyWith({
-    MosqueModel? mosque,
+    MosqueBootstrap? mosque,
     bool? isLoading,
     bool? isSaving,
     bool? hasUnsavedChanges,

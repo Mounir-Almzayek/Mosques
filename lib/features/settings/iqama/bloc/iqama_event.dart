@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 
 // ——— Enums ———
 
@@ -36,7 +36,7 @@ class SaveIqamaRequested extends IqamaEvent {
 /// Internal event emitted when the mosque stream pushes a new value.
 /// Not part of the public API; use [LoadIqama] instead.
 class IqamaMosqueUpdated extends IqamaEvent {
-  final MosqueModel? mosque;
+  final MosqueBootstrap? mosque;
 
   const IqamaMosqueUpdated(this.mosque);
 

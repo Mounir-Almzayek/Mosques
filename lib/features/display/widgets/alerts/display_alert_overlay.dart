@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import '../../../../core/enums/app_numeral_format.dart';
 import '../../../../core/utils/app_font_loader.dart';
 import '../../../../core/utils/app_number_format.dart';
-import '../../../../data/models/mosque/announcement_model.dart';
+import '../../../../data/models/mosque/announcement.dart';
 
 /// Full-screen priority alert overlay.
 /// Displays a high-priority message, hiding all other UI until dismissed.
 class DisplayAlertOverlay extends StatefulWidget {
-  final List<AnnouncementModel> alerts;
+  final List<Announcement> alerts;
   final Color primaryColor;
   final Color backgroundColor;
   final AppNumeralFormat numeralFormat;
@@ -28,7 +28,7 @@ class DisplayAlertOverlay extends StatefulWidget {
 }
 
 class _DisplayAlertOverlayState extends State<DisplayAlertOverlay> {
-  AnnouncementModel? _currentAlert;
+  Announcement? _currentAlert;
   Timer? _dismissTimer;
 
   @override

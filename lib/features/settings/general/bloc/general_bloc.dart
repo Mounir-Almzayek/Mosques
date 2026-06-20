@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/services/error_mapper.dart';
+import '../../../../core/utils/async_runner.dart';
 import '../../../../data/repositories/interfaces/mosque_repository_interface.dart';
 import 'general_event.dart';
 import 'general_state.dart';
@@ -11,6 +13,7 @@ export 'general_state.dart';
 
 class GeneralBloc extends Bloc<GeneralEvent, GeneralState> {
   final IMosqueRepository _repo;
+  final AsyncRunner<void> _saveRunner = AsyncRunner();
 
   GeneralBloc({required IMosqueRepository mosqueRepository})
     : _repo = mosqueRepository,
@@ -32,7 +35,7 @@ class GeneralBloc extends Bloc<GeneralEvent, GeneralState> {
     _sub = _repo.streamActiveMosque.listen(
       (mosque) => add(GeneralMosqueUpdated(mosque)),
       onError: (Object error) =>
-          emit(state.copyWith(isLoading: false, error: error.toString())),
+          emit(state.copyWith(isLoading: false, error: errorMessage(error))),
     );
   }
 
@@ -61,10 +64,16 @@ class GeneralBloc extends Bloc<GeneralEvent, GeneralState> {
     final m = state.mosque;
     if (m == null) return;
     final updated = switch (event.field) {
-      GeneralField.name => m.copyWith(name: event.value as String),
-      GeneralField.city => m.copyWith(city: event.value as String),
+      GeneralField.name => m.copyWith(
+        mosque: m.mosque.copyWith(name: event.value as String),
+      ),
+      GeneralField.city => m.copyWith(
+        mosque: m.mosque.copyWith(city: event.value as String),
+      ),
       GeneralField.calculationMethod => m.copyWith(
-        prayerCalculationMethod: event.value as String,
+        prayerSettings: m.prayerSettings.copyWith(
+          calculationMethod: event.value as String,
+        ),
       ),
     };
     emit(state.copyWith(mosque: updated, hasUnsavedChanges: true));
@@ -75,7 +84,9 @@ class GeneralBloc extends Bloc<GeneralEvent, GeneralState> {
     if (m == null) return;
     emit(
       state.copyWith(
-        mosque: m.copyWith(appLanguageCode: event.language.code),
+        mosque: m.copyWith(
+          mosque: m.mosque.copyWith(languageCode: event.language.code),
+        ),
         hasUnsavedChanges: true,
       ),
     );
@@ -90,8 +101,10 @@ class GeneralBloc extends Bloc<GeneralEvent, GeneralState> {
     emit(
       state.copyWith(
         mosque: m.copyWith(
-          latitude: event.latitude,
-          longitude: event.longitude,
+          mosque: m.mosque.copyWith(
+            latitude: event.latitude.toString(),
+            longitude: event.longitude.toString(),
+          ),
         ),
         hasUnsavedChanges: true,
       ),
@@ -105,20 +118,30 @@ class GeneralBloc extends Bloc<GeneralEvent, GeneralState> {
     final m = state.mosque;
     if (m == null) return;
     final o = switch (event.prayer) {
-      PrayerOffsetField.fajr => m.prayerOffsets.copyWith(fajr: event.offset),
-      PrayerOffsetField.sunrise => m.prayerOffsets.copyWith(
+      PrayerOffsetField.fajr => m.prayerSettings.offsets.copyWith(
+        fajr: event.offset,
+      ),
+      PrayerOffsetField.sunrise => m.prayerSettings.offsets.copyWith(
         sunrise: event.offset,
       ),
-      PrayerOffsetField.dhuhr => m.prayerOffsets.copyWith(dhuhr: event.offset),
-      PrayerOffsetField.asr => m.prayerOffsets.copyWith(asr: event.offset),
-      PrayerOffsetField.maghrib => m.prayerOffsets.copyWith(
+      PrayerOffsetField.dhuhr => m.prayerSettings.offsets.copyWith(
+        dhuhr: event.offset,
+      ),
+      PrayerOffsetField.asr => m.prayerSettings.offsets.copyWith(
+        asr: event.offset,
+      ),
+      PrayerOffsetField.maghrib => m.prayerSettings.offsets.copyWith(
         maghrib: event.offset,
       ),
-      PrayerOffsetField.isha => m.prayerOffsets.copyWith(isha: event.offset),
+      PrayerOffsetField.isha => m.prayerSettings.offsets.copyWith(
+        isha: event.offset,
+      ),
     };
     emit(
       state.copyWith(
-        mosque: m.copyWith(prayerOffsets: o),
+        mosque: m.copyWith(
+          prayerSettings: m.prayerSettings.copyWith(offsets: o),
+        ),
         hasUnsavedChanges: true,
       ),
     );
@@ -130,20 +153,22 @@ class GeneralBloc extends Bloc<GeneralEvent, GeneralState> {
   ) async {
     final m = state.mosque;
     if (m == null) return;
-    emit(state.copyWith(isSaving: true));
-    try {
-      await _repo.updateMosque(m);
-      emit(
+    await _saveRunner.run(
+      checkConnectivity: false,
+      onlineTask: (_) => _repo.updateMosque(m),
+      onStart: () => emit(state.copyWith(isSaving: true)),
+      onSuccess: (_) => emit(
         state.copyWith(isSaving: false, hasUnsavedChanges: false, error: null),
-      );
-    } catch (e) {
-      emit(state.copyWith(isSaving: false, error: e.toString()));
-    }
+      ),
+      onError: (error) =>
+          emit(state.copyWith(isSaving: false, error: errorMessage(error))),
+    );
   }
 
   @override
   Future<void> close() {
     _sub?.cancel();
+    _saveRunner.cancel();
     return super.close();
   }
 }

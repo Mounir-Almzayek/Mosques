@@ -2,9 +2,8 @@
 import 'package:flutter/scheduler.dart';
 
 import '../../../../data/models/display/ticker_segment_builder.dart';
-import '../../../../data/models/mosque/announcement_model.dart';
-import '../../../../data/models/app/app_settings_model.dart';
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/app/app_config.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 import '../../../../data/models/display/ticker_segment.dart';
 import 'ticker_item_widget.dart';
 import 'ticker_side_label_widget.dart';
@@ -12,9 +11,9 @@ import 'ticker_side_label_widget.dart';
 /// Horizontal auto-scrolling ticker bar for announcements at the bottom
 /// of the display screen.
 class DisplayTickerBar extends StatefulWidget {
-  final MosqueModel mosque;
-  final List<AnnouncementModel> platformAnnouncements;
-  final AppSettingsModel? appSettings;
+  final MosqueBootstrap mosque;
+  final List<Announcement> platformAnnouncements;
+  final AppConfig? appSettings;
   final String? currentVersion;
   final Color primaryColor;
   final double fontSize;
@@ -97,7 +96,7 @@ class _DisplayTickerBarState extends State<DisplayTickerBar>
     final dt = ((elapsed - _lastElapsed).inMicroseconds / 1e6).clamp(0.0, 0.05);
     _lastElapsed = elapsed;
 
-    final speedMultiplier = widget.mosque.designSettings.tickerSpeed;
+    final speedMultiplier = widget.mosque.displaySettings.tickerSpeed;
     var next = _scrollController.offset + _basePxPerSecond * speedMultiplier * dt;
 
     // The content is rendered twice back-to-back, so one copy spans half the
@@ -133,8 +132,8 @@ class _DisplayTickerBarState extends State<DisplayTickerBar>
   Widget build(BuildContext context) {
     if (_segments.isEmpty) return const SizedBox.shrink();
 
-    final fontFamily = widget.mosque.designSettings.fontFamily;
-    final numeralFormat = widget.mosque.designSettings.numeralFormat;
+    final fontFamily = widget.mosque.displaySettings.fontFamily;
+    final numeralFormat = widget.mosque.displaySettings.numeralFormat;
     final locale = Localizations.localeOf(context);
     final isArabic = locale.languageCode.toLowerCase().startsWith('ar');
     final dir = isArabic ? TextDirection.rtl : Directionality.of(context);

@@ -1,7 +1,7 @@
 # Mosque Smart Display & Settings 🕌
 
 
-A comprehensive, real-time Smart Mosque solution built with Flutter. This project provides a beautiful, customizable display for prayer times, announcements, and spiritual content, seamlessly synchronized across devices via Firebase.
+A comprehensive, real-time Smart Mosque solution built with Flutter. This project provides a beautiful, customizable display for prayer times, announcements, and spiritual content, seamlessly synchronized across devices via the Tebyan backend (HTTP + WebSocket).
 
 ![App Screenshot](assets/Screenshot.png)
 
@@ -28,7 +28,7 @@ A comprehensive, real-time Smart Mosque solution built with Flutter. This projec
 
 *   **Premium UI/UX:** Modern, sleek, and high-contrast design optimized for large mosque displays.
 *   **High Performance:** Built with **Flutter** and optimized with **BLoC** for smooth state management.
-*   **Infinite Scalability:** Powered by **Firebase (Firestore, Auth, Messaging)** to handle multiple mosques and screens effortlessly.
+*   **Infinite Scalability:** Powered by a dedicated backend (REST + WebSocket) plus Firebase Cloud Messaging for push delivery.
 *   **Extreme Flexibility:** Adjust prayer time offsets, calculation methods (MWL, ISNA, Egypt, etc.), and jurisdictional settings (Hanafi, Shafi'i).
 *   **User-Friendly Admin:** Manage everything from a dedicated mobile settings interface.
 
@@ -38,21 +38,32 @@ A comprehensive, real-time Smart Mosque solution built with Flutter. This projec
 
 This project follows **Clean Architecture** principles to ensure maintainability and testability:
 
-*   **Core:** Common utilities, themes, enums, and localization.
-*   **Data:** Models, Repository implementations, and Data sources (Firestore, Local Hive DB).
+*   **Core:** Common utilities, themes, enums, localization, and the realtime transport.
+*   **Data:** Models, repository implementations, and data sources (HTTP/WebSocket via the Tebyan backend, local Hive cache).
 *   **Features:** Modularized logic and UI (Auth, Display, Settings, Language, Splash).
 *   **State Management:** `flutter_bloc` for predictable state transitions.
 *   **Navigation:** `go_router` for robust routing.
-*   **Database:** `Cloud Firestore` (Real-time Sync) & `Hive` (Local Storage).
+*   **Network:** `dio` for HTTP + `web_socket_channel` for live snapshots.
+*   **Local Storage:** `Hive` for snapshot cache, `flutter_secure_storage` for auth tokens.
 
 ---
 
 ## 🛠️ Local Setup
 
 1.  **Prerequisites:**
-    *   Flutter SDK (^3.10.7)
-    *   A Firebase project configured for Android/iOS/Web.
-2.  **Run the project:**
+    *   Flutter SDK (^3.10.7).
+    *   A running Tebyan backend (see `mosques-backend/`).
+    *   A Firebase project (FCM only) configured for Android/iOS.
+2.  **Configure the backend URL** via `--dart-define`:
+    ```bash
+    flutter run \
+      --dart-define=API_BASE_URL=http://10.0.2.2:8080/api/v1 \
+      --dart-define=WS_BASE_URL=ws://10.0.2.2:8080/api/v1
+    ```
+    On Android emulator the host's localhost is `10.0.2.2`; on iOS sim and
+    web use `localhost`. Skip the flags to fall back to the localhost
+    defaults baked into `core/config/api_config.dart`.
+3.  **Run the project:**
     ```bash
     flutter pub get
     flutter run

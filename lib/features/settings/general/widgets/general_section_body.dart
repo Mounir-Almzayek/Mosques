@@ -49,7 +49,7 @@ class _GeneralSectionBodyState extends State<GeneralSectionBody> {
   void _syncControllers(GeneralState state) {
     if (!_controllersInitialized && state.mosque != null) {
       _nameController.text = state.mosque!.name;
-      _cityController.text = state.mosque!.city;
+      _cityController.text = state.mosque!.mosque.city;
       _controllersInitialized = true;
     }
   }
@@ -197,8 +197,8 @@ class _GeneralSectionBodyState extends State<GeneralSectionBody> {
                 ),
                 const SizedBox(height: 16),
                 GeneralCoordinatesSection(
-                  latitude: mosque.latitude,
-                  longitude: mosque.longitude,
+                  latitude: mosque.mosque.latitudeValue,
+                  longitude: mosque.mosque.longitudeValue,
                   locating: _locating,
                   onUseCurrentLocation: _useCurrentLocation,
                 ),

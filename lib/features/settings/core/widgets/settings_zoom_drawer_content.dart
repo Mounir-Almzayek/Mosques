@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../../core/di/service_locator.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/utils/version_helper.dart';
 import '../../../../core/widgets/media/media_widgets.dart';
-import '../../../../data/repositories/interfaces/app_settings_repository_interface.dart';
+import '../../../../core/di/service_locator.dart';
+import '../../../../data/repositories/interfaces/app_config_repository_interface.dart';
 import 'drawer_nav_tile.dart';
 
 class SettingsZoomDrawerContent extends StatefulWidget {
@@ -13,6 +13,7 @@ class SettingsZoomDrawerContent extends StatefulWidget {
   final ValueChanged<int> onSelectSection;
   final VoidCallback onSignOut;
   final bool isOpen;
+  final bool showRecitation;
 
   const SettingsZoomDrawerContent({
     super.key,
@@ -20,6 +21,7 @@ class SettingsZoomDrawerContent extends StatefulWidget {
     required this.onSelectSection,
     required this.onSignOut,
     required this.isOpen,
+    this.showRecitation = false,
   });
 
   @override
@@ -33,7 +35,8 @@ class _SettingsZoomDrawerContentState extends State<SettingsZoomDrawerContent>
   late final List<Animation<double>> _fadeAnimations;
   late final List<Animation<Offset>> _slideAnimations;
 
-  static const int _itemCount = 11;
+  static const int _maxItemCount = 11;
+  int get _itemCount => widget.showRecitation ? 11 : 10;
 
   @override
   void initState() {
@@ -42,8 +45,7 @@ class _SettingsZoomDrawerContentState extends State<SettingsZoomDrawerContent>
       vsync: this,
       duration: const Duration(milliseconds: 800),
     );
-
-    _fadeAnimations = List.generate(_itemCount, (i) {
+    _fadeAnimations = List.generate(_maxItemCount, (i) {
       final start = i * 0.05;
       final end = (start + 0.4).clamp(0.0, 1.0);
       return Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -53,8 +55,7 @@ class _SettingsZoomDrawerContentState extends State<SettingsZoomDrawerContent>
         ),
       );
     });
-
-    _slideAnimations = List.generate(_itemCount, (i) {
+    _slideAnimations = List.generate(_maxItemCount, (i) {
       final start = i * 0.05;
       final end = (start + 0.4).clamp(0.0, 1.0);
       return Tween<Offset>(
@@ -101,10 +102,10 @@ class _SettingsZoomDrawerContentState extends State<SettingsZoomDrawerContent>
       (Icons.campaign_outlined, s.tab_announcements),
       (Icons.photo_library_outlined, s.tab_album),
       (Icons.emergency_share_outlined, s.tab_alerts),
+      if (widget.showRecitation) (Icons.mic_rounded, 'تتبع القراءة'),
       (Icons.person_outline_rounded, s.tab_profile),
       (Icons.info_outline_rounded, s.tab_about),
       (Icons.system_update_rounded, s.tab_update),
-      (Icons.mic_none_outlined, 'تتبع قراءة الإمام'),
     ];
 
     return Material(
@@ -113,6 +114,7 @@ class _SettingsZoomDrawerContentState extends State<SettingsZoomDrawerContent>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Header
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
               child: Row(
@@ -166,6 +168,7 @@ class _SettingsZoomDrawerContentState extends State<SettingsZoomDrawerContent>
                 ],
               ),
             ),
+            // Section label
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 4, 24, 8),
               child: Text(
@@ -178,11 +181,12 @@ class _SettingsZoomDrawerContentState extends State<SettingsZoomDrawerContent>
                 ),
               ),
             ),
+            // Nav items
             Expanded(
               child: ListView.builder(
                 key: ValueKey(widget.isOpen),
                 padding: const EdgeInsets.only(bottom: 8),
-                itemCount: navItems.length,
+                itemCount: _itemCount,
                 itemBuilder: (context, i) {
                   return FadeTransition(
                     opacity: _fadeAnimations[i],
@@ -201,6 +205,7 @@ class _SettingsZoomDrawerContentState extends State<SettingsZoomDrawerContent>
                 },
               ),
             ),
+            // Footer
             Divider(color: Colors.white.withValues(alpha: 0.12), height: 1),
             ListTile(
               contentPadding: const EdgeInsets.symmetric(
@@ -222,11 +227,11 @@ class _SettingsZoomDrawerContentState extends State<SettingsZoomDrawerContent>
                 ),
               ),
               onTap: () async {
-                final appSettings = await sl<IAppSettingsRepository>()
-                    .getAppSettings();
+                final appSettings = await sl<IAppConfigRepository>()
+                    .getAppConfig();
                 final phone = appSettings?.supportPhone ?? '';
                 if (phone.isNotEmpty) {
-                  final whatsappUrl = Uri.parse('https://wa.me/$phone');
+                  final Uri whatsappUrl = Uri.parse('https://wa.me/$phone');
                   if (await canLaunchUrl(whatsappUrl)) {
                     await launchUrl(
                       whatsappUrl,

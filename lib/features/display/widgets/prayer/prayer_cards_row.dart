@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/prayer_times_helper.dart';
-import '../../../../data/models/design/design_settings_model.dart';
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 import '../../../../data/models/prayer_display_slot.dart';
 import 'display_prayer_card.dart';
 
 class PrayerCardsRow extends StatelessWidget {
-  final MosqueModel mosque;
-  final DesignSettingsModel designSettings;
+  final MosqueBootstrap mosque;
+  final DisplaySettings designSettings;
   final PrayerTimesHelper helper;
   final DateTime now;
 
@@ -28,11 +27,12 @@ class PrayerCardsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final today = helper.buildAdjustedPrayerTimes(now);
-    final preAdhanMin = designSettings.preAdhanMinutes;
+    final preAdhanMin = mosque.prayerSettings.preAdhanMinutes;
     final phase = helper.getPrayerDisplayPhase(
       now,
       preAdhanMinutes: preAdhanMin,
-      adhanMomentDurationSeconds: designSettings.adhanMomentDurationSeconds,
+      adhanMomentDurationSeconds:
+          mosque.prayerSettings.adhanMomentDurationSeconds,
     );
     final slots = PrayerDisplaySlot.values;
     final isFriday = now.weekday == DateTime.friday;
@@ -77,7 +77,7 @@ class PrayerCardsRow extends StatelessWidget {
                   azanTime: azanTime,
                   isFocusCard: isFocusCard,
                   designSettings: designSettings,
-                  prayersFontSize: designSettings.fontSizes.prayers,
+                  prayersFontSize: designSettings.prayersFontSize,
                   isFriday: isFriday,
                 ),
               ),

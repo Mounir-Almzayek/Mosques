@@ -3,7 +3,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 import '../bloc/religious_content_bloc.dart';
 import 'mosque_text_list_section.dart';
 
@@ -16,7 +16,7 @@ class MosqueTextEditorSheet extends StatefulWidget {
     required this.labels,
   });
 
-  final MosqueTextEntryModel? existing;
+  final ContentItem? existing;
   final ReligiousContentBloc bloc;
   final MosqueTextListKind kind;
   final MosqueTextL10n labels;
@@ -112,13 +112,14 @@ class _MosqueTextEditorSheetState extends State<MosqueTextEditorSheet> {
               label: s.save,
               onPressed: () {
                 if (_textCtrl.text.trim().isEmpty) return;
-                final item = MosqueTextEntryModel(
+                final item = ContentItem(
                   id: existing?.id ?? const Uuid().v4(),
+                  kind: existing?.kind ?? ContentItem.kindFor(widget.kind),
                   narrator: _narratorCtrl.text.trim(),
                   text: _textCtrl.text.trim(),
                   source: _sourceCtrl.text.trim(),
                   isActive: existing?.isActive ?? true,
-                  order: existing?.order ?? 0,
+                  displayOrder: existing?.displayOrder ?? 0,
                 );
                 if (existing == null) {
                   bloc.add(MosqueTextAdded(widget.kind, item));

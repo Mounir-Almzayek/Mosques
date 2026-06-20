@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/widgets/feedback/unified_snackbar.dart';
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/announcement.dart';
 import '../bloc/alerts_bloc.dart';
 import 'alert_card.dart';
 import 'alert_edit_dialog.dart';
@@ -14,14 +14,7 @@ import 'alerts_empty_state.dart';
 class AlertsSectionBody extends StatelessWidget {
   const AlertsSectionBody({super.key});
 
-  static bool _isLive(AnnouncementModel alert) {
-    if (!alert.isPublished || alert.publishedAt == null) return false;
-
-    final expiry = alert.publishedAt!.add(
-      Duration(seconds: alert.publishDurationSeconds),
-    );
-    return DateTime.now().isBefore(expiry);
-  }
+  static bool _isLive(Announcement alert) => alert.isActiveAt(DateTime.now());
 
   void _openCreateDialog(BuildContext context) {
     final bloc = context.read<AlertsBloc>();
@@ -36,7 +29,7 @@ class AlertsSectionBody extends StatelessWidget {
     );
   }
 
-  void _openEditDialog(BuildContext context, AnnouncementModel alert) {
+  void _openEditDialog(BuildContext context, Announcement alert) {
     final bloc = context.read<AlertsBloc>();
     showDialog<void>(
       context: context,
@@ -50,7 +43,7 @@ class AlertsSectionBody extends StatelessWidget {
     );
   }
 
-  void _confirmDelete(BuildContext context, AnnouncementModel alert) {
+  void _confirmDelete(BuildContext context, Announcement alert) {
     final bloc = context.read<AlertsBloc>();
     final s = S.of(context);
     showDialog<void>(
@@ -103,7 +96,7 @@ class AlertsSectionBody extends StatelessWidget {
     );
   }
 
-  void _showPublishSheet(BuildContext context, AnnouncementModel alert) {
+  void _showPublishSheet(BuildContext context, Announcement alert) {
     final bloc = context.read<AlertsBloc>();
     showModalBottomSheet<void>(
       context: context,
@@ -122,7 +115,7 @@ class AlertsSectionBody extends StatelessWidget {
     );
   }
 
-  void _unpublish(BuildContext context, AnnouncementModel alert) {
+  void _unpublish(BuildContext context, Announcement alert) {
     final bloc = context.read<AlertsBloc>();
     bloc.add(AlertUnpublished(alert.id));
     bloc.add(const SaveAlertsRequested());

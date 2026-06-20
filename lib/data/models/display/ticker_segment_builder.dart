@@ -1,17 +1,15 @@
-import '../../../core/enums/display/ticker_kind.dart';
 import '../../../core/utils/version_helper.dart';
-import '../app/app_settings_model.dart';
-import '../mosque/announcement_model.dart';
-import '../mosque/mosque_model.dart';
+import '../app/app_config.dart';
+import '../mosque/mosque_bootstrap.dart';
 import 'ticker_segment.dart';
 
 class TickerSegmentBuilder {
   TickerSegmentBuilder._();
 
   static List<TickerSegment> build({
-    required MosqueModel mosque,
-    required List<AnnouncementModel> platform,
-    AppSettingsModel? appSettings,
+    required MosqueBootstrap mosque,
+    required List<Announcement> platform,
+    AppConfig? appSettings,
     String? currentVersion,
   }) {
     final now = DateTime.now();
@@ -68,11 +66,11 @@ class TickerSegmentBuilder {
     return out;
   }
 
-  static bool _isVisible(AnnouncementModel a, DateTime now) {
-    return a.isActive && !a.startDate.isAfter(now) && a.endDate.isAfter(now);
+  static bool _isVisible(Announcement a, DateTime now) {
+    return a.isActiveAt(now);
   }
 
-  static String _marqueeText(AnnouncementModel a) {
+  static String _marqueeText(Announcement a) {
     if (a.subtitle != null && a.subtitle!.trim().isNotEmpty) {
       return '${a.title} — ${a.subtitle!.trim()}';
     }

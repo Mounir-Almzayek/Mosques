@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../core/services/error_mapper.dart';
+import '../../../../core/utils/async_runner.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 import '../../../../data/repositories/interfaces/mosque_repository_interface.dart';
 import 'announcements_event.dart';
 import 'announcements_state.dart';
@@ -12,6 +14,7 @@ export 'announcements_state.dart';
 
 class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
   final IMosqueRepository _repo;
+  final AsyncRunner<void> _saveRunner = AsyncRunner();
 
   AnnouncementsBloc({required IMosqueRepository mosqueRepository})
     : _repo = mosqueRepository,
@@ -35,7 +38,7 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
     _sub = _repo.streamActiveMosque.listen(
       (mosque) => add(AnnouncementsMosqueUpdated(mosque)),
       onError: (Object error) =>
-          emit(state.copyWith(isLoading: false, error: error.toString())),
+          emit(state.copyWith(isLoading: false, error: errorMessage(error))),
     );
   }
 
@@ -62,7 +65,7 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
   ) {
     final m = state.mosque;
     if (m == null) return;
-    final list = List<AnnouncementModel>.from(m.announcements)
+    final list = List<Announcement>.from(m.announcements)
       ..add(event.announcement);
     emit(
       state.copyWith(
@@ -112,20 +115,27 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
   ) async {
     final m = state.mosque;
     if (m == null) return;
-    emit(state.copyWith(isSaving: true));
-    try {
-      await _repo.updateAnnouncements(m);
-      emit(
+    // Persist edited ads (non-alert announcements) while preserving any
+    // saved alerts unchanged — announcements + alerts share one list now.
+    final updated = m.copyWith(
+      announcements: [...m.ads, ...m.savedAlerts],
+    );
+    await _saveRunner.run(
+      checkConnectivity: false,
+      onlineTask: (_) => _repo.updateAnnouncements(updated),
+      onStart: () => emit(state.copyWith(isSaving: true)),
+      onSuccess: (_) => emit(
         state.copyWith(isSaving: false, hasUnsavedChanges: false, error: null),
-      );
-    } catch (e) {
-      emit(state.copyWith(isSaving: false, error: e.toString()));
-    }
+      ),
+      onError: (error) =>
+          emit(state.copyWith(isSaving: false, error: errorMessage(error))),
+    );
   }
 
   @override
   Future<void> close() {
     _sub?.cancel();
+    _saveRunner.cancel();
     return super.close();
   }
 }

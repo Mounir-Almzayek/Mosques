@@ -1,8 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../data/models/app/app_settings_model.dart';
-import '../../../data/models/mosque/announcement_model.dart';
-import '../../../data/models/mosque/mosque_model.dart';
+import '../../../data/models/app/app_config.dart';
+import '../../../data/models/mosque/mosque_bootstrap.dart';
 
 /// Base class for all display-screen events.
 abstract class DisplayEvent extends Equatable {
@@ -12,12 +11,12 @@ abstract class DisplayEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Initiates Firestore subscriptions for mosque data and platform announcements.
+/// Initiates backend subscriptions for mosque data and platform announcements.
 class StartDisplaySubscription extends DisplayEvent {}
 
-/// Fired when the mosque document snapshot changes (or from the hourly fetch).
+/// Fired when the mosque snapshot changes (or from the hourly fetch).
 class MosqueUpdated extends DisplayEvent {
-  final MosqueModel? mosque;
+  final MosqueBootstrap? mosque;
 
   const MosqueUpdated(this.mosque);
 
@@ -27,7 +26,7 @@ class MosqueUpdated extends DisplayEvent {
 
 /// Fired when the platform-wide announcements stream emits.
 class PlatformAnnouncementsUpdated extends DisplayEvent {
-  final List<AnnouncementModel> announcements;
+  final List<Announcement> announcements;
 
   const PlatformAnnouncementsUpdated(this.announcements);
 
@@ -35,9 +34,9 @@ class PlatformAnnouncementsUpdated extends DisplayEvent {
   List<Object?> get props => [announcements];
 }
 
-/// Fired when global app settings change.
+/// Fired when global app config changes.
 class AppSettingsUpdated extends DisplayEvent {
-  final AppSettingsModel? settings;
+  final AppConfig? settings;
 
   const AppSettingsUpdated(this.settings);
 
@@ -53,6 +52,15 @@ class CurrentVersionUpdated extends DisplayEvent {
 
   @override
   List<Object?> get props => [version];
+}
+
+class RecitationDisplayEventUpdated extends DisplayEvent {
+  final Map<String, dynamic>? event;
+
+  const RecitationDisplayEventUpdated(this.event);
+
+  @override
+  List<Object?> get props => [event];
 }
 
 /// Fired on subscription errors.

@@ -1,7 +1,7 @@
 ﻿import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import '../../data/models/app/app_update_model.dart';
+import '../../data/models/app/app_config.dart';
 
 class VersionHelper {
   VersionHelper._();
@@ -13,7 +13,7 @@ class VersionHelper {
   }
 
   /// الحصول على رابط التحميل المناسب للمنصة الحالية.
-  static String getPlatformDownloadLink(AppUpdateModel update) {
+  static String getPlatformDownloadLink(AppUpdate update) {
     if (kIsWeb) return ''; // لا دعم للتحديث التلقائي للويب حالياً
     if (Platform.isAndroid) return update.androidLink;
     if (Platform.isWindows) return update.windowsLink;

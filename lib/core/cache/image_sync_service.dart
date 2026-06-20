@@ -1,5 +1,5 @@
-import '../../data/models/app/app_settings_model.dart';
-import '../../data/models/mosque/mosque_model.dart';
+import '../../data/models/app/app_config.dart';
+import '../../data/models/mosque/mosque_bootstrap.dart';
 import 'offline_image_store.dart';
 
 /// Keeps [OfflineImageStore] in sync with the image URLs referenced by the
@@ -28,17 +28,18 @@ class ImageSyncService {
     await _pruneSafely(keep);
   }
 
-  Future<void> syncMosque(MosqueModel mosque) async {
+  Future<void> syncMosque(MosqueBootstrap mosque) async {
+    final ds = mosque.displaySettings;
     _mosqueUrls = <String>[
-      ...mosque.albumImageUrls,
-      if (mosque.publishedAlbumImageUrl != null) mosque.publishedAlbumImageUrl!,
-      mosque.designSettings.background.value,
+      ...ds.albumImageUrls,
+      if (ds.publishedAlbumUrl != null) ds.publishedAlbumUrl!,
+      ds.backgroundValue,
     ].where(_isHttp).toSet();
     await _syncTracked();
   }
 
-  Future<void> syncAppSettings(AppSettingsModel settings) async {
-    _appSettingsUrls = settings.backgroundLibraryUrls.where(_isHttp).toSet();
+  Future<void> syncAppConfig(AppConfig config) async {
+    _appSettingsUrls = config.backgroundLibraryUrls.where(_isHttp).toSet();
     await _syncTracked();
   }
 

@@ -1,6 +1,9 @@
 {
   "@@locale": "en",
   "error_occurred": "Something went wrong",
+  "error_network": "Network unavailable. Please check your connection.",
+  "error_session_expired": "Your session has expired. Please sign in again.",
+  "error_permission_denied": "You don't have permission to do that.",
   "retry": "Retry",
   "ok": "OK",
   "cancel": "Cancel",

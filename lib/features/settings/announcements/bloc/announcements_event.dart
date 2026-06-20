@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 
 sealed class AnnouncementsEvent extends Equatable {
   const AnnouncementsEvent();
@@ -14,7 +14,7 @@ class LoadAnnouncements extends AnnouncementsEvent {
 }
 
 class AnnouncementAdded extends AnnouncementsEvent {
-  final AnnouncementModel announcement;
+  final Announcement announcement;
 
   const AnnouncementAdded(this.announcement);
 
@@ -23,7 +23,7 @@ class AnnouncementAdded extends AnnouncementsEvent {
 }
 
 class AnnouncementUpdated extends AnnouncementsEvent {
-  final AnnouncementModel announcement;
+  final Announcement announcement;
 
   const AnnouncementUpdated(this.announcement);
 
@@ -46,7 +46,7 @@ class SaveAnnouncementsRequested extends AnnouncementsEvent {
 
 /// Internal event emitted when the mosque stream pushes a new value.
 class AnnouncementsMosqueUpdated extends AnnouncementsEvent {
-  final MosqueModel? mosque;
+  final MosqueBootstrap? mosque;
 
   const AnnouncementsMosqueUpdated(this.mosque);
 

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/styles/app_colors.dart';
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 import 'mosque_text_list_section.dart';
 
 class ContentPanel extends StatelessWidget {
-  final MosqueModel mosque;
+  final MosqueBootstrap mosque;
   final MosqueTextListKind kind;
   final IconData icon;
   final String title;

@@ -5,8 +5,8 @@ import '../../../../core/di/service_locator.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_theme.dart';
 import '../../../../core/widgets/feedback/unified_snackbar.dart';
-import '../../../../data/models/app/app_settings_model.dart';
-import '../../../../data/repositories/interfaces/app_settings_repository_interface.dart';
+import '../../../../data/models/app/app_config.dart';
+import '../../../../data/repositories/interfaces/app_config_repository_interface.dart';
 import '../bloc/design_bloc.dart';
 import 'design_save_bar.dart';
 import 'design_widgets.dart';
@@ -40,11 +40,11 @@ class DesignSectionBody extends StatelessWidget {
           final mosque = state.mosque;
           if (mosque == null) return const SizedBox.shrink();
 
-          final design = mosque.designSettings;
+          final design = mosque.displaySettings;
           final bloc = context.read<DesignBloc>();
 
-          return StreamBuilder<AppSettingsModel?>(
-            stream: sl<IAppSettingsRepository>().streamAppSettings,
+          return StreamBuilder<AppConfig?>(
+            stream: sl<IAppConfigRepository>().streamAppConfig,
             builder: (context, appSettingsSnapshot) {
               final libraryUrls =
                   appSettingsSnapshot.data?.backgroundLibraryUrls ?? [];
@@ -59,8 +59,9 @@ class DesignSectionBody extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           BackgroundSettingsSection(
-                            settings: design.background,
-                            albumUrls: mosque.albumImageUrls,
+                            backgroundType: design.backgroundTypeKind,
+                            backgroundValue: design.backgroundValue,
+                            albumUrls: mosque.displaySettings.albumImageUrls,
                             libraryUrls: libraryUrls,
                             onTypeChanged: (type) {
                               bloc.add(DesignBackgroundTypeChanged(type));
@@ -77,7 +78,7 @@ class DesignSectionBody extends StatelessWidget {
                           ),
                           const SizedBox(height: 20),
                           ColorSettingsSection(
-                            colors: design.colors,
+                            colors: design,
                             onPrimaryChanged: (value) => bloc.add(
                               DesignColorChanged(
                                 DesignColorField.primary,
@@ -141,7 +142,7 @@ class DesignSectionBody extends StatelessWidget {
                           ),
                           const SizedBox(height: 20),
                           FontSizeSettingsSection(
-                            fontSizes: design.fontSizes,
+                            fontSizes: design,
                             onClockSizeChanged: (value) => bloc.add(
                               DesignFontSizeChanged(
                                 DesignFontSizeField.clock,
@@ -169,18 +170,6 @@ class DesignSectionBody extends StatelessWidget {
                             onReligiousContentSizeChanged: (value) => bloc.add(
                               DesignFontSizeChanged(
                                 DesignFontSizeField.religiousContent,
-                                value,
-                              ),
-                            ),
-                            onAlertsSizeChanged: (value) => bloc.add(
-                              DesignFontSizeChanged(
-                                DesignFontSizeField.alerts,
-                                value,
-                              ),
-                            ),
-                            onCountdownSizeChanged: (value) => bloc.add(
-                              DesignFontSizeChanged(
-                                DesignFontSizeField.countdown,
                                 value,
                               ),
                             ),

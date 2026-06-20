@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 
 // ——— Enums ———
 
@@ -21,7 +21,7 @@ class LoadReligiousContent extends ReligiousContentEvent {
 
 class MosqueTextAdded extends ReligiousContentEvent {
   final MosqueTextListKind kind;
-  final MosqueTextEntryModel item;
+  final ContentItem item;
 
   const MosqueTextAdded(this.kind, this.item);
 
@@ -31,7 +31,7 @@ class MosqueTextAdded extends ReligiousContentEvent {
 
 class MosqueTextUpdated extends ReligiousContentEvent {
   final MosqueTextListKind kind;
-  final MosqueTextEntryModel item;
+  final ContentItem item;
 
   const MosqueTextUpdated(this.kind, this.item);
 
@@ -66,7 +66,7 @@ class SaveAllReligiousContentRequested extends ReligiousContentEvent {
 /// Internal event emitted when the mosque stream pushes a new value.
 /// Not part of the public API; use [LoadReligiousContent] instead.
 class ReligiousContentMosqueUpdated extends ReligiousContentEvent {
-  final MosqueModel? mosque;
+  final MosqueBootstrap? mosque;
 
   const ReligiousContentMosqueUpdated(this.mosque);
 

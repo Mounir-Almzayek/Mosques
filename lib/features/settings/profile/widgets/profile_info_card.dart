@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
+import '../../../auth/models/auth_user.dart';
 
 class ProfileInfoCard extends StatelessWidget {
-  final User? user;
+  final AuthUser? user;
 
   const ProfileInfoCard({super.key, this.user});
 

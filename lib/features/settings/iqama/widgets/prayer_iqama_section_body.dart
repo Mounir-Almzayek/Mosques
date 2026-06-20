@@ -98,13 +98,15 @@ class _PrayerIqamaSectionBodyState extends State<PrayerIqamaSectionBody> {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              _syncMethod(mosque.prayerCalculationMethod);
+              _syncMethod(mosque.prayerSettings.calculationMethod);
 
               final generalBloc = context.read<GeneralBloc>();
               final iqamaBloc = context.read<IqamaBloc>();
-              final offsets = mosque.prayerOffsets;
+              final offsets = mosque.prayerSettings.offsets;
               final iqamaMosque = iqamaState.mosque;
-              final iqama = iqamaMosque?.iqamaSettings ?? mosque.iqamaSettings;
+              final iqama =
+                  iqamaMosque?.prayerSettings.iqamaOffsets ??
+                  mosque.prayerSettings.iqamaOffsets;
 
               return ListView(
                 padding: const EdgeInsets.all(16),
@@ -116,7 +118,7 @@ class _PrayerIqamaSectionBodyState extends State<PrayerIqamaSectionBody> {
                   const SizedBox(height: 12),
                   DropdownButtonFormField<String>(
                     key: ValueKey<String>(
-                      '${mosque.id}_${mosque.prayerCalculationMethod}',
+                      '${mosque.id}_${mosque.prayerSettings.calculationMethod}',
                     ),
                     initialValue: _calculationMethod,
                     decoration: InputDecoration(
@@ -204,7 +206,7 @@ class _PrayerIqamaSectionBodyState extends State<PrayerIqamaSectionBody> {
                   const SizedBox(height: 12),
                   OffsetStepperField(
                     label: s.prayer_fajr,
-                    value: iqama.fajrOffset,
+                    value: iqama.fajr,
                     suffix: s.minutes_short,
                     onChanged: (value) => iqamaBloc.add(
                       IqamaOffsetChanged(IqamaField.fajr, value),
@@ -212,7 +214,7 @@ class _PrayerIqamaSectionBodyState extends State<PrayerIqamaSectionBody> {
                   ),
                   OffsetStepperField(
                     label: s.prayer_dhuhr,
-                    value: iqama.dhuhrOffset,
+                    value: iqama.dhuhr,
                     suffix: s.minutes_short,
                     onChanged: (value) => iqamaBloc.add(
                       IqamaOffsetChanged(IqamaField.dhuhr, value),
@@ -220,7 +222,7 @@ class _PrayerIqamaSectionBodyState extends State<PrayerIqamaSectionBody> {
                   ),
                   OffsetStepperField(
                     label: s.prayer_asr,
-                    value: iqama.asrOffset,
+                    value: iqama.asr,
                     suffix: s.minutes_short,
                     onChanged: (value) => iqamaBloc.add(
                       IqamaOffsetChanged(IqamaField.asr, value),
@@ -228,7 +230,7 @@ class _PrayerIqamaSectionBodyState extends State<PrayerIqamaSectionBody> {
                   ),
                   OffsetStepperField(
                     label: s.prayer_maghrib,
-                    value: iqama.maghribOffset,
+                    value: iqama.maghrib,
                     suffix: s.minutes_short,
                     onChanged: (value) => iqamaBloc.add(
                       IqamaOffsetChanged(IqamaField.maghrib, value),
@@ -236,7 +238,7 @@ class _PrayerIqamaSectionBodyState extends State<PrayerIqamaSectionBody> {
                   ),
                   OffsetStepperField(
                     label: s.prayer_isha,
-                    value: iqama.ishaOffset,
+                    value: iqama.isha,
                     suffix: s.minutes_short,
                     onChanged: (value) => iqamaBloc.add(
                       IqamaOffsetChanged(IqamaField.isha, value),
@@ -244,7 +246,7 @@ class _PrayerIqamaSectionBodyState extends State<PrayerIqamaSectionBody> {
                   ),
                   OffsetStepperField(
                     label: s.prayer_jummah,
-                    value: iqama.jummahOffset,
+                    value: iqama.jummah,
                     suffix: s.minutes_short,
                     onChanged: (value) => iqamaBloc.add(
                       IqamaOffsetChanged(IqamaField.jummah, value),
@@ -258,15 +260,15 @@ class _PrayerIqamaSectionBodyState extends State<PrayerIqamaSectionBody> {
                   const SizedBox(height: 12),
                   BlocBuilder<DesignBloc, DesignState>(
                     builder: (context, designState) {
-                      final design =
-                          designState.mosque?.designSettings ??
-                          mosque.designSettings;
+                      final prayer =
+                          designState.mosque?.prayerSettings ??
+                          mosque.prayerSettings;
                       final designBloc = context.read<DesignBloc>();
                       return Column(
                         children: [
                           OffsetStepperField(
                             label: s.pre_adhan_minutes,
-                            value: design.preAdhanMinutes,
+                            value: prayer.preAdhanMinutes,
                             suffix: s.minutes_short,
                             onChanged: (value) => designBloc.add(
                               DisplayTimingChanged(
@@ -277,7 +279,7 @@ class _PrayerIqamaSectionBodyState extends State<PrayerIqamaSectionBody> {
                           ),
                           OffsetStepperField(
                             label: s.adhan_moment_duration,
-                            value: design.adhanMomentDurationSeconds,
+                            value: prayer.adhanMomentDurationSeconds,
                             onChanged: (value) => designBloc.add(
                               DisplayTimingChanged(
                                 DisplayTimingField.adhanMomentDuration,

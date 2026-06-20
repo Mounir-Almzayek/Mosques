@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../../../core/enums/app_numeral_format.dart';
 import '../../../../core/enums/display_background_type.dart';
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 
 // ——— Enums ———
 
@@ -25,8 +25,6 @@ enum DesignFontSizeField {
   prayers,
   announcements,
   religiousContent,
-  alerts,
-  countdown,
 }
 
 enum DisplayTimingField { preAdhanMinutes, adhanMomentDuration }
@@ -46,7 +44,7 @@ class LoadDesign extends DesignEvent {
 
 /// Internal event emitted when the mosque stream pushes a new value.
 class DesignMosqueUpdated extends DesignEvent {
-  final MosqueModel? mosque;
+  final MosqueBootstrap? mosque;
 
   const DesignMosqueUpdated(this.mosque);
 

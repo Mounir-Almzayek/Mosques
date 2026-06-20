@@ -9,8 +9,7 @@ import '../../../core/routes/app_routes.dart';
 import '../../../core/styles/app_theme.dart';
 import '../../../core/utils/box_fit_codec.dart';
 import '../../../core/utils/prayer_times_helper.dart';
-import '../../../data/models/mosque/mosque_model.dart';
-import '../../../data/repositories/interfaces/mosque_repository_interface.dart';
+import '../../../data/models/mosque/mosque_bootstrap.dart';
 import '../../../core/enums/app_mode.dart';
 import '../../../core/di/service_locator.dart';
 import '../../../data/repositories/interfaces/auth_repository_interface.dart';
@@ -21,9 +20,9 @@ import '../widgets/content/content_widgets.dart';
 import '../widgets/header/header_widgets.dart';
 import '../widgets/layers/alert_layer.dart';
 import '../widgets/layers/iqama_adhan_layer.dart';
-import '../widgets/layers/imam_tracking_layer.dart';
 import '../widgets/layers/layer_transition_wrapper.dart';
 import '../widgets/layers/photo_studio_layer.dart';
+import '../widgets/layers/recitation_layer.dart';
 import '../widgets/ticker/ticker_widgets.dart';
 
 class DisplayScreen extends StatefulWidget {
@@ -69,26 +68,28 @@ class _DisplayScreenState extends State<DisplayScreen> {
     final state = context.read<DisplayBloc>().state;
     if (state is! DisplayLoaded) return;
     final mosque = state.mosque;
-    final design = mosque.designSettings;
+    final design = mosque.displaySettings;
 
     _helper = PrayerTimesHelper(mosque);
     final phase = _helper.getPrayerDisplayPhase(
       _now.value,
-      preAdhanMinutes: design.preAdhanMinutes,
-      adhanMomentDurationSeconds: design.adhanMomentDurationSeconds,
+      preAdhanMinutes: mosque.prayerSettings.preAdhanMinutes,
+      adhanMomentDurationSeconds:
+          mosque.prayerSettings.adhanMomentDurationSeconds,
     );
 
     _layerController.configure(
       religiousWaitSeconds: design.religiousContentWaitSeconds,
       religiousDisplaySeconds: design.religiousContentDisplaySeconds,
     );
-    _layerController.updateImamTrackingSession(mosque.imamTrackingSession);
     _layerController.updateAlerts(mosque.savedAlerts);
     _layerController.updateAlbumImage(
-      publishedUrl: mosque.publishedAlbumImageUrl,
-      publishedAt: mosque.publishedAlbumImageAt,
-      durationSeconds: mosque.publishedAlbumImageDuration,
+      publishedUrl: mosque.displaySettings.publishedAlbumUrl,
+      publishedAt: mosque.displaySettings.publishedAlbumAt,
+      durationSeconds:
+          mosque.displaySettings.publishedAlbumDurationSeconds ?? 30,
     );
+    _layerController.updateRecitationActive(state.recitation != null);
     _layerController.updatePrayerPhase(phase);
   }
 
@@ -96,12 +97,6 @@ class _DisplayScreenState extends State<DisplayScreen> {
     await sl<IAuthRepository>().setAppModeOverride(AppMode.mobileSettings);
     if (!context.mounted) return;
     context.go(Routes.settingsPath);
-  }
-
-  Future<void> _updateImamTrackingPage(MosqueModel mosque, int pageNumber) {
-    return sl<IMosqueRepository>().updateImamTrackingSession(
-      mosque.imamTrackingSession.copyWith(currentPage: pageNumber),
-    );
   }
 
   @override
@@ -128,8 +123,7 @@ class _DisplayScreenState extends State<DisplayScreen> {
           if (state is! DisplayLoaded) return const SizedBox.shrink();
 
           final mosque = state.mosque;
-          final design = mosque.designSettings;
-          final colors = design.colors;
+          final design = mosque.displaySettings;
 
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
@@ -162,12 +156,7 @@ class _DisplayScreenState extends State<DisplayScreen> {
                     }
                     return LayerTransitionWrapper(
                       activeLayer: activeLayer,
-                      child: _buildOverlayLayer(
-                        activeLayer,
-                        mosque,
-                        design,
-                        colors,
-                      ),
+                      child: _buildOverlayLayer(activeLayer, mosque, design),
                     );
                   },
                 ),
@@ -180,13 +169,85 @@ class _DisplayScreenState extends State<DisplayScreen> {
     );
   }
 
+  // ignore: unused_element
+  Widget _buildRecitationOverlay(Map<String, dynamic> frame) {
+    final event = (frame['event'] as Map?)?.cast<String, dynamic>() ?? frame;
+    final type = event['type']?.toString() ?? '';
+    final surah = event['surah']?.toString();
+    final ayah = event['ayah']?.toString();
+    final confidence = (event['confidence'] as num?)?.toDouble();
+    final message = event['message']?.toString();
+    final state = event['state']?.toString();
+
+    final title = switch (type) {
+      'error' => 'ملاحظة على القراءة',
+      'position' => 'تتبع القراءة',
+      'session_state' => 'حالة التتبع',
+      'usage' => 'تحليل القراءة',
+      _ => 'تتبع القراءة',
+    };
+    final details = [
+      if (surah != null && ayah != null) 'السورة $surah - الآية $ayah',
+      ?state,
+      if (message != null && message.isNotEmpty) message,
+      if (confidence != null) 'الثقة ${(confidence * 100).round()}%',
+    ].join('   ');
+
+    return Positioned(
+      left: 32,
+      right: 32,
+      top: 92,
+      child: SafeArea(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: const Color(0xEE123735),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.22)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            child: Directionality(
+              textDirection: TextDirection.rtl,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  if (details.isNotEmpty) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      details,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildBaseLayer(
     BuildContext context,
-    MosqueModel mosque,
+    MosqueBootstrap mosque,
     DisplayLoaded state,
   ) {
-    final design = mosque.designSettings;
-    final colors = design.colors;
+    final design = mosque.displaySettings;
     final media = MediaQuery.sizeOf(context);
     final padH = (media.width * 0.028).clamp(14.0, 64.0);
     final padV = (media.height * 0.022).clamp(8.0, 36.0);
@@ -196,9 +257,9 @@ class _DisplayScreenState extends State<DisplayScreen> {
       children: [
         Positioned.fill(
           child: DisplayBackgroundImage(
-            fallbackColor: colors.primaryValue,
-            settings: design.background,
-            albumUrls: mosque.albumImageUrls,
+            fallbackColor: design.primaryColorValue,
+            settings: design,
+            albumUrls: design.albumImageUrls,
           ),
         ),
         Positioned.fill(
@@ -246,8 +307,8 @@ class _DisplayScreenState extends State<DisplayScreen> {
                   platformAnnouncements: state.platformAnnouncements,
                   appSettings: state.appSettings,
                   currentVersion: state.currentVersion,
-                  primaryColor: colors.secondaryValue,
-                  fontSize: design.fontSizes.announcements,
+                  primaryColor: design.secondaryColorValue,
+                  fontSize: design.announcementsFontSize,
                 ),
               ),
             ],
@@ -259,43 +320,40 @@ class _DisplayScreenState extends State<DisplayScreen> {
 
   Widget _buildOverlayLayer(
     DisplayLayerKind layer,
-    MosqueModel mosque,
-    dynamic design,
-    dynamic colors,
+    MosqueBootstrap mosque,
+    DisplaySettings design,
   ) {
     switch (layer) {
-      case DisplayLayerKind.imamTracking:
-        return ImamTrackingLayer(
-          session: mosque.imamTrackingSession,
-          primaryColor: colors.alertTextValue,
-          backgroundColor: colors.alertBackgroundValue,
-          onPageSelected: (pageNumber) {
-            unawaited(_updateImamTrackingPage(mosque, pageNumber));
-          },
-        );
       case DisplayLayerKind.alert:
         return AlertLayer(
           alerts: mosque.savedAlerts,
-          alertsFontSize: design.fontSizes.alerts,
-          primaryColor: colors.alertTextValue,
-          backgroundColor: colors.alertBackgroundValue,
+          alertsFontSize: design.alertsFontSize,
+          primaryColor: design.alertTextColorValue,
+          backgroundColor: design.alertBackgroundColorValue,
           numeralFormat: design.numeralFormat,
           fontFamily: design.fontFamily,
           onExpired: _updateLayerInputs,
         );
+      case DisplayLayerKind.recitation:
+        final displayState = context.read<DisplayBloc>().state;
+        if (displayState is DisplayLoaded && displayState.recitation != null) {
+          return RecitationLayer(recitation: displayState.recitation!);
+        }
+        return const SizedBox.shrink();
       case DisplayLayerKind.photoStudio:
         return AlbumImageLayer(
           imageUrl: _layerController.photoStudioUrl ?? '',
-          backgroundColor: colors.primaryValue,
-          fit: boxFitFromName(mosque.publishedAlbumImageFit),
+          backgroundColor: design.primaryColorValue,
+          fit: boxFitFromName(design.publishedAlbumFit),
         );
       case DisplayLayerKind.iqamaAdhan:
         final helper = PrayerTimesHelper(mosque);
         final now = _now.value;
         final phase = helper.getPrayerDisplayPhase(
           now,
-          preAdhanMinutes: design.preAdhanMinutes,
-          adhanMomentDurationSeconds: design.adhanMomentDurationSeconds,
+          preAdhanMinutes: mosque.prayerSettings.preAdhanMinutes,
+          adhanMomentDurationSeconds:
+              mosque.prayerSettings.adhanMomentDurationSeconds,
         );
         final remaining = phase.focusTime.difference(now);
         return IqamaAdhanLayer(
@@ -304,7 +362,7 @@ class _DisplayScreenState extends State<DisplayScreen> {
           designSettings: design,
           mosque: mosque,
           isFriday: now.weekday == DateTime.friday,
-          countdownFontSize: design.fontSizes.countdown,
+          countdownFontSize: design.countdownFontSize,
         );
       case DisplayLayerKind.religious:
         return const SizedBox.shrink(); // Handled inline by DisplayBeigeArea

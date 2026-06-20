@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/utils/app_font_loader.dart';
 import '../../../../core/utils/prayer_times_helper.dart';
-import '../../../../core/enums/display/prayer_display_phase_kind.dart';
-import '../../../../data/models/design/design_settings_model.dart';
+import '../../../../data/models/mosque/display_settings.dart';
 import '../../../../data/models/prayer_display_slot.dart';
 
 /// Inline pre-Adhan countdown displayed inside the beige area during the
@@ -12,7 +11,7 @@ import '../../../../data/models/prayer_display_slot.dart';
 class PreAdhanCountdownInline extends StatelessWidget {
   final PrayerTimesHelper helper;
   final DateTime now;
-  final DesignSettingsModel designSettings;
+  final DisplaySettings designSettings;
 
   const PreAdhanCountdownInline({
     super.key,
@@ -24,13 +23,13 @@ class PreAdhanCountdownInline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    final colors = designSettings.colors;
-    final textColor = colors.inactiveCardTextValue;
+    final textColor = designSettings.inactiveCardTextColorValue;
 
     final phase = helper.getPrayerDisplayPhase(
       now,
-      preAdhanMinutes: designSettings.preAdhanMinutes,
-      adhanMomentDurationSeconds: designSettings.adhanMomentDurationSeconds,
+      preAdhanMinutes: helper.mosque.prayerSettings.preAdhanMinutes,
+      adhanMomentDurationSeconds:
+          helper.mosque.prayerSettings.adhanMomentDurationSeconds,
     );
     if (phase.kind != PrayerDisplayPhaseKind.preAdhan &&
         phase.kind != PrayerDisplayPhaseKind.iqama) {
@@ -64,7 +63,7 @@ class PreAdhanCountdownInline extends StatelessWidget {
                         ? s.display_remaining_to_iqama_line(prayerLabel)
                         : s.display_remaining_to_adhan_line(prayerLabel),
                     style: baseStyle.copyWith(
-                      fontSize: (designSettings.fontSizes.countdown * 1.6)
+                      fontSize: (designSettings.countdownFontSize * 1.6)
                           .clamp(14.0, 40.0),
                       fontWeight: FontWeight.w700,
                     ),
@@ -76,7 +75,7 @@ class PreAdhanCountdownInline extends StatelessWidget {
                   Text(
                     PrayerTimesHelper.formatDuration(remaining),
                     style: baseStyle.copyWith(
-                      fontSize: (designSettings.fontSizes.countdown * 2.8)
+                      fontSize: (designSettings.countdownFontSize * 2.8)
                           .clamp(20.0, 80.0),
                       fontWeight: FontWeight.w800,
                       height: 1.0,

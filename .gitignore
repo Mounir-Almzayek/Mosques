@@ -57,3 +57,7 @@ upload.js
 node_modules/
 package-lock.json
 package.json
+
+# Sibling projects with their own git repos; do not track from here.
+mosques-backend/
+survey-app/

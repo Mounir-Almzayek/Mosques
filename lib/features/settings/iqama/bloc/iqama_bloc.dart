@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/services/error_mapper.dart';
+import '../../../../core/utils/async_runner.dart';
 import '../../../../data/repositories/interfaces/mosque_repository_interface.dart';
 import 'iqama_event.dart';
 import 'iqama_state.dart';
@@ -11,6 +13,7 @@ export 'iqama_state.dart';
 
 class IqamaBloc extends Bloc<IqamaEvent, IqamaState> {
   final IMosqueRepository _repo;
+  final AsyncRunner<void> _saveRunner = AsyncRunner();
 
   IqamaBloc({required IMosqueRepository mosqueRepository})
     : _repo = mosqueRepository,
@@ -29,7 +32,7 @@ class IqamaBloc extends Bloc<IqamaEvent, IqamaState> {
     _sub = _repo.streamActiveMosque.listen(
       (mosque) => add(IqamaMosqueUpdated(mosque)),
       onError: (Object error) =>
-          emit(state.copyWith(isLoading: false, error: error.toString())),
+          emit(state.copyWith(isLoading: false, error: errorMessage(error))),
     );
   }
 
@@ -53,19 +56,19 @@ class IqamaBloc extends Bloc<IqamaEvent, IqamaState> {
   ) {
     final m = state.mosque;
     if (m == null) return;
+    final offsets = m.prayerSettings.iqamaOffsets;
     final i = switch (event.prayer) {
-      IqamaField.fajr => m.iqamaSettings.copyWith(fajrOffset: event.offset),
-      IqamaField.dhuhr => m.iqamaSettings.copyWith(dhuhrOffset: event.offset),
-      IqamaField.asr => m.iqamaSettings.copyWith(asrOffset: event.offset),
-      IqamaField.maghrib => m.iqamaSettings.copyWith(
-        maghribOffset: event.offset,
-      ),
-      IqamaField.isha => m.iqamaSettings.copyWith(ishaOffset: event.offset),
-      IqamaField.jummah => m.iqamaSettings.copyWith(jummahOffset: event.offset),
+      IqamaField.fajr => offsets.copyWith(fajr: event.offset),
+      IqamaField.dhuhr => offsets.copyWith(dhuhr: event.offset),
+      IqamaField.asr => offsets.copyWith(asr: event.offset),
+      IqamaField.maghrib => offsets.copyWith(maghrib: event.offset),
+      IqamaField.isha => offsets.copyWith(isha: event.offset),
+      IqamaField.jummah => offsets.copyWith(jummah: event.offset),
     };
+    final prayer = m.prayerSettings.copyWith(iqamaOffsets: i);
     emit(
       state.copyWith(
-        mosque: m.copyWith(iqamaSettings: i),
+        mosque: m.copyWith(prayerSettings: prayer),
         hasUnsavedChanges: true,
       ),
     );
@@ -77,20 +80,22 @@ class IqamaBloc extends Bloc<IqamaEvent, IqamaState> {
   ) async {
     final m = state.mosque;
     if (m == null) return;
-    emit(state.copyWith(isSaving: true));
-    try {
-      await _repo.updateIqamaSettings(m);
-      emit(
+    await _saveRunner.run(
+      checkConnectivity: false,
+      onlineTask: (_) => _repo.updateIqamaSettings(m),
+      onStart: () => emit(state.copyWith(isSaving: true)),
+      onSuccess: (_) => emit(
         state.copyWith(isSaving: false, hasUnsavedChanges: false, error: null),
-      );
-    } catch (e) {
-      emit(state.copyWith(isSaving: false, error: e.toString()));
-    }
+      ),
+      onError: (error) =>
+          emit(state.copyWith(isSaving: false, error: errorMessage(error))),
+    );
   }
 
   @override
   Future<void> close() {
     _sub?.cancel();
+    _saveRunner.cancel();
     return super.close();
   }
 }

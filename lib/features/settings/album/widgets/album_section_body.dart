@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/widgets/feedback/unified_snackbar.dart';
 import '../../../../core/widgets/forms/custom_text_field.dart';
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 import '../bloc/album_bloc.dart';
 import 'album_empty_state.dart';
 import 'album_grid_cell.dart';
@@ -13,12 +13,13 @@ import 'album_publish_bottom_sheet.dart';
 class AlbumSectionBody extends StatelessWidget {
   const AlbumSectionBody({super.key});
 
-  static bool _isImageLive(MosqueModel mosque, String url) {
-    if (mosque.publishedAlbumImageUrl != url) return false;
-    if (mosque.publishedAlbumImageAt == null) return false;
+  static bool _isImageLive(MosqueBootstrap mosque, String url) {
+    final ds = mosque.displaySettings;
+    if (ds.publishedAlbumUrl != url) return false;
+    if (ds.publishedAlbumAt == null) return false;
 
-    final expiry = mosque.publishedAlbumImageAt!.add(
-      Duration(seconds: mosque.publishedAlbumImageDuration),
+    final expiry = ds.publishedAlbumAt!.add(
+      Duration(seconds: ds.publishedAlbumDurationSeconds ?? 30),
     );
     return DateTime.now().isBefore(expiry);
   }
@@ -68,7 +69,7 @@ class AlbumSectionBody extends StatelessWidget {
 
   void _showPublishSheet(
     BuildContext context,
-    MosqueModel mosque,
+    MosqueBootstrap mosque,
     String url,
     bool isLive,
   ) {
@@ -82,8 +83,9 @@ class AlbumSectionBody extends StatelessWidget {
       builder: (sheetCtx) => AlbumPublishBottomSheet(
         url: url,
         isLive: isLive,
-        initialDurationSeconds: mosque.publishedAlbumImageDuration,
-        initialFit: mosque.publishedAlbumImageFit,
+        initialDurationSeconds:
+            mosque.displaySettings.publishedAlbumDurationSeconds ?? 30,
+        initialFit: mosque.displaySettings.publishedAlbumFit,
         onPublish: (durationSeconds, fit) {
           bloc.add(AlbumImagePublished(url, durationSeconds, fit));
           bloc.add(const SaveAlbumRequested());
@@ -129,7 +131,7 @@ class AlbumSectionBody extends StatelessWidget {
           final mosque = state.mosque;
           if (mosque == null) return const SizedBox.shrink();
 
-          final urls = mosque.albumImageUrls;
+          final urls = mosque.displaySettings.albumImageUrls;
 
           return Scaffold(
             body: urls.isEmpty

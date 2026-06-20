@@ -2,7 +2,7 @@
 
 import '../../data/models/display/adjusted_prayer_times.dart';
 import '../../data/models/display/prayer_time_item.dart';
-import '../../data/models/mosque/mosque_model.dart';
+import '../../data/models/mosque/mosque_bootstrap.dart';
 import '../../data/models/prayer_display_slot.dart';
 import 'next_prayer_event.dart';
 import 'prayer_display_phase.dart';
@@ -14,14 +14,14 @@ export '../../data/models/display/adjusted_prayer_times.dart';
 /// Optimized helper for prayer time calculations and display phase management.
 /// Uses a continuous timeline approach to handle large offsets and transitions correctly.
 class PrayerTimesHelper {
-  final MosqueModel mosque;
+  final MosqueBootstrap mosque;
 
   static const String tomorrowFajrPrayerName = 'FAJR (TOMORROW)';
 
   PrayerTimesHelper(this.mosque);
 
   CalculationParameters _getParams() {
-    switch (mosque.prayerCalculationMethod) {
+    switch (mosque.prayerSettings.calculationMethod) {
       case 'MuslimWorldLeague':
         return CalculationMethod.muslim_world_league.getParameters();
       case 'Egyptian':
@@ -53,7 +53,8 @@ class PrayerTimesHelper {
 
   /// Builds adjusted prayer times for a specific date, applying all offsets.
   AdjustedPrayerTimes buildAdjustedPrayerTimes(DateTime date) {
-    final coordinates = Coordinates(mosque.latitude, mosque.longitude);
+    final coordinates =
+        Coordinates(mosque.mosque.latitudeValue, mosque.mosque.longitudeValue);
     final params = _getParams();
     final prayers = PrayerTimes(coordinates, DateComponents.from(date), params);
 
@@ -118,7 +119,7 @@ class PrayerTimesHelper {
   }
 
   int _getOffsetFor(Prayer prayer) {
-    final offsets = mosque.prayerOffsets;
+    final offsets = mosque.prayerSettings.offsets;
     switch (prayer) {
       case Prayer.fajr:
         return offsets.fajr;
@@ -142,19 +143,18 @@ class PrayerTimesHelper {
       item.prayer == Prayer.dhuhr && item.adhanTime.weekday == DateTime.friday;
 
   int getIqamaOffset(Prayer prayer, {bool isFriday = false}) {
+    final iqama = mosque.prayerSettings.iqamaOffsets;
     switch (prayer) {
       case Prayer.fajr:
-        return mosque.iqamaSettings.fajrOffset;
+        return iqama.fajr;
       case Prayer.dhuhr:
-        return isFriday
-            ? mosque.iqamaSettings.jummahOffset
-            : mosque.iqamaSettings.dhuhrOffset;
+        return isFriday ? iqama.jummah : iqama.dhuhr;
       case Prayer.asr:
-        return mosque.iqamaSettings.asrOffset;
+        return iqama.asr;
       case Prayer.maghrib:
-        return mosque.iqamaSettings.maghribOffset;
+        return iqama.maghrib;
       case Prayer.isha:
-        return mosque.iqamaSettings.ishaOffset;
+        return iqama.isha;
       default:
         return 0;
     }

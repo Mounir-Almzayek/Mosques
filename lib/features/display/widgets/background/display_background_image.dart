@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/widgets/media/media_widgets.dart';
 import '../../../../core/enums/display_background_type.dart';
 import '../../../../core/utils/color_parser.dart';
-import '../../../../data/models/design/design_background_settings.dart';
+import '../../../../data/models/mosque/display_settings.dart';
 
 /// Duration between album background image transitions.
 const Duration _kAlbumCycleDuration = Duration(seconds: 30);
@@ -14,7 +14,7 @@ const Duration _kAlbumCrossfadeDuration = Duration(milliseconds: 1200);
 
 class DisplayBackgroundImage extends StatefulWidget {
   final Color fallbackColor;
-  final DesignBackgroundSettings settings;
+  final DisplaySettings settings;
   final List<String> albumUrls;
 
   const DisplayBackgroundImage({
@@ -42,7 +42,7 @@ class _DisplayBackgroundImageState extends State<DisplayBackgroundImage> {
   @override
   void didUpdateWidget(covariant DisplayBackgroundImage old) {
     super.didUpdateWidget(old);
-    if (old.settings.type != widget.settings.type ||
+    if (old.settings.backgroundTypeKind != widget.settings.backgroundTypeKind ||
         old.albumUrls.length != widget.albumUrls.length) {
       _albumIndex = 0;
       _startAlbumTimerIfNeeded();
@@ -59,7 +59,7 @@ class _DisplayBackgroundImageState extends State<DisplayBackgroundImage> {
     _albumTimer?.cancel();
     _albumTimer = null;
 
-    if (widget.settings.type == DisplayBackgroundType.album &&
+    if (widget.settings.backgroundTypeKind == DisplayBackgroundType.album &&
         widget.albumUrls.length > 1) {
       _albumTimer = Timer.periodic(_kAlbumCycleDuration, (_) {
         if (!mounted) return;
@@ -72,17 +72,17 @@ class _DisplayBackgroundImageState extends State<DisplayBackgroundImage> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.settings.type == DisplayBackgroundType.color) {
-      final color = parseColorHex(widget.settings.value, widget.fallbackColor);
+    if (widget.settings.backgroundTypeKind == DisplayBackgroundType.color) {
+      final color = parseColorHex(widget.settings.backgroundValue, widget.fallbackColor);
       return Container(color: color);
     }
 
-    if (widget.settings.type == DisplayBackgroundType.album) {
+    if (widget.settings.backgroundTypeKind == DisplayBackgroundType.album) {
       return _buildAlbumBackground();
     }
 
     // Image type — remote URL stored in background_value
-    final url = widget.settings.value;
+    final url = widget.settings.backgroundValue;
 
     // If value looks like a URL, load from network with caching.
     // Otherwise (empty, 'default', or old preset ID), show fallback color.
@@ -119,7 +119,7 @@ class _DisplayBackgroundImageState extends State<DisplayBackgroundImage> {
     // If no album URLs, fall back to settings.value (legacy single URL)
     // or the fallback color.
     if (urls.isEmpty) {
-      final singleUrl = widget.settings.value;
+      final singleUrl = widget.settings.backgroundValue;
       if (singleUrl.isNotEmpty && singleUrl.startsWith('http')) {
         return _buildCachedImage(singleUrl);
       }

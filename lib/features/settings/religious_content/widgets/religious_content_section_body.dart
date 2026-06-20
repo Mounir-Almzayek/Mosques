@@ -61,7 +61,7 @@ class ReligiousContentSectionBody extends StatelessWidget {
           }
 
           final bloc = context.read<ReligiousContentBloc>();
-          final design = mosque.designSettings;
+          final design = mosque.displaySettings;
           final scheme = Theme.of(context).colorScheme;
 
           return SingleChildScrollView(

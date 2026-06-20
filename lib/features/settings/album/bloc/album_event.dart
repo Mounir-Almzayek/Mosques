@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 
 sealed class AlbumEvent extends Equatable {
   const AlbumEvent();
@@ -15,7 +15,7 @@ class LoadAlbum extends AlbumEvent {
 
 /// Internal event emitted when the mosque stream pushes a new value.
 class AlbumMosqueUpdated extends AlbumEvent {
-  final MosqueModel? mosque;
+  final MosqueBootstrap? mosque;
 
   const AlbumMosqueUpdated(this.mosque);
 

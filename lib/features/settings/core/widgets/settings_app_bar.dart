@@ -130,8 +130,6 @@ class SettingsAppBar extends StatelessWidget implements PreferredSizeWidget {
         return s.tab_about;
       case 9:
         return s.tab_update;
-      case 10:
-        return 'تتبع قراءة الإمام';
       default:
         return s.settings_title;
     }
@@ -159,8 +157,6 @@ class SettingsAppBar extends StatelessWidget implements PreferredSizeWidget {
         return Icons.info_outlined;
       case 9:
         return Icons.system_update_outlined;
-      case 10:
-        return Icons.mic_outlined;
       default:
         return Icons.settings_outlined;
     }

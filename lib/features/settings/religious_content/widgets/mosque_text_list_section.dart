@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 import '../bloc/religious_content_bloc.dart';
 import 'mosque_text_editor_sheet.dart';
 
@@ -105,7 +105,7 @@ class MosqueTextL10n {
 /// Manages mosque text lists (hadith, verse, dua, adhkar) with the same list
 /// and save pattern.
 class MosqueTextListSection extends StatefulWidget {
-  final MosqueModel mosque;
+  final MosqueBootstrap mosque;
   final MosqueTextListKind kind;
 
   const MosqueTextListSection({
@@ -119,7 +119,7 @@ class MosqueTextListSection extends StatefulWidget {
 }
 
 class _MosqueTextListSectionState extends State<MosqueTextListSection> {
-  Future<void> _openEditor([MosqueTextEntryModel? existing]) async {
+  Future<void> _openEditor([ContentItem? existing]) async {
     final bloc = context.read<ReligiousContentBloc>();
     final s = S.of(context);
     final labels = MosqueTextL10n.of(s, widget.kind);
@@ -140,7 +140,7 @@ class _MosqueTextListSectionState extends State<MosqueTextListSection> {
     );
   }
 
-  Future<void> _confirmDelete(MosqueTextEntryModel item) async {
+  Future<void> _confirmDelete(ContentItem item) async {
     final s = S.of(context);
     final labels = MosqueTextL10n.of(s, widget.kind);
     final ok = await showDialog<bool>(

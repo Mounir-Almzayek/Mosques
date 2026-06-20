@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/app_font_loader.dart';
-import '../../../../data/models/mosque/mosque_model.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 
 /// Inline religious content (hadith, verse, dua, adhkar) rendered inside the
 /// beige area instead of as a fullscreen overlay.
@@ -12,8 +12,8 @@ import '../../../../data/models/mosque/mosque_model.dart';
 /// [ReligiousContentLayer], but uses [inactiveCardTextValue] for text color
 /// and scales fonts via [religiousContentFontSize].
 class ReligiousContentInline extends StatefulWidget {
-  final MosqueModel mosque;
-  final DesignSettingsModel designSettings;
+  final MosqueBootstrap mosque;
+  final DisplaySettings designSettings;
   final int slideIndex;
   final double religiousContentFontSize;
 
@@ -32,7 +32,7 @@ class ReligiousContentInline extends StatefulWidget {
 
 class _ReligiousContentInlineState extends State<ReligiousContentInline>
     with SingleTickerProviderStateMixin {
-  late MosqueTextEntryModel _current;
+  late ContentItem _current;
   late bool _isQuran;
   late AnimationController _controller;
 
@@ -75,8 +75,8 @@ class _ReligiousContentInlineState extends State<ReligiousContentInline>
 
   /// Picks a random active entry from all content lists, tagging whether it
   /// came from the Qur'an verses list (so verse text uses the Uthmanic font).
-  ({MosqueTextEntryModel entry, bool isQuran}) _pickSlide() {
-    final pool = <({MosqueTextEntryModel entry, bool isQuran})>[
+  ({ContentItem entry, bool isQuran}) _pickSlide() {
+    final pool = <({ContentItem entry, bool isQuran})>[
       ...widget.mosque.hadiths.map((e) => (entry: e, isQuran: false)),
       ...widget.mosque.verses.map((e) => (entry: e, isQuran: true)),
       ...widget.mosque.duas.map((e) => (entry: e, isQuran: false)),
@@ -85,7 +85,7 @@ class _ReligiousContentInlineState extends State<ReligiousContentInline>
 
     if (pool.isEmpty) {
       return (
-        entry: const MosqueTextEntryModel(
+        entry: const ContentItem(
           id: '_empty',
           narrator: '',
           text: '',
@@ -101,8 +101,7 @@ class _ReligiousContentInlineState extends State<ReligiousContentInline>
 
   @override
   Widget build(BuildContext context) {
-    final colors = widget.designSettings.colors;
-    final textColor = colors.inactiveCardTextValue;
+    final textColor = widget.designSettings.inactiveCardTextColorValue;
 
     // Verses render with a Qur'an-capable font so Uthmanic marks survive;
     // everything else keeps the mosque's chosen display font.

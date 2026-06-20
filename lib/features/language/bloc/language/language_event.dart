@@ -13,7 +13,7 @@ class ChangeLanguage extends LanguageEvent {
   const ChangeLanguage(this.language);
 }
 
-/// Applied after reading Firestore (no write-back to Firebase to avoid loops).
+/// Applied after reading from the backend (no write-back to avoid loops).
 class RemoteLanguageChanged extends LanguageEvent {
   final AppLanguage language;
   const RemoteLanguageChanged(this.language);
