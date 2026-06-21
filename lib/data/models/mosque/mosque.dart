@@ -14,6 +14,9 @@ class Mosque extends Equatable {
   final String name;
   final String city;
   final String? countryCode;
+  final String? administrativeDivisionId;
+  final String? administrativeDivisionName;
+  final String? governorateName;
   final String latitude;
   final String longitude;
   final String timezone;
@@ -29,6 +32,9 @@ class Mosque extends Equatable {
     this.name = '',
     this.city = '',
     this.countryCode,
+    this.administrativeDivisionId,
+    this.administrativeDivisionName,
+    this.governorateName,
     this.latitude = '0',
     this.longitude = '0',
     this.timezone = 'Asia/Damascus',
@@ -49,6 +55,10 @@ class Mosque extends Equatable {
       name: json['name']?.toString() ?? '',
       city: json['city']?.toString() ?? '',
       countryCode: json['countryCode']?.toString(),
+      administrativeDivisionId: json['administrativeDivisionId']?.toString(),
+      administrativeDivisionName: json['administrativeDivisionName']
+          ?.toString(),
+      governorateName: json['governorateName']?.toString(),
       latitude: json['latitude']?.toString() ?? '0',
       longitude: json['longitude']?.toString() ?? '0',
       timezone: json['timezone']?.toString() ?? 'Asia/Damascus',
@@ -67,6 +77,9 @@ class Mosque extends Equatable {
       'name': name,
       'city': city,
       'countryCode': countryCode,
+      'administrativeDivisionId': administrativeDivisionId,
+      'administrativeDivisionName': administrativeDivisionName,
+      'governorateName': governorateName,
       'latitude': latitude,
       'longitude': longitude,
       'timezone': timezone,
@@ -84,6 +97,9 @@ class Mosque extends Equatable {
     String? name,
     String? city,
     String? countryCode,
+    String? administrativeDivisionId,
+    String? administrativeDivisionName,
+    String? governorateName,
     String? latitude,
     String? longitude,
     String? timezone,
@@ -99,6 +115,11 @@ class Mosque extends Equatable {
       name: name ?? this.name,
       city: city ?? this.city,
       countryCode: countryCode ?? this.countryCode,
+      administrativeDivisionId:
+          administrativeDivisionId ?? this.administrativeDivisionId,
+      administrativeDivisionName:
+          administrativeDivisionName ?? this.administrativeDivisionName,
+      governorateName: governorateName ?? this.governorateName,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       timezone: timezone ?? this.timezone,
@@ -112,18 +133,21 @@ class Mosque extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        publicSlug,
-        name,
-        city,
-        countryCode,
-        latitude,
-        longitude,
-        timezone,
-        languageCode,
-        defaultRiwayahCode,
-        ownerUserId,
-        syncRevision,
-        updatedAt,
-      ];
+    id,
+    publicSlug,
+    name,
+    city,
+    countryCode,
+    administrativeDivisionId,
+    administrativeDivisionName,
+    governorateName,
+    latitude,
+    longitude,
+    timezone,
+    languageCode,
+    defaultRiwayahCode,
+    ownerUserId,
+    syncRevision,
+    updatedAt,
+  ];
 }
