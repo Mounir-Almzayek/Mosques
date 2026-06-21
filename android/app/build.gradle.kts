@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mouniralmzayek.mosques"
+    namespace = "com.tebyan.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -24,7 +24,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.mouniralmzayek.mosques"
+        applicationId = "com.tebyan.app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         // minSdk من Flutter؛ يجب أن يبقى ≥ 21 لدعم Android TV (Leanback).

@@ -361,5 +361,31 @@
   "design_bg_type_album": "ألبوم",
   "url_label": "رابط",
   "add_label": "إضافة",
+  "recitation_tracking_title": "تتبع القراءة",
+  "recitation_surah_number": "رقم السورة",
+  "recitation_ayah_number": "رقم الآية",
+  "recitation_start_tracking": "بدء التتبع",
+  "recitation_stop_tracking": "إيقاف التتبع",
+  "recitation_no_results": "لم تصل نتائج بعد.",
+  "recitation_imam_tracking_title": "تتبع قراءة الإمام",
+  "recitation_imam_error_title": "ملاحظة على قراءة الإمام",
+  "recitation_error_title": "ملاحظة على القراءة",
+  "recitation_position_title": "تتبع القراءة",
+  "recitation_session_state_title": "حالة التتبع",
+  "recitation_usage_title": "تحليل القراءة",
+  "recitation_position_detail": "السورة {surah} - الآية {ayah}",
+  "@recitation_position_detail": {
+    "placeholders": {
+      "surah": {},
+      "ayah": {}
+    }
+  },
+  "recitation_confidence_detail": "الثقة {percent}%",
+  "@recitation_confidence_detail": {
+    "placeholders": {
+      "percent": {}
+    }
+  },
+  "display_ticker_ads_label": "إعلانات",
   "settings_language": "اللغة"
 }

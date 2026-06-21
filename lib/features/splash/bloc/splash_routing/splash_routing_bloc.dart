@@ -2,7 +2,7 @@ import 'dart:ui' as ui;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/enums/splash/splash_destination.dart';
 import '../../../../data/repositories/interfaces/auth_repository_interface.dart';
-import '../../../auth/repository/user_active_mosque_repository.dart';
+import '../../../../data/repositories/user_active_mosque_repository.dart';
 
 part 'splash_routing_event.dart';
 part 'splash_routing_state.dart';

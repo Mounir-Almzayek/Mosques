@@ -152,7 +152,7 @@ class RecitationBloc extends Bloc<RecitationEvent, RecitationState> {
   ) async {
     final mosque = await _mosqueRepository.getActiveMosque();
     if (mosque == null || mosque.id.isEmpty) {
-      throw StateError('لا يوجد جامع مرتبط بهذا الحساب.');
+      throw StateError('no_mosque');
     }
 
     await _authRepository.setAppModeOverride(AppMode.mobileSettings);
@@ -218,9 +218,6 @@ class RecitationBloc extends Bloc<RecitationEvent, RecitationState> {
   }
 
   String _messageFor(Object error) {
-    if (error is StateError && error.message.isNotEmpty) {
-      return error.message;
-    }
     return errorMessage(error);
   }
 

@@ -361,5 +361,31 @@
   "design_bg_type_album": "Album",
   "url_label": "URL",
   "add_label": "Add",
+  "recitation_tracking_title": "Recitation tracking",
+  "recitation_surah_number": "Surah number",
+  "recitation_ayah_number": "Ayah number",
+  "recitation_start_tracking": "Start tracking",
+  "recitation_stop_tracking": "Stop tracking",
+  "recitation_no_results": "No results yet.",
+  "recitation_imam_tracking_title": "Imam recitation tracking",
+  "recitation_imam_error_title": "Note on imam recitation",
+  "recitation_error_title": "Recitation note",
+  "recitation_position_title": "Recitation tracking",
+  "recitation_session_state_title": "Tracking status",
+  "recitation_usage_title": "Recitation analysis",
+  "recitation_position_detail": "Surah {surah} - Ayah {ayah}",
+  "@recitation_position_detail": {
+    "placeholders": {
+      "surah": {},
+      "ayah": {}
+    }
+  },
+  "recitation_confidence_detail": "Confidence {percent}%",
+  "@recitation_confidence_detail": {
+    "placeholders": {
+      "percent": {}
+    }
+  },
+  "display_ticker_ads_label": "Ads",
   "settings_language": "Language"
 }

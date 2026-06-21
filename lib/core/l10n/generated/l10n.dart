@@ -18,8 +18,10 @@ class S {
   static S? _current;
 
   static S get current {
-    assert(_current != null,
-        'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
+    assert(
+      _current != null,
+      'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.',
+    );
     return _current!;
   }
 
@@ -41,8 +43,10 @@ class S {
 
   static S of(BuildContext context) {
     final instance = S.maybeOf(context);
-    assert(instance != null,
-        'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?');
+    assert(
+      instance != null,
+      'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?',
+    );
     return instance!;
   }
 
@@ -92,82 +96,42 @@ class S {
 
   /// `Retry`
   String get retry {
-    return Intl.message(
-      'Retry',
-      name: 'retry',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Retry', name: 'retry', desc: '', args: []);
   }
 
   /// `OK`
   String get ok {
-    return Intl.message(
-      'OK',
-      name: 'ok',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('OK', name: 'ok', desc: '', args: []);
   }
 
   /// `Cancel`
   String get cancel {
-    return Intl.message(
-      'Cancel',
-      name: 'cancel',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Cancel', name: 'cancel', desc: '', args: []);
   }
 
   /// `Save`
   String get save {
-    return Intl.message(
-      'Save',
-      name: 'save',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Save', name: 'save', desc: '', args: []);
   }
 
   /// `Delete`
   String get delete {
-    return Intl.message(
-      'Delete',
-      name: 'delete',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Delete', name: 'delete', desc: '', args: []);
   }
 
   /// `Edit`
   String get edit {
-    return Intl.message(
-      'Edit',
-      name: 'edit',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Edit', name: 'edit', desc: '', args: []);
   }
 
   /// `Search`
   String get search {
-    return Intl.message(
-      'Search',
-      name: 'search',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Search', name: 'search', desc: '', args: []);
   }
 
   /// `No data`
   String get no_data {
-    return Intl.message(
-      'No data',
-      name: 'no_data',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('No data', name: 'no_data', desc: '', args: []);
   }
 
   /// `Please select`
@@ -182,12 +146,7 @@ class S {
 
   /// `Select date`
   String get select_date {
-    return Intl.message(
-      'Select date',
-      name: 'select_date',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Select date', name: 'select_date', desc: '', args: []);
   }
 
   /// `Upload image`
@@ -202,22 +161,12 @@ class S {
 
   /// `Gallery`
   String get gallery {
-    return Intl.message(
-      'Gallery',
-      name: 'gallery',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Gallery', name: 'gallery', desc: '', args: []);
   }
 
   /// `Camera`
   String get camera {
-    return Intl.message(
-      'Camera',
-      name: 'camera',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Camera', name: 'camera', desc: '', args: []);
   }
 
   /// `In the name of Allah, the Most Gracious, the Most Merciful`
@@ -232,12 +181,7 @@ class S {
 
   /// `Sign in`
   String get login_title {
-    return Intl.message(
-      'Sign in',
-      name: 'login_title',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Sign in', name: 'login_title', desc: '', args: []);
   }
 
   /// `Mosque management — control panel`
@@ -252,12 +196,7 @@ class S {
 
   /// `Email`
   String get email_label {
-    return Intl.message(
-      'Email',
-      name: 'email_label',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Email', name: 'email_label', desc: '', args: []);
   }
 
   /// `example@domain.com`
@@ -272,32 +211,17 @@ class S {
 
   /// `Password`
   String get password_label {
-    return Intl.message(
-      'Password',
-      name: 'password_label',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Password', name: 'password_label', desc: '', args: []);
   }
 
   /// `••••••••`
   String get password_hint {
-    return Intl.message(
-      '••••••••',
-      name: 'password_hint',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('••••••••', name: 'password_hint', desc: '', args: []);
   }
 
   /// `Sign in`
   String get login_button {
-    return Intl.message(
-      'Sign in',
-      name: 'login_button',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Sign in', name: 'login_button', desc: '', args: []);
   }
 
   /// `«And whoever relies upon Allah — then He is sufficient for him»`
@@ -362,22 +286,12 @@ class S {
 
   /// `Sign out`
   String get sign_out {
-    return Intl.message(
-      'Sign out',
-      name: 'sign_out',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Sign out', name: 'sign_out', desc: '', args: []);
   }
 
   /// `Refresh`
   String get refresh {
-    return Intl.message(
-      'Refresh',
-      name: 'refresh',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Refresh', name: 'refresh', desc: '', args: []);
   }
 
   /// `Smart screen mode enabled`
@@ -402,12 +316,7 @@ class S {
 
   /// `Restart`
   String get restart_action {
-    return Intl.message(
-      'Restart',
-      name: 'restart_action',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Restart', name: 'restart_action', desc: '', args: []);
   }
 
   /// `Enable smart screen`
@@ -432,12 +341,7 @@ class S {
 
   /// `Saving…`
   String get saving {
-    return Intl.message(
-      'Saving…',
-      name: 'saving',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Saving…', name: 'saving', desc: '', args: []);
   }
 
   /// `Saved successfully`
@@ -662,12 +566,7 @@ class S {
 
   /// `Logo`
   String get design_bg_brand {
-    return Intl.message(
-      'Logo',
-      name: 'design_bg_brand',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Logo', name: 'design_bg_brand', desc: '', args: []);
   }
 
   /// `Clock and Time color`
@@ -732,72 +631,37 @@ class S {
 
   /// `General`
   String get tab_general {
-    return Intl.message(
-      'General',
-      name: 'tab_general',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('General', name: 'tab_general', desc: '', args: []);
   }
 
   /// `Design`
   String get tab_design {
-    return Intl.message(
-      'Design',
-      name: 'tab_design',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Design', name: 'tab_design', desc: '', args: []);
   }
 
   /// `Iqama`
   String get tab_iqama {
-    return Intl.message(
-      'Iqama',
-      name: 'tab_iqama',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Iqama', name: 'tab_iqama', desc: '', args: []);
   }
 
   /// `Hadith`
   String get tab_hadith {
-    return Intl.message(
-      'Hadith',
-      name: 'tab_hadith',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hadith', name: 'tab_hadith', desc: '', args: []);
   }
 
   /// `Verses`
   String get tab_verses {
-    return Intl.message(
-      'Verses',
-      name: 'tab_verses',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Verses', name: 'tab_verses', desc: '', args: []);
   }
 
   /// `Supplications`
   String get tab_duas {
-    return Intl.message(
-      'Supplications',
-      name: 'tab_duas',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Supplications', name: 'tab_duas', desc: '', args: []);
   }
 
   /// `Dhikr`
   String get tab_adhkar {
-    return Intl.message(
-      'Dhikr',
-      name: 'tab_adhkar',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Dhikr', name: 'tab_adhkar', desc: '', args: []);
   }
 
   /// `Announcements`
@@ -882,12 +746,7 @@ class S {
 
   /// `Text`
   String get hadith_text {
-    return Intl.message(
-      'Text',
-      name: 'hadith_text',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Text', name: 'hadith_text', desc: '', args: []);
   }
 
   /// `Source (optional)`
@@ -962,12 +821,7 @@ class S {
 
   /// `New verse`
   String get verse_fab_add {
-    return Intl.message(
-      'New verse',
-      name: 'verse_fab_add',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('New verse', name: 'verse_fab_add', desc: '', args: []);
   }
 
   /// `New verse`
@@ -1002,12 +856,7 @@ class S {
 
   /// `Verse text`
   String get verse_text {
-    return Intl.message(
-      'Verse text',
-      name: 'verse_text',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Verse text', name: 'verse_text', desc: '', args: []);
   }
 
   /// `Source (optional)`
@@ -1112,12 +961,7 @@ class S {
 
   /// `Text`
   String get dua_text {
-    return Intl.message(
-      'Text',
-      name: 'dua_text',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Text', name: 'dua_text', desc: '', args: []);
   }
 
   /// `Source (optional)`
@@ -1222,12 +1066,7 @@ class S {
 
   /// `Text`
   String get adhkar_text {
-    return Intl.message(
-      'Text',
-      name: 'adhkar_text',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Text', name: 'adhkar_text', desc: '', args: []);
   }
 
   /// `Note (optional)`
@@ -1492,12 +1331,7 @@ class S {
 
   /// `LIVE`
   String get alert_status_live {
-    return Intl.message(
-      'LIVE',
-      name: 'alert_status_live',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('LIVE', name: 'alert_status_live', desc: '', args: []);
   }
 
   /// `Ready`
@@ -1542,12 +1376,7 @@ class S {
 
   /// `Edit Alert`
   String get alert_edit {
-    return Intl.message(
-      'Edit Alert',
-      name: 'alert_edit',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Edit Alert', name: 'alert_edit', desc: '', args: []);
   }
 
   /// `Delete Alert`
@@ -1632,12 +1461,7 @@ class S {
 
   /// `Prayer times`
   String get miqat_ar {
-    return Intl.message(
-      'Prayer times',
-      name: 'miqat_ar',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Prayer times', name: 'miqat_ar', desc: '', args: []);
   }
 
   /// `MIQAT PRAYER TIMES`
@@ -1672,22 +1496,12 @@ class S {
 
   /// `Azan`
   String get countdown_azan {
-    return Intl.message(
-      'Azan',
-      name: 'countdown_azan',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Azan', name: 'countdown_azan', desc: '', args: []);
   }
 
   /// `Iqama`
   String get countdown_iqama {
-    return Intl.message(
-      'Iqama',
-      name: 'countdown_iqama',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Iqama', name: 'countdown_iqama', desc: '', args: []);
   }
 
   /// `Scan for details`
@@ -1712,102 +1526,52 @@ class S {
 
   /// `Fajr`
   String get prayer_fajr {
-    return Intl.message(
-      'Fajr',
-      name: 'prayer_fajr',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Fajr', name: 'prayer_fajr', desc: '', args: []);
   }
 
   /// `Sunrise`
   String get prayer_sunrise {
-    return Intl.message(
-      'Sunrise',
-      name: 'prayer_sunrise',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Sunrise', name: 'prayer_sunrise', desc: '', args: []);
   }
 
   /// `Dhuhr`
   String get prayer_dhuhr {
-    return Intl.message(
-      'Dhuhr',
-      name: 'prayer_dhuhr',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Dhuhr', name: 'prayer_dhuhr', desc: '', args: []);
   }
 
   /// `Asr`
   String get prayer_asr {
-    return Intl.message(
-      'Asr',
-      name: 'prayer_asr',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Asr', name: 'prayer_asr', desc: '', args: []);
   }
 
   /// `Maghrib`
   String get prayer_maghrib {
-    return Intl.message(
-      'Maghrib',
-      name: 'prayer_maghrib',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Maghrib', name: 'prayer_maghrib', desc: '', args: []);
   }
 
   /// `Isha`
   String get prayer_isha {
-    return Intl.message(
-      'Isha',
-      name: 'prayer_isha',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Isha', name: 'prayer_isha', desc: '', args: []);
   }
 
   /// `Jumuah`
   String get prayer_jummah {
-    return Intl.message(
-      'Jumuah',
-      name: 'prayer_jummah',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Jumuah', name: 'prayer_jummah', desc: '', args: []);
   }
 
   /// `فجر`
   String get prayer_fajr_ar {
-    return Intl.message(
-      'فجر',
-      name: 'prayer_fajr_ar',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('فجر', name: 'prayer_fajr_ar', desc: '', args: []);
   }
 
   /// `Fajr`
   String get prayer_fajr_en {
-    return Intl.message(
-      'Fajr',
-      name: 'prayer_fajr_en',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Fajr', name: 'prayer_fajr_en', desc: '', args: []);
   }
 
   /// `شروق`
   String get prayer_sunrise_ar {
-    return Intl.message(
-      'شروق',
-      name: 'prayer_sunrise_ar',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('شروق', name: 'prayer_sunrise_ar', desc: '', args: []);
   }
 
   /// `Sunrise`
@@ -1822,52 +1586,27 @@ class S {
 
   /// `ظهر`
   String get prayer_dhuhr_ar {
-    return Intl.message(
-      'ظهر',
-      name: 'prayer_dhuhr_ar',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('ظهر', name: 'prayer_dhuhr_ar', desc: '', args: []);
   }
 
   /// `Dhuhr`
   String get prayer_dhuhr_en {
-    return Intl.message(
-      'Dhuhr',
-      name: 'prayer_dhuhr_en',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Dhuhr', name: 'prayer_dhuhr_en', desc: '', args: []);
   }
 
   /// `عصر`
   String get prayer_asr_ar {
-    return Intl.message(
-      'عصر',
-      name: 'prayer_asr_ar',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('عصر', name: 'prayer_asr_ar', desc: '', args: []);
   }
 
   /// `Asr`
   String get prayer_asr_en {
-    return Intl.message(
-      'Asr',
-      name: 'prayer_asr_en',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Asr', name: 'prayer_asr_en', desc: '', args: []);
   }
 
   /// `مغرب`
   String get prayer_maghrib_ar {
-    return Intl.message(
-      'مغرب',
-      name: 'prayer_maghrib_ar',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('مغرب', name: 'prayer_maghrib_ar', desc: '', args: []);
   }
 
   /// `Maghrib`
@@ -1882,42 +1621,22 @@ class S {
 
   /// `عشاء`
   String get prayer_isha_ar {
-    return Intl.message(
-      'عشاء',
-      name: 'prayer_isha_ar',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('عشاء', name: 'prayer_isha_ar', desc: '', args: []);
   }
 
   /// `Isha`
   String get prayer_isha_en {
-    return Intl.message(
-      'Isha',
-      name: 'prayer_isha_en',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Isha', name: 'prayer_isha_en', desc: '', args: []);
   }
 
   /// `Azan`
   String get azan_label {
-    return Intl.message(
-      'Azan',
-      name: 'azan_label',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Azan', name: 'azan_label', desc: '', args: []);
   }
 
   /// `Iqama`
   String get iqama_label {
-    return Intl.message(
-      'Iqama',
-      name: 'iqama_label',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Iqama', name: 'iqama_label', desc: '', args: []);
   }
 
   /// `Language`
@@ -1942,42 +1661,22 @@ class S {
 
   /// `Required`
   String get required_field {
-    return Intl.message(
-      'Required',
-      name: 'required_field',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Required', name: 'required_field', desc: '', args: []);
   }
 
   /// `mins`
   String get minutes_suffix {
-    return Intl.message(
-      'mins',
-      name: 'minutes_suffix',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('mins', name: 'minutes_suffix', desc: '', args: []);
   }
 
   /// `m`
   String get minutes_short {
-    return Intl.message(
-      'm',
-      name: 'minutes_short',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('m', name: 'minutes_short', desc: '', args: []);
   }
 
   /// `s`
   String get unit_seconds {
-    return Intl.message(
-      's',
-      name: 'unit_seconds',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('s', name: 'unit_seconds', desc: '', args: []);
   }
 
   /// `No active mosque linked to this account.`
@@ -2012,12 +1711,7 @@ class S {
 
   /// `Dua`
   String get display_ticker_dua {
-    return Intl.message(
-      'Dua',
-      name: 'display_ticker_dua',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Dua', name: 'display_ticker_dua', desc: '', args: []);
   }
 
   /// `Dhikr`
@@ -2362,12 +2056,7 @@ class S {
 
   /// `City`
   String get city_label {
-    return Intl.message(
-      'City',
-      name: 'city_label',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('City', name: 'city_label', desc: '', args: []);
   }
 
   /// `Prayer calculation method`
@@ -2732,32 +2421,17 @@ class S {
 
   /// `Profile`
   String get tab_profile {
-    return Intl.message(
-      'Profile',
-      name: 'tab_profile',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Profile', name: 'tab_profile', desc: '', args: []);
   }
 
   /// `About App`
   String get tab_about {
-    return Intl.message(
-      'About App',
-      name: 'tab_about',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('About App', name: 'tab_about', desc: '', args: []);
   }
 
   /// `Email`
   String get profile_email {
-    return Intl.message(
-      'Email',
-      name: 'profile_email',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Email', name: 'profile_email', desc: '', args: []);
   }
 
   /// `Current Password`
@@ -2822,12 +2496,7 @@ class S {
 
   /// `App Update`
   String get tab_update {
-    return Intl.message(
-      'App Update',
-      name: 'tab_update',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('App Update', name: 'tab_update', desc: '', args: []);
   }
 
   /// `New Update Available!`
@@ -2982,12 +2651,7 @@ class S {
 
   /// `Album`
   String get tab_album {
-    return Intl.message(
-      'Album',
-      name: 'tab_album',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Album', name: 'tab_album', desc: '', args: []);
   }
 
   /// `No images added yet`
@@ -3032,12 +2696,7 @@ class S {
 
   /// `LIVE`
   String get album_live_badge {
-    return Intl.message(
-      'LIVE',
-      name: 'album_live_badge',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('LIVE', name: 'album_live_badge', desc: '', args: []);
   }
 
   /// `Remove from Display`
@@ -3082,22 +2741,12 @@ class S {
 
   /// `Cover`
   String get album_fit_cover {
-    return Intl.message(
-      'Cover',
-      name: 'album_fit_cover',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Cover', name: 'album_fit_cover', desc: '', args: []);
   }
 
   /// `Fill`
   String get album_fit_fill {
-    return Intl.message(
-      'Fill',
-      name: 'album_fit_fill',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Fill', name: 'album_fit_fill', desc: '', args: []);
   }
 
   /// `Fit width`
@@ -3282,19 +2931,159 @@ class S {
 
   /// `URL`
   String get url_label {
+    return Intl.message('URL', name: 'url_label', desc: '', args: []);
+  }
+
+  /// `Add`
+  String get add_label {
+    return Intl.message('Add', name: 'add_label', desc: '', args: []);
+  }
+
+  /// `Recitation tracking`
+  String get recitation_tracking_title {
     return Intl.message(
-      'URL',
-      name: 'url_label',
+      'Recitation tracking',
+      name: 'recitation_tracking_title',
       desc: '',
       args: [],
     );
   }
 
-  /// `Add`
-  String get add_label {
+  /// `Surah number`
+  String get recitation_surah_number {
     return Intl.message(
-      'Add',
-      name: 'add_label',
+      'Surah number',
+      name: 'recitation_surah_number',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ayah number`
+  String get recitation_ayah_number {
+    return Intl.message(
+      'Ayah number',
+      name: 'recitation_ayah_number',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start tracking`
+  String get recitation_start_tracking {
+    return Intl.message(
+      'Start tracking',
+      name: 'recitation_start_tracking',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Stop tracking`
+  String get recitation_stop_tracking {
+    return Intl.message(
+      'Stop tracking',
+      name: 'recitation_stop_tracking',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No results yet.`
+  String get recitation_no_results {
+    return Intl.message(
+      'No results yet.',
+      name: 'recitation_no_results',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Imam recitation tracking`
+  String get recitation_imam_tracking_title {
+    return Intl.message(
+      'Imam recitation tracking',
+      name: 'recitation_imam_tracking_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Note on imam recitation`
+  String get recitation_imam_error_title {
+    return Intl.message(
+      'Note on imam recitation',
+      name: 'recitation_imam_error_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recitation note`
+  String get recitation_error_title {
+    return Intl.message(
+      'Recitation note',
+      name: 'recitation_error_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recitation tracking`
+  String get recitation_position_title {
+    return Intl.message(
+      'Recitation tracking',
+      name: 'recitation_position_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tracking status`
+  String get recitation_session_state_title {
+    return Intl.message(
+      'Tracking status',
+      name: 'recitation_session_state_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recitation analysis`
+  String get recitation_usage_title {
+    return Intl.message(
+      'Recitation analysis',
+      name: 'recitation_usage_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Surah {surah} - Ayah {ayah}`
+  String recitation_position_detail(Object surah, Object ayah) {
+    return Intl.message(
+      'Surah $surah - Ayah $ayah',
+      name: 'recitation_position_detail',
+      desc: '',
+      args: [surah, ayah],
+    );
+  }
+
+  /// `Confidence {percent}%`
+  String recitation_confidence_detail(Object percent) {
+    return Intl.message(
+      'Confidence $percent%',
+      name: 'recitation_confidence_detail',
+      desc: '',
+      args: [percent],
+    );
+  }
+
+  /// `Ads`
+  String get display_ticker_ads_label {
+    return Intl.message(
+      'Ads',
+      name: 'display_ticker_ads_label',
       desc: '',
       args: [],
     );

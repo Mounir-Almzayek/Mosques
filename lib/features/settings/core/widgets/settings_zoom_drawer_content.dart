@@ -102,7 +102,8 @@ class _SettingsZoomDrawerContentState extends State<SettingsZoomDrawerContent>
       (Icons.campaign_outlined, s.tab_announcements),
       (Icons.photo_library_outlined, s.tab_album),
       (Icons.emergency_share_outlined, s.tab_alerts),
-      if (widget.showRecitation) (Icons.mic_rounded, 'تتبع القراءة'),
+      if (widget.showRecitation)
+        (Icons.mic_rounded, s.recitation_tracking_title),
       (Icons.person_outline_rounded, s.tab_profile),
       (Icons.info_outline_rounded, s.tab_about),
       (Icons.system_update_rounded, s.tab_update),

@@ -19,5 +19,8 @@ String errorMessage(Object? error) {
       _ => error.message.isNotEmpty ? error.message : s.error_occurred,
     };
   }
+  if (error is StateError && error.message == 'no_mosque') {
+    return s.display_error_no_mosque;
+  }
   return s.error_occurred;
 }

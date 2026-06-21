@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/utils/app_font_loader.dart';
 
 class TickerSideLabelWidget extends StatelessWidget {
@@ -14,11 +16,7 @@ class TickerSideLabelWidget extends StatelessWidget {
   });
 
   String _sideLabel(BuildContext context) {
-    final locale = Localizations.localeOf(context);
-    if (locale.languageCode.toLowerCase().startsWith('ar')) {
-      return 'إعلانات';
-    }
-    return 'Ads';
+    return S.of(context).display_ticker_ads_label;
   }
 
   @override

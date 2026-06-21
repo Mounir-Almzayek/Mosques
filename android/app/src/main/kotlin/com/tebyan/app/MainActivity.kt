@@ -1,4 +1,4 @@
-package com.mouniralmzayek.mosques
+package com.tebyan.app
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,6 +1,5 @@
-import '../../../core/services/storage_service.dart';
+import '../../core/services/storage_service.dart';
 
-/// تخزين محلي لـ `active_mosque_id` — يبقى بعد إغلاق التطبيق ويعمل بدون شبكة.
 class UserActiveMosqueLocalRepository {
   UserActiveMosqueLocalRepository._();
 
