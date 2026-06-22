@@ -33,6 +33,10 @@ class SaveIqamaRequested extends IqamaEvent {
   const SaveIqamaRequested();
 }
 
+class DiscardIqamaChangesRequested extends IqamaEvent {
+  const DiscardIqamaChangesRequested();
+}
+
 /// Internal event emitted when the mosque stream pushes a new value.
 /// Not part of the public API; use [LoadIqama] instead.
 class IqamaMosqueUpdated extends IqamaEvent {

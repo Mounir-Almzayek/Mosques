@@ -25,6 +25,7 @@ class GeneralBloc extends Bloc<GeneralEvent, GeneralState> {
     on<CoordinatesChanged>(_onCoordinatesChanged);
     on<PrayerOffsetChanged>(_onPrayerOffsetChanged);
     on<SaveGeneralRequested>(_onSave);
+    on<DiscardGeneralChangesRequested>(_onDiscardChanges);
   }
 
   StreamSubscription<dynamic>? _sub;
@@ -163,6 +164,13 @@ class GeneralBloc extends Bloc<GeneralEvent, GeneralState> {
       onError: (error) =>
           emit(state.copyWith(isSaving: false, error: errorMessage(error))),
     );
+  }
+
+  void _onDiscardChanges(
+    DiscardGeneralChangesRequested event,
+    Emitter<GeneralState> emit,
+  ) {
+    emit(state.copyWith(hasUnsavedChanges: false, error: null));
   }
 
   @override

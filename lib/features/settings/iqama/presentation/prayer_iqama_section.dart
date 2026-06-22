@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/service_locator.dart';
 import '../../../../data/repositories/interfaces/mosque_repository_interface.dart';
+import '../../core/refresh/settings_refresh_scope.dart';
 import '../../design/bloc/design_bloc.dart';
 import '../../general/bloc/general_bloc.dart';
 import '../bloc/iqama_bloc.dart';
@@ -31,7 +32,34 @@ class PrayerIqamaSection extends StatelessWidget {
                 ..add(const LoadDesign()),
         ),
       ],
-      child: const PrayerIqamaSectionBody(),
+      child: SettingsRefreshRegistrar<GeneralBloc, GeneralState>(
+        id: 'prayer_general',
+        label: 'إعدادات الأذان',
+        hasUnsavedChanges: (state) => state.hasUnsavedChanges,
+        isSaving: (state) => state.isSaving,
+        error: (state) => state.error,
+        save: (bloc) => bloc.add(const SaveGeneralRequested()),
+        discard: (bloc) => bloc.add(const DiscardGeneralChangesRequested()),
+        child: SettingsRefreshRegistrar<IqamaBloc, IqamaState>(
+          id: 'prayer_iqama',
+          label: 'إعدادات الإقامة',
+          hasUnsavedChanges: (state) => state.hasUnsavedChanges,
+          isSaving: (state) => state.isSaving,
+          error: (state) => state.error,
+          save: (bloc) => bloc.add(const SaveIqamaRequested()),
+          discard: (bloc) => bloc.add(const DiscardIqamaChangesRequested()),
+          child: SettingsRefreshRegistrar<DesignBloc, DesignState>(
+            id: 'prayer_display',
+            label: 'سلوك شاشة الصلاة',
+            hasUnsavedChanges: (state) => state.hasUnsavedChanges,
+            isSaving: (state) => state.isSaving,
+            error: (state) => state.error,
+            save: (bloc) => bloc.add(const SaveDesignRequested()),
+            discard: (bloc) => bloc.add(const DiscardDesignChangesRequested()),
+            child: const PrayerIqamaSectionBody(),
+          ),
+        ),
+      ),
     );
   }
 }

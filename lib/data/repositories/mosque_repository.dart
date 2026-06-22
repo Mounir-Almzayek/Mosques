@@ -18,6 +18,8 @@ class MosqueRepository implements IMosqueRepository {
 
   /// Last bootstrap observed, used to diff announcement/alert lists on write.
   MosqueBootstrap? _latest;
+  final StreamController<MosqueBootstrap?> _manualRefreshController =
+      StreamController<MosqueBootstrap?>.broadcast();
 
   MosqueRepository({
     required MosqueRemoteDataSource dataSource,
@@ -25,14 +27,14 @@ class MosqueRepository implements IMosqueRepository {
     required Future<void> Function(String) syncActiveMosque,
     required JsonCache<MosqueBootstrap> cache,
     ImageSyncService? imageSync,
-  })  : _dataSource = dataSource,
-        _getActiveMosqueId = getActiveMosqueId,
-        _syncActiveMosque = syncActiveMosque,
-        _cache = cache,
-        _loader = CacheFirstLoader<MosqueBootstrap>(
-          cache,
-          onValue: imageSync?.syncMosque,
-        );
+  }) : _dataSource = dataSource,
+       _getActiveMosqueId = getActiveMosqueId,
+       _syncActiveMosque = syncActiveMosque,
+       _cache = cache,
+       _loader = CacheFirstLoader<MosqueBootstrap>(
+         cache,
+         onValue: imageSync?.syncMosque,
+       );
 
   String? get _activeId {
     final id = _getActiveMosqueId();
@@ -52,23 +54,49 @@ class MosqueRepository implements IMosqueRepository {
   Stream<MosqueBootstrap?> _remoteStream() {
     final id = _activeId;
     if (id == null) return Stream.value(null);
-    return _dataSource.watchBootstrap(id).map((b) {
-      if (b != null) _latest = b;
-      return b;
-    });
+    final controller = StreamController<MosqueBootstrap?>();
+    StreamSubscription<MosqueBootstrap?>? bootstrapSub;
+    StreamSubscription<MosqueBootstrap?>? refreshSub;
+
+    controller.onListen = () {
+      bootstrapSub = _dataSource
+          .watchBootstrap(id)
+          .listen(
+            (b) {
+              if (b != null) _latest = b;
+              if (!controller.isClosed) controller.add(b);
+            },
+            onError: (Object error, StackTrace stackTrace) {
+              if (!controller.isClosed) controller.addError(error, stackTrace);
+            },
+          );
+      refreshSub = _manualRefreshController.stream.listen((b) {
+        if (b != null) _latest = b;
+        if (!controller.isClosed) controller.add(b);
+      });
+    };
+    controller.onCancel = () async {
+      await bootstrapSub?.cancel();
+      await refreshSub?.cancel();
+    };
+    return controller.stream;
   }
 
   @override
   Future<MosqueBootstrap?> getActiveMosque() async {
     final uid = _activeId;
     if (uid != null) await _syncActiveMosque(uid);
-    return _loader.once(remote: () async {
-      final id = _activeId;
-      if (id == null) return null;
-      final b = await _dataSource.fetchBootstrap(id);
-      if (b != null) _latest = b;
-      return b;
-    }).last;
+    return _loader
+        .once(
+          remote: () async {
+            final id = _activeId;
+            if (id == null) return null;
+            final b = await _dataSource.fetchBootstrap(id);
+            if (b != null) _latest = b;
+            return b;
+          },
+        )
+        .last;
   }
 
   @override
@@ -80,6 +108,7 @@ class MosqueRepository implements IMosqueRepository {
     if (b == null) return null;
     _latest = b;
     await _cache.save(b);
+    _manualRefreshController.add(b);
     return b;
   }
 
@@ -91,6 +120,8 @@ class MosqueRepository implements IMosqueRepository {
       'name': m.name,
       'city': m.city,
       if (m.countryCode != null) 'countryCode': m.countryCode,
+      if (m.administrativeDivisionId != null)
+        'administrativeDivisionId': m.administrativeDivisionId,
       'latitude': double.tryParse(m.latitude) ?? 0,
       'longitude': double.tryParse(m.longitude) ?? 0,
       'timezone': m.timezone,

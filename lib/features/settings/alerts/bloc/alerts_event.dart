@@ -67,6 +67,10 @@ class SaveAlertsRequested extends AlertsEvent {
   const SaveAlertsRequested();
 }
 
+class DiscardAlertsChangesRequested extends AlertsEvent {
+  const DiscardAlertsChangesRequested();
+}
+
 /// Internal event emitted when the mosque stream pushes a new value.
 class AlertsMosqueUpdated extends AlertsEvent {
   final MosqueBootstrap? mosque;

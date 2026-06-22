@@ -44,6 +44,10 @@ class SaveAnnouncementsRequested extends AnnouncementsEvent {
   const SaveAnnouncementsRequested();
 }
 
+class DiscardAnnouncementsChangesRequested extends AnnouncementsEvent {
+  const DiscardAnnouncementsChangesRequested();
+}
+
 /// Internal event emitted when the mosque stream pushes a new value.
 class AnnouncementsMosqueUpdated extends AnnouncementsEvent {
   final MosqueBootstrap? mosque;

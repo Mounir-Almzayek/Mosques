@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/service_locator.dart';
 import '../../../../data/repositories/interfaces/mosque_repository_interface.dart';
+import '../../core/refresh/settings_refresh_scope.dart';
 import '../bloc/album_bloc.dart';
 import '../widgets/album_section_body.dart';
 
@@ -21,7 +22,16 @@ class AlbumSection extends StatelessWidget {
       create: (_) =>
           AlbumBloc(mosqueRepository: sl<IMosqueRepository>())
             ..add(const LoadAlbum()),
-      child: const AlbumSectionBody(),
+      child: SettingsRefreshRegistrar<AlbumBloc, AlbumState>(
+        id: 'album',
+        label: 'مكتبة الصور',
+        hasUnsavedChanges: (state) => state.hasUnsavedChanges,
+        isSaving: (state) => state.isSaving,
+        error: (state) => state.error,
+        save: (bloc) => bloc.add(const SaveAlbumRequested()),
+        discard: (bloc) => bloc.add(const DiscardAlbumChangesRequested()),
+        child: const AlbumSectionBody(),
+      ),
     );
   }
 }

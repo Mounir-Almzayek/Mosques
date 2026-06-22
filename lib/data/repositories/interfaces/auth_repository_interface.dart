@@ -18,6 +18,7 @@ abstract class IAuthRepository {
   /// The mosque id the user has selected (cached locally).
   String? getActiveMosqueId();
 
+  Future<AuthUser?> refreshCurrentUser();
   Future<AuthSession> login(String email, String password);
   Future<void> saveFcmToken(String token);
   Future<void> logout();

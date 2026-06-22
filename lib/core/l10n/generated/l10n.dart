@@ -114,6 +114,11 @@ class S {
     return Intl.message('Save', name: 'save', desc: '', args: []);
   }
 
+  /// `Copy`
+  String get copy {
+    return Intl.message('Copy', name: 'copy', desc: '', args: []);
+  }
+
   /// `Delete`
   String get delete {
     return Intl.message('Delete', name: 'delete', desc: '', args: []);
@@ -279,6 +284,26 @@ class S {
     return Intl.message(
       'Mosque settings',
       name: 'settings_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No mosque linked`
+  String get settings_no_active_mosque_title {
+    return Intl.message(
+      'No mosque linked',
+      name: 'settings_no_active_mosque_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This account is not linked to an active mosque yet. Assign a mosque from the dashboard, then refresh.`
+  String get settings_no_active_mosque_subtitle {
+    return Intl.message(
+      'This account is not linked to an active mosque yet. Assign a mosque from the dashboard, then refresh.',
+      name: 'settings_no_active_mosque_subtitle',
       desc: '',
       args: [],
     );
@@ -634,6 +659,26 @@ class S {
     return Intl.message('General', name: 'tab_general', desc: '', args: []);
   }
 
+  /// `Notifications`
+  String get tab_notifications {
+    return Intl.message(
+      'Notifications',
+      name: 'tab_notifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mosque info`
+  String get tab_mosque_info {
+    return Intl.message(
+      'Mosque info',
+      name: 'tab_mosque_info',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Design`
   String get tab_design {
     return Intl.message('Design', name: 'tab_design', desc: '', args: []);
@@ -699,6 +744,171 @@ class S {
     return Intl.message(
       'Sections',
       name: 'settings_navigate_sections',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Settings refreshed`
+  String get settings_refreshed {
+    return Intl.message(
+      'Settings refreshed',
+      name: 'settings_refreshed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unsaved changes`
+  String get settings_refresh_unsaved_title {
+    return Intl.message(
+      'Unsaved changes',
+      name: 'settings_refresh_unsaved_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Some settings were changed locally. Save them or discard them before refreshing.`
+  String get settings_refresh_unsaved_message {
+    return Intl.message(
+      'Some settings were changed locally. Save them or discard them before refreshing.',
+      name: 'settings_refresh_unsaved_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save then refresh`
+  String get settings_refresh_save {
+    return Intl.message(
+      'Save then refresh',
+      name: 'settings_refresh_save',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Discard changes`
+  String get settings_refresh_discard {
+    return Intl.message(
+      'Discard changes',
+      name: 'settings_refresh_discard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Signed in account`
+  String get general_account_title {
+    return Intl.message(
+      'Signed in account',
+      name: 'general_account_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No app settings announcements right now.`
+  String get general_no_announcements {
+    return Intl.message(
+      'No app settings announcements right now.',
+      name: 'general_no_announcements',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No notifications yet.`
+  String get notifications_empty {
+    return Intl.message(
+      'No notifications yet.',
+      name: 'notifications_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Read`
+  String get notifications_read {
+    return Intl.message('Read', name: 'notifications_read', desc: '', args: []);
+  }
+
+  /// `Unread`
+  String get notifications_unread {
+    return Intl.message(
+      'Unread',
+      name: 'notifications_unread',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notification text copied`
+  String get notifications_copied {
+    return Intl.message(
+      'Notification text copied',
+      name: 'notifications_copied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mosque information`
+  String get mosque_info_title {
+    return Intl.message(
+      'Mosque information',
+      name: 'mosque_info_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update the mosque identity, administrative region, and display coordinates.`
+  String get mosque_info_subtitle {
+    return Intl.message(
+      'Update the mosque identity, administrative region, and display coordinates.',
+      name: 'mosque_info_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save mosque information`
+  String get save_mosque_info {
+    return Intl.message(
+      'Save mosque information',
+      name: 'save_mosque_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Administrative division`
+  String get administrative_division_label {
+    return Intl.message(
+      'Administrative division',
+      name: 'administrative_division_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search governorate, district, subdistrict, or code...`
+  String get administrative_division_search_hint {
+    return Intl.message(
+      'Search governorate, district, subdistrict, or code...',
+      name: 'administrative_division_search_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No administrative division selected yet.`
+  String get administrative_division_empty {
+    return Intl.message(
+      'No administrative division selected yet.',
+      name: 'administrative_division_empty',
       desc: '',
       args: [],
     );
@@ -2614,6 +2824,116 @@ class S {
     return Intl.message(
       'Your app is up to date',
       name: 'update_up_to_date',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change password`
+  String get password_onboarding_title {
+    return Intl.message(
+      'Change password',
+      name: 'password_onboarding_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This account is using a temporary password. Choose a new password to continue.`
+  String get password_onboarding_subtitle {
+    return Intl.message(
+      'This account is using a temporary password. Choose a new password to continue.',
+      name: 'password_onboarding_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current password`
+  String get password_onboarding_current_password {
+    return Intl.message(
+      'Current password',
+      name: 'password_onboarding_current_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter the temporary password`
+  String get password_onboarding_current_password_hint {
+    return Intl.message(
+      'Enter the temporary password',
+      name: 'password_onboarding_current_password_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New password`
+  String get password_onboarding_new_password {
+    return Intl.message(
+      'New password',
+      name: 'password_onboarding_new_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a new password`
+  String get password_onboarding_new_password_hint {
+    return Intl.message(
+      'Enter a new password',
+      name: 'password_onboarding_new_password_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm password`
+  String get password_onboarding_confirm_password {
+    return Intl.message(
+      'Confirm password',
+      name: 'password_onboarding_confirm_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Re-enter the new password`
+  String get password_onboarding_confirm_password_hint {
+    return Intl.message(
+      'Re-enter the new password',
+      name: 'password_onboarding_confirm_password_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save and continue`
+  String get password_onboarding_save_continue {
+    return Intl.message(
+      'Save and continue',
+      name: 'password_onboarding_save_continue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password confirmation does not match`
+  String get password_onboarding_confirm_mismatch {
+    return Intl.message(
+      'Password confirmation does not match',
+      name: 'password_onboarding_confirm_mismatch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password changed successfully`
+  String get password_onboarding_success {
+    return Intl.message(
+      'Password changed successfully',
+      name: 'password_onboarding_success',
       desc: '',
       args: [],
     );

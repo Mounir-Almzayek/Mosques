@@ -34,15 +34,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m6(value) => "Longitude: ${value}";
 
-  static String m7(version) => "Current Version: ${version}";
+  static String m7(percent) => "Confidence ${percent}%";
 
-  static String m8(progress) => "Downloading... ${progress}%";
+  static String m8(surah, ayah) => "Surah ${surah} - Ayah ${ayah}";
 
-  static String m9(version) => "Latest Version: ${version}";
+  static String m9(version) => "Current Version: ${version}";
 
-  static String m10(surah, ayah) => "Surah ${surah} - Ayah ${ayah}";
+  static String m10(progress) => "Downloading... ${progress}%";
 
-  static String m11(percent) => "Confidence ${percent}%";
+  static String m11(version) => "Latest Version: ${version}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -76,6 +76,15 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "adhkar_source": MessageLookupByLibrary.simpleMessage("Note (optional)"),
     "adhkar_text": MessageLookupByLibrary.simpleMessage("Text"),
+    "administrative_division_empty": MessageLookupByLibrary.simpleMessage(
+      "No administrative division selected yet.",
+    ),
+    "administrative_division_label": MessageLookupByLibrary.simpleMessage(
+      "Administrative division",
+    ),
+    "administrative_division_search_hint": MessageLookupByLibrary.simpleMessage(
+      "Search governorate, district, subdistrict, or code...",
+    ),
     "album_add_url": MessageLookupByLibrary.simpleMessage("Add Image URL"),
     "album_empty": MessageLookupByLibrary.simpleMessage("No images added yet"),
     "album_fit_contain": MessageLookupByLibrary.simpleMessage("Contain"),
@@ -187,6 +196,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "contact_developers": MessageLookupByLibrary.simpleMessage(
       "Contact Tech Support",
     ),
+    "copy": MessageLookupByLibrary.simpleMessage("Copy"),
     "countdown_azan": MessageLookupByLibrary.simpleMessage("Azan"),
     "countdown_iqama": MessageLookupByLibrary.simpleMessage("Iqama"),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
@@ -379,8 +389,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "display_sunrise_now": MessageLookupByLibrary.simpleMessage(
       "It\'s now time for Sunrise",
     ),
-    "display_ticker_ads_label": MessageLookupByLibrary.simpleMessage("Ads"),
     "display_ticker_adhkar": MessageLookupByLibrary.simpleMessage("Dhikr"),
+    "display_ticker_ads_label": MessageLookupByLibrary.simpleMessage("Ads"),
     "display_ticker_dua": MessageLookupByLibrary.simpleMessage("Dua"),
     "display_ticker_hadith": MessageLookupByLibrary.simpleMessage("Hadith"),
     "display_ticker_mosque": MessageLookupByLibrary.simpleMessage("Mosque ad"),
@@ -424,11 +434,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "enable_smart_screen": MessageLookupByLibrary.simpleMessage(
       "Enable smart screen",
     ),
-    "error_occurred": MessageLookupByLibrary.simpleMessage(
-      "Something went wrong",
-    ),
     "error_network": MessageLookupByLibrary.simpleMessage(
       "Network unavailable. Please check your connection.",
+    ),
+    "error_occurred": MessageLookupByLibrary.simpleMessage(
+      "Something went wrong",
     ),
     "error_permission_denied": MessageLookupByLibrary.simpleMessage(
       "You don\'t have permission to do that.",
@@ -437,6 +447,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Your session has expired. Please sign in again.",
     ),
     "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
+    "general_account_title": MessageLookupByLibrary.simpleMessage(
+      "Signed in account",
+    ),
+    "general_no_announcements": MessageLookupByLibrary.simpleMessage(
+      "No app settings announcements right now.",
+    ),
     "general_section_adjustments": MessageLookupByLibrary.simpleMessage(
       "Advanced Prayer Time Adjustment (Minutes)",
     ),
@@ -495,8 +511,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "mosque_blessing": MessageLookupByLibrary.simpleMessage(
       "May Allah bless this Mosque",
     ),
+    "mosque_info_subtitle": MessageLookupByLibrary.simpleMessage(
+      "Update the mosque identity, administrative region, and display coordinates.",
+    ),
+    "mosque_info_title": MessageLookupByLibrary.simpleMessage(
+      "Mosque information",
+    ),
     "mosque_name_label": MessageLookupByLibrary.simpleMessage("Mosque name"),
     "no_data": MessageLookupByLibrary.simpleMessage("No data"),
+    "notifications_copied": MessageLookupByLibrary.simpleMessage(
+      "Notification text copied",
+    ),
+    "notifications_empty": MessageLookupByLibrary.simpleMessage(
+      "No notifications yet.",
+    ),
+    "notifications_read": MessageLookupByLibrary.simpleMessage("Read"),
+    "notifications_unread": MessageLookupByLibrary.simpleMessage("Unread"),
     "numeral_format_arabic": MessageLookupByLibrary.simpleMessage(
       "Arabic (١٢٣)",
     ),
@@ -506,6 +536,35 @@ class MessageLookup extends MessageLookupByLibrary {
     "ok": MessageLookupByLibrary.simpleMessage("OK"),
     "password_hint": MessageLookupByLibrary.simpleMessage("••••••••"),
     "password_label": MessageLookupByLibrary.simpleMessage("Password"),
+    "password_onboarding_confirm_mismatch":
+        MessageLookupByLibrary.simpleMessage(
+          "Password confirmation does not match",
+        ),
+    "password_onboarding_confirm_password":
+        MessageLookupByLibrary.simpleMessage("Confirm password"),
+    "password_onboarding_confirm_password_hint":
+        MessageLookupByLibrary.simpleMessage("Re-enter the new password"),
+    "password_onboarding_current_password":
+        MessageLookupByLibrary.simpleMessage("Current password"),
+    "password_onboarding_current_password_hint":
+        MessageLookupByLibrary.simpleMessage("Enter the temporary password"),
+    "password_onboarding_new_password": MessageLookupByLibrary.simpleMessage(
+      "New password",
+    ),
+    "password_onboarding_new_password_hint":
+        MessageLookupByLibrary.simpleMessage("Enter a new password"),
+    "password_onboarding_save_continue": MessageLookupByLibrary.simpleMessage(
+      "Save and continue",
+    ),
+    "password_onboarding_subtitle": MessageLookupByLibrary.simpleMessage(
+      "This account is using a temporary password. Choose a new password to continue.",
+    ),
+    "password_onboarding_success": MessageLookupByLibrary.simpleMessage(
+      "Password changed successfully",
+    ),
+    "password_onboarding_title": MessageLookupByLibrary.simpleMessage(
+      "Change password",
+    ),
     "photo_studio_add_url": MessageLookupByLibrary.simpleMessage(
       "Add Image URL",
     ),
@@ -575,11 +634,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "profile_terminate_other": MessageLookupByLibrary.simpleMessage(
       "Terminate other sessions",
     ),
-    "refresh": MessageLookupByLibrary.simpleMessage("Refresh"),
     "recitation_ayah_number": MessageLookupByLibrary.simpleMessage(
       "Ayah number",
     ),
-    "recitation_confidence_detail": m11,
+    "recitation_confidence_detail": m7,
     "recitation_error_title": MessageLookupByLibrary.simpleMessage(
       "Recitation note",
     ),
@@ -592,7 +650,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "recitation_no_results": MessageLookupByLibrary.simpleMessage(
       "No results yet.",
     ),
-    "recitation_position_detail": m10,
+    "recitation_position_detail": m8,
     "recitation_position_title": MessageLookupByLibrary.simpleMessage(
       "Recitation tracking",
     ),
@@ -614,6 +672,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "recitation_usage_title": MessageLookupByLibrary.simpleMessage(
       "Recitation analysis",
     ),
+    "refresh": MessageLookupByLibrary.simpleMessage("Refresh"),
     "religious_content_display": MessageLookupByLibrary.simpleMessage(
       "Display duration (seconds)",
     ),
@@ -637,6 +696,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "save_iqama_settings": MessageLookupByLibrary.simpleMessage(
       "Save iqama settings",
     ),
+    "save_mosque_info": MessageLookupByLibrary.simpleMessage(
+      "Save mosque information",
+    ),
     "saved_successfully": MessageLookupByLibrary.simpleMessage(
       "Saved successfully",
     ),
@@ -658,6 +720,27 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings_language": MessageLookupByLibrary.simpleMessage("Language"),
     "settings_navigate_sections": MessageLookupByLibrary.simpleMessage(
       "Sections",
+    ),
+    "settings_no_active_mosque_subtitle": MessageLookupByLibrary.simpleMessage(
+      "This account is not linked to an active mosque yet. Assign a mosque from the dashboard, then refresh.",
+    ),
+    "settings_no_active_mosque_title": MessageLookupByLibrary.simpleMessage(
+      "No mosque linked",
+    ),
+    "settings_refresh_discard": MessageLookupByLibrary.simpleMessage(
+      "Discard changes",
+    ),
+    "settings_refresh_save": MessageLookupByLibrary.simpleMessage(
+      "Save then refresh",
+    ),
+    "settings_refresh_unsaved_message": MessageLookupByLibrary.simpleMessage(
+      "Some settings were changed locally. Save them or discard them before refreshing.",
+    ),
+    "settings_refresh_unsaved_title": MessageLookupByLibrary.simpleMessage(
+      "Unsaved changes",
+    ),
+    "settings_refreshed": MessageLookupByLibrary.simpleMessage(
+      "Settings refreshed",
     ),
     "settings_title": MessageLookupByLibrary.simpleMessage("Mosque settings"),
     "sign_out": MessageLookupByLibrary.simpleMessage("Sign out"),
@@ -681,6 +764,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "tab_general": MessageLookupByLibrary.simpleMessage("General"),
     "tab_hadith": MessageLookupByLibrary.simpleMessage("Hadith"),
     "tab_iqama": MessageLookupByLibrary.simpleMessage("Iqama"),
+    "tab_mosque_info": MessageLookupByLibrary.simpleMessage("Mosque info"),
+    "tab_notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
     "tab_photo_studio": MessageLookupByLibrary.simpleMessage("Photo Studio"),
     "tab_prayer_iqama": MessageLookupByLibrary.simpleMessage("Prayer & Iqama"),
     "tab_profile": MessageLookupByLibrary.simpleMessage("Profile"),
@@ -693,15 +778,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "«And whoever relies upon Allah — then He is sufficient for him»",
     ),
     "unit_seconds": MessageLookupByLibrary.simpleMessage("s"),
-    "update_current_version": m7,
+    "update_current_version": m9,
     "update_download": MessageLookupByLibrary.simpleMessage(
       "Download & Install Update",
     ),
-    "update_downloading": m8,
+    "update_downloading": m10,
     "update_failure": MessageLookupByLibrary.simpleMessage(
       "Download failed. Please try again later.",
     ),
-    "update_latest_version": m9,
+    "update_latest_version": m11,
     "update_no_link": MessageLookupByLibrary.simpleMessage(
       "No download link available for this platform.",
     ),

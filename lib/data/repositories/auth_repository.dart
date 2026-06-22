@@ -30,11 +30,9 @@ class AuthRepository implements IAuthRepository {
   final StreamController<AuthUser?> _authStateController =
       StreamController<AuthUser?>.broadcast();
 
-  AuthRepository({
-    required ApiService api,
-    required TokenStorage tokens,
-  })  : _api = api,
-        _tokens = tokens {
+  AuthRepository({required ApiService api, required TokenStorage tokens})
+    : _api = api,
+      _tokens = tokens {
     _restoreCachedUser();
     // When the API decides the session is gone, drop the cached user.
     _api.onSessionExpired = () {
@@ -95,10 +93,7 @@ class AuthRepository implements IAuthRepository {
 
   @override
   Future<AuthSession> login(String email, String password) async {
-    final body = <String, dynamic>{
-      'email': email,
-      'password': password,
-    };
+    final body = <String, dynamic>{'email': email, 'password': password};
 
     // Best-effort: include the FCM device payload so the backend can register
     // the device in one round-trip.
@@ -114,6 +109,11 @@ class AuthRepository implements IAuthRepository {
 
     final data = await _api.post(ApiEndpoints.authLogin, body: body);
     final session = AuthSession.fromJson(data);
+    final sessionUser = _userWithResolvedActiveMosque(
+      session.user,
+      activeMosque: session.activeMosque,
+      mosques: session.mosques,
+    );
 
     await _tokens.save(
       accessToken: session.accessToken,
@@ -121,11 +121,10 @@ class AuthRepository implements IAuthRepository {
       expiresInSeconds: session.expiresInSeconds,
     );
 
-    _setCurrentUser(session.user);
+    _setCurrentUser(sessionUser);
 
     // Persist active mosque id for the offline cache used at startup.
-    final activeMosqueId = session.user.activeMosqueId ??
-        (session.activeMosque?['id']?.toString());
+    final activeMosqueId = sessionUser.activeMosqueId;
     if (activeMosqueId != null && activeMosqueId.isNotEmpty) {
       await UserActiveMosqueLocalRepository.saveActiveMosqueId(activeMosqueId);
     } else {
@@ -139,6 +138,7 @@ class AuthRepository implements IAuthRepository {
   Future<void> saveFcmToken(String token) async {
     if (token.trim().isEmpty) return;
     if (_currentUser == null) return;
+    if (_currentUser?.passwordChangeRequired == true) return;
     try {
       await _api.put(
         ApiEndpoints.devicesCurrent,
@@ -179,10 +179,7 @@ class AuthRepository implements IAuthRepository {
     // The legacy ProfileBloc only passes the new value, so we forward an
     // empty current password — accepted only when the user is in a
     // first-login state. Prefer [changePassword] from new UI.
-    await changePassword(
-      currentPassword: '',
-      newPassword: newPassword,
-    );
+    await changePassword(currentPassword: '', newPassword: newPassword);
   }
 
   @override
@@ -192,10 +189,7 @@ class AuthRepository implements IAuthRepository {
   }) async {
     final data = await _api.post(
       ApiEndpoints.authChangePassword,
-      body: {
-        'currentPassword': currentPassword,
-        'newPassword': newPassword,
-      },
+      body: {'currentPassword': currentPassword, 'newPassword': newPassword},
     );
     // Backend returns a fresh token pair after a successful change.
     final access = data['accessToken']?.toString();
@@ -217,19 +211,15 @@ class AuthRepository implements IAuthRepository {
     }
     // Clear the first-login flag locally so the UI doesn't gate on it.
     if (_currentUser?.passwordChangeRequired == true) {
-      _setCurrentUser(
-        _currentUser!.copyWith(passwordChangeRequired: false),
-      );
+      _setCurrentUser(_currentUser!.copyWith(passwordChangeRequired: false));
     }
+    await refreshCurrentUser();
   }
 
   @override
   Future<void> updatePhone(String newPhone) async {
     if (_currentUser == null) return;
-    final data = await _api.patch(
-      ApiEndpoints.me,
-      body: {'phone': newPhone},
-    );
+    final data = await _api.patch(ApiEndpoints.me, body: {'phone': newPhone});
     final updatedUserJson = (data['user'] as Map?)?.cast<String, dynamic>();
     if (updatedUserJson != null) {
       _setCurrentUser(AuthUser.fromJson(updatedUserJson));
@@ -242,13 +232,8 @@ class AuthRepository implements IAuthRepository {
   Future<String?> getPhone() async {
     if (_currentUser?.phone != null) return _currentUser!.phone;
     try {
-      final data = await _api.get(ApiEndpoints.me);
-      final userJson = (data['user'] as Map?)?.cast<String, dynamic>();
-      if (userJson != null) {
-        final u = AuthUser.fromJson(userJson);
-        _setCurrentUser(u);
-        return u.phone;
-      }
+      final user = await refreshCurrentUser();
+      return user?.phone;
     } on ApiException {
       // ignore: best-effort
     }
@@ -286,5 +271,47 @@ class AuthRepository implements IAuthRepository {
     } catch (_) {
       return 'unknown';
     }
+  }
+
+  @override
+  Future<AuthUser?> refreshCurrentUser() async {
+    final data = await _api.get(ApiEndpoints.me);
+    final userJson = (data['user'] as Map?)?.cast<String, dynamic>();
+    if (userJson == null) return _currentUser;
+    final user = _userWithResolvedActiveMosque(
+      AuthUser.fromJson(userJson),
+      activeMosque: (data['activeMosque'] as Map?)?.cast<String, dynamic>(),
+      mosques: ((data['mosques'] as List?) ?? const [])
+          .whereType<Map>()
+          .map((e) => Map<String, dynamic>.from(e))
+          .toList(),
+    );
+    _setCurrentUser(user);
+    final activeMosqueId = user.activeMosqueId;
+    if (activeMosqueId != null && activeMosqueId.isNotEmpty) {
+      await UserActiveMosqueLocalRepository.saveActiveMosqueId(activeMosqueId);
+    }
+    return user;
+  }
+
+  AuthUser _userWithResolvedActiveMosque(
+    AuthUser user, {
+    required Map<String, dynamic>? activeMosque,
+    required List<Map<String, dynamic>> mosques,
+  }) {
+    if (user.activeMosqueId != null && user.activeMosqueId!.isNotEmpty) {
+      return user;
+    }
+    final activeId = activeMosque?['id']?.toString();
+    if (activeId != null && activeId.isNotEmpty) {
+      return user.copyWith(activeMosqueId: activeId);
+    }
+    if (mosques.length == 1) {
+      final onlyMosqueId = mosques.first['id']?.toString();
+      if (onlyMosqueId != null && onlyMosqueId.isNotEmpty) {
+        return user.copyWith(activeMosqueId: onlyMosqueId);
+      }
+    }
+    return user;
   }
 }

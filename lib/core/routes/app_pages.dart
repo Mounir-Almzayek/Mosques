@@ -16,11 +16,21 @@ class Pages {
 String? _authGuard(BuildContext context, GoRouterState state) {
   final authRepo = sl<IAuthRepository>();
   final loggedIn = authRepo.currentUser != null;
+  final passwordChangeRequired =
+      authRepo.currentUser?.passwordChangeRequired == true;
   final isPublicRoute =
       state.matchedLocation == Routes.splashPath ||
       state.matchedLocation == Routes.loginPath;
+  final isPasswordOnboarding =
+      state.matchedLocation == Routes.passwordOnboardingPath;
 
   if (!loggedIn && !isPublicRoute) return Routes.loginPath;
+  if (loggedIn && passwordChangeRequired && !isPasswordOnboarding) {
+    return Routes.passwordOnboardingPath;
+  }
+  if (loggedIn && !passwordChangeRequired && isPasswordOnboarding) {
+    return Routes.splashPath;
+  }
   return null;
 }
 
@@ -36,6 +46,10 @@ final appPages = GoRouter(
     GoRoute(
       path: Routes.loginPath,
       builder: (context, state) => const LoginPage(),
+    ),
+    GoRoute(
+      path: Routes.passwordOnboardingPath,
+      builder: (context, state) => const PasswordOnboardingPage(),
     ),
     GoRoute(
       path: Routes.settingsPath,

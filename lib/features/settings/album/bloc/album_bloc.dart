@@ -25,6 +25,7 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
     on<AlbumImagePublished>(_onImagePublished);
     on<AlbumImageUnpublished>(_onImageUnpublished);
     on<SaveAlbumRequested>(_onSave);
+    on<DiscardAlbumChangesRequested>(_onDiscardChanges);
   }
 
   StreamSubscription<dynamic>? _sub;
@@ -133,6 +134,13 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
       onError: (error) =>
           emit(state.copyWith(isSaving: false, error: errorMessage(error))),
     );
+  }
+
+  void _onDiscardChanges(
+    DiscardAlbumChangesRequested event,
+    Emitter<AlbumState> emit,
+  ) {
+    emit(state.copyWith(hasUnsavedChanges: false, error: null));
   }
 
   @override

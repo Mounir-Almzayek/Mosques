@@ -79,7 +79,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 curr is LoginSuccess || curr is LoginFailure,
             listener: (context, state) {
               if (state is LoginSuccess) {
-                context.go(Routes.settingsPath);
+                context.go(
+                  state.response.passwordChangeRequired
+                      ? Routes.passwordOnboardingPath
+                      : Routes.settingsPath,
+                );
               } else if (state is LoginFailure) {
                 UnifiedSnackbar.error(context, message: state.error);
               }

@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../../../core/utils/date_parse.dart';
+import '../administrative_division.dart';
 
 /// Mosque profile — 1:1 with the backend `MosqueSummaryResponse` /
 /// `DisplayMosqueResponse` DTO.
@@ -16,6 +17,7 @@ class Mosque extends Equatable {
   final String? countryCode;
   final String? administrativeDivisionId;
   final String? administrativeDivisionName;
+  final List<AdministrativeDivision> administrativeDivisionPath;
   final String? governorateName;
   final String latitude;
   final String longitude;
@@ -34,6 +36,7 @@ class Mosque extends Equatable {
     this.countryCode,
     this.administrativeDivisionId,
     this.administrativeDivisionName,
+    this.administrativeDivisionPath = const [],
     this.governorateName,
     this.latitude = '0',
     this.longitude = '0',
@@ -49,6 +52,7 @@ class Mosque extends Equatable {
   double get longitudeValue => double.tryParse(longitude) ?? 0;
 
   factory Mosque.fromJson(Map<String, dynamic> json) {
+    final path = json['administrativeDivisionPath'];
     return Mosque(
       id: json['id']?.toString() ?? '',
       publicSlug: json['publicSlug']?.toString() ?? '',
@@ -58,6 +62,16 @@ class Mosque extends Equatable {
       administrativeDivisionId: json['administrativeDivisionId']?.toString(),
       administrativeDivisionName: json['administrativeDivisionName']
           ?.toString(),
+      administrativeDivisionPath: path is List
+          ? path
+                .whereType<Map>()
+                .map(
+                  (item) => AdministrativeDivision.fromJson(
+                    Map<String, dynamic>.from(item),
+                  ),
+                )
+                .toList()
+          : const [],
       governorateName: json['governorateName']?.toString(),
       latitude: json['latitude']?.toString() ?? '0',
       longitude: json['longitude']?.toString() ?? '0',
@@ -79,6 +93,9 @@ class Mosque extends Equatable {
       'countryCode': countryCode,
       'administrativeDivisionId': administrativeDivisionId,
       'administrativeDivisionName': administrativeDivisionName,
+      'administrativeDivisionPath': administrativeDivisionPath
+          .map((e) => e.toJson())
+          .toList(),
       'governorateName': governorateName,
       'latitude': latitude,
       'longitude': longitude,
@@ -99,6 +116,7 @@ class Mosque extends Equatable {
     String? countryCode,
     String? administrativeDivisionId,
     String? administrativeDivisionName,
+    List<AdministrativeDivision>? administrativeDivisionPath,
     String? governorateName,
     String? latitude,
     String? longitude,
@@ -119,6 +137,8 @@ class Mosque extends Equatable {
           administrativeDivisionId ?? this.administrativeDivisionId,
       administrativeDivisionName:
           administrativeDivisionName ?? this.administrativeDivisionName,
+      administrativeDivisionPath:
+          administrativeDivisionPath ?? this.administrativeDivisionPath,
       governorateName: governorateName ?? this.governorateName,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
@@ -140,6 +160,7 @@ class Mosque extends Equatable {
     countryCode,
     administrativeDivisionId,
     administrativeDivisionName,
+    administrativeDivisionPath,
     governorateName,
     latitude,
     longitude,

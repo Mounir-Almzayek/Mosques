@@ -1,2 +1,6 @@
-enum SplashDestination { login, mobileSettings, screenDisplay }
-
+enum SplashDestination {
+  login,
+  passwordOnboarding,
+  mobileSettings,
+  screenDisplay,
+}

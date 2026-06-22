@@ -25,6 +25,7 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
     on<AnnouncementUpdated>(_onAnnouncementUpdated);
     on<AnnouncementRemoved>(_onAnnouncementRemoved);
     on<SaveAnnouncementsRequested>(_onSave);
+    on<DiscardAnnouncementsChangesRequested>(_onDiscardChanges);
   }
 
   StreamSubscription<dynamic>? _sub;
@@ -117,9 +118,7 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
     if (m == null) return;
     // Persist edited ads (non-alert announcements) while preserving any
     // saved alerts unchanged — announcements + alerts share one list now.
-    final updated = m.copyWith(
-      announcements: [...m.ads, ...m.savedAlerts],
-    );
+    final updated = m.copyWith(announcements: [...m.ads, ...m.savedAlerts]);
     await _saveRunner.run(
       checkConnectivity: false,
       onlineTask: (_) => _repo.updateAnnouncements(updated),
@@ -130,6 +129,13 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
       onError: (error) =>
           emit(state.copyWith(isSaving: false, error: errorMessage(error))),
     );
+  }
+
+  void _onDiscardChanges(
+    DiscardAnnouncementsChangesRequested event,
+    Emitter<AnnouncementsState> emit,
+  ) {
+    emit(state.copyWith(hasUnsavedChanges: false, error: null));
   }
 
   @override

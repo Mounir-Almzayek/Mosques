@@ -22,6 +22,7 @@ class IqamaBloc extends Bloc<IqamaEvent, IqamaState> {
     on<IqamaMosqueUpdated>(_onMosqueUpdated);
     on<IqamaOffsetChanged>(_onIqamaOffsetChanged);
     on<SaveIqamaRequested>(_onSave);
+    on<DiscardIqamaChangesRequested>(_onDiscardChanges);
   }
 
   StreamSubscription<dynamic>? _sub;
@@ -90,6 +91,13 @@ class IqamaBloc extends Bloc<IqamaEvent, IqamaState> {
       onError: (error) =>
           emit(state.copyWith(isSaving: false, error: errorMessage(error))),
     );
+  }
+
+  void _onDiscardChanges(
+    DiscardIqamaChangesRequested event,
+    Emitter<IqamaState> emit,
+  ) {
+    emit(state.copyWith(hasUnsavedChanges: false, error: null));
   }
 
   @override

@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 /// Backend connection settings.
 ///
 /// Override via `--dart-define`:
-///   flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080
+///   flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8000
 ///
 /// Defaults when unset:
 /// - Android emulator uses `10.0.2.2` to reach the host's localhost.
@@ -49,13 +49,13 @@ abstract final class ApiConfig {
 
   static String _defaultHost(String scheme) {
     // Web/desktop: localhost. Android emulator: 10.0.2.2.
-    if (kIsWeb) return '$scheme://localhost:8080';
+    if (kIsWeb) return '$scheme://localhost:8000';
     try {
-      if (Platform.isAndroid) return '$scheme://10.0.2.2:8080';
+      if (Platform.isAndroid) return '$scheme://10.0.2.2:8000';
     } catch (_) {
       // Platform may be unavailable in some environments (tests, etc.).
     }
-    return '$scheme://localhost:8080';
+    return '$scheme://localhost:8000';
   }
 
   static String _ensureNoTrailingSlash(String value) {

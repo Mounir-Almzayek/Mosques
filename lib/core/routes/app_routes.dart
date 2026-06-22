@@ -3,6 +3,7 @@
 class Routes {
   static const String splashPath = '/splash';
   static const String loginPath = '/login';
+  static const String passwordOnboardingPath = '/password-onboarding';
   static const String settingsPath = '/settings';
   static const String displayPath = '/display';
 }

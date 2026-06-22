@@ -6,16 +6,22 @@ import '../realtime/snapshot_sync.dart';
 import '../services/api_service.dart';
 import '../services/token_storage.dart';
 import '../../data/datasources/app_config_remote_data_source.dart';
+import '../../data/datasources/administrative_divisions_remote_data_source.dart';
 import '../../data/datasources/mosque_remote_data_source.dart';
+import '../../data/datasources/notifications_remote_data_source.dart';
 import '../../data/models/app/app_config.dart';
 import '../../data/models/mosque/mosque_bootstrap.dart';
 import '../../data/models/platform_announcements/settings_announcement_model.dart';
 import '../../data/repositories/app_config_repository.dart';
+import '../../data/repositories/administrative_divisions_repository.dart';
+import '../../data/repositories/interfaces/administrative_divisions_repository_interface.dart';
 import '../../data/repositories/interfaces/app_config_repository_interface.dart';
 import '../../data/repositories/interfaces/auth_repository_interface.dart';
 import '../../data/repositories/interfaces/mosque_repository_interface.dart';
+import '../../data/repositories/interfaces/notifications_repository_interface.dart';
 import '../../data/repositories/interfaces/platform_announcements_repository_interface.dart';
 import '../../data/repositories/mosque_repository.dart';
+import '../../data/repositories/notifications_repository.dart';
 import '../../data/repositories/platform_announcements_repository.dart';
 import '../../features/auth/auth.dart'
     show AuthRepository, UserActiveMosqueRepository;
@@ -34,10 +40,7 @@ void setupServiceLocator() {
 
   // Auth
   sl.registerLazySingleton<IAuthRepository>(
-    () => AuthRepository(
-      api: sl<ApiService>(),
-      tokens: sl<TokenStorage>(),
-    ),
+    () => AuthRepository(api: sl<ApiService>(), tokens: sl<TokenStorage>()),
   );
 
   // Realtime + data sources
@@ -45,13 +48,20 @@ void setupServiceLocator() {
     () => SnapshotSync(tokens: sl<TokenStorage>()),
   );
   sl.registerLazySingleton<MosqueRemoteDataSource>(
-    () => MosqueRemoteDataSource(
-      api: sl<ApiService>(),
-      sync: sl<SnapshotSync>(),
-    ),
+    () =>
+        MosqueRemoteDataSource(api: sl<ApiService>(), sync: sl<SnapshotSync>()),
   );
   sl.registerLazySingleton<AppConfigRemoteDataSource>(
     () => AppConfigRemoteDataSource(api: sl<ApiService>()),
+  );
+  sl.registerLazySingleton<NotificationsRemoteDataSource>(
+    () => NotificationsRemoteDataSource(
+      api: sl<ApiService>(),
+      tokens: sl<TokenStorage>(),
+    ),
+  );
+  sl.registerLazySingleton<AdministrativeDivisionsRemoteDataSource>(
+    () => AdministrativeDivisionsRemoteDataSource(api: sl<ApiService>()),
   );
 
   // Cache infrastructure
@@ -91,6 +101,20 @@ void setupServiceLocator() {
     ),
   );
 
+  // Administrative divisions
+  sl.registerLazySingleton<IAdministrativeDivisionsRepository>(
+    () => AdministrativeDivisionsRepository(
+      dataSource: sl<AdministrativeDivisionsRemoteDataSource>(),
+    ),
+  );
+
+  // Notifications
+  sl.registerLazySingleton<INotificationsRepository>(
+    () => NotificationsRepository(
+      dataSource: sl<NotificationsRemoteDataSource>(),
+    ),
+  );
+
   // Platform announcements
   sl.registerLazySingleton<IPlatformAnnouncementsRepository>(
     () => PlatformAnnouncementsRepository(
@@ -109,14 +133,14 @@ void setupServiceLocator() {
         store: sl<ICacheStore>(),
         cacheKey: ApiEndpoints.settingsAnnouncementsCacheKey,
         toJson: (list) => {'items': list.map((a) => a.toMap()).toList()},
-        fromJson: (m) => (m['items'] as List? ?? const [])
-            .whereType<Map>()
-            .map((e) {
+        fromJson: (m) =>
+            (m['items'] as List? ?? const []).whereType<Map>().map((e) {
               final map = Map<String, dynamic>.from(e);
               return SettingsAnnouncementModel.fromMap(
-                  map, map['id']?.toString() ?? '');
-            })
-            .toList(),
+                map,
+                map['id']?.toString() ?? '',
+              );
+            }).toList(),
       ),
     ),
   );

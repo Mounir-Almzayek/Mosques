@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/enums/app_numeral_format.dart';
 import '../../../../core/utils/app_font_loader.dart';
 import '../../../../core/utils/app_number_format.dart';
+import '../../../../core/utils/color_extensions.dart';
 import '../../../../data/models/mosque/announcement.dart';
 
 /// Full-screen priority alert overlay.
@@ -117,7 +118,7 @@ class _DisplayAlertOverlayState extends State<DisplayAlertOverlay> {
                   widget.fontFamily,
                   baseStyle: TextStyle(
                     fontSize: 32,
-                    color: widget.primaryColor.withOpacity(0.8),
+                    color: widget.primaryColor.withOpacityCompat(0.8),
                   ),
                 ),
               ),
@@ -128,4 +129,3 @@ class _DisplayAlertOverlayState extends State<DisplayAlertOverlay> {
     );
   }
 }
-

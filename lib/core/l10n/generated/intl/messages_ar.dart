@@ -34,15 +34,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m6(value) => "خط الطول: ${value}";
 
-  static String m7(version) => "الإصدار الحالي: ${version}";
+  static String m7(percent) => "الثقة ${percent}%";
 
-  static String m8(progress) => "جاري التحميل... ${progress}%";
+  static String m8(surah, ayah) => "السورة ${surah} - الآية ${ayah}";
 
-  static String m9(version) => "الإصدار الأحدث: ${version}";
+  static String m9(version) => "الإصدار الحالي: ${version}";
 
-  static String m10(surah, ayah) => "السورة ${surah} - الآية ${ayah}";
+  static String m10(progress) => "جاري التحميل... ${progress}%";
 
-  static String m11(percent) => "الثقة ${percent}%";
+  static String m11(version) => "الإصدار الأحدث: ${version}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -72,6 +72,15 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "adhkar_source": MessageLookupByLibrary.simpleMessage("تعليق (اختياري)"),
     "adhkar_text": MessageLookupByLibrary.simpleMessage("النص"),
+    "administrative_division_empty": MessageLookupByLibrary.simpleMessage(
+      "لم يتم اختيار تقسيم إداري بعد.",
+    ),
+    "administrative_division_label": MessageLookupByLibrary.simpleMessage(
+      "التقسيم الإداري",
+    ),
+    "administrative_division_search_hint": MessageLookupByLibrary.simpleMessage(
+      "ابحث عن المحافظة أو المنطقة أو الناحية أو الكود...",
+    ),
     "album_add_url": MessageLookupByLibrary.simpleMessage("إضافة رابط صورة"),
     "album_empty": MessageLookupByLibrary.simpleMessage("لم تتم إضافة صور بعد"),
     "album_fit_contain": MessageLookupByLibrary.simpleMessage("احتواء"),
@@ -171,6 +180,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "contact_developers": MessageLookupByLibrary.simpleMessage(
       "التواصل مع الدعم الفني",
     ),
+    "copy": MessageLookupByLibrary.simpleMessage("نسخ"),
     "countdown_azan": MessageLookupByLibrary.simpleMessage("أذان"),
     "countdown_iqama": MessageLookupByLibrary.simpleMessage("إقامة"),
     "delete": MessageLookupByLibrary.simpleMessage("حذف"),
@@ -355,8 +365,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "display_sunrise_now": MessageLookupByLibrary.simpleMessage(
       "حان الآن موعد الشروق",
     ),
-    "display_ticker_ads_label": MessageLookupByLibrary.simpleMessage("إعلانات"),
     "display_ticker_adhkar": MessageLookupByLibrary.simpleMessage("ذكر"),
+    "display_ticker_ads_label": MessageLookupByLibrary.simpleMessage("إعلانات"),
     "display_ticker_dua": MessageLookupByLibrary.simpleMessage("دعاء"),
     "display_ticker_hadith": MessageLookupByLibrary.simpleMessage("حديث"),
     "display_ticker_mosque": MessageLookupByLibrary.simpleMessage("إعلان مسجد"),
@@ -392,10 +402,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "enable_smart_screen": MessageLookupByLibrary.simpleMessage(
       "تفعيل الشاشة الذكية",
     ),
-    "error_occurred": MessageLookupByLibrary.simpleMessage("حدث خطأ"),
     "error_network": MessageLookupByLibrary.simpleMessage(
       "لا يوجد اتصال بالشبكة. يرجى التحقق من اتصالك بالإنترنت.",
     ),
+    "error_occurred": MessageLookupByLibrary.simpleMessage("حدث خطأ"),
     "error_permission_denied": MessageLookupByLibrary.simpleMessage(
       "ليس لديك صلاحية للقيام بذلك.",
     ),
@@ -403,6 +413,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "انتهت صلاحية الجلسة. يرجى تسجيل الدخول مرة أخرى.",
     ),
     "gallery": MessageLookupByLibrary.simpleMessage("معرض الصور"),
+    "general_account_title": MessageLookupByLibrary.simpleMessage(
+      "الحساب المسجل",
+    ),
+    "general_no_announcements": MessageLookupByLibrary.simpleMessage(
+      "لا توجد إعلانات لإعدادات التطبيق حالياً.",
+    ),
     "general_section_adjustments": MessageLookupByLibrary.simpleMessage(
       "ضبط أوقات الصلاة المتقدم (بالدقائق)",
     ),
@@ -457,8 +473,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "mosque_blessing": MessageLookupByLibrary.simpleMessage(
       "بارك الله في هذا المسجد",
     ),
+    "mosque_info_subtitle": MessageLookupByLibrary.simpleMessage(
+      "حدّث هوية المسجد والمنطقة الإدارية والإحداثيات المعتمدة للعرض.",
+    ),
+    "mosque_info_title": MessageLookupByLibrary.simpleMessage("معلومات المسجد"),
     "mosque_name_label": MessageLookupByLibrary.simpleMessage("اسم المسجد"),
     "no_data": MessageLookupByLibrary.simpleMessage("لا توجد بيانات"),
+    "notifications_copied": MessageLookupByLibrary.simpleMessage(
+      "تم نسخ نص الإشعار",
+    ),
+    "notifications_empty": MessageLookupByLibrary.simpleMessage(
+      "لا توجد إشعارات بعد.",
+    ),
+    "notifications_read": MessageLookupByLibrary.simpleMessage("مقروء"),
+    "notifications_unread": MessageLookupByLibrary.simpleMessage("غير مقروء"),
     "numeral_format_arabic": MessageLookupByLibrary.simpleMessage("عربي (١٢٣)"),
     "numeral_format_english": MessageLookupByLibrary.simpleMessage(
       "إنجليزي (123)",
@@ -466,6 +494,33 @@ class MessageLookup extends MessageLookupByLibrary {
     "ok": MessageLookupByLibrary.simpleMessage("موافق"),
     "password_hint": MessageLookupByLibrary.simpleMessage("••••••••"),
     "password_label": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
+    "password_onboarding_confirm_mismatch":
+        MessageLookupByLibrary.simpleMessage("تأكيد كلمة المرور غير مطابق"),
+    "password_onboarding_confirm_password":
+        MessageLookupByLibrary.simpleMessage("تأكيد كلمة المرور"),
+    "password_onboarding_confirm_password_hint":
+        MessageLookupByLibrary.simpleMessage("أعد إدخال كلمة المرور الجديدة"),
+    "password_onboarding_current_password":
+        MessageLookupByLibrary.simpleMessage("كلمة المرور الحالية"),
+    "password_onboarding_current_password_hint":
+        MessageLookupByLibrary.simpleMessage("أدخل كلمة المرور المؤقتة"),
+    "password_onboarding_new_password": MessageLookupByLibrary.simpleMessage(
+      "كلمة المرور الجديدة",
+    ),
+    "password_onboarding_new_password_hint":
+        MessageLookupByLibrary.simpleMessage("أدخل كلمة مرور جديدة"),
+    "password_onboarding_save_continue": MessageLookupByLibrary.simpleMessage(
+      "حفظ ومتابعة",
+    ),
+    "password_onboarding_subtitle": MessageLookupByLibrary.simpleMessage(
+      "هذا الحساب يستخدم كلمة مرور مؤقتة. اختر كلمة مرور جديدة للمتابعة.",
+    ),
+    "password_onboarding_success": MessageLookupByLibrary.simpleMessage(
+      "تم تغيير كلمة المرور بنجاح",
+    ),
+    "password_onboarding_title": MessageLookupByLibrary.simpleMessage(
+      "تغيير كلمة المرور",
+    ),
     "photo_studio_add_url": MessageLookupByLibrary.simpleMessage(
       "إضافة رابط صورة",
     ),
@@ -533,9 +588,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "profile_terminate_other": MessageLookupByLibrary.simpleMessage(
       "إنهاء الجلسات في الأجهزة الأخرى",
     ),
-    "refresh": MessageLookupByLibrary.simpleMessage("تحديث"),
     "recitation_ayah_number": MessageLookupByLibrary.simpleMessage("رقم الآية"),
-    "recitation_confidence_detail": m11,
+    "recitation_confidence_detail": m7,
     "recitation_error_title": MessageLookupByLibrary.simpleMessage(
       "ملاحظة على القراءة",
     ),
@@ -548,7 +602,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "recitation_no_results": MessageLookupByLibrary.simpleMessage(
       "لم تصل نتائج بعد.",
     ),
-    "recitation_position_detail": m10,
+    "recitation_position_detail": m8,
     "recitation_position_title": MessageLookupByLibrary.simpleMessage(
       "تتبع القراءة",
     ),
@@ -570,6 +624,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "recitation_usage_title": MessageLookupByLibrary.simpleMessage(
       "تحليل القراءة",
     ),
+    "refresh": MessageLookupByLibrary.simpleMessage("تحديث"),
     "religious_content_display": MessageLookupByLibrary.simpleMessage(
       "مدة العرض (ثواني)",
     ),
@@ -593,6 +648,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "save_iqama_settings": MessageLookupByLibrary.simpleMessage(
       "حفظ إعدادات الإقامة",
     ),
+    "save_mosque_info": MessageLookupByLibrary.simpleMessage(
+      "حفظ معلومات المسجد",
+    ),
     "saved_successfully": MessageLookupByLibrary.simpleMessage(
       "تم الحفظ بنجاح",
     ),
@@ -614,6 +672,27 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings_language": MessageLookupByLibrary.simpleMessage("اللغة"),
     "settings_navigate_sections": MessageLookupByLibrary.simpleMessage(
       "الأقسام",
+    ),
+    "settings_no_active_mosque_subtitle": MessageLookupByLibrary.simpleMessage(
+      "هذا الحساب غير مرتبط بمسجد نشط بعد. اربط المستخدم بمسجد من لوحة التحكم ثم اضغط تحديث.",
+    ),
+    "settings_no_active_mosque_title": MessageLookupByLibrary.simpleMessage(
+      "لا يوجد مسجد مرتبط",
+    ),
+    "settings_refresh_discard": MessageLookupByLibrary.simpleMessage(
+      "تجاهل التعديلات",
+    ),
+    "settings_refresh_save": MessageLookupByLibrary.simpleMessage(
+      "حفظ ثم تحديث",
+    ),
+    "settings_refresh_unsaved_message": MessageLookupByLibrary.simpleMessage(
+      "بعض الإعدادات تم تعديلها محلياً. احفظها أو تجاهلها قبل تحديث البيانات.",
+    ),
+    "settings_refresh_unsaved_title": MessageLookupByLibrary.simpleMessage(
+      "توجد تعديلات غير محفوظة",
+    ),
+    "settings_refreshed": MessageLookupByLibrary.simpleMessage(
+      "تم تحديث الإعدادات",
     ),
     "settings_title": MessageLookupByLibrary.simpleMessage("إعدادات المسجد"),
     "sign_out": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
@@ -637,6 +716,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "tab_general": MessageLookupByLibrary.simpleMessage("عام"),
     "tab_hadith": MessageLookupByLibrary.simpleMessage("الأحاديث"),
     "tab_iqama": MessageLookupByLibrary.simpleMessage("الإقامة"),
+    "tab_mosque_info": MessageLookupByLibrary.simpleMessage("معلومات المسجد"),
+    "tab_notifications": MessageLookupByLibrary.simpleMessage("الإشعارات"),
     "tab_photo_studio": MessageLookupByLibrary.simpleMessage("معرض الصور"),
     "tab_prayer_iqama": MessageLookupByLibrary.simpleMessage("الصلاة والإقامة"),
     "tab_profile": MessageLookupByLibrary.simpleMessage("الملف الشخصي"),
@@ -649,15 +730,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "«وَمَن يَتَوَكَّلْ عَلَى اللَّهِ فَهُوَ حَسْبُهُ»",
     ),
     "unit_seconds": MessageLookupByLibrary.simpleMessage("ث"),
-    "update_current_version": m7,
+    "update_current_version": m9,
     "update_download": MessageLookupByLibrary.simpleMessage(
       "تحميل وتثبيت التحديث",
     ),
-    "update_downloading": m8,
+    "update_downloading": m10,
     "update_failure": MessageLookupByLibrary.simpleMessage(
       "فشل التحميل. يرجى المحاولة لاحقاً.",
     ),
-    "update_latest_version": m9,
+    "update_latest_version": m11,
     "update_no_link": MessageLookupByLibrary.simpleMessage(
       "لا يوجد رابط تحميل متوفر لهذه المنصة.",
     ),

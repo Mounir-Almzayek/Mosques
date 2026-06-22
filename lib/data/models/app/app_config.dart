@@ -42,27 +42,70 @@ class AppUpdate extends Equatable {
   }
 
   Map<String, dynamic> toJson() => {
-        'latestVersion': latestVersion,
-        'androidLink': androidLink,
-        'windowsLink': windowsLink,
-        'iosLink': iosLink,
-        'macosLink': macosLink,
-        'linuxLink': linuxLink,
-        'releaseNotes': releaseNotes,
-        'isUpdateAvailable': isUpdateAvailable,
-      };
+    'latestVersion': latestVersion,
+    'androidLink': androidLink,
+    'windowsLink': windowsLink,
+    'iosLink': iosLink,
+    'macosLink': macosLink,
+    'linuxLink': linuxLink,
+    'releaseNotes': releaseNotes,
+    'isUpdateAvailable': isUpdateAvailable,
+  };
 
   @override
   List<Object?> get props => [
-        latestVersion,
-        androidLink,
-        windowsLink,
-        iosLink,
-        macosLink,
-        linuxLink,
-        releaseNotes,
-        isUpdateAvailable,
-      ];
+    latestVersion,
+    androidLink,
+    windowsLink,
+    iosLink,
+    macosLink,
+    linuxLink,
+    releaseNotes,
+    isUpdateAvailable,
+  ];
+}
+
+class LatestRelease extends Equatable {
+  final String platform;
+  final String version;
+  final String downloadUrl;
+  final String releaseNotes;
+  final bool isUpdateAvailable;
+
+  const LatestRelease({
+    this.platform = '',
+    this.version = '',
+    this.downloadUrl = '',
+    this.releaseNotes = '',
+    this.isUpdateAvailable = false,
+  });
+
+  factory LatestRelease.fromJson(Map<String, dynamic> json) {
+    return LatestRelease(
+      platform: json['platform']?.toString() ?? '',
+      version: json['version']?.toString() ?? '',
+      downloadUrl: json['downloadUrl']?.toString() ?? '',
+      releaseNotes: json['releaseNotes']?.toString() ?? '',
+      isUpdateAvailable: json['isUpdateAvailable'] == true,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'platform': platform,
+    'version': version,
+    'downloadUrl': downloadUrl,
+    'releaseNotes': releaseNotes,
+    'isUpdateAvailable': isUpdateAvailable,
+  };
+
+  @override
+  List<Object?> get props => [
+    platform,
+    version,
+    downloadUrl,
+    releaseNotes,
+    isUpdateAvailable,
+  ];
 }
 
 /// Public app launch config — 1:1 with backend `AppBootstrapResponse`
@@ -73,6 +116,7 @@ class AppConfig extends Equatable {
   final String backgroundFolderUrl;
   final List<AboutCategoryModel> aboutCategories;
   final AppUpdate update;
+  final LatestRelease? latestRelease;
 
   const AppConfig({
     this.supportPhone = '',
@@ -80,6 +124,7 @@ class AppConfig extends Equatable {
     this.backgroundFolderUrl = '',
     this.aboutCategories = const [],
     this.update = const AppUpdate(),
+    this.latestRelease,
   });
 
   // Backward-compatible getters preserved from AppSettingsModel.
@@ -93,37 +138,47 @@ class AppConfig extends Equatable {
       return const {};
     }
 
+    final latestRelease = asMap(json['latestRelease']);
+
     return AppConfig(
       supportPhone: json['supportPhone']?.toString() ?? '',
-      backgroundLibraryUrls: (json['backgroundLibraryUrls'] as List?)
+      backgroundLibraryUrls:
+          (json['backgroundLibraryUrls'] as List?)
               ?.map((e) => e.toString())
               .toList() ??
           const [],
       backgroundFolderUrl: json['backgroundFolderUrl']?.toString() ?? '',
-      aboutCategories: (json['aboutCategories'] as List?)
+      aboutCategories:
+          (json['aboutCategories'] as List?)
               ?.whereType<Map>()
-              .map((e) => AboutCategoryModel.fromMap(
-                  Map<String, dynamic>.from(e)))
+              .map(
+                (e) => AboutCategoryModel.fromMap(Map<String, dynamic>.from(e)),
+              )
               .toList() ??
           const [],
       update: AppUpdate.fromJson(asMap(json['update'])),
+      latestRelease: latestRelease.isEmpty
+          ? null
+          : LatestRelease.fromJson(latestRelease),
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'supportPhone': supportPhone,
-        'backgroundLibraryUrls': backgroundLibraryUrls,
-        'backgroundFolderUrl': backgroundFolderUrl,
-        'aboutCategories': aboutCategories.map((c) => c.toMap()).toList(),
-        'update': update.toJson(),
-      };
+    'supportPhone': supportPhone,
+    'backgroundLibraryUrls': backgroundLibraryUrls,
+    'backgroundFolderUrl': backgroundFolderUrl,
+    'aboutCategories': aboutCategories.map((c) => c.toMap()).toList(),
+    'update': update.toJson(),
+    'latestRelease': latestRelease?.toJson(),
+  };
 
   @override
   List<Object?> get props => [
-        supportPhone,
-        backgroundLibraryUrls,
-        backgroundFolderUrl,
-        aboutCategories,
-        update,
-      ];
+    supportPhone,
+    backgroundLibraryUrls,
+    backgroundFolderUrl,
+    aboutCategories,
+    update,
+    latestRelease,
+  ];
 }

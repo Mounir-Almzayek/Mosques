@@ -65,6 +65,10 @@ class SaveGeneralRequested extends GeneralEvent {
   const SaveGeneralRequested();
 }
 
+class DiscardGeneralChangesRequested extends GeneralEvent {
+  const DiscardGeneralChangesRequested();
+}
+
 /// Internal event emitted when the mosque stream pushes a new value.
 /// Not part of the public API; use [LoadGeneral] instead.
 class GeneralMosqueUpdated extends GeneralEvent {

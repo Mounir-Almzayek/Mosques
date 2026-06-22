@@ -27,6 +27,7 @@ class ReligiousContentBloc
     on<MosqueTextRemoved>(_onMosqueTextRemoved);
     on<ReligiousContentTimingChanged>(_onTimingChanged);
     on<SaveAllReligiousContentRequested>(_onSaveAll);
+    on<DiscardReligiousContentChangesRequested>(_onDiscardChanges);
   }
 
   StreamSubscription<dynamic>? _sub;
@@ -189,6 +190,13 @@ class ReligiousContentBloc
       onError: (error) =>
           emit(state.copyWith(isSaving: false, error: errorMessage(error))),
     );
+  }
+
+  void _onDiscardChanges(
+    DiscardReligiousContentChangesRequested event,
+    Emitter<ReligiousContentState> emit,
+  ) {
+    emit(state.copyWith(hasUnsavedChanges: false, error: null));
   }
 
   @override

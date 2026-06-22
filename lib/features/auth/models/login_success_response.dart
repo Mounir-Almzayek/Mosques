@@ -4,12 +4,14 @@ import 'package:equatable/equatable.dart';
 class LoginSuccessResponse extends Equatable {
   final String uid;
   final String message;
+  final bool passwordChangeRequired;
 
   const LoginSuccessResponse({
     required this.uid,
     required this.message,
+    this.passwordChangeRequired = false,
   });
 
   @override
-  List<Object?> get props => [uid, message];
+  List<Object?> get props => [uid, message, passwordChangeRequired];
 }

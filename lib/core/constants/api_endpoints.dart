@@ -26,11 +26,29 @@ abstract final class ApiEndpoints {
   static const String appBootstrap = '/mobile/app/bootstrap';
 
   // ---------------------------------------------------------------------------
+  // Administrative divisions
+  // ---------------------------------------------------------------------------
+  static const String administrativeDivisions =
+      '/dashboard/administrative-divisions';
+  static String administrativeDivisionPath(String id) =>
+      '$administrativeDivisions/$id/path';
+
+  // ---------------------------------------------------------------------------
   // AI recitation
   // ---------------------------------------------------------------------------
   static const String aiSessionRequests = '/mobile/ai/session-requests';
   static String aiSessionEvents(String requestId) =>
       '$aiSessionRequests/$requestId/events';
+
+  // ---------------------------------------------------------------------------
+  // Notifications
+  // ---------------------------------------------------------------------------
+  static const String notifications = '/mobile/mosques/notifications';
+  static const String notificationsUnreadCount =
+      '/mobile/mosques/notifications/unread-count';
+  static const String notificationsWs = '/mobile/mosques/notifications/ws';
+  static String notificationRead(String messageId) =>
+      '$notifications/$messageId/read';
 
   // ---------------------------------------------------------------------------
   // Mosques
@@ -47,8 +65,7 @@ abstract final class ApiEndpoints {
       '$mosques/$id/display-settings/published-album';
   static String mosqueReligiousContent(String id) =>
       '$mosques/$id/religious-content';
-  static String mosqueAnnouncements(String id) =>
-      '$mosques/$id/announcements';
+  static String mosqueAnnouncements(String id) => '$mosques/$id/announcements';
   static String mosqueAnnouncement(String mosqueId, String announcementId) =>
       '$mosques/$mosqueId/announcements/$announcementId';
   static String mosqueAlerts(String id) => '$mosques/$id/alerts';

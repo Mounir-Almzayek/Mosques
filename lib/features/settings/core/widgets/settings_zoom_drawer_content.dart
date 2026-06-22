@@ -35,8 +35,8 @@ class _SettingsZoomDrawerContentState extends State<SettingsZoomDrawerContent>
   late final List<Animation<double>> _fadeAnimations;
   late final List<Animation<Offset>> _slideAnimations;
 
-  static const int _maxItemCount = 11;
-  int get _itemCount => widget.showRecitation ? 11 : 10;
+  static const int _maxItemCount = 13;
+  int get _itemCount => widget.showRecitation ? 13 : 12;
 
   @override
   void initState() {
@@ -95,7 +95,9 @@ class _SettingsZoomDrawerContentState extends State<SettingsZoomDrawerContent>
     final s = S.of(context);
 
     final navItems = [
-      (Icons.mosque_outlined, s.tab_general),
+      (Icons.dashboard_outlined, s.tab_general),
+      (Icons.notifications_none_rounded, s.tab_notifications),
+      (Icons.mosque_outlined, s.tab_mosque_info),
       (Icons.access_time_outlined, s.tab_prayer_iqama),
       (Icons.menu_book_rounded, s.tab_religious_content),
       (Icons.palette_outlined, s.tab_design),

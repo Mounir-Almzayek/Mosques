@@ -11,8 +11,8 @@ class SplashRoutingBloc extends Bloc<SplashRoutingEvent, SplashRoutingState> {
   final IAuthRepository _authRepo;
 
   SplashRoutingBloc({required IAuthRepository authRepository})
-      : _authRepo = authRepository,
-        super(const SplashInitial()) {
+    : _authRepo = authRepository,
+      super(const SplashInitial()) {
     on<SplashCheckStatus>(_checkStatus);
   }
 
@@ -25,17 +25,31 @@ class SplashRoutingBloc extends Bloc<SplashRoutingEvent, SplashRoutingState> {
     // Delay to show splash nicely
     await Future.delayed(const Duration(seconds: 2));
 
-    final currentUser = _authRepo.currentUser;
+    var currentUser = _authRepo.currentUser;
 
     if (currentUser == null) {
       emit(const SplashLoaded(destination: SplashDestination.login));
       return;
     }
 
+    if (currentUser.passwordChangeRequired) {
+      emit(
+        const SplashLoaded(destination: SplashDestination.passwordOnboarding),
+      );
+      return;
+    }
+
+    try {
+      currentUser = await _authRepo.refreshCurrentUser() ?? currentUser;
+    } catch (_) {
+      // Keep routing with the cached user when the profile refresh is
+      // unavailable. The settings screen will surface any missing mosque state.
+    }
+
     // Refresh active mosque from the backend when online; otherwise keep
     // the local cache. With the new backend this is a no-op — the active
     // mosque already arrives via login / GET /mobile/me.
-    await UserActiveMosqueRepository.syncBestEffort(currentUser.uid);
+    await UserActiveMosqueRepository.syncBestEffort(currentUser?.uid);
 
     // Check local override using the new AppMode enum
     final savedMode = _authRepo.getAppModeOverride();

@@ -3,6 +3,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/utils/color_extensions.dart';
 import '../../../../core/widgets/feedback/unified_snackbar.dart';
 import '../../../../data/models/about/about_section_model.dart';
 
@@ -159,7 +160,7 @@ class AboutItemView extends StatelessWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: theme.colorScheme.primary.withOpacity(0.3),
+                color: theme.colorScheme.primary.withOpacityCompat(0.3),
                 width: 1.5,
               ),
             ),

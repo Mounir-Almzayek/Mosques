@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -30,8 +32,8 @@ class ApiService {
   Completer<void>? _refreshInFlight;
 
   ApiService({required TokenStorage tokens, Dio? dio})
-      : _tokens = tokens,
-        _dio = dio ?? Dio() {
+    : _tokens = tokens,
+      _dio = dio ?? Dio() {
     _dio.options
       ..baseUrl = ApiConfig.baseUrl
       ..connectTimeout = ApiConfig.connectTimeout
@@ -43,10 +45,13 @@ class ApiService {
         'Content-Type': 'application/json',
       };
 
-    _dio.interceptors.add(InterceptorsWrapper(
-      onRequest: _onRequest,
-      onError: _onError,
-    ));
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: _onRequest,
+        onResponse: _onResponse,
+        onError: _onError,
+      ),
+    );
   }
 
   Dio get raw => _dio;
@@ -54,15 +59,24 @@ class ApiService {
   // ---------------------------------------------------------------------------
   // Interceptors
   // ---------------------------------------------------------------------------
-  void _onRequest(
-    RequestOptions options,
-    RequestInterceptorHandler handler,
-  ) {
+  void _onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    final requestId = _ensureRequestId(options);
+    options.extra['__request_started_at'] =
+        DateTime.now().microsecondsSinceEpoch;
     final token = _tokens.accessToken;
     if (token != null && token.isNotEmpty && !_skipAuth(options)) {
       options.headers['Authorization'] = 'Bearer $token';
     }
+    _logRequest(options, requestId);
     handler.next(options);
+  }
+
+  void _onResponse(
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) {
+    _logResponse(response);
+    handler.next(response);
   }
 
   bool _skipAuth(RequestOptions options) {
@@ -87,6 +101,7 @@ class ApiService {
         !_skipAuth(err.requestOptions) &&
         (_tokens.refreshToken?.isNotEmpty ?? false)) {
       try {
+        _logRefreshAttempt(err.requestOptions);
         await _runRefresh();
         final newToken = _tokens.accessToken;
         final retryOptions = err.requestOptions.copyWith(
@@ -95,10 +110,7 @@ class ApiService {
             if (newToken != null && newToken.isNotEmpty)
               'Authorization': 'Bearer $newToken',
           },
-          extra: {
-            ...err.requestOptions.extra,
-            '__retried_after_refresh': true,
-          },
+          extra: {...err.requestOptions.extra, '__retried_after_refresh': true},
         );
         final retried = await _dio.fetch<dynamic>(retryOptions);
         return handler.resolve(retried);
@@ -107,9 +119,12 @@ class ApiService {
         await _tokens.clear();
         try {
           onSessionExpired?.call();
-        } catch (_) {/* swallow callback errors */}
+        } catch (_) {
+          /* swallow callback errors */
+        }
       }
     }
+    _logError(err);
     handler.next(err);
   }
 
@@ -122,24 +137,28 @@ class ApiService {
     () async {
       final refreshToken = _tokens.refreshToken;
       if (refreshToken == null || refreshToken.isEmpty) {
-        completer.completeError(ApiException(
-          code: 'unauthenticated',
-          message: 'No refresh token available.',
-        ));
+        completer.completeError(
+          ApiException(
+            code: 'unauthenticated',
+            message: 'No refresh token available.',
+          ),
+        );
         return;
       }
       try {
         // Bypass interceptor by using a clean Dio instance for the refresh.
-        final fresh = Dio(BaseOptions(
-          baseUrl: ApiConfig.baseUrl,
-          connectTimeout: ApiConfig.connectTimeout,
-          receiveTimeout: ApiConfig.receiveTimeout,
-          sendTimeout: ApiConfig.sendTimeout,
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-        ));
+        final fresh = Dio(
+          BaseOptions(
+            baseUrl: ApiConfig.baseUrl,
+            connectTimeout: ApiConfig.connectTimeout,
+            receiveTimeout: ApiConfig.receiveTimeout,
+            sendTimeout: ApiConfig.sendTimeout,
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+          ),
+        );
         final res = await fresh.post(
           ApiEndpoints.authRefresh,
           data: {'refreshToken': refreshToken},
@@ -193,11 +212,13 @@ class ApiService {
     Map<String, dynamic>? query,
     Map<String, dynamic>? headers,
   }) async {
-    return _send(() => _dio.get(
-          path,
-          queryParameters: query,
-          options: Options(headers: headers),
-        ));
+    return _send(
+      () => _dio.get(
+        path,
+        queryParameters: query,
+        options: Options(headers: headers),
+      ),
+    );
   }
 
   Future<Map<String, dynamic>> post(
@@ -206,12 +227,14 @@ class ApiService {
     Map<String, dynamic>? query,
     Map<String, dynamic>? headers,
   }) async {
-    return _send(() => _dio.post(
-          path,
-          data: body,
-          queryParameters: query,
-          options: Options(headers: headers),
-        ));
+    return _send(
+      () => _dio.post(
+        path,
+        data: body,
+        queryParameters: query,
+        options: Options(headers: headers),
+      ),
+    );
   }
 
   Future<Map<String, dynamic>> put(
@@ -220,12 +243,14 @@ class ApiService {
     Map<String, dynamic>? query,
     Map<String, dynamic>? headers,
   }) async {
-    return _send(() => _dio.put(
-          path,
-          data: body,
-          queryParameters: query,
-          options: Options(headers: headers),
-        ));
+    return _send(
+      () => _dio.put(
+        path,
+        data: body,
+        queryParameters: query,
+        options: Options(headers: headers),
+      ),
+    );
   }
 
   Future<Map<String, dynamic>> patch(
@@ -234,12 +259,14 @@ class ApiService {
     Map<String, dynamic>? query,
     Map<String, dynamic>? headers,
   }) async {
-    return _send(() => _dio.patch(
-          path,
-          data: body,
-          queryParameters: query,
-          options: Options(headers: headers),
-        ));
+    return _send(
+      () => _dio.patch(
+        path,
+        data: body,
+        queryParameters: query,
+        options: Options(headers: headers),
+      ),
+    );
   }
 
   Future<Map<String, dynamic>> delete(
@@ -248,12 +275,14 @@ class ApiService {
     Map<String, dynamic>? query,
     Map<String, dynamic>? headers,
   }) async {
-    return _send(() => _dio.delete(
-          path,
-          data: body,
-          queryParameters: query,
-          options: Options(headers: headers),
-        ));
+    return _send(
+      () => _dio.delete(
+        path,
+        data: body,
+        queryParameters: query,
+        options: Options(headers: headers),
+      ),
+    );
   }
 
   Future<Map<String, dynamic>> _send(
@@ -266,9 +295,6 @@ class ApiService {
       // 4xx/5xx with a body → translate via envelope.
       if (e.response != null && e.response!.data is Map) {
         throw _unwrapError(e.response!);
-      }
-      if (kDebugMode) {
-        debugPrint('ApiService network failure: ${e.type} ${e.message}');
       }
       throw ApiException.network(e);
     } catch (e) {
@@ -298,13 +324,171 @@ class ApiService {
           code: err['code']?.toString() ?? 'unknown_error',
           message: err['message']?.toString() ?? 'Unknown error.',
           statusCode: response.statusCode,
-          details: details is Map
-              ? Map<String, dynamic>.from(details)
-              : null,
+          details: details is Map ? Map<String, dynamic>.from(details) : null,
           requestId: err['requestId']?.toString(),
         );
       }
     }
     return ApiException.malformed(response.statusCode, null);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Request tracking logs
+  // ---------------------------------------------------------------------------
+  String _ensureRequestId(RequestOptions options) {
+    final existing = options.headers['X-Request-ID']?.toString();
+    if (existing != null && existing.isNotEmpty) return existing;
+    final requestId = _newRequestId();
+    options.headers['X-Request-ID'] = requestId;
+    return requestId;
+  }
+
+  String _newRequestId() {
+    final now = DateTime.now().microsecondsSinceEpoch.toRadixString(36);
+    final random = Random().nextInt(0xFFFFFF).toRadixString(36).padLeft(5, '0');
+    return 'mob_$now$random';
+  }
+
+  void _logRequest(RequestOptions options, String requestId) {
+    if (!kDebugMode) return;
+    debugPrint(
+      '[HTTP -->] $requestId ${options.method} ${_safePath(options)} '
+      'base=${options.baseUrl}',
+    );
+    final payload = _safePayload(options.data);
+    if (payload != null) debugPrint('[HTTP payload] $requestId $payload');
+  }
+
+  void _logResponse(Response<dynamic> response) {
+    if (!kDebugMode) return;
+    final options = response.requestOptions;
+    final requestId = _responseRequestId(response);
+    debugPrint(
+      '[HTTP <--] $requestId ${options.method} ${_safePath(options)} '
+      'status=${response.statusCode ?? '-'} duration=${_durationMs(options)}ms',
+    );
+    final payload = _safePayload(response.data);
+    if (payload != null) debugPrint('[HTTP response] $requestId $payload');
+  }
+
+  void _logError(DioException err) {
+    if (!kDebugMode) return;
+    final options = err.requestOptions;
+    final requestId = err.response == null
+        ? options.headers['X-Request-ID']?.toString()
+        : _responseRequestId(err.response!);
+    final effectiveRequestId = requestId ?? 'request_unset';
+    debugPrint(
+      '[HTTP ERR] $effectiveRequestId ${options.method} ${_safePath(options)} '
+      'status=${err.response?.statusCode ?? '-'} type=${err.type.name} '
+      'duration=${_durationMs(options)}ms message=${err.message ?? '-'}',
+    );
+    final payload = _safePayload(err.response?.data);
+    if (payload != null) {
+      debugPrint('[HTTP error response] $effectiveRequestId $payload');
+    }
+  }
+
+  void _logRefreshAttempt(RequestOptions options) {
+    if (!kDebugMode) return;
+    debugPrint(
+      '[HTTP RETRY] ${options.headers['X-Request-ID'] ?? 'request_unset'} '
+      '${options.method} ${_safePath(options)} refreshing token after 401',
+    );
+  }
+
+  String _responseRequestId(Response<dynamic> response) {
+    final header = response.headers.value('X-Request-ID');
+    if (header != null && header.isNotEmpty) return header;
+    final body = response.data;
+    if (body is Map) {
+      final meta = body['meta'];
+      if (meta is Map && meta['requestId'] != null) {
+        return meta['requestId'].toString();
+      }
+      final error = body['error'];
+      if (error is Map && error['requestId'] != null) {
+        return error['requestId'].toString();
+      }
+    }
+    return response.requestOptions.headers['X-Request-ID']?.toString() ??
+        'request_unset';
+  }
+
+  int _durationMs(RequestOptions options) {
+    final startedAt = options.extra['__request_started_at'];
+    if (startedAt is! int) return -1;
+    final elapsedMicros = DateTime.now().microsecondsSinceEpoch - startedAt;
+    return (elapsedMicros / 1000).round();
+  }
+
+  String _safePath(RequestOptions options) {
+    final query = Map<String, dynamic>.from(options.queryParameters)
+      ..removeWhere((key, _) => _isSensitiveKey(key));
+    final uri = Uri(
+      path: options.path,
+      queryParameters: query.isEmpty
+          ? null
+          : query.map((key, value) => MapEntry(key, value?.toString())),
+    );
+    return uri.toString();
+  }
+
+  bool _isSensitiveKey(Object key) {
+    final value = key.toString().toLowerCase();
+    return value.contains('token') ||
+        value.contains('password') ||
+        value.contains('secret') ||
+        value.contains('authorization');
+  }
+
+  String? _safePayload(Object? payload) {
+    if (payload == null) return null;
+    Object? safeValue;
+    if (payload is FormData) {
+      safeValue = {
+        'fields': {
+          for (final field in payload.fields)
+            if (!_isSensitiveKey(field.key)) field.key: field.value,
+        },
+        'files': payload.files
+            .map(
+              (file) => {
+                'field': file.key,
+                'filename': file.value.filename,
+                'contentType': file.value.contentType?.toString(),
+                'length': file.value.length,
+              },
+            )
+            .toList(),
+      };
+    } else {
+      safeValue = _redactSensitive(payload);
+    }
+    return _truncate(_stringify(safeValue));
+  }
+
+  Object? _redactSensitive(Object? value) {
+    if (value is Map) {
+      return value.map((key, nested) {
+        if (_isSensitiveKey(key)) return MapEntry(key.toString(), '<redacted>');
+        return MapEntry(key.toString(), _redactSensitive(nested));
+      });
+    }
+    if (value is Iterable) return value.map(_redactSensitive).toList();
+    return value;
+  }
+
+  String _stringify(Object? value) {
+    try {
+      return const JsonEncoder.withIndent('  ').convert(value);
+    } catch (_) {
+      return value.toString();
+    }
+  }
+
+  String _truncate(String value, {int maxChars = 4000}) {
+    if (value.length <= maxChars) return value;
+    return '${value.substring(0, maxChars)}... <truncated ${value.length - maxChars} chars>';
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/service_locator.dart';
 import '../../../../data/repositories/interfaces/mosque_repository_interface.dart';
+import '../../core/refresh/settings_refresh_scope.dart';
 import '../bloc/alerts_bloc.dart';
 import '../widgets/alerts_section_body.dart';
 
@@ -19,7 +20,16 @@ class AlertsSection extends StatelessWidget {
       create: (_) =>
           AlertsBloc(mosqueRepository: sl<IMosqueRepository>())
             ..add(const LoadAlerts()),
-      child: const AlertsSectionBody(),
+      child: SettingsRefreshRegistrar<AlertsBloc, AlertsState>(
+        id: 'alerts',
+        label: 'التنبيهات',
+        hasUnsavedChanges: (state) => state.hasUnsavedChanges,
+        isSaving: (state) => state.isSaving,
+        error: (state) => state.error,
+        save: (bloc) => bloc.add(const SaveAlertsRequested()),
+        discard: (bloc) => bloc.add(const DiscardAlertsChangesRequested()),
+        child: const AlertsSectionBody(),
+      ),
     );
   }
 }

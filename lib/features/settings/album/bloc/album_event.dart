@@ -59,3 +59,7 @@ class AlbumImageUnpublished extends AlbumEvent {
 class SaveAlbumRequested extends AlbumEvent {
   const SaveAlbumRequested();
 }
+
+class DiscardAlbumChangesRequested extends AlbumEvent {
+  const DiscardAlbumChangesRequested();
+}

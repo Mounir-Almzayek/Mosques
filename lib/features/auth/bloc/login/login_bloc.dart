@@ -70,14 +70,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           response: LoginSuccessResponse(
             uid: session.user.id,
             message: '',
+            passwordChangeRequired: session.user.passwordChangeRequired,
           ),
         ),
       ),
       onError: (error) => emit(
-        LoginFailure(
-          request: state.request,
-          error: errorMessage(error),
-        ),
+        LoginFailure(request: state.request, error: errorMessage(error)),
       ),
     );
   }

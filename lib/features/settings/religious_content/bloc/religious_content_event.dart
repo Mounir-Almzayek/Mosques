@@ -63,6 +63,10 @@ class SaveAllReligiousContentRequested extends ReligiousContentEvent {
   const SaveAllReligiousContentRequested();
 }
 
+class DiscardReligiousContentChangesRequested extends ReligiousContentEvent {
+  const DiscardReligiousContentChangesRequested();
+}
+
 /// Internal event emitted when the mosque stream pushes a new value.
 /// Not part of the public API; use [LoadReligiousContent] instead.
 class ReligiousContentMosqueUpdated extends ReligiousContentEvent {

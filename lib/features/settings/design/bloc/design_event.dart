@@ -184,3 +184,7 @@ class BackgroundCustomUrlChanged extends DesignEvent {
 class SaveDesignRequested extends DesignEvent {
   const SaveDesignRequested();
 }
+
+class DiscardDesignChangesRequested extends DesignEvent {
+  const DiscardDesignChangesRequested();
+}
