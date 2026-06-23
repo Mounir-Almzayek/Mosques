@@ -50,13 +50,18 @@ class MosqueBootstrap extends Equatable {
   List<ContentItem> get duas => _byKind(const {'dua'});
   List<ContentItem> get adhkar => _byKind(const {'dhikr', 'adhkar'});
 
-  /// Regular (non-alert) mosque announcements.
-  List<Announcement> get ads =>
-      announcements.where((a) => !a.isAlert).toList();
+  /// Regular mosque announcements rendered on the public display screen.
+  List<Announcement> get ads => announcements
+      .where((a) => !a.isAlert && a.audience == 'display')
+      .toList();
+
+  /// Mosque-scoped announcements intended for the imam/settings app.
+  List<Announcement> get appAnnouncements =>
+      announcements.where((a) => !a.isAlert && a.audience == 'imam').toList();
 
   /// Mosque alerts (`announcementType == 'alert'`).
   List<Announcement> get savedAlerts =>
-      announcements.where((a) => a.isAlert).toList();
+      announcements.where((a) => a.isAlert && a.audience == 'display').toList();
 
   List<ContentItem> _byKind(Set<String> kinds) =>
       content.where((c) => kinds.contains(c.kind)).toList();
@@ -96,14 +101,14 @@ class MosqueBootstrap extends Equatable {
       prayerSettings: PrayerSettings.fromJson(asMap(json['prayerSettings'])),
       displaySettings: DisplaySettings.fromJson(asMap(json['displaySettings'])),
       content: asList(json['content']).map(ContentItem.fromJson).toList(),
-      announcements:
-          asList(json['announcements']).map(Announcement.fromJson).toList(),
-      platformAnnouncements: asList(json['platformAnnouncements'])
-          .map(Announcement.fromJson)
-          .toList(),
+      announcements: asList(
+        json['announcements'],
+      ).map(Announcement.fromJson).toList(),
+      platformAnnouncements: asList(
+        json['platformAnnouncements'],
+      ).map(Announcement.fromJson).toList(),
       syncRevision: (json['syncRevision'] as num?)?.toInt() ?? 1,
-      firestoreDocumentId:
-          legacy['firestoreDocumentId']?.toString() ?? '',
+      firestoreDocumentId: legacy['firestoreDocumentId']?.toString() ?? '',
       serverTime: _parseServerTime(json['serverTime']),
     );
   }
@@ -114,17 +119,18 @@ class MosqueBootstrap extends Equatable {
   }
 
   Map<String, dynamic> toJson() => {
-        'mosque': mosque.toJson(),
-        'prayerSettings': prayerSettings.toJson(),
-        'displaySettings': displaySettings.toJson(),
-        'content': content.map((c) => c.toJson()).toList(),
-        'announcements': announcements.map((a) => a.toJson()).toList(),
-        'platformAnnouncements':
-            platformAnnouncements.map((a) => a.toJson()).toList(),
-        'syncRevision': syncRevision,
-        'legacyCompatibility': {'firestoreDocumentId': firestoreDocumentId},
-        if (serverTime != null) 'serverTime': serverTime!.toIso8601String(),
-      };
+    'mosque': mosque.toJson(),
+    'prayerSettings': prayerSettings.toJson(),
+    'displaySettings': displaySettings.toJson(),
+    'content': content.map((c) => c.toJson()).toList(),
+    'announcements': announcements.map((a) => a.toJson()).toList(),
+    'platformAnnouncements': platformAnnouncements
+        .map((a) => a.toJson())
+        .toList(),
+    'syncRevision': syncRevision,
+    'legacyCompatibility': {'firestoreDocumentId': firestoreDocumentId},
+    if (serverTime != null) 'serverTime': serverTime!.toIso8601String(),
+  };
 
   MosqueBootstrap copyWith({
     Mosque? mosque,
@@ -153,14 +159,14 @@ class MosqueBootstrap extends Equatable {
 
   @override
   List<Object?> get props => [
-        mosque,
-        prayerSettings,
-        displaySettings,
-        content,
-        announcements,
-        platformAnnouncements,
-        syncRevision,
-        firestoreDocumentId,
-        serverTime,
-      ];
+    mosque,
+    prayerSettings,
+    displaySettings,
+    content,
+    announcements,
+    platformAnnouncements,
+    syncRevision,
+    firestoreDocumentId,
+    serverTime,
+  ];
 }

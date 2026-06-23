@@ -8,10 +8,12 @@ abstract class IMosqueRepository {
   Stream<MosqueBootstrap?> get streamActiveMosque;
   Future<MosqueBootstrap?> getActiveMosque();
   Future<MosqueBootstrap?> fetchActiveMosqueFromServer();
+  Future<PrayerSettingsPreview> previewPrayerSettings(MosqueBootstrap mosque);
 
   /// Top-level mosque profile (name/city/lat/long/languageCode/…).
   Future<void> updateMosque(MosqueBootstrap mosque);
   Future<void> updateDesignSettings(MosqueBootstrap mosque);
+  Future<MosqueBootstrap> uploadAlbumImage(String filePath);
   Future<void> updateLanguageCode(AppLanguage language);
   Future<void> updateIqamaSettings(MosqueBootstrap mosque);
   Future<void> updateMosqueTextList(

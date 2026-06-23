@@ -12,7 +12,6 @@ class RecitationAudioStreamer {
   WebSocketChannel? _channel;
   StreamSubscription<Uint8List>? _audioSub;
   StreamSubscription<dynamic>? _socketSub;
-  int _seq = 0;
 
   Future<void> start({
     required RecitationSessionAuthorization authorization,
@@ -71,13 +70,7 @@ class RecitationAudioStreamer {
   Future<void> dispose() => stop();
 
   void _sendAudio(Uint8List bytes) {
-    _send({
-      'type': 'audio',
-      'seq': ++_seq,
-      'ts_ms': DateTime.now().millisecondsSinceEpoch,
-      'format': 'pcm16/16k/mono',
-      'pcm_b64': base64Encode(bytes),
-    });
+    _channel?.sink.add(bytes);
   }
 
   void _send(Map<String, dynamic> payload) {

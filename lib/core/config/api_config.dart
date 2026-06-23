@@ -47,6 +47,24 @@ abstract final class ApiConfig {
   /// Heartbeat watchdog — if no frame arrives within this window, reconnect.
   static const Duration wsHeartbeatTimeout = Duration(seconds: 60);
 
+  static String resolvePublicUrl(String value) {
+    final trimmed = value.trim();
+    if (trimmed.isEmpty) return trimmed;
+    final uri = Uri.tryParse(trimmed);
+    if (uri != null && uri.hasScheme) return trimmed;
+    if (trimmed.startsWith('//')) {
+      return '${Uri.parse(baseUrl).scheme}:$trimmed';
+    }
+
+    final base = Uri.parse(baseUrl);
+    final origin = '${base.scheme}://${base.authority}';
+    if (trimmed.startsWith('/')) return '$origin$trimmed';
+    return '$origin/$trimmed';
+  }
+
+  static bool canResolvePublicUrl(String value) =>
+      resolvePublicUrl(value).startsWith('http');
+
   static String _defaultHost(String scheme) {
     // Web/desktop: localhost. Android emulator: 10.0.2.2.
     if (kIsWeb) return '$scheme://localhost:8000';

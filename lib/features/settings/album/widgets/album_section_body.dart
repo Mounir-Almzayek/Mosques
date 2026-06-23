@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/widgets/feedback/unified_snackbar.dart';
-import '../../../../core/widgets/forms/custom_text_field.dart';
 import '../../../../data/models/mosque/mosque_bootstrap.dart';
 import '../bloc/album_bloc.dart';
 import 'album_empty_state.dart';
@@ -24,47 +24,58 @@ class AlbumSectionBody extends StatelessWidget {
     return DateTime.now().isBefore(expiry);
   }
 
-  Future<void> _showAddUrlDialog(BuildContext context) async {
+  Future<void> _showImageSourceSheet(BuildContext context) async {
     final bloc = context.read<AlbumBloc>();
     final s = S.of(context);
-    final controller = TextEditingController();
 
-    await showDialog<void>(
+    await showModalBottomSheet<void>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(s.album_add_url),
-        content: CustomTextField(
-          controller: controller,
-          autofocus: true,
-          keyboardType: TextInputType.url,
-          textInputAction: TextInputAction.done,
-          hintText: 'https://example.com/image.jpg',
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_library_rounded),
+                title: Text(s.gallery),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  _pickAndUpload(context, bloc, ImageSource.gallery);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_camera_rounded),
+                title: Text(s.camera),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  _pickAndUpload(context, bloc, ImageSource.camera);
+                },
+              ),
+            ],
+          ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(s.cancel),
-          ),
-          FilledButton(
-            onPressed: () {
-              final url = controller.text.trim();
-              if (url.isNotEmpty) {
-                bloc.add(AlbumImageAdded(url));
-                bloc.add(const SaveAlbumRequested());
-              }
-              Navigator.pop(ctx);
-            },
-            style: FilledButton.styleFrom(
-              backgroundColor: const Color(0xFF1A3C34),
-              foregroundColor: Colors.white,
-            ),
-            child: Text(s.add_label),
-          ),
-        ],
       ),
     );
+  }
 
-    controller.dispose();
+  Future<void> _pickAndUpload(
+    BuildContext context,
+    AlbumBloc bloc,
+    ImageSource source,
+  ) async {
+    final picker = ImagePicker();
+    final image = await picker.pickImage(
+      source: source,
+      maxWidth: 1920,
+      maxHeight: 1920,
+      imageQuality: 90,
+    );
+    if (image == null || !context.mounted) return;
+    bloc.add(AlbumImageUploadRequested(image.path));
   }
 
   void _showPublishSheet(
@@ -112,9 +123,10 @@ class AlbumSectionBody extends StatelessWidget {
     return BlocListener<AlbumBloc, AlbumState>(
       listenWhen: (prev, curr) =>
           prev.isSaving != curr.isSaving ||
+          prev.isUploading != curr.isUploading ||
           (curr.error != null && prev.error == null),
       listener: (context, state) {
-        if (state.isSaving) {
+        if (state.isSaving || state.isUploading) {
           UnifiedSnackbar.info(context, message: S.of(context).saving);
         } else if (state.error != null) {
           UnifiedSnackbar.error(context, message: state.error!);
@@ -132,36 +144,48 @@ class AlbumSectionBody extends StatelessWidget {
           if (mosque == null) return const SizedBox.shrink();
 
           final urls = mosque.displaySettings.albumImageUrls;
+          final isBusy = state.isSaving || state.isUploading;
 
           return Scaffold(
-            body: urls.isEmpty
-                ? AlbumEmptyState(s: s)
-                : GridView.builder(
-                    padding: const EdgeInsets.all(16),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                        ),
-                    itemCount: urls.length,
-                    itemBuilder: (context, index) {
-                      final url = urls[index];
-                      final live = _isImageLive(mosque, url);
-                      return AlbumGridCell(
-                        url: url,
-                        isLive: live,
-                        liveBadgeLabel: s.album_live_badge,
-                        onTap: () =>
-                            _showPublishSheet(context, mosque, url, live),
-                      );
-                    },
+            body: Stack(
+              children: [
+                urls.isEmpty
+                    ? AlbumEmptyState(s: s)
+                    : GridView.builder(
+                        padding: const EdgeInsets.all(16),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 12,
+                              mainAxisSpacing: 12,
+                            ),
+                        itemCount: urls.length,
+                        itemBuilder: (context, index) {
+                          final url = urls[index];
+                          final live = _isImageLive(mosque, url);
+                          return AlbumGridCell(
+                            url: url,
+                            isLive: live,
+                            liveBadgeLabel: s.album_live_badge,
+                            onTap: () =>
+                                _showPublishSheet(context, mosque, url, live),
+                          );
+                        },
+                      ),
+                if (state.isUploading)
+                  const PositionedDirectional(
+                    top: 0,
+                    start: 0,
+                    end: 0,
+                    child: LinearProgressIndicator(),
                   ),
+              ],
+            ),
             floatingActionButton: FloatingActionButton.extended(
               heroTag: 'settings_album_fab',
-              onPressed: () => _showAddUrlDialog(context),
+              onPressed: isBusy ? null : () => _showImageSourceSheet(context),
               icon: const Icon(Icons.add_photo_alternate_outlined),
-              label: Text(s.album_add_url),
+              label: Text(s.upload_image),
               backgroundColor: const Color(0xFF1A3C34),
               foregroundColor: Colors.white,
             ),

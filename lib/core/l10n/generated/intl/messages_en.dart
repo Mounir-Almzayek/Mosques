@@ -83,7 +83,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Administrative division",
     ),
     "administrative_division_search_hint": MessageLookupByLibrary.simpleMessage(
-      "Search governorate, district, subdistrict, or code...",
+      "Search governorate, district, subdistrict, neighborhood, or code...",
     ),
     "album_add_url": MessageLookupByLibrary.simpleMessage("Add Image URL"),
     "album_empty": MessageLookupByLibrary.simpleMessage("No images added yet"),

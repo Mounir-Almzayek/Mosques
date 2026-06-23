@@ -69,9 +69,6 @@ class DesignSectionBody extends StatelessWidget {
                             onValueChanged: (value) {
                               bloc.add(DesignBackgroundValueChanged(value));
                             },
-                            onAlbumUrlAdded: (url) {
-                              bloc.add(BackgroundAlbumUrlAdded(url));
-                            },
                             onAlbumUrlRemoved: (index) {
                               bloc.add(BackgroundAlbumUrlRemoved(index));
                             },

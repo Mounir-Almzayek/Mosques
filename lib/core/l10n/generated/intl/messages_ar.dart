@@ -79,7 +79,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "التقسيم الإداري",
     ),
     "administrative_division_search_hint": MessageLookupByLibrary.simpleMessage(
-      "ابحث عن المحافظة أو المنطقة أو الناحية أو الكود...",
+      "ابحث عن المحافظة أو المنطقة أو الناحية أو الحي أو الكود...",
     ),
     "album_add_url": MessageLookupByLibrary.simpleMessage("إضافة رابط صورة"),
     "album_empty": MessageLookupByLibrary.simpleMessage("لم تتم إضافة صور بعد"),

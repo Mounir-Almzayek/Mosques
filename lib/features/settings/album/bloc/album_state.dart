@@ -6,6 +6,7 @@ class AlbumState extends Equatable {
   final MosqueBootstrap? mosque;
   final bool isLoading;
   final bool isSaving;
+  final bool isUploading;
   final bool hasUnsavedChanges;
   final String? error;
 
@@ -13,6 +14,7 @@ class AlbumState extends Equatable {
     this.mosque,
     this.isLoading = false,
     this.isSaving = false,
+    this.isUploading = false,
     this.hasUnsavedChanges = false,
     this.error,
   });
@@ -21,6 +23,7 @@ class AlbumState extends Equatable {
     MosqueBootstrap? mosque,
     bool? isLoading,
     bool? isSaving,
+    bool? isUploading,
     bool? hasUnsavedChanges,
     String? error,
   }) {
@@ -28,6 +31,7 @@ class AlbumState extends Equatable {
       mosque: mosque ?? this.mosque,
       isLoading: isLoading ?? this.isLoading,
       isSaving: isSaving ?? this.isSaving,
+      isUploading: isUploading ?? this.isUploading,
       hasUnsavedChanges: hasUnsavedChanges ?? this.hasUnsavedChanges,
       error: error,
     );
@@ -38,6 +42,7 @@ class AlbumState extends Equatable {
     mosque,
     isLoading,
     isSaving,
+    isUploading,
     hasUnsavedChanges,
     error,
   ];

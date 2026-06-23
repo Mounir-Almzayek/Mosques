@@ -19,11 +19,11 @@ class PlatformAnnouncementsRepository
     required String? Function() getActiveMosqueId,
     required JsonCache<List<Announcement>> displayCache,
     required JsonCache<List<SettingsAnnouncementModel>> settingsCache,
-  })  : _dataSource = dataSource,
-        _getActiveMosqueId = getActiveMosqueId,
-        _displayCache = displayCache,
-        _displayLoader = CacheFirstLoader(displayCache),
-        _settingsLoader = CacheFirstLoader(settingsCache);
+  }) : _dataSource = dataSource,
+       _getActiveMosqueId = getActiveMosqueId,
+       _displayCache = displayCache,
+       _displayLoader = CacheFirstLoader(displayCache),
+       _settingsLoader = CacheFirstLoader(settingsCache);
 
   String? get _activeId {
     final id = _getActiveMosqueId();
@@ -43,11 +43,10 @@ class PlatformAnnouncementsRepository
   List<SettingsAnnouncementModel> _settingsList(MosqueBootstrap? b) {
     if (b == null) return const [];
     final now = DateTime.now();
-    return b.platformAnnouncements
-        .where((a) => a.audience == 'imam')
-        .map(_toSettings)
-        .where((s) => s.isVisibleAt(now))
-        .toList()
+    return [
+        ...b.appAnnouncements,
+        ...b.platformAnnouncements.where((a) => a.audience == 'imam'),
+      ].map(_toSettings).where((s) => s.isVisibleAt(now)).toList()
       ..sort((x, y) => x.order.compareTo(y.order));
   }
 
@@ -57,7 +56,9 @@ class PlatformAnnouncementsRepository
       title: a.title,
       body: (a.subtitle?.trim().isEmpty ?? true) ? null : a.subtitle!.trim(),
       imageUrl: null,
-      linkUrl: (a.qrCodeUrl?.trim().isEmpty ?? true) ? null : a.qrCodeUrl!.trim(),
+      linkUrl: (a.qrCodeUrl?.trim().isEmpty ?? true)
+          ? null
+          : a.qrCodeUrl!.trim(),
       isActive: a.isActive,
       order: a.displayOrder,
       startDate: a.startAt,

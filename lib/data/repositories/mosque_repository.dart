@@ -113,6 +113,14 @@ class MosqueRepository implements IMosqueRepository {
   }
 
   @override
+  Future<PrayerSettingsPreview> previewPrayerSettings(MosqueBootstrap mosque) {
+    return _dataSource.previewPrayerSettings(
+      _requireActiveId(),
+      mosque.prayerSettings,
+    );
+  }
+
+  @override
   Future<void> updateMosque(MosqueBootstrap mosque) async {
     final id = _requireActiveId();
     final m = mosque.mosque;
@@ -136,6 +144,23 @@ class MosqueRepository implements IMosqueRepository {
       _requireActiveId(),
       mosque.displaySettings,
     );
+  }
+
+  @override
+  Future<MosqueBootstrap> uploadAlbumImage(String filePath) async {
+    final displaySettings = await _dataSource.uploadAlbumImage(
+      _requireActiveId(),
+      filePath,
+    );
+    final current = _latest ?? await getActiveMosque();
+    if (current == null) {
+      throw Exception('No active mosque');
+    }
+    final updated = current.copyWith(displaySettings: displaySettings);
+    _latest = updated;
+    await _cache.save(updated);
+    _manualRefreshController.add(updated);
+    return updated;
   }
 
   @override

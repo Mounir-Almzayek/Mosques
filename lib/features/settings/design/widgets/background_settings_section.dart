@@ -15,7 +15,6 @@ class BackgroundSettingsSection extends StatelessWidget {
   final ValueChanged<DisplayBackgroundType> onTypeChanged;
   final ValueChanged<String> onValueChanged;
   final List<String> albumUrls;
-  final ValueChanged<String> onAlbumUrlAdded;
   final void Function(int) onAlbumUrlRemoved;
 
   /// Available background images from the global library (app config).
@@ -28,7 +27,6 @@ class BackgroundSettingsSection extends StatelessWidget {
     required this.onTypeChanged,
     required this.onValueChanged,
     required this.albumUrls,
-    required this.onAlbumUrlAdded,
     required this.onAlbumUrlRemoved,
     this.libraryUrls = const [],
   });
@@ -132,11 +130,7 @@ class BackgroundSettingsSection extends StatelessWidget {
               ),
             )
           else if (backgroundType == DisplayBackgroundType.album)
-            AlbumUrlList(
-              urls: albumUrls,
-              onUrlAdded: onAlbumUrlAdded,
-              onUrlRemoved: onAlbumUrlRemoved,
-            )
+            AlbumUrlList(urls: albumUrls, onUrlRemoved: onAlbumUrlRemoved)
           else
             DisplayBackgroundPicker(
               selectedValue: backgroundValue,

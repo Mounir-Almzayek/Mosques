@@ -238,7 +238,7 @@ class _DivisionSearchField extends StatelessWidget {
                     radius: 16,
                     backgroundColor: AppColors.primaryWhisper,
                     child: Text(
-                      'L${division.adminLevel}',
+                      _divisionLevelBadge(division.adminLevel),
                       style: const TextStyle(
                         fontSize: 10,
                         color: AppColors.primary,
@@ -311,7 +311,7 @@ class _DivisionPathView extends StatelessWidget {
                       (division) => Chip(
                         label: Text(division.displayName),
                         avatar: Text(
-                          'L${division.adminLevel}',
+                          _divisionLevelBadge(division.adminLevel),
                           style: const TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w800,
@@ -324,4 +324,17 @@ class _DivisionPathView extends StatelessWidget {
       ),
     );
   }
+}
+
+String _divisionLevelBadge(int level) {
+  return switch (level) {
+    0 => 'CTR',
+    1 => 'GOV',
+    2 => 'DIS',
+    3 => 'SUB',
+    4 => 'COM',
+    5 => 'ARE',
+    6 => 'NBH',
+    _ => 'L$level',
+  };
 }

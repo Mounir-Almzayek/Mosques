@@ -99,7 +99,7 @@
   "mosque_info_subtitle": "Update the mosque identity, administrative region, and display coordinates.",
   "save_mosque_info": "Save mosque information",
   "administrative_division_label": "Administrative division",
-  "administrative_division_search_hint": "Search governorate, district, subdistrict, or code...",
+  "administrative_division_search_hint": "Search governorate, district, subdistrict, neighborhood, or code...",
   "administrative_division_empty": "No administrative division selected yet.",
   "hadith_fab_add": "New hadith",
   "hadith_editor_title_new": "New hadith",

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import '../../../../core/config/api_config.dart';
 import '../../../../core/widgets/media/media_widgets.dart';
 import '../../../../core/enums/display_background_type.dart';
 import '../../../../core/utils/color_parser.dart';
@@ -73,7 +74,10 @@ class _DisplayBackgroundImageState extends State<DisplayBackgroundImage> {
   @override
   Widget build(BuildContext context) {
     if (widget.settings.backgroundTypeKind == DisplayBackgroundType.color) {
-      final color = parseColorHex(widget.settings.backgroundValue, widget.fallbackColor);
+      final color = parseColorHex(
+        widget.settings.backgroundValue,
+        widget.fallbackColor,
+      );
       return Container(color: color);
     }
 
@@ -86,7 +90,7 @@ class _DisplayBackgroundImageState extends State<DisplayBackgroundImage> {
 
     // If value looks like a URL, load from network with caching.
     // Otherwise (empty, 'default', or old preset ID), show fallback color.
-    if (url.startsWith('http')) {
+    if (ApiConfig.canResolvePublicUrl(url)) {
       return _buildCachedImage(url);
     }
 
@@ -120,7 +124,7 @@ class _DisplayBackgroundImageState extends State<DisplayBackgroundImage> {
     // or the fallback color.
     if (urls.isEmpty) {
       final singleUrl = widget.settings.backgroundValue;
-      if (singleUrl.isNotEmpty && singleUrl.startsWith('http')) {
+      if (singleUrl.isNotEmpty && ApiConfig.canResolvePublicUrl(singleUrl)) {
         return _buildCachedImage(singleUrl);
       }
       return Container(color: widget.fallbackColor);

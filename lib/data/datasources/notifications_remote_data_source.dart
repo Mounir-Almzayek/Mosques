@@ -78,8 +78,14 @@ class NotificationsRemoteDataSource {
   Stream<Map<String, dynamic>> watchEvents() {
     final controller = StreamController<Map<String, dynamic>>();
     WebSocketChannel? channel;
+    Timer? reconnectTimer;
 
     void connect() {
+      if (controller.isClosed) return;
+      final currentChannel = channel;
+      if (currentChannel != null) {
+        unawaited(currentChannel.sink.close());
+      }
       final token = _tokens.accessToken;
       final uri =
           Uri.parse(
@@ -89,7 +95,19 @@ class NotificationsRemoteDataSource {
               if (token != null && token.isNotEmpty) 'access_token': token,
             },
           );
-      channel = WebSocketChannel.connect(uri);
+      try {
+        channel = WebSocketChannel.connect(uri);
+      } catch (_) {
+        reconnectTimer?.cancel();
+        reconnectTimer = Timer(const Duration(seconds: 2), connect);
+        return;
+      }
+      channel!.ready.catchError((_) {
+        if (!controller.isClosed) {
+          reconnectTimer?.cancel();
+          reconnectTimer = Timer(const Duration(seconds: 2), connect);
+        }
+      });
       channel!.stream.listen(
         (raw) {
           try {
@@ -99,10 +117,16 @@ class NotificationsRemoteDataSource {
             }
           } catch (_) {}
         },
-        onError: controller.addError,
+        onError: (_) {
+          if (!controller.isClosed) {
+            reconnectTimer?.cancel();
+            reconnectTimer = Timer(const Duration(seconds: 2), connect);
+          }
+        },
         onDone: () {
           if (!controller.isClosed) {
-            Future<void>.delayed(const Duration(seconds: 2), connect);
+            reconnectTimer?.cancel();
+            reconnectTimer = Timer(const Duration(seconds: 2), connect);
           }
         },
       );
@@ -110,6 +134,7 @@ class NotificationsRemoteDataSource {
 
     controller.onListen = connect;
     controller.onCancel = () async {
+      reconnectTimer?.cancel();
       await channel?.sink.close();
     };
     return controller.stream;

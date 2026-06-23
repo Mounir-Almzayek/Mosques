@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../core/constants/api_endpoints.dart';
@@ -22,11 +23,9 @@ class MosqueRemoteDataSource {
   /// join the live channel.
   final Map<String, String> _slugById = {};
 
-  MosqueRemoteDataSource({
-    required ApiService api,
-    required SnapshotSync sync,
-  })  : _api = api,
-        _sync = sync;
+  MosqueRemoteDataSource({required ApiService api, required SnapshotSync sync})
+    : _api = api,
+      _sync = sync;
 
   // ---------------------------------------------------------------------------
   // Reads
@@ -77,24 +76,49 @@ class MosqueRemoteDataSource {
         return;
       }
 
-      wsSub = _sync.watch(slug).listen(
-        (snapshot) {
-          // The WS snapshot omits legacyCompatibility; preserve the id we
-          // already know from the HTTP bootstrap.
-          final merged = MosqueBootstrap.fromJson(snapshot).copyWith(
-            firestoreDocumentId: bootstrap?.firestoreDocumentId,
+      wsSub = _sync
+          .watch(slug)
+          .listen(
+            (snapshot) {
+              // The WS snapshot omits legacyCompatibility; preserve the id we
+              // already know from the HTTP bootstrap. Display snapshots carry
+              // display-facing announcements only, so preserve imam-facing app
+              // announcements from the latest bootstrap value.
+              final incoming = MosqueBootstrap.fromJson(snapshot);
+              final merged = incoming.copyWith(
+                announcements: _mergeAnnouncementsByAudience(
+                  current: bootstrap?.announcements ?? const [],
+                  incoming: incoming.announcements,
+                ),
+                platformAnnouncements: _mergeAnnouncementsByAudience(
+                  current: bootstrap?.platformAnnouncements ?? const [],
+                  incoming: incoming.platformAnnouncements,
+                ),
+                firestoreDocumentId: bootstrap?.firestoreDocumentId,
+              );
+              bootstrap = merged;
+              if (!controller.isClosed) controller.add(merged);
+            },
+            onError: (Object error) {
+              if (kDebugMode) {
+                debugPrint('MosqueRemoteDataSource WS error: $error');
+              }
+            },
           );
-          if (!controller.isClosed) controller.add(merged);
-        },
-        onError: (Object error) {
-          if (kDebugMode) {
-            debugPrint('MosqueRemoteDataSource WS error: $error');
-          }
-        },
-      );
     }();
 
     return controller.stream;
+  }
+
+  List<Announcement> _mergeAnnouncementsByAudience({
+    required List<Announcement> current,
+    required List<Announcement> incoming,
+  }) {
+    final incomingAudiences = incoming.map((item) => item.audience).toSet();
+    return [
+      ...current.where((item) => !incomingAudiences.contains(item.audience)),
+      ...incoming,
+    ];
   }
 
   // ---------------------------------------------------------------------------
@@ -117,6 +141,17 @@ class MosqueRemoteDataSource {
     );
   }
 
+  Future<PrayerSettingsPreview> previewPrayerSettings(
+    String mosqueId,
+    PrayerSettings settings,
+  ) async {
+    final raw = await _api.post(
+      ApiEndpoints.mosquePrayerSettingsPreview(mosqueId),
+      body: settings.toRequestBody(),
+    );
+    return PrayerSettingsPreview.fromJson(raw);
+  }
+
   Future<void> putDisplaySettings(
     String mosqueId,
     DisplaySettings settings,
@@ -124,6 +159,29 @@ class MosqueRemoteDataSource {
     await _api.put(
       ApiEndpoints.mosqueDisplaySettings(mosqueId),
       body: settings.toRequestBody(),
+    );
+  }
+
+  Future<DisplaySettings> uploadAlbumImage(
+    String mosqueId,
+    String filePath,
+  ) async {
+    final file = await MultipartFile.fromFile(filePath);
+    final form = FormData.fromMap({
+      'files': [file],
+    });
+    final raw = await _api.post(
+      ApiEndpoints.mosqueAlbumImages(mosqueId),
+      body: form,
+    );
+    final displaySettings = raw['displaySettings'];
+    if (displaySettings is Map) {
+      return DisplaySettings.fromJson(
+        Map<String, dynamic>.from(displaySettings),
+      );
+    }
+    throw const FormatException(
+      'Album upload response missing displaySettings',
     );
   }
 
@@ -171,15 +229,20 @@ class MosqueRemoteDataSource {
     required List<Announcement> previous,
     required List<Announcement> next,
   }) async {
+    const audience = 'display';
     final previousById = <String, Announcement>{};
-    for (final a in previous) {
+    for (final a in previous.where(
+      (a) => a.announcementType == announcementType && a.audience == audience,
+    )) {
       if (a.id.isNotEmpty) previousById[a.id] = a;
     }
 
     final seen = <String>{};
-    for (final entry in next) {
+    for (final entry in next.where(
+      (a) => a.announcementType == announcementType && a.audience == audience,
+    )) {
       final body = entry
-          .copyWith(announcementType: announcementType, audience: 'display')
+          .copyWith(announcementType: announcementType, audience: audience)
           .toRequestBody();
       if (entry.id.isEmpty || !previousById.containsKey(entry.id)) {
         await _api.post(ApiEndpoints.mosqueAnnouncements(mosqueId), body: body);

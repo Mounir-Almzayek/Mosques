@@ -59,8 +59,12 @@ abstract final class ApiEndpoints {
   static String mosqueBootstrap(String id) => '$mosques/$id/bootstrap';
   static String mosquePrayerSettings(String id) =>
       '$mosques/$id/prayer-settings';
+  static String mosquePrayerSettingsPreview(String id) =>
+      '$mosques/$id/prayer-settings/preview';
   static String mosqueDisplaySettings(String id) =>
       '$mosques/$id/display-settings';
+  static String mosqueAlbumImages(String id) =>
+      '$mosques/$id/display-settings/album-images';
   static String mosquePublishedAlbum(String id) =>
       '$mosques/$id/display-settings/published-album';
   static String mosqueReligiousContent(String id) =>

@@ -99,7 +99,7 @@
   "mosque_info_subtitle": "حدّث هوية المسجد والمنطقة الإدارية والإحداثيات المعتمدة للعرض.",
   "save_mosque_info": "حفظ معلومات المسجد",
   "administrative_division_label": "التقسيم الإداري",
-  "administrative_division_search_hint": "ابحث عن المحافظة أو المنطقة أو الناحية أو الكود...",
+  "administrative_division_search_hint": "ابحث عن المحافظة أو المنطقة أو الناحية أو الحي أو الكود...",
   "administrative_division_empty": "لم يتم اختيار تقسيم إداري بعد.",
   "hadith_fab_add": "حديث جديد",
   "hadith_editor_title_new": "حديث جديد",

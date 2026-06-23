@@ -894,10 +894,10 @@ class S {
     );
   }
 
-  /// `Search governorate, district, subdistrict, or code...`
+  /// `Search governorate, district, subdistrict, neighborhood, or code...`
   String get administrative_division_search_hint {
     return Intl.message(
-      'Search governorate, district, subdistrict, or code...',
+      'Search governorate, district, subdistrict, neighborhood, or code...',
       name: 'administrative_division_search_hint',
       desc: '',
       args: [],

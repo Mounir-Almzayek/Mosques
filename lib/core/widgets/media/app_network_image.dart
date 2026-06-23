@@ -51,6 +51,15 @@ class _AppNetworkImageState extends State<AppNetworkImage> {
     _loadFromStore();
   }
 
+  @override
+  void didUpdateWidget(covariant AppNetworkImage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.source == widget.source) return;
+    _cachedFile = null;
+    _resolved = false;
+    _loadFromStore();
+  }
+
   Future<void> _loadFromStore() async {
     try {
       final file = await widget.store.fileFor(widget.source);

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/services/error_mapper.dart';
 import '../../../../core/utils/async_runner.dart';
+import '../../../../data/models/mosque/mosque_bootstrap.dart';
 import '../../../../data/repositories/interfaces/mosque_repository_interface.dart';
 import 'album_event.dart';
 import 'album_state.dart';
@@ -13,7 +14,7 @@ export 'album_state.dart';
 
 class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
   final IMosqueRepository _repo;
-  final AsyncRunner<void> _saveRunner = AsyncRunner();
+  final AsyncRunner<Object?> _saveRunner = AsyncRunner();
 
   AlbumBloc({required IMosqueRepository mosqueRepository})
     : _repo = mosqueRepository,
@@ -21,6 +22,7 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
     on<LoadAlbum>(_onLoad);
     on<AlbumMosqueUpdated>(_onMosqueUpdated);
     on<AlbumImageAdded>(_onImageAdded);
+    on<AlbumImageUploadRequested>(_onImageUploadRequested);
     on<AlbumImageRemoved>(_onImageRemoved);
     on<AlbumImagePublished>(_onImagePublished);
     on<AlbumImageUnpublished>(_onImageUnpublished);
@@ -65,6 +67,30 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
         ),
         hasUnsavedChanges: true,
       ),
+    );
+  }
+
+  Future<void> _onImageUploadRequested(
+    AlbumImageUploadRequested event,
+    Emitter<AlbumState> emit,
+  ) async {
+    await _saveRunner.run(
+      checkConnectivity: false,
+      onlineTask: (_) => _repo.uploadAlbumImage(event.filePath),
+      onStart: () => emit(state.copyWith(isUploading: true, error: null)),
+      onSuccess: (result) {
+        final mosque = result is MosqueBootstrap ? result : state.mosque;
+        emit(
+          state.copyWith(
+            mosque: mosque,
+            isUploading: false,
+            hasUnsavedChanges: false,
+            error: null,
+          ),
+        );
+      },
+      onError: (error) =>
+          emit(state.copyWith(isUploading: false, error: errorMessage(error))),
     );
   }
 
@@ -126,7 +152,10 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
     if (m == null) return;
     await _saveRunner.run(
       checkConnectivity: false,
-      onlineTask: (_) => _repo.updateMosque(m),
+      onlineTask: (_) async {
+        await _repo.updateDesignSettings(m);
+        return null;
+      },
       onStart: () => emit(state.copyWith(isSaving: true)),
       onSuccess: (_) => emit(
         state.copyWith(isSaving: false, hasUnsavedChanges: false, error: null),

@@ -31,13 +31,13 @@ class PrayerOffsets extends Equatable {
   }
 
   Map<String, dynamic> toJson() => {
-        'fajr': fajr,
-        'sunrise': sunrise,
-        'dhuhr': dhuhr,
-        'asr': asr,
-        'maghrib': maghrib,
-        'isha': isha,
-      };
+    'fajr': fajr,
+    'sunrise': sunrise,
+    'dhuhr': dhuhr,
+    'asr': asr,
+    'maghrib': maghrib,
+    'isha': isha,
+  };
 
   PrayerOffsets copyWith({
     int? fajr,
@@ -95,13 +95,13 @@ class IqamaOffsets extends Equatable {
   }
 
   Map<String, dynamic> toJson() => {
-        'fajr': fajr,
-        'dhuhr': dhuhr,
-        'asr': asr,
-        'maghrib': maghrib,
-        'isha': isha,
-        'jummah': jummah,
-      };
+    'fajr': fajr,
+    'dhuhr': dhuhr,
+    'asr': asr,
+    'maghrib': maghrib,
+    'isha': isha,
+    'jummah': jummah,
+  };
 
   IqamaOffsets copyWith({
     int? fajr,
@@ -164,22 +164,22 @@ class PrayerSettings extends Equatable {
   }
 
   Map<String, dynamic> toJson() => {
-        'mosqueId': mosqueId,
-        'calculationMethod': calculationMethod,
-        'offsets': offsets.toJson(),
-        'iqamaOffsets': iqamaOffsets.toJson(),
-        'preAdhanMinutes': preAdhanMinutes,
-        'adhanMomentDurationSeconds': adhanMomentDurationSeconds,
-      };
+    'mosqueId': mosqueId,
+    'calculationMethod': calculationMethod,
+    'offsets': offsets.toJson(),
+    'iqamaOffsets': iqamaOffsets.toJson(),
+    'preAdhanMinutes': preAdhanMinutes,
+    'adhanMomentDurationSeconds': adhanMomentDurationSeconds,
+  };
 
   /// Backend write body for `PUT .../prayer-settings` (no `mosqueId`).
   Map<String, dynamic> toRequestBody() => {
-        'calculationMethod': calculationMethod,
-        'offsets': offsets.toJson(),
-        'iqamaOffsets': iqamaOffsets.toJson(),
-        'preAdhanMinutes': preAdhanMinutes,
-        'adhanMomentDurationSeconds': adhanMomentDurationSeconds,
-      };
+    'calculationMethod': calculationMethod,
+    'offsets': offsets.toJson(),
+    'iqamaOffsets': iqamaOffsets.toJson(),
+    'preAdhanMinutes': preAdhanMinutes,
+    'adhanMomentDurationSeconds': adhanMomentDurationSeconds,
+  };
 
   PrayerSettings copyWith({
     String? mosqueId,
@@ -202,11 +202,133 @@ class PrayerSettings extends Equatable {
 
   @override
   List<Object?> get props => [
-        mosqueId,
-        calculationMethod,
-        offsets,
-        iqamaOffsets,
-        preAdhanMinutes,
-        adhanMomentDurationSeconds,
-      ];
+    mosqueId,
+    calculationMethod,
+    offsets,
+    iqamaOffsets,
+    preAdhanMinutes,
+    adhanMomentDurationSeconds,
+  ];
+}
+
+class PrayerCalculationMethodOption extends Equatable {
+  final String key;
+  final String label;
+
+  const PrayerCalculationMethodOption({required this.key, required this.label});
+
+  factory PrayerCalculationMethodOption.fromJson(Map<String, dynamic> json) {
+    final key = json['key']?.toString() ?? '';
+    return PrayerCalculationMethodOption(
+      key: key,
+      label: json['label']?.toString() ?? key,
+    );
+  }
+
+  @override
+  List<Object?> get props => [key, label];
+}
+
+class PrayerPreviewItem extends Equatable {
+  final String prayer;
+  final DateTime? baseTime;
+  final int offset;
+  final DateTime? adhanTime;
+  final int iqamaOffset;
+  final DateTime? iqamaTime;
+
+  const PrayerPreviewItem({
+    required this.prayer,
+    this.baseTime,
+    this.offset = 0,
+    this.adhanTime,
+    this.iqamaOffset = 0,
+    this.iqamaTime,
+  });
+
+  factory PrayerPreviewItem.fromJson(Map<String, dynamic> json) {
+    return PrayerPreviewItem(
+      prayer: json['prayer']?.toString() ?? '',
+      baseTime: DateTime.tryParse(json['baseTime']?.toString() ?? ''),
+      offset: (json['offset'] as num?)?.toInt() ?? 0,
+      adhanTime: DateTime.tryParse(json['adhanTime']?.toString() ?? ''),
+      iqamaOffset: (json['iqamaOffset'] as num?)?.toInt() ?? 0,
+      iqamaTime: DateTime.tryParse(json['iqamaTime']?.toString() ?? ''),
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    prayer,
+    baseTime,
+    offset,
+    adhanTime,
+    iqamaOffset,
+    iqamaTime,
+  ];
+}
+
+class PrayerSettingsPreview extends Equatable {
+  final DateTime? date;
+  final String timezone;
+  final String calculationMethod;
+  final List<PrayerCalculationMethodOption> methods;
+  final List<PrayerPreviewItem> items;
+
+  const PrayerSettingsPreview({
+    this.date,
+    this.timezone = '',
+    this.calculationMethod = 'MuslimWorldLeague',
+    this.methods = const [],
+    this.items = const [],
+  });
+
+  factory PrayerSettingsPreview.fromJson(Map<String, dynamic> json) {
+    final methods = json['methods'];
+    final items = json['items'];
+    return PrayerSettingsPreview(
+      date: DateTime.tryParse(json['date']?.toString() ?? ''),
+      timezone: json['timezone']?.toString() ?? '',
+      calculationMethod:
+          json['calculationMethod']?.toString() ?? 'MuslimWorldLeague',
+      methods: methods is List
+          ? methods
+                .whereType<Map>()
+                .map(
+                  (item) => PrayerCalculationMethodOption.fromJson(
+                    Map<String, dynamic>.from(item),
+                  ),
+                )
+                .where((item) => item.key.isNotEmpty)
+                .toList()
+          : const [],
+      items: items is List
+          ? items
+                .whereType<Map>()
+                .map(
+                  (item) => PrayerPreviewItem.fromJson(
+                    Map<String, dynamic>.from(item),
+                  ),
+                )
+                .where((item) => item.prayer.isNotEmpty)
+                .toList()
+          : const [],
+    );
+  }
+
+  PrayerPreviewItem? itemFor(String prayer) {
+    for (final item in items) {
+      if (item.prayer == prayer) return item;
+    }
+    return null;
+  }
+
+  @override
+  List<Object?> get props => [
+    date,
+    timezone,
+    calculationMethod,
+    methods,
+    items,
+  ];
 }

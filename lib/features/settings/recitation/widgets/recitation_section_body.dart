@@ -16,15 +16,8 @@ class RecitationSectionBody extends StatefulWidget {
 }
 
 class _RecitationSectionBodyState extends State<RecitationSectionBody> {
-  final _surahController = TextEditingController(text: '1');
-  final _ayahController = TextEditingController(text: '1');
-
-  @override
-  void dispose() {
-    _surahController.dispose();
-    _ayahController.dispose();
-    super.dispose();
-  }
+  int _selectedSurah = 1;
+  int _selectedAyah = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +30,24 @@ class _RecitationSectionBodyState extends State<RecitationSectionBody> {
             children: [
               RecitationTrackingControls(
                 state: state,
-                surahController: _surahController,
-                ayahController: _ayahController,
+                selectedSurah: _selectedSurah,
+                selectedAyah: _selectedAyah,
+                onSurahChanged: (value) {
+                  setState(() {
+                    _selectedSurah = value;
+                    _selectedAyah = 1;
+                  });
+                },
+                onAyahChanged: (value) {
+                  setState(() {
+                    _selectedAyah = value;
+                  });
+                },
                 onStartTracking: () {
                   context.read<RecitationBloc>().add(
                     StartRecitationTracking(
-                      surah: int.tryParse(_surahController.text) ?? 1,
-                      ayah: int.tryParse(_ayahController.text) ?? 1,
+                      surah: _selectedSurah,
+                      ayah: _selectedAyah,
                     ),
                   );
                 },

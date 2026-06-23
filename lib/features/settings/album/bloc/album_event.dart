@@ -32,6 +32,15 @@ class AlbumImageAdded extends AlbumEvent {
   List<Object?> get props => [url];
 }
 
+class AlbumImageUploadRequested extends AlbumEvent {
+  final String filePath;
+
+  const AlbumImageUploadRequested(this.filePath);
+
+  @override
+  List<Object?> get props => [filePath];
+}
+
 class AlbumImageRemoved extends AlbumEvent {
   final String url;
 

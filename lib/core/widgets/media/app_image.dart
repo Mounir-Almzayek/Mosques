@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../cache/offline_image_store.dart';
+import '../../config/api_config.dart';
 import '../../di/service_locator.dart';
 import 'app_network_image.dart';
 import 'optimized_image.dart';
@@ -135,8 +136,9 @@ class AppImage extends StatelessWidget {
         fit: fit,
       );
     }
+    final resolvedSource = ApiConfig.resolvePublicUrl(source);
     return AppNetworkImage(
-      source: source,
+      source: resolvedSource,
       width: width,
       height: height,
       fit: fit,
